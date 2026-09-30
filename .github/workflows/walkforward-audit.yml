@@ -1,0 +1,64 @@
+name: Walk-Forward Dataset Audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/dataset.py"
+      - "nfl/evaluation.py"
+      - "nfl/walkforward.py"
+      - "run_walkforward.py"
+      - ".github/workflows/walkforward-audit.yml"
+  workflow_dispatch:
+    inputs:
+      season:
+        description: "NFL season to reconstruct"
+        required: true
+        default: "2025"
+        type: string
+      start_week:
+        description: "First target week"
+        required: true
+        default: "5"
+        type: string
+      end_week:
+        description: "Last target week"
+        required: true
+        default: "10"
+        type: string
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      AUDIT_SEASON: ${{ inputs.season || '2025' }}
+      START_WEEK: ${{ inputs.start_week || '5' }}
+      END_WEEK: ${{ inputs.end_week || '10' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e .
+
+      - name: Reconstruct historical weeks
+        run: |
+          mkdir -p reports
+          python run_walkforward.py "$AUDIT_SEASON" \
+            --start-week "$START_WEEK" \
+            --end-week "$END_WEEK" \
+            --refresh | tee reports/walkforward_audit.json
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: walkforward-${{ env.AUDIT_SEASON }}-weeks-${{ env.START_WEEK }}-${{ env.END_WEEK }}
+          path: reports/walkforward_audit.json
