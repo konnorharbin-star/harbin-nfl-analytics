@@ -59,7 +59,7 @@ class FairScoreModel:
     def fitted(self) -> bool:
         return self.league_points is not None
 
-    def fit(self, team_games: pl.DataFrame) -> "FairScoreModel":
+    def fit(self, team_games: pl.DataFrame) -> FairScoreModel:
         required = {"team", "opponent", "points_for", "is_home"}
         require_columns(team_games, required, "team_games")
         if team_games.height < 4:
