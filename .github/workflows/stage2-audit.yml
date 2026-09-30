@@ -41,7 +41,10 @@ jobs:
           cache: pip
 
       - name: Install package
-        run: python -m pip install -e .
+        run: python -m pip install -e ".[dev]"
+
+      - name: Show Ruff import fix
+        run: ruff check nfl/advanced.py --select I001 --fix --diff || true
 
       - name: Run Stage 2 source audit
         run: |
