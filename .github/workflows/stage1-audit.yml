@@ -1,6 +1,13 @@
 name: Stage 1 Data Audit
 
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/**"
+      - "run_stage1.py"
+      - "pyproject.toml"
+      - ".github/workflows/stage1-audit.yml"
   workflow_dispatch:
     inputs:
       season:
@@ -13,6 +20,8 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      AUDIT_SEASON: ${{ inputs.season || '2025' }}
 
     steps:
       - name: Checkout
@@ -27,13 +36,13 @@ jobs:
       - name: Install package
         run: python -m pip install -e .
 
-      - name: Run Stage 1 audit
+      - name: Run Stage 1 source audit
         run: |
           mkdir -p reports
-          python run_stage1.py "${{ inputs.season }}" --refresh | tee reports/stage1_audit.json
+          python run_stage1.py "$AUDIT_SEASON" --refresh | tee reports/stage1_audit.json
 
       - name: Upload audit report
         uses: actions/upload-artifact@v4
         with:
-          name: stage1-audit-${{ inputs.season }}
+          name: stage1-audit-${{ env.AUDIT_SEASON }}
           path: reports/stage1_audit.json
