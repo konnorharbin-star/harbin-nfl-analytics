@@ -53,6 +53,12 @@ def test_team_game_expansion_is_two_rows_per_completed_game() -> None:
     team_games = schedule_to_team_games(_schedule())
     assert team_games.height == 4
     assert set(team_games.get_column("team")) == {"A", "B", "C", "D"}
-    margins = dict(zip(team_games.get_column("team"), team_games.get_column("point_margin")))
+    margins = dict(
+        zip(
+            team_games.get_column("team"),
+            team_games.get_column("point_margin"),
+            strict=True,
+        )
+    )
     assert margins["A"] == -4.0
     assert margins["B"] == 4.0
