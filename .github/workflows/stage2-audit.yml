@@ -1,0 +1,55 @@
+name: Stage 2 Feature Audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/advanced.py"
+      - "nfl/ratings.py"
+      - "nfl/stage2.py"
+      - "run_stage2.py"
+      - ".github/workflows/stage2-audit.yml"
+  workflow_dispatch:
+    inputs:
+      season:
+        description: "NFL season to audit"
+        required: true
+        default: "2025"
+        type: string
+      week:
+        description: "Pregame target week"
+        required: true
+        default: "10"
+        type: string
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      AUDIT_SEASON: ${{ inputs.season || '2025' }}
+      AUDIT_WEEK: ${{ inputs.week || '10' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e .
+
+      - name: Run Stage 2 source audit
+        run: |
+          mkdir -p reports
+          python run_stage2.py "$AUDIT_SEASON" "$AUDIT_WEEK" --refresh | tee reports/stage2_audit.json
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage2-audit-${{ env.AUDIT_SEASON }}-week-${{ env.AUDIT_WEEK }}
+          path: reports/stage2_audit.json
