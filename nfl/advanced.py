@@ -6,8 +6,6 @@ transparent so each signal can be audited before it is allowed into the fair-sco
 engine.
 """
 
-from __future__ import annotations
-
 import polars as pl
 
 from .contracts import DataContractError, require_columns
