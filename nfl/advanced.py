@@ -10,7 +10,6 @@ import polars as pl
 
 from nfl.contracts import DataContractError, require_columns
 
-
 ADVANCED_PBP_REQUIRED = {
     "season",
     "week",
