@@ -6,9 +6,9 @@ us one place to enforce schema contracts, cache provenance, and pregame cutoffs.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from datetime import date, datetime
 from pathlib import Path
-from typing import Callable
 
 import nflreadpy as nfl
 import polars as pl
@@ -140,14 +140,14 @@ def _coerce_date(value: date | datetime | str) -> date:
 
 def _with_game_date(frame: pl.DataFrame) -> pl.DataFrame:
     require_columns(frame, {"gameday"}, "schedules")
-    dtype = frame.schema["gameday"]
-    if dtype == pl.Date:
-        expr = pl.col("gameday")
-    elif isinstance(dtype, pl.Datetime):
-        expr = pl.col("gameday").cast(pl.Date)
-    else:
-        expr = pl.col("gameday").cast(pl.String).str.to_date(strict=False)
-    return frame.with_columns(expr.alias("_game_date"))
+    expr = (
+        pl.col("gameday")
+        .cast(pl.String)
+        .str.slice(0, 10)
+        .str.to_date(strict=False)
+        .alias("_game_date")
+    )
+    return frame.with_columns(expr)
 
 
 def completed_games(
