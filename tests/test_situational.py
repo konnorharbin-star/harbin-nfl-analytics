@@ -56,7 +56,10 @@ def _pbp(target_week_shift: float = 0.0) -> pl.DataFrame:
             (away, home, -0.05),
             (home, away, 0.08),
         ):
-            for down, ydstogo, yardline, pass_attempt, rush_attempt, dropback, sack, epa in situations:
+            for situation in situations:
+                down, ydstogo, yardline, pass_attempt, rush_attempt, dropback, sack, epa = (
+                    situation
+                )
                 play_id += 1
                 value = epa + team_bias
                 if week == 3:
