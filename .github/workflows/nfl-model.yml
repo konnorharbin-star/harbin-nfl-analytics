@@ -18,6 +18,12 @@ on:
         required: false
         default: "4"
         type: string
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/pipeline.py"
+      - "tests/test_market_outage_failclosed.py"
+      - ".github/workflows/nfl-model.yml"
   push:
     branches: [main]
     paths-ignore: ["outputs/**", "history/**", "reports/**", "docs/**"]
@@ -89,6 +95,7 @@ jobs:
           PY
 
       - name: Commit generated state
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           git config user.name "harbin-nfl-model-bot"
