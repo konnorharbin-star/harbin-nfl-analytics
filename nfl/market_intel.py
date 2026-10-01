@@ -10,7 +10,7 @@ import polars as pl
 
 from .contracts import DataContractError, require_columns
 from .espn_market import ESPNTwoWayMarket
-from .market import MarketQuote, compare_two_way_market
+from .market import MarketComparison, MarketQuote, compare_two_way_market
 from .policy import fractional_kelly_units, load_policy, signal_from_policy
 from .probability import GaussianScoreDistribution
 
@@ -37,6 +37,49 @@ def _kickoff_map(targets: pl.DataFrame) -> dict[str, object]:
     return mapping
 
 
+def _book_key(market: ESPNTwoWayMarket) -> str:
+    return str(market.book or market.provider).strip().lower()
+
+
+def _pair_best(
+    distribution: GaussianScoreDistribution,
+    game: dict[str, object],
+    market: ESPNTwoWayMarket,
+) -> MarketComparison:
+    first = MarketQuote(
+        market_type=market.market_type,
+        side=market.first_side,
+        line=market.first_line,
+        american_odds=market.first_american_odds,
+        book=market.book,
+        captured_at=market.captured_at,
+    )
+    second = MarketQuote(
+        market_type=market.market_type,
+        side=market.second_side,
+        line=market.second_line,
+        american_odds=market.second_american_odds,
+        book=market.book,
+        captured_at=market.captured_at,
+    )
+    pair = compare_two_way_market(
+        distribution,
+        projected_home_margin=float(game["baseline_home_margin"]),
+        projected_total=float(game["baseline_total"]),
+        first=first,
+        second=second,
+    )
+    return max(
+        pair,
+        key=lambda value: (
+            value.expected_value_per_unit,
+            value.probability_edge,
+            value.american_odds,
+            value.side,
+        ),
+    )
+
+
 def build_market_intelligence(
     projection: pl.DataFrame,
     targets: pl.DataFrame,
@@ -45,11 +88,12 @@ def build_market_intelligence(
     *,
     policy: dict[str, object] | None = None,
 ) -> tuple[pl.DataFrame, dict[str, object]]:
-    """Select one downstream research opportunity per game/market.
+    """Line-shop downstream NFL opportunities without contaminating football ratings.
 
-    This is the NFL equivalent of the CFB canonical market-intelligence layer. The
-    football projection and probability distribution already exist before quotes are
-    evaluated. No sportsbook value is fed back into football ratings.
+    Each source quote is evaluated independently after the football projection exists.
+    The best expected-value quote is then retained once per game/market. Book breadth is
+    counted by sportsbook identity, not provider identity, so duplicate feeds cannot
+    manufacture multi-book consensus.
     """
 
     require_columns(
@@ -78,41 +122,32 @@ def build_market_intelligence(
     distribution = GaussianScoreDistribution().fit(historical)
     projected = {str(row["game_id"]): row for row in projection.iter_rows(named=True)}
     kickoff = _kickoff_map(targets)
-    rows: list[dict[str, object]] = []
 
+    grouped: dict[
+        tuple[str, str],
+        list[tuple[MarketComparison, ESPNTwoWayMarket]],
+    ] = {}
+    books_by_game: dict[str, set[str]] = {}
     for market in markets:
         game = projected.get(market.game_id)
         if game is None:
             continue
-        first = MarketQuote(
-            market_type=market.market_type,
-            side=market.first_side,
-            line=market.first_line,
-            american_odds=market.first_american_odds,
-            book=market.book,
-            captured_at=market.captured_at,
-        )
-        second = MarketQuote(
-            market_type=market.market_type,
-            side=market.second_side,
-            line=market.second_line,
-            american_odds=market.second_american_odds,
-            book=market.book,
-            captured_at=market.captured_at,
-        )
-        pair = compare_two_way_market(
-            distribution,
-            projected_home_margin=float(game["baseline_home_margin"]),
-            projected_total=float(game["baseline_total"]),
-            first=first,
-            second=second,
-        )
-        chosen = max(
-            pair,
-            key=lambda value: (
-                value.expected_value_per_unit,
-                value.probability_edge,
-                value.american_odds,
+        chosen = _pair_best(distribution, game, market)
+        grouped.setdefault((market.game_id, market.market_type), []).append((chosen, market))
+        books_by_game.setdefault(market.game_id, set()).add(_book_key(market))
+
+    rows: list[dict[str, object]] = []
+    for (game_id, market_type), candidates in sorted(grouped.items()):
+        game = projected[game_id]
+        distinct_books = sorted({_book_key(market) for _, market in candidates})
+        chosen, source_market = max(
+            candidates,
+            key=lambda item: (
+                item[0].expected_value_per_unit,
+                item[0].probability_edge,
+                item[0].american_odds,
+                item[0].side,
+                str(item[1].book),
             ),
         )
         signal = signal_from_policy(
@@ -131,14 +166,16 @@ def build_market_intelligence(
                 kelly_fraction=kelly_fraction,
                 max_units=max_units,
             )
-        home_probability = distribution.home_win_probability(float(game["baseline_home_margin"]))
+        home_probability = distribution.home_win_probability(
+            float(game["baseline_home_margin"])
+        )
 
         row: dict[str, object] = {
             "season": int(game["season"]),
             "week": int(game["week"]),
-            "game_id": market.game_id,
+            "game_id": game_id,
             "date": game.get("gameday"),
-            "kickoff": kickoff.get(market.game_id),
+            "kickoff": kickoff.get(game_id),
             "away_team": game["away_team"],
             "home_team": game["home_team"],
             "model_margin_home": float(game["baseline_home_margin"]),
@@ -150,18 +187,19 @@ def build_market_intelligence(
             "quant_book": chosen.book,
             "quant_price": chosen.line,
             "quant_odds": chosen.american_odds,
-            "quant_quote_at": market.captured_at.isoformat(),
+            "quant_quote_at": source_market.captured_at.isoformat(),
             "quant_probability": chosen.model_probability,
             "quant_market_probability": chosen.no_vig_probability,
             "quant_ev": chosen.expected_value_per_unit,
             "quant_edge": chosen.probability_edge,
-            "market_book_count": 1,
-            "market_provider": market.provider,
-            "source_event_id": market.source_event_id,
+            "market_book_count": len(distinct_books),
+            "market_books": ";".join(distinct_books),
+            "market_provider": source_market.provider,
+            "source_event_id": source_market.source_event_id,
             "stake_units": stake,
         }
         for key, value in game.items():
-            if key.startswith("home_qb_") or key.startswith("away_qb_") or key.startswith("qb_"):
+            if key.startswith(("home_qb_", "away_qb_", "qb_")):
                 row[key] = value
         rows.append(row)
 
@@ -173,14 +211,15 @@ def build_market_intelligence(
                 pl.col("quant_market") == market_name
             ).height
     games = projection.height
+    multi_book_games = sum(len(books) >= 2 for books in books_by_game.values())
     metadata = {
         "games": games,
         **market_counts,
-        "complete_market_coverage": (
-            min(market_counts.values()) / games if games else 0.0
-        ),
-        "multi_book_coverage": 0.0,
-        "market_source": "ESPN public endpoints",
+        "complete_market_coverage": min(market_counts.values()) / games if games else 0.0,
+        "multi_book_games": multi_book_games,
+        "multi_book_coverage": multi_book_games / games if games else 0.0,
+        "distinct_books": len({book for books in books_by_game.values() for book in books}),
+        "market_source": "canonical current NFL market aggregation",
         "api_key_required": False,
         "probability_training_games": historical.height,
         "release_state": "RESEARCH",
