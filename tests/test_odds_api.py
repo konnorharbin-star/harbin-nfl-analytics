@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import polars as pl
 import pytest
@@ -117,7 +117,7 @@ def test_fetch_market_history_and_build_close_query() -> None:
     decisions = pl.DataFrame(
         {
             "game_id": ["2025_05_NE_BUF"],
-            "decision_time": [datetime(2025, 10, 5, 16, 0, tzinfo=timezone.utc)],
+            "decision_time": [datetime(2025, 10, 5, 16, 0, tzinfo=UTC)],
         }
     )
     history = fetch_market_history_for_decisions(_FixtureClient(), _schedule(), decisions)
@@ -126,7 +126,7 @@ def test_fetch_market_history_and_build_close_query() -> None:
     assert history.height == 6
     assert closing.height == 1
     assert closing.row(0, named=True)["decision_time"] == datetime(
-        2025, 10, 5, 16, 55, tzinfo=timezone.utc
+        2025, 10, 5, 16, 55, tzinfo=UTC
     )
 
 
@@ -134,4 +134,4 @@ def test_client_fails_closed_without_api_key(tmp_path: object) -> None:
     client = TheOddsAPIClient(api_key=None, cache_dir=tmp_path)
 
     with pytest.raises(DataContractError, match="THE_ODDS_API_KEY"):
-        client.historical_snapshot(datetime(2025, 10, 5, 16, 0, tzinfo=timezone.utc))
+        client.historical_snapshot(datetime(2025, 10, 5, 16, 0, tzinfo=UTC))
