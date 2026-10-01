@@ -1,0 +1,26 @@
+{
+  "bets": 3069,
+  "errors": 0,
+  "issues": [
+    {
+      "code": "archive_final_fallback_present",
+      "meaning": "valid research rows; no separate opening line was observed",
+      "rows": 3069,
+      "severity": "WARNING"
+    }
+  ],
+  "quote_integrity": {
+    "all_archive_bets": 3069,
+    "final_fallback_bets": 3069,
+    "opening_line_observed_bets": 0,
+    "opening_price_verified_bets": 0,
+    "opening_price_verified_rate": 0.0,
+    "promotion_rule": "only entry_price_verified=true rows may contribute to promotion-quality historical entry evidence",
+    "research_only_entry_price_bets": 3069,
+    "unverified_or_final_fallback_bets": 3069,
+    "verified_opening_entry_bets": 0,
+    "verified_opening_entry_rate": 0.0
+  },
+  "status": "WARN",
+  "warnings": 1
+}
