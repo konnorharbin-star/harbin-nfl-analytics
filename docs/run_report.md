@@ -20,7 +20,6 @@
 - multi_book_consensus: >=75% current games covered by 2+ verified books
 - historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks
 - historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons
-- portfolio_verified_forward_ledger: forward evidence comes from cap-constrained persisted portfolio decisions
 - live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV
 
 ## Operational alerts
