@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 
 import polars as pl
 
+from .context import build_current_context
 from .current import run_current_projection, unplayed_regular_games
 from .data import NFLDataClient
 from .decision_ledger import append_portfolio_decisions
@@ -61,36 +62,68 @@ def _probability_meta(historical: pl.DataFrame, season: int) -> dict[str, object
     }
 
 
-def _context_meta(projection: pl.DataFrame) -> dict[str, object]:
+def _qb_coverage(projection: pl.DataFrame) -> float:
     if projection.is_empty():
-        return {"status": "BLOCKED", "coverage": 0.0, "qb_coverage": 0.0}
-    qb_columns = {"home_qb_proxy_id", "away_qb_proxy_id"}
-    if not qb_columns.issubset(projection.columns):
-        qb_coverage = 0.0
-    else:
-        covered = projection.filter(
-            pl.col("home_qb_proxy_id").is_not_null()
-            & pl.col("away_qb_proxy_id").is_not_null()
-        ).height
-        qb_coverage = covered / projection.height
+        return 0.0
+    required = {"home_qb_proxy_id", "away_qb_proxy_id"}
+    if not required.issubset(projection.columns):
+        return 0.0
+    covered = projection.filter(
+        pl.col("home_qb_proxy_id").is_not_null()
+        & pl.col("away_qb_proxy_id").is_not_null()
+    ).height
+    return covered / projection.height
 
-    # Stage 4 personnel/weather/travel remains deliberately incomplete. QB state is
-    # one of four required context groups, so broad coverage cannot exceed 25% yet.
-    return {
-        "status": "PARTIAL",
-        "coverage": 0.25 * qb_coverage,
-        "qb_coverage": qb_coverage,
-        "components": {
-            "quarterback": qb_coverage,
-            "injuries_personnel": 0.0,
-            "weather_stadium": 0.0,
-            "rest_travel": 0.0,
-        },
-        "note": (
-            "QB state is implemented; the remaining timestamp-safe Stage 4 context "
-            "layers are not yet promoted."
-        ),
+
+def _context_sources(
+    source: NFLDataClient,
+    season: int,
+    *,
+    refresh: bool,
+) -> tuple[dict[str, pl.DataFrame], dict[str, str]]:
+    frames: dict[str, pl.DataFrame] = {}
+    status: dict[str, str] = {}
+    loaders = {
+        "injuries": source.load_injuries,
+        "depth_charts": source.load_depth_charts,
+        "rosters_weekly": source.load_rosters_weekly,
     }
+    for name, loader in loaders.items():
+        try:
+            frames[name] = loader([season], refresh=refresh)
+            status[name] = "OK"
+        except Exception as exc:
+            frames[name] = pl.DataFrame()
+            status[name] = f"ERROR: {type(exc).__name__}: {exc}"
+    return frames, status
+
+
+def _merge_context_meta(
+    context_meta: dict[str, object],
+    projection: pl.DataFrame,
+) -> dict[str, object]:
+    qb = _qb_coverage(projection)
+    components = context_meta.get("components")
+    if not isinstance(components, dict):
+        components = {}
+    combined = {
+        "quarterback": qb,
+        "injuries_personnel": float(components.get("injuries_personnel", 0.0) or 0.0),
+        "weather_stadium": float(components.get("weather_stadium", 0.0) or 0.0),
+        "rest_travel": float(components.get("rest_travel", 0.0) or 0.0),
+    }
+    coverage = sum(combined.values()) / len(combined)
+    output = dict(context_meta)
+    output.update(
+        {
+            "status": "READY" if min(combined.values()) >= 0.90 else "PARTIAL",
+            "coverage": coverage,
+            "qb_coverage": qb,
+            "components": combined,
+            "score_adjustment_enabled": False,
+        }
+    )
+    return output
 
 
 def run_operational_pipeline(
@@ -108,6 +141,7 @@ def run_operational_pipeline(
     if history_seasons < 3:
         raise ValueError("history_seasons must be >= 3")
     source = client or NFLDataClient()
+    run_at = datetime.now(UTC)
     projection, projection_audit = run_current_projection(
         season,
         week,
@@ -140,17 +174,50 @@ def run_operational_pipeline(
         historical,
         policy=policy,
     )
+
+    context_frames, context_source_status = _context_sources(
+        source,
+        season,
+        refresh=refresh,
+    )
+    try:
+        context_frame, raw_context_meta = build_current_context(
+            targets,
+            season=season,
+            week=target_week,
+            injuries=context_frames["injuries"],
+            depth_charts=context_frames["depth_charts"],
+            rosters=context_frames["rosters_weekly"],
+            as_of=run_at,
+        )
+    except Exception as exc:
+        context_frame = pl.DataFrame()
+        raw_context_meta = {
+            "status": "BLOCKED",
+            "coverage": 0.0,
+            "components": {},
+            "weather_errors": [],
+            "reason": f"{type(exc).__name__}: {exc}",
+            "score_adjustment_enabled": False,
+        }
+    context = _merge_context_meta(raw_context_meta, projection)
+    if not candidates.is_empty() and not context_frame.is_empty():
+        candidates = candidates.join(context_frame, on="game_id", how="left")
+
     evidence = write_evidence_report()
     probability = _probability_meta(historical, season)
-    context = _context_meta(projection)
+    context_errors = [
+        value for value in context_source_status.values() if value.startswith("ERROR:")
+    ]
     data_quality = {
-        "status": "OK",
+        "status": "WARN" if context_errors else "OK",
         "projection_games": projection.height,
         "target_games": targets.height,
         "market_rows": candidates.height,
+        "context_source_errors": context_errors,
     }
     meta: dict[str, object] = {
-        "generated_at": datetime.now(UTC).isoformat(),
+        "generated_at": run_at.isoformat(),
         "season": season,
         "week": target_week,
         "projection_audit": projection_audit.to_dict(),
@@ -168,6 +235,8 @@ def run_operational_pipeline(
             "football": "nflverse",
             "current_market": "ESPN public endpoints",
             "historical_market": "nflverse public archive",
+            **context_source_status,
+            "weather": "Open-Meteo",
         },
     }
 
