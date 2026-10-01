@@ -12,7 +12,7 @@ from dataclasses import asdict, dataclass
 
 import polars as pl
 
-from .contracts import DataContractError, SCHEDULE_REQUIRED, require_columns
+from .contracts import SCHEDULE_REQUIRED, DataContractError, require_columns
 from .data import NFLDataClient
 from .qb_dataset import build_qb_walkforward_dataset
 from .qb_state import QB_PRIOR_DROPBACKS, qb_matchup_signals, team_qb_state
