@@ -1,9 +1,9 @@
-"""Professional/current NFL market aggregation with free ESPN as the primary source.
+"""Professional/current NFL market aggregation with fail-closed source hierarchy.
 
-The NCAA model treats richer paid/professional market data as optional enrichment rather
-than a dependency. This module gives the NFL model the same source hierarchy: ESPN is
-always attempted first; The Odds API is used only when a key is configured. Every quote
-stays downstream of the independent football projection.
+ESPN remains the free primary live source and The Odds API remains optional enrichment.
+When neither yields a usable verified quote, upcoming nflverse schedule market fields may
+be attached as explicitly research-only snapshots. Those fallback rows do not count as
+verified books or executable prices and stay downstream of the football projection.
 """
 
 from __future__ import annotations
@@ -22,6 +22,7 @@ import polars as pl
 from .contracts import DataContractError, require_columns
 from .espn_market import ESPNMarketClient, ESPNTwoWayMarket
 from .odds_api import NFL_SPORT_KEY, TEAM_NAME_TO_NFLVERSE
+from .schedule_market import is_research_only_market, schedule_snapshot_markets
 
 CURRENT_ODDS_API_URL = "https://api.the-odds-api.com/v4/sports/{sport}/odds"
 
@@ -227,6 +228,10 @@ class CurrentOddsAPIClient:
         return rows
 
 
+def _market_identity(market: ESPNTwoWayMarket) -> tuple[str, str]:
+    return market.game_id, market.market_type
+
+
 def collect_current_markets(
     targets: pl.DataFrame,
     *,
@@ -234,7 +239,7 @@ def collect_current_markets(
     espn_client: ESPNMarketClient | None = None,
     pro_client: CurrentOddsAPIClient | None = None,
 ) -> tuple[list[ESPNTwoWayMarket], dict[str, object]]:
-    """Return deduplicated current markets and source/breadth metadata."""
+    """Return verified live quotes plus research-only schedule fallbacks when needed."""
 
     espn = espn_client or ESPNMarketClient()
     optional = pro_client or CurrentOddsAPIClient()
@@ -252,6 +257,19 @@ def collect_current_markets(
             markets.extend(pro_rows)
         except DataContractError as exc:
             source_errors.append(f"the_odds_api: {exc}")
+
+    # nflverse schedule rows are a current research fallback only. Add them only for
+    # game/market pairs not already covered by a verified source.
+    verified_pairs = {_market_identity(row) for row in markets}
+    try:
+        schedule_rows = schedule_snapshot_markets(targets)
+    except DataContractError as exc:
+        schedule_rows = []
+        source_errors.append(f"nflverse_schedule_snapshot: {exc}")
+    fallback_rows = [
+        row for row in schedule_rows if _market_identity(row) not in verified_pairs
+    ]
+    markets.extend(fallback_rows)
 
     unique: dict[tuple[object, ...], ESPNTwoWayMarket] = {}
     for market in markets:
@@ -276,23 +294,40 @@ def collect_current_markets(
     )
     if not values:
         raise DataContractError(
-            "no usable current NFL markets from ESPN or optional professional source"
+            "no usable current NFL markets from verified or research fallback sources"
         )
 
+    verified = [row for row in values if not is_research_only_market(row)]
     games = targets.height
-    book_counts: dict[str, set[str]] = {}
-    for row in values:
-        book_counts.setdefault(row.game_id, set()).add(str(row.book).strip().lower())
-    multi_book_games = sum(len(books) >= 2 for books in book_counts.values())
+    any_games = {row.game_id for row in values}
+    verified_book_counts: dict[str, set[str]] = {}
+    for row in verified:
+        verified_book_counts.setdefault(row.game_id, set()).add(
+            str(row.book).strip().lower()
+        )
+    multi_book_games = sum(len(books) >= 2 for books in verified_book_counts.values())
+    verified_books = {
+        str(row.book).strip().lower() for row in verified if str(row.book).strip()
+    }
     return values, {
+        "status": "READY" if verified else "RESEARCH_FALLBACK",
         "primary_source": "ESPN public endpoints",
+        "research_fallback_source": "nflverse schedule market fields",
         "optional_source_configured": optional.configured,
         "optional_source_rows": len(pro_rows),
+        "research_fallback_rows": len(fallback_rows),
+        "verified_rows": len(verified),
         "sources": sorted({row.provider for row in values}),
-        "books": len({str(row.book).strip().lower() for row in values}),
+        "verified_sources": sorted({row.provider for row in verified}),
+        "books": len(verified_books),
         "games": games,
-        "games_with_any_market": len(book_counts),
+        "games_with_any_market": len(any_games),
+        "verified_games_with_any_market": len(verified_book_counts),
         "multi_book_games": multi_book_games,
         "multi_book_coverage": multi_book_games / games if games else 0.0,
         "source_errors": source_errors,
+        "execution_note": (
+            "nflverse schedule fallback has no sportsbook identity or quote-update "
+            "timestamp and is research-only"
+        ),
     }
