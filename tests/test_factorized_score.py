@@ -42,7 +42,8 @@ def _pbp(target_extra_drives: int = 0) -> pl.DataFrame:
     rows: list[dict[str, object]] = []
     for game in _schedules().iter_rows(named=True):
         base_drives = 10
-        extra = target_extra_drives if int(game["season"]) == 2025 and int(game["week"]) == 3 else 0
+        target_week = int(game["season"]) == 2025 and int(game["week"]) == 3
+        extra = target_extra_drives if target_week else 0
         for offense in (str(game["away_team"]), str(game["home_team"])):
             for drive in range(1, base_drives + extra + 1):
                 rows.append(
@@ -91,7 +92,8 @@ def test_target_week_pbp_cannot_change_factorized_projection() -> None:
 def test_architecture_gate_falls_back_to_canonical_when_not_strictly_better(
     monkeypatch,
 ) -> None:
-    def fake_walkforward(*args, season: int, **kwargs) -> pl.DataFrame:
+    def fake_walkforward(*args, **kwargs) -> pl.DataFrame:
+        season = int(args[2])
         return pl.DataFrame(
             {
                 "season": [season, season],
@@ -106,7 +108,10 @@ def test_architecture_gate_falls_back_to_canonical_when_not_strictly_better(
             }
         )
 
-    monkeypatch.setattr("nfl.factorized_eval.build_factorized_walkforward", fake_walkforward)
+    monkeypatch.setattr(
+        "nfl.factorized_eval.build_factorized_walkforward",
+        fake_walkforward,
+    )
     evaluation = evaluate_factorized_architecture(
         pl.DataFrame(),
         pl.DataFrame(),
