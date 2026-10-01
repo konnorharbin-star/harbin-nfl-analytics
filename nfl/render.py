@@ -191,18 +191,38 @@ def render_html(
         if state == "PRODUCTION"
         else f"{state} evidence mode · displayed opportunities are not production staking"
     )
-    css = """
-*{box-sizing:border-box}body{margin:0;background:#0f1113;color:#f0f1f2;font-family:Inter,Arial,sans-serif}
-.shell{max-width:1360px;margin:auto;padding:14px}.page{display:none}.head{display:flex;justify-content:space-between;align-items:flex-start}
-.title{font-size:24px;font-weight:800}.sub,.counter{font-size:12px;color:#8b8e92}.status{font-size:10px;color:#d6a44b;margin-top:4px}
-.counter{text-align:right;line-height:1.45}table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:8px}
-th{font-size:9px;letter-spacing:.08em;color:#777c81;text-align:left;padding:7px 8px;border-bottom:1px solid #272a2e}
-td{font-size:12px;padding:8px;border-bottom:1px solid #272a2e;height:38px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-tbody tr:nth-child(even){background:#16181b}.winner{font-weight:800}.at{color:#777c81}.proj{font-weight:800}.bar{display:inline-block;height:6px;background:#4c84e0;border-radius:5px;margin-right:6px;vertical-align:middle}
-.quiet{color:#64686d}.badge{font-size:8px;font-weight:800;border-radius:4px;padding:3px 5px;margin-left:4px}.strong{background:#5fc468;color:#0c2c12}.bet{background:#1f462a;color:#63c76d}.lean{background:#483b1e;color:#e3b549}
-.nav{text-align:center;padding:14px}.nav button{background:#202328;border:1px solid #373b40;color:#eee;border-radius:5px;padding:6px 10px;margin:2px}
-.c1{width:18%}.c2{width:7%}.c3{width:8%}.c4{width:22%}.c5{width:22%}.c6{width:18%}.c7{width:5%}@media(max-width:900px){.shell{overflow-x:auto}.page{min-width:1180px}}
-"""
+    css = "\n".join(
+        [
+            "*{box-sizing:border-box}",
+            "body{margin:0;background:#0f1113;color:#f0f1f2;font-family:Inter,Arial,sans-serif}",
+            ".shell{max-width:1360px;margin:auto;padding:14px}",
+            ".page{display:none}",
+            ".head{display:flex;justify-content:space-between;align-items:flex-start}",
+            ".title{font-size:24px;font-weight:800}",
+            ".sub,.counter{font-size:12px;color:#8b8e92}",
+            ".status{font-size:10px;color:#d6a44b;margin-top:4px}",
+            ".counter{text-align:right;line-height:1.45}",
+            "table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:8px}",
+            "th{font-size:9px;letter-spacing:.08em;color:#777c81;text-align:left}",
+            "th{padding:7px 8px;border-bottom:1px solid #272a2e}",
+            "td{font-size:12px;padding:8px;border-bottom:1px solid #272a2e;height:38px}",
+            "td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
+            "tbody tr:nth-child(even){background:#16181b}",
+            ".winner{font-weight:800}.at{color:#777c81}.proj{font-weight:800}",
+            ".bar{display:inline-block;height:6px;background:#4c84e0;border-radius:5px}",
+            ".bar{margin-right:6px;vertical-align:middle}",
+            ".quiet{color:#64686d}",
+            ".badge{font-size:8px;font-weight:800;border-radius:4px;padding:3px 5px}",
+            ".badge{margin-left:4px}.strong{background:#5fc468;color:#0c2c12}",
+            ".bet{background:#1f462a;color:#63c76d}.lean{background:#483b1e;color:#e3b549}",
+            ".nav{text-align:center;padding:14px}",
+            ".nav button{background:#202328;border:1px solid #373b40;color:#eee}",
+            ".nav button{border-radius:5px;padding:6px 10px;margin:2px}",
+            ".c1{width:18%}.c2{width:7%}.c3{width:8%}.c4{width:22%}",
+            ".c5{width:22%}.c6{width:18%}.c7{width:5%}",
+            "@media(max-width:900px){.shell{overflow-x:auto}.page{min-width:1180px}}",
+        ]
+    )
     values = board.to_dicts()
     pages: list[str] = []
     page_count = max(1, math.ceil(len(values) / 14))
@@ -214,9 +234,17 @@ tbody tr:nth-child(even){background:#16181b}.winner{font-weight:800}.at{color:#7
             away = html.escape(str(row["away_team"]))
             home = html.escape(str(row["home_team"]))
             winner = str(row["winner"])
-            matchup = f'<span class="winner">{away}</span>' if row["away_team"] == winner else away
+            matchup = (
+                f'<span class="winner">{away}</span>'
+                if row["away_team"] == winner
+                else away
+            )
             matchup += ' <span class="at">@</span> '
-            matchup += f'<span class="winner">{home}</span>' if row["home_team"] == winner else home
+            matchup += (
+                f'<span class="winner">{home}</span>'
+                if row["home_team"] == winner
+                else home
+            )
             pct = int(row["win_pct"])
             bar = max(4, min(52, int((pct - 50) * 1.15)))
             context = row.get("context_quality")
@@ -237,11 +265,15 @@ tbody tr:nth-child(even){background:#16181b}.winner{font-weight:800}.at{color:#7
             if values
             else "0 games"
         )
+        subtitle = (
+            "Projected scores &amp; line-shopped markets · Updated "
+            f"{html.escape(updated_at)}"
+        )
         pages.append(
             f'<section class="page" id="p{page}">'
             '<div class="head"><div>'
             f'<div class="title">NFL MODEL · WEEK {week} BOARD</div>'
-            f'<div class="sub">Projected scores &amp; line-shopped markets · Updated {html.escape(updated_at)}</div>'
+            f'<div class="sub">{subtitle}</div>'
             f'<div class="status">{html.escape(state_note)}</div></div>'
             f'<div class="counter">{game_range}<br>{page} / {page_count}</div></div>'
             '<table><colgroup><col class="c1"><col class="c2"><col class="c3">'
