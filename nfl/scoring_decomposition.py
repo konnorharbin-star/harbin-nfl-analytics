@@ -111,7 +111,12 @@ class RidgeRemainderModel:
 class DecomposedScoreModel:
     """Possession-scoring model plus a shrunk non-possession remainder."""
 
-    def __init__(self, *, offensive_ridge: float = 8.0, remainder_ridge: float | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        offensive_ridge: float = 8.0,
+        remainder_ridge: float | None = None,
+    ) -> None:
         if offensive_ridge <= 0:
             raise ValueError("offensive_ridge must be > 0")
         if remainder_ridge is not None and remainder_ridge <= 0:
