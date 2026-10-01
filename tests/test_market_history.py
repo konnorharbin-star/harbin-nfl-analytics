@@ -1,6 +1,6 @@
+import math
 from datetime import datetime, timedelta
 
-import math
 import polars as pl
 import pytest
 
