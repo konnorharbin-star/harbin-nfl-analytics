@@ -1,4 +1,4 @@
-"""Probe live ESPN NFL request behavior and odds shape without changing model state."""
+"""Probe live NFL market-source behavior without changing model state."""
 
 from __future__ import annotations
 
@@ -9,6 +9,8 @@ from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
+
+import polars as pl
 
 from nfl.current import next_unplayed_regular_week, unplayed_regular_games
 from nfl.data import NFLDataClient
@@ -37,6 +39,7 @@ HEADER_PROFILES: dict[str, dict[str, str]] = {
         "Referer": "https://www.espn.com/nfl/",
     },
 }
+MARKET_FIELD_TOKENS = ("spread", "total", "money", "odds", "line")
 
 
 def _request_json(
@@ -191,6 +194,49 @@ def _core_probe(
     return output
 
 
+def _schedule_market_summary(target_frame: pl.DataFrame) -> dict[str, object]:
+    market_columns = sorted(
+        column
+        for column in target_frame.columns
+        if any(token in column.lower() for token in MARKET_FIELD_TOKENS)
+    )
+    column_meta: dict[str, object] = {}
+    for column in market_columns:
+        series = target_frame.get_column(column)
+        non_null = series.drop_nulls()
+        values: list[object] = []
+        for value in non_null.head(8).to_list():
+            if isinstance(value, (str, int, float, bool)) or value is None:
+                values.append(value)
+            else:
+                values.append(str(value))
+        column_meta[column] = {
+            "dtype": str(target_frame.schema[column]),
+            "non_null": non_null.len(),
+            "sample_values": values,
+        }
+
+    selected = [
+        column
+        for column in (
+            "game_id",
+            "away_team",
+            "home_team",
+            "gameday",
+            "gametime",
+            *market_columns,
+        )
+        if column in target_frame.columns
+    ]
+    rows = target_frame.select(selected).to_dicts() if selected else []
+    return {
+        "all_schedule_columns": sorted(target_frame.columns),
+        "market_like_columns": market_columns,
+        "market_column_meta": column_meta,
+        "target_rows": rows,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("season", type=int, nargs="?", default=2026)
@@ -253,7 +299,8 @@ def main() -> None:
         "week": week,
         "target_games": target_frame.height,
         "target_pairs": sorted(f"{away}@{home}" for home, away in targets),
-        "profiles": profiles,
+        "nflverse_schedule": _schedule_market_summary(target_frame),
+        "espn_profiles": profiles,
     }
     print(json.dumps(output, indent=2, sort_keys=True, default=str))
 
