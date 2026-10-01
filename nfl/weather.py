@@ -85,7 +85,10 @@ def haversine_miles(
     p2 = math.radians(lat2)
     dp = math.radians(lat2 - lat1)
     dl = math.radians(lon2 - lon1)
-    a = math.sin(dp / 2.0) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2.0) ** 2
+    a = (
+        math.sin(dp / 2.0) ** 2
+        + math.cos(p1) * math.cos(p2) * math.sin(dl / 2.0) ** 2
+    )
     return 2.0 * radius * math.asin(math.sqrt(a))
 
 
@@ -241,6 +244,7 @@ class OpenMeteoNFLWeather:
         if not isinstance(times, list) or not times:
             raise DataContractError("Open-Meteo response missing hourly timestamps")
         parsed: list[tuple[float, int]] = []
+        kickoff_utc_value = kickoff.astimezone(UTC)
         for index, value in enumerate(times):
             try:
                 stamp = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
@@ -248,7 +252,8 @@ class OpenMeteoNFLWeather:
                 continue
             if stamp.tzinfo is None:
                 stamp = stamp.replace(tzinfo=UTC)
-            parsed.append((abs((stamp.astimezone(UTC) - kickoff.astimezone(UTC)).total_seconds()), index))
+            distance = abs((stamp.astimezone(UTC) - kickoff_utc_value).total_seconds())
+            parsed.append((distance, index))
         if not parsed:
             raise DataContractError("Open-Meteo hourly timestamps could not be parsed")
         _, index = min(parsed)
