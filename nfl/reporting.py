@@ -8,6 +8,8 @@ from pathlib import Path
 
 import polars as pl
 
+from .render import write_weekly_publication
+
 
 def build_canonical_report(
     current: pl.DataFrame,
@@ -21,6 +23,7 @@ def build_canonical_report(
     model_card: dict[str, object],
     ledger: dict[str, object] | None = None,
     line_capture: dict[str, object] | None = None,
+    publication: dict[str, object] | None = None,
 ) -> dict[str, object]:
     return {
         "generated_at": datetime.now(UTC).isoformat(),
@@ -36,6 +39,7 @@ def build_canonical_report(
         "model_card": model_card,
         "decision_ledger": ledger or {},
         "line_capture": line_capture or {},
+        "publication": publication or {},
         "games": current.to_dicts(),
     }
 
@@ -56,6 +60,13 @@ def write_canonical_report(
     report_json: str | Path = "reports/current_model.json",
     output_csv: str | Path = "outputs/current_predictions.csv",
 ) -> dict[str, object]:
+    release_state = str(release_gate.get("release_state", "RESEARCH"))
+    publication = write_weekly_publication(
+        current,
+        week=int(meta.get("week", 0) or 0),
+        updated_at=str(meta.get("generated_at") or datetime.now(UTC).isoformat()),
+        release_state=release_state,
+    )
     payload = build_canonical_report(
         current,
         meta=meta,
@@ -67,6 +78,7 @@ def write_canonical_report(
         model_card=model_card,
         ledger=ledger,
         line_capture=line_capture,
+        publication=publication,
     )
     for path in (output_json, report_json):
         target = Path(path)
