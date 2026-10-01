@@ -3,7 +3,7 @@
     "context": 0.984375,
     "games": 16,
     "moneyline": 16,
-    "multi_book": 0.0,
+    "multi_book": 1.0,
     "quarterback": 1.0,
     "spread": 16,
     "total": 16
@@ -17,7 +17,7 @@
     "status": "OK",
     "target_games": 16
   },
-  "generated_at": "2026-10-01T21:55:37.019766+00:00",
+  "generated_at": "2026-10-01T22:00:41.818996+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
@@ -28,20 +28,16 @@
       "status": "OK",
       "target_games": 16
     },
-    "live_readiness_score": 84.4,
+    "live_readiness_score": 92.4,
     "meaning": "operational health; not a profitability or staking signal",
-    "monitor_alerts": [
-      "multi-book consensus is limited"
-    ],
+    "monitor_alerts": [],
     "production_eligible": false,
     "release_blockers": [
-      "live_monitoring: live readiness >=90/100",
-      "multi_book_consensus: >=75% current games covered by 2+ verified books",
       "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
       "historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
       "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV"
     ],
-    "release_state": "RESEARCH",
+    "release_state": "PAPER",
     "source_failures": [],
     "sources": {
       "current_market": "espn",
@@ -69,7 +65,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-01T21:55:12.890857+00:00",
+    "model_generated_at": "2026-10-01T22:00:15.959063+00:00",
     "prediction_games": 16,
     "prediction_rows": 48,
     "season": 2026,
@@ -89,22 +85,20 @@
   },
   "meaning": "NFL publication/audit snapshot. Readiness, model error, historical evidence, and forward evidence remain separate; none guarantees future profitability.",
   "monitoring": {
-    "alerts": [
-      "multi-book consensus is limited"
-    ],
+    "alerts": [],
     "drift_details": {},
-    "live_readiness_score": 84.4,
-    "recent_readiness_delta": 0.0,
+    "live_readiness_score": 92.4,
+    "recent_readiness_delta": 8.0,
     "scores": {
       "calibration": 91.80250233233778,
       "context": 98.4375,
       "distribution_stability": 65.0,
       "freshness": 100.0,
       "market_coverage": 100.0,
-      "multi_book": 0.0,
+      "multi_book": 100.0,
       "output_completeness": 96.69669669669669
     },
-    "status": "WARN"
+    "status": "OK"
   },
   "portfolio": {
     "approved_bets": 0,
@@ -128,9 +122,9 @@
     "paper_or_shadow_allocated_units": 0.322104,
     "policy_mode": "paper",
     "production_eligible": false,
-    "proposed_units": 1.096281,
-    "release_state": "RESEARCH",
-    "risk_adjusted_proposed_units": 1.096281
+    "proposed_units": 1.088959,
+    "release_state": "PAPER",
+    "risk_adjusted_proposed_units": 1.088959
   },
   "probability": {
     "candidate_pass": false,
@@ -176,7 +170,7 @@
         "severity": "ERROR"
       },
       {
-        "detail": "report=RESEARCH gate=RESEARCH",
+        "detail": "report=PAPER gate=PAPER",
         "name": "release_gate_reconciled",
         "passed": true,
         "severity": "ERROR"
@@ -188,7 +182,7 @@
         "severity": "ERROR"
       },
       {
-        "detail": "approved=0.000 release=RESEARCH policy=paper portfolio=paper",
+        "detail": "approved=0.000 release=PAPER policy=paper portfolio=paper",
         "name": "approved_stake_fail_closed",
         "passed": true,
         "severity": "ERROR"
@@ -217,8 +211,6 @@
   },
   "release": {
     "blockers": [
-      "live_monitoring: live readiness >=90/100",
-      "multi_book_consensus: >=75% current games covered by 2+ verified books",
       "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
       "historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
       "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV"
@@ -266,16 +258,16 @@
       {
         "detail": "",
         "name": "live_monitoring",
-        "passed": false,
+        "passed": true,
         "requirement": "live readiness >=90/100",
-        "value": 84.4
+        "value": 92.4
       },
       {
         "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
         "name": "multi_book_consensus",
-        "passed": false,
+        "passed": true,
         "requirement": ">=75% current games covered by 2+ verified books",
-        "value": 0.0
+        "value": 1.0
       },
       {
         "detail": "",
@@ -324,17 +316,16 @@
         }
       }
     ],
-    "engineering_ready": false,
+    "engineering_ready": true,
     "historical_edge_ready": false,
     "live_evidence_ready": false,
     "next_requirements": [
-      "Accumulate or supplement verified multi-book current pricing coverage.",
       "Accumulate explicit forward/opening entry snapshots; archive-final fallbacks cannot promote the model.",
       "Keep NFL policy in paper research until verified-entry chronological ROI/CLV evidence clears the hard gates.",
       "Accumulate independently graded portfolio decisions; historical backtests do not substitute for live evidence."
     ],
     "production_eligible": false,
-    "state": "RESEARCH"
+    "state": "PAPER"
   },
   "schema_version": 1,
   "status": "WARN",
@@ -410,12 +401,21 @@
       "release_state": "RESEARCH",
       "season": 2026,
       "week": 4
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 65.0,
+      "generated_at": "2026-10-01T21:55:37.019766+00:00",
+      "live_readiness_score": 84.4,
+      "model_generated_at": "2026-10-01T21:55:12.890857+00:00",
+      "publication_status": "WARN",
+      "release_state": "RESEARCH",
+      "season": 2026,
+      "week": 4
     }
   ],
   "warnings": [
-    "multi-book consensus is limited",
-    "live_monitoring: live readiness >=90/100",
-    "multi_book_consensus: >=75% current games covered by 2+ verified books",
     "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
     "historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
     "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV"

@@ -80,7 +80,7 @@
   },
   "production_eligible": false,
   "purpose": "Leakage-safe NFL fair-score, probability, market-research, portfolio-risk, grading, and monitoring platform.",
-  "release_state": "RESEARCH",
+  "release_state": "PAPER",
   "risk": {
     "drawdown_throttle": true,
     "portfolio_caps": true,
