@@ -11,7 +11,7 @@ from datetime import UTC, datetime
 
 import polars as pl
 
-from .contracts import DataContractError, require_columns
+from .contracts import require_columns
 
 
 def _column(frame: pl.DataFrame, *names: str) -> str | None:
@@ -38,7 +38,11 @@ def _as_utc(value: datetime | str | None) -> datetime:
     return parsed.astimezone(UTC)
 
 
-def _player_key(row: dict[str, object], id_column: str | None, name_column: str | None) -> str:
+def _player_key(
+    row: dict[str, object],
+    id_column: str | None,
+    name_column: str | None,
+) -> str:
     if id_column:
         value = _text(row.get(id_column))
         if value:
@@ -54,7 +58,8 @@ def _active_from_status(value: object) -> tuple[bool, bool]:
     status = _text(value).lower()
     if not status:
         return True, False
-    if any(token in status for token in ("inactive", "injured reserve", "reserve/injured", "suspended")):
+    unavailable = ("inactive", "injured reserve", "reserve/injured", "suspended")
+    if any(token in status for token in unavailable):
         return False, True
     if status in {"out", "ir", "pup"}:
         return False, True
@@ -95,6 +100,7 @@ def normalize_depth_charts(
                 captured = None
         if captured is not None and captured > cutoff:
             continue
+
         row_week: int | None = None
         if week_column and source.get(week_column) not in {None, ""}:
             try:
@@ -103,6 +109,7 @@ def normalize_depth_charts(
                 row_week = None
             if row_week is not None and row_week > week:
                 continue
+
         key = _player_key(source, id_column, name_column)
         if not key:
             continue
@@ -112,13 +119,14 @@ def normalize_depth_charts(
                 rank = int(float(source[rank_column]))
             except (TypeError, ValueError):
                 rank = None
+        position = _text(source.get(position_column)).upper() if position_column else ""
         rows.append(
             {
                 "team": str(source["team"]),
                 "player_key": key,
                 "gsis_id": _text(source.get(id_column)) if id_column else "",
                 "player_name": _text(source.get(name_column)) if name_column else "",
-                "position": _text(source.get(position_column)).upper() if position_column else "",
+                "position": position,
                 "depth_rank": rank,
                 "depth_week": row_week,
                 "depth_captured_at": captured.isoformat() if captured is not None else None,
@@ -132,7 +140,8 @@ def normalize_depth_charts(
     # admissible snapshot for each team when timestamps are present.
     if normalized.get_column("depth_captured_at").drop_nulls().len():
         latest: dict[str, str] = {}
-        for row in normalized.filter(pl.col("depth_captured_at").is_not_null()).iter_rows(named=True):
+        timestamped = normalized.filter(pl.col("depth_captured_at").is_not_null())
+        for row in timestamped.iter_rows(named=True):
             team = str(row["team"])
             stamp = str(row["depth_captured_at"])
             if team not in latest or stamp > latest[team]:
@@ -140,7 +149,9 @@ def normalize_depth_charts(
         normalized = normalized.filter(
             pl.col("depth_captured_at").is_null()
             | pl.struct(["team", "depth_captured_at"]).map_elements(
-                lambda value: latest.get(str(value["team"])) == value["depth_captured_at"],
+                lambda value: (
+                    latest.get(str(value["team"])) == value["depth_captured_at"]
+                ),
                 return_dtype=pl.Boolean,
             )
         )
@@ -164,15 +175,19 @@ def normalize_rosters(
     require_columns(frame, {"season", "team", "position"}, "rosters_weekly")
     id_column = _column(frame, "gsis_id", "espn_id", "player_id")
     name_column = _column(frame, "full_name", "player_name")
-    status_column = _column(frame, "status_description_abbr", "status", "roster_status")
+    status_column = _column(
+        frame,
+        "status_description_abbr",
+        "status",
+        "roster_status",
+    )
     week_column = _column(frame, "week")
 
     filtered = frame.filter(pl.col("season") == season)
     if week_column:
-        filtered = filtered.filter(
-            pl.col(week_column).cast(pl.Int64, strict=False).is_null()
-            | (pl.col(week_column).cast(pl.Int64, strict=False) <= week)
-        )
+        week_expr = pl.col(week_column).cast(pl.Int64, strict=False)
+        filtered = filtered.filter(week_expr.is_null() | (week_expr <= week))
+
     rows: list[dict[str, object]] = []
     for source in filtered.iter_rows(named=True):
         key = _player_key(source, id_column, name_column)
@@ -195,7 +210,9 @@ def normalize_rosters(
                 "player_name": _text(source.get(name_column)) if name_column else "",
                 "position": _text(source.get("position")).upper(),
                 "roster_week": row_week,
-                "roster_status": _text(source.get(status_column)) if status_column else "",
+                "roster_status": (
+                    _text(source.get(status_column)) if status_column else ""
+                ),
                 "active": active,
                 "status_known": status_known,
             }
@@ -216,7 +233,11 @@ def normalize_rosters(
 def _injury_lookup(injuries: pl.DataFrame) -> dict[tuple[str, str], float]:
     if injuries.is_empty():
         return {}
-    require_columns(injuries, {"team", "player_key", "severity"}, "normalized_injuries")
+    require_columns(
+        injuries,
+        {"team", "player_key", "severity"},
+        "normalized_injuries",
+    )
     return {
         (str(row["team"]), str(row["player_key"])): float(row["severity"])
         for row in injuries.iter_rows(named=True)
@@ -231,21 +252,31 @@ def summarize_team_personnel(
     """Combine depth, roster, and injury state into one confidence-only team summary."""
 
     injury = _injury_lookup(injuries)
-    teams = set()
+    teams: set[str] = set()
     for frame in (depth, rosters, injuries):
         if not frame.is_empty() and "team" in frame.columns:
-            teams.update(str(value) for value in frame.get_column("team").unique().to_list())
+            teams.update(
+                str(value) for value in frame.get_column("team").unique().to_list()
+            )
     if not teams:
         return pl.DataFrame()
 
     rows: list[dict[str, object]] = []
     for team in sorted(teams):
-        team_depth = depth.filter(pl.col("team") == team) if not depth.is_empty() else pl.DataFrame()
+        team_depth = (
+            depth.filter(pl.col("team") == team)
+            if not depth.is_empty()
+            else pl.DataFrame()
+        )
         team_roster = (
-            rosters.filter(pl.col("team") == team) if not rosters.is_empty() else pl.DataFrame()
+            rosters.filter(pl.col("team") == team)
+            if not rosters.is_empty()
+            else pl.DataFrame()
         )
         starters = (
-            team_depth.filter(pl.col("depth_rank").is_null() | (pl.col("depth_rank") <= 1))
+            team_depth.filter(
+                pl.col("depth_rank").is_null() | (pl.col("depth_rank") <= 1)
+            )
             if not team_depth.is_empty()
             else pl.DataFrame()
         )
@@ -258,7 +289,17 @@ def summarize_team_personnel(
                 position = str(player.get("position") or "").upper()
                 if position == "QB":
                     group_risk["qb"] = max(group_risk["qb"], severity)
-                elif position in {"LT", "RT", "OT", "G", "LG", "RG", "OG", "C", "OL"}:
+                elif position in {
+                    "LT",
+                    "RT",
+                    "OT",
+                    "G",
+                    "LG",
+                    "RG",
+                    "OG",
+                    "C",
+                    "OL",
+                }:
                     group_risk["ol"] += severity
                 elif position in {"WR", "TE", "RB", "FB"}:
                     group_risk["skill"] += severity
@@ -276,15 +317,22 @@ def summarize_team_personnel(
                 inactive = team_roster.filter(~pl.col("active")).height
                 inactive_share = inactive / team_roster.height
 
+        starter_denominator = max(1.0, starters.height / 4.0)
         rows.append(
             {
                 "team": team,
                 "depth_players": team_depth.height,
                 "starter_slots": starters.height,
-                "starter_injury_risk": min(1.0, starter_risk / max(1, starters.height / 4)),
+                "starter_injury_risk": min(
+                    1.0,
+                    starter_risk / starter_denominator,
+                ),
                 "ol_injury_risk": min(1.0, group_risk["ol"] / 3.0),
                 "skill_injury_risk": min(1.0, group_risk["skill"] / 3.0),
-                "defense_injury_risk": min(1.0, group_risk["defense"] / 6.0),
+                "defense_injury_risk": min(
+                    1.0,
+                    group_risk["defense"] / 6.0,
+                ),
                 "depth_qb_injury_risk": min(1.0, group_risk["qb"]),
                 "roster_count": team_roster.height,
                 "roster_status_known": roster_status_known,
