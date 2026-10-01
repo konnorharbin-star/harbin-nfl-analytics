@@ -38,6 +38,11 @@ def validate_execution_row(
     """Fail closed when a proposed NFL bet lacks executable price provenance."""
 
     config = limits or {}
+    if row.get("market_execution_verified") is False:
+        return False, "market source is research-only and not executable"
+    if row.get("market_quote_timestamp_verified") is False:
+        return False, "market source lacks a verified quote timestamp"
+
     market = str(row.get("quant_market") or "").lower()
     side = str(row.get("quant_side") or "").strip()
     if market not in {"moneyline", "spread", "total"}:
