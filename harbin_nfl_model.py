@@ -46,6 +46,9 @@ def main() -> None:
     context = report["meta"].get("current_context", {})
     if not isinstance(context, dict):
         context = {}
+    components = context.get("components", {})
+    if not isinstance(components, dict):
+        components = {}
     data_quality = report["meta"].get("data_quality", {})
     if not isinstance(data_quality, dict):
         data_quality = {}
@@ -61,9 +64,11 @@ def main() -> None:
         "context": {
             "status": context.get("status"),
             "coverage": context.get("coverage"),
+            "components": components,
             "depth_feed_available": context.get("depth_feed_available", False),
             "injury_feed_available": context.get("injury_feed_available", False),
             "roster_feed_available": context.get("roster_feed_available", False),
+            "weather_errors": context.get("weather_errors", []),
         },
         "data_quality": {
             "status": data_quality.get("status"),
