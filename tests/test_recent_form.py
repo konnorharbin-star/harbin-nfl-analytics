@@ -73,9 +73,9 @@ def test_recent_form_uses_game_level_ewma() -> None:
     features = team_recent_pbp_features(history, alpha=0.5)
     a = features.filter(pl.col("team") == "A").row(0, named=True)
 
-    # A's offense appears in g1 as home and g4 as home. Each game averages two plays.
-    first = (0.4 + 0.3 + 0.4 - 0.1) / 2
-    second = (0.4 + 0.3 + 0.4 - 0.1) / 2
+    # A is away in g1 and home in g4. Each game averages two eligible plays.
+    first = ((-0.2 + 0.3) + (-0.2 - 0.1)) / 2
+    second = ((0.4 + 0.3) + (0.4 - 0.1)) / 2
     assert a["recent_off_epa_per_play"] == pytest.approx((0.5 * first) + (0.5 * second))
     assert a["recent_off_games"] == 2
     assert a["recent_def_games"] == 2
