@@ -1,0 +1,76 @@
+name: Current Recent Form Shadow Audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/recent_form_current.py"
+      - "nfl/recent_form_forward.py"
+      - "nfl/pipeline.py"
+      - "nfl/market_intel.py"
+      - "run_current_recent_form_shadow.py"
+      - "grade_recent_form_forward.py"
+      - "tests/test_recent_form_current.py"
+      - "tests/test_recent_form_forward.py"
+      - ".github/workflows/current-recent-form-shadow.yml"
+  workflow_dispatch:
+    inputs:
+      season:
+        description: "NFL season"
+        required: true
+        default: "2026"
+        type: string
+      week:
+        description: "Optional target week; blank selects next unplayed week"
+        required: false
+        default: ""
+        type: string
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      TARGET_SEASON: ${{ inputs.season || '2026' }}
+      TARGET_WEEK: ${{ inputs.week || '' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e .
+
+      - name: Audit current recent-form shadow
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports
+          for attempt in 1 2 3; do
+            echo "Current recent-form shadow attempt ${attempt}/3"
+            if [ -n "$TARGET_WEEK" ]; then
+              CMD=(python run_current_recent_form_shadow.py "$TARGET_SEASON" --week "$TARGET_WEEK" --refresh)
+            else
+              CMD=(python run_current_recent_form_shadow.py "$TARGET_SEASON" --refresh)
+            fi
+            if "${CMD[@]}" | tee reports/current_recent_form_shadow.json; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              sleep 10
+            fi
+          done
+          echo "Current recent-form shadow audit failed after 3 attempts" >&2
+          exit 1
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: current-recent-form-shadow
+          path: reports/current_recent_form_shadow.json
