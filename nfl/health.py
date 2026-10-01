@@ -21,7 +21,7 @@ def build_health(
     source_failures = [
         name
         for name, value in sources.items()
-        if str(value).upper() in {"FAIL", "ERROR"}
+        if str(value).upper().startswith(("FAIL", "ERROR"))
     ]
     data_ok = str(data_quality.get("status", "UNKNOWN")).upper() not in {
         "FAIL",
