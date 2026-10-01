@@ -1,17 +1,170 @@
 {
-  "by_market": {},
-  "by_season": {},
-  "note": "Free nflverse archive-final fallbacks are valid research observations but are not promotion-quality opening entries. ROBUST status requires explicit distinct opening entry evidence plus positive uncertainty-adjusted ROI/CLV across markets and seasons.",
-  "overall": {},
+  "by_market": {
+    "moneyline": {
+      "average_clv_proxy": null,
+      "average_expected_value_per_unit": 0.2858496537323526,
+      "average_probability_edge": 0.09597125802347392,
+      "bets": 886,
+      "clv_samples": 0,
+      "losses": 585,
+      "max_drawdown": 124.07406307376685,
+      "net_units": -101.76152866620005,
+      "pushes": 2,
+      "roi_ci_95_high": -0.020842261245022354,
+      "roi_ci_95_low": -0.20308499855059955,
+      "roi_per_unit_staked": -0.11485499849458244,
+      "wins": 299
+    },
+    "spread": {
+      "average_clv_proxy": null,
+      "average_expected_value_per_unit": 0.15080034679951362,
+      "average_probability_edge": 0.09928534662458605,
+      "bets": 868,
+      "clv_samples": 0,
+      "losses": 431,
+      "max_drawdown": 65.18819990657408,
+      "net_units": -49.00855336875044,
+      "pushes": 24,
+      "roi_ci_95_high": 0.005706891133679924,
+      "roi_ci_95_low": -0.117586328334922,
+      "roi_per_unit_staked": -0.056461467014689445,
+      "wins": 413
+    },
+    "total": {
+      "average_clv_proxy": null,
+      "average_expected_value_per_unit": 0.12019619008271412,
+      "average_probability_edge": 0.08421820000769696,
+      "bets": 830,
+      "clv_samples": 0,
+      "losses": 422,
+      "max_drawdown": 58.7005307185967,
+      "net_units": -51.8107874179535,
+      "pushes": 5,
+      "roi_ci_95_high": 0.0017289072747782026,
+      "roi_ci_95_low": -0.12674640893222394,
+      "roi_per_unit_staked": -0.06242263544331747,
+      "wins": 403
+    }
+  },
+  "by_season": {
+    "2022": {
+      "average_clv_proxy": null,
+      "average_expected_value_per_unit": 0.18194685099740143,
+      "average_probability_edge": 0.08477160554180177,
+      "bets": 551,
+      "clv_samples": 0,
+      "losses": 319,
+      "max_drawdown": 85.08037934807396,
+      "net_units": -67.71491367374064,
+      "pushes": 8,
+      "roi_ci_95_high": -0.022175545019686334,
+      "roi_ci_95_low": -0.21659690328069292,
+      "roi_per_unit_staked": -0.1228945801701282,
+      "wins": 224
+    },
+    "2023": {
+      "average_clv_proxy": null,
+      "average_expected_value_per_unit": 0.16924363673194104,
+      "average_probability_edge": 0.09062108774578624,
+      "bets": 687,
+      "clv_samples": 0,
+      "losses": 370,
+      "max_drawdown": 62.165882864339245,
+      "net_units": -33.71239065423488,
+      "pushes": 15,
+      "roi_ci_95_high": 0.03788937496539208,
+      "roi_ci_95_low": -0.1342771984095534,
+      "roi_per_unit_staked": -0.04907189323760536,
+      "wins": 302
+    },
+    "2024": {
+      "average_clv_proxy": null,
+      "average_expected_value_per_unit": 0.1812839995884581,
+      "average_probability_edge": 0.09592522150344884,
+      "bets": 671,
+      "clv_samples": 0,
+      "losses": 365,
+      "max_drawdown": 76.97407644997759,
+      "net_units": -47.17238926412042,
+      "pushes": 6,
+      "roi_ci_95_high": 0.0127202803156551,
+      "roi_ci_95_low": -0.15154334665145083,
+      "roi_per_unit_staked": -0.07030162334444176,
+      "wins": 300
+    },
+    "2025": {
+      "average_clv_proxy": null,
+      "average_expected_value_per_unit": 0.2159343332433004,
+      "average_probability_edge": 0.10041430506907402,
+      "bets": 675,
+      "clv_samples": 0,
+      "losses": 384,
+      "max_drawdown": 54.8740330036653,
+      "net_units": -53.98117586080808,
+      "pushes": 2,
+      "roi_ci_95_high": 0.0061985179678682,
+      "roi_ci_95_low": -0.16665439578387614,
+      "roi_per_unit_staked": -0.07997211238638234,
+      "wins": 289
+    }
+  },
+  "note": "Free nflverse archive-final fallbacks and opening-line observations without opening juice remain valid research observations, but they are not promotion-quality entry-price evidence. ROBUST status requires observed entry prices plus positive uncertainty-adjusted ROI/CLV across multiple markets and seasons.",
+  "overall": {
+    "average_clv_proxy": null,
+    "average_expected_value_per_unit": 0.18727567027766828,
+    "average_probability_edge": 0.09330933494014204,
+    "bets": 2584,
+    "clv_samples": 0,
+    "losses": 1438,
+    "max_drawdown": 220.83919227009505,
+    "net_units": -202.58086945290398,
+    "pushes": 31,
+    "roi_ci_95_high": -0.03351727630015059,
+    "roi_ci_95_low": -0.12119339179926414,
+    "roi_per_unit_staked": -0.0783981692929195,
+    "wins": 1115
+  },
   "promotion_sample": {
     "avg_verified_clv_proxy": null,
+    "by_market": {},
+    "by_season": {},
+    "entry_price_verified": false,
     "entry_quote_verified": false,
-    "excluded_unverified_bets": 0,
+    "excluded_unverified_bets": 3069,
+    "opening_line_observed_bets": 0,
     "positive_markets": 0,
     "positive_seasons": 0,
-    "raw_archive_bets": 0,
-    "verified_bets": 0
+    "raw_archive_bets": 3069,
+    "verified_bets": 0,
+    "verified_roi_ci_95": [
+      null,
+      null
+    ],
+    "verified_roi_per_unit_staked": null
   },
-  "source": {},
-  "status": "EARLY SAMPLE"
+  "source": {
+    "api_key_required": false,
+    "clv_label": "opening-to-archive-final CLV proxy",
+    "entry_price_rule": "Only the exact price observed at entry can qualify as verified entry-price evidence. Opening spread/total lines without opening juice remain research-only.",
+    "historical_market": "nflverse schedules/nfldata public archive",
+    "initial_lines_coverage": {
+      "available": true,
+      "backtest_window_rows": 0,
+      "first_season": 2021,
+      "last_season": 2021,
+      "market_types": [
+        "SPREAD",
+        "TOTAL"
+      ],
+      "overlaps_backtest_window": false,
+      "rows": 1088,
+      "seasons": [
+        2021
+      ]
+    },
+    "initial_lines_error": null,
+    "notes": "Archive-final values are not claimed to be timestamped official closes. When a distinct opening is unavailable, the final archive value is an explicit execution fallback and no CLV proxy is recorded.",
+    "opening_market": "nflverse nfldata initial_lines.csv when available"
+  },
+  "status": "ESTABLISHED SAMPLE"
 }
