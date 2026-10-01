@@ -1,0 +1,62 @@
+name: NFL Situational PBP Audit
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/situational.py"
+      - "nfl/situational_dataset.py"
+      - "nfl/situational_fixed.py"
+      - "nfl/situational_audit.py"
+      - "run_situational_audit.py"
+      - "tests/test_situational.py"
+      - ".github/workflows/situational-audit.yml"
+  push:
+    branches: [main]
+    paths:
+      - "nfl/situational.py"
+      - "nfl/situational_dataset.py"
+      - "nfl/situational_fixed.py"
+      - "nfl/situational_audit.py"
+      - "run_situational_audit.py"
+      - ".github/workflows/situational-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      PYTHONUNBUFFERED: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+
+      - name: Unit tests
+        run: python -m pytest -q tests/test_situational.py
+
+      - name: Run 2022-2025 situational rolling audit
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports
+          python run_situational_audit.py --refresh | tee reports/situational_audit.log
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-situational-pbp-audit
+          path: |
+            reports/situational_audit.json
+            reports/situational_audit.log
+          if-no-files-found: error
