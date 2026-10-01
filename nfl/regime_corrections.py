@@ -7,9 +7,9 @@ contain no tunable coefficient or sportsbook input.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from math import sqrt
-from typing import Callable
 
 import numpy as np
 import polars as pl
