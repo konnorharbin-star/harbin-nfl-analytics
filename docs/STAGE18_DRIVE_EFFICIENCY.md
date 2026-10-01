@@ -36,8 +36,21 @@ A candidate uses one fixed feature bundle and one fixed ridge penalty across eve
 
 Baseline / zero adjustment is always admissible and wins automatically when no fixed candidate clears all requirements.
 
+## Real-source result
+
+The 2022–2025 nflverse audit completed successfully and verified every drive-reconstruction field, including `drive`, `play_id`, `yardline_100`, `first_down`, turnover flags, and pre/post possession scores. The walk-forward dataset contained 831 rows; the 2023–2025 evaluation sample contained 624 games (208 per season).
+
+No fixed drive feature-bundle/ridge combination improved both MAE and RMSE in all three development folds. The selector therefore chose the disabled baseline for both targets:
+
+- margin baseline/selected MAE: `10.1966 / 10.1966`;
+- margin baseline/selected RMSE: `13.0138 / 13.0138`;
+- total baseline/selected MAE: `10.4926 / 10.4926`;
+- total baseline/selected RMSE: `13.4427 / 13.4427`;
+- margin positive folds: `0 / 3`;
+- total positive folds: `0 / 3`.
+
+Accordingly, Stage 18 creates no new 2026 shadow candidate and makes no change to the canonical fair score.
+
 ## Evidence boundary
 
-The Stage 18 audit hard-codes `canonical_score_adjustment_enabled=false` and `promotion_eligible=false`. The 2022–2025 seasons are development evidence only. A surviving candidate could justify a separately frozen 2026 prospective shadow experiment, but historical results alone cannot alter the canonical fair score.
-
-The live-source workflow also fails closed if nflverse does not provide the required drive reconstruction fields, including `drive`, `play_id`, `yardline_100`, `first_down`, turnover flags, and pre/post possession scores.
+The Stage 18 audit hard-codes `canonical_score_adjustment_enabled=false` and `promotion_eligible=false`. The 2022–2025 seasons are development evidence only. A future drive-level design would need a new predeclared specification and the same chronological gate before it could even enter shadow evaluation.
