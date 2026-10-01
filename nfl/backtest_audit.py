@@ -18,13 +18,20 @@ REQUIRED = {
     "american_odds",
     "price_stage",
     "has_distinct_open",
+    "entry_line_observed",
+    "entry_price_verified",
+    "entry_price_stage",
     "result",
     "net_units",
 }
 
 
+def _bool_expr(name: str) -> pl.Expr:
+    return pl.col(name).cast(pl.Boolean, strict=False).fill_null(False)
+
+
 def audit_backtest_bets(frame: pl.DataFrame) -> dict[str, object]:
-    """Separate broad archive research from promotion-quality opening-entry evidence."""
+    """Separate broad archive research from promotion-quality opening-price evidence."""
 
     if frame.is_empty():
         return {
@@ -34,8 +41,14 @@ def audit_backtest_bets(frame: pl.DataFrame) -> dict[str, object]:
             "bets": 0,
             "issues": [{"severity": "WARNING", "code": "empty_backtest"}],
             "quote_integrity": {
+                "all_archive_bets": 0,
+                "opening_line_observed_bets": 0,
+                "opening_price_verified_bets": 0,
                 "verified_opening_entry_bets": 0,
+                "research_only_entry_price_bets": 0,
+                "final_fallback_bets": 0,
                 "unverified_or_final_fallback_bets": 0,
+                "opening_price_verified_rate": 0.0,
                 "verified_opening_entry_rate": 0.0,
             },
         }
@@ -67,63 +80,167 @@ def audit_backtest_bets(frame: pl.DataFrame) -> dict[str, object]:
             }
         )
 
-    allowed_stages = {"archive_open_line_final_price", "archive_final_fallback"}
-    invalid_stage = frame.filter(~pl.col("price_stage").is_in(sorted(allowed_stages))).height
-    if invalid_stage:
+    allowed_legacy_stages = {"archive_open_line_final_price", "archive_final_fallback"}
+    invalid_legacy_stage = frame.filter(
+        ~pl.col("price_stage").is_in(sorted(allowed_legacy_stages))
+    ).height
+    if invalid_legacy_stage:
         issues.append(
             {
                 "severity": "ERROR",
                 "code": "invalid_price_stage",
-                "rows": invalid_stage,
+                "rows": invalid_legacy_stage,
             }
         )
 
-    distinct = frame.get_column("has_distinct_open").cast(pl.Boolean, strict=False).fill_null(False)
-    verified = int(distinct.sum())
-    fallback = frame.height - verified
-    if fallback:
+    allowed_entry_stages = {
+        "archive_open_price",
+        "archive_open_line_final_price",
+        "archive_final_fallback",
+    }
+    invalid_entry_stage = frame.filter(
+        ~pl.col("entry_price_stage").is_in(sorted(allowed_entry_stages))
+    ).height
+    if invalid_entry_stage:
+        issues.append(
+            {
+                "severity": "ERROR",
+                "code": "invalid_entry_price_stage",
+                "rows": invalid_entry_stage,
+            }
+        )
+
+    legacy_distinct = _bool_expr("has_distinct_open")
+    line_observed = _bool_expr("entry_line_observed")
+    price_verified = _bool_expr("entry_price_verified")
+    market = pl.col("market_type").cast(pl.String).str.to_lowercase()
+
+    line_flag_mismatch = frame.filter(legacy_distinct != line_observed).height
+    if line_flag_mismatch:
+        issues.append(
+            {
+                "severity": "ERROR",
+                "code": "opening_line_flag_mismatch",
+                "rows": line_flag_mismatch,
+            }
+        )
+
+    price_without_line = frame.filter(price_verified & ~line_observed).height
+    if price_without_line:
+        issues.append(
+            {
+                "severity": "ERROR",
+                "code": "verified_price_without_opening_line",
+                "rows": price_without_line,
+            }
+        )
+
+    unsupported_verified_market = frame.filter(
+        price_verified & (market != "moneyline")
+    ).height
+    if unsupported_verified_market:
+        issues.append(
+            {
+                "severity": "ERROR",
+                "code": "verified_opening_price_on_unsupported_market",
+                "rows": unsupported_verified_market,
+                "meaning": (
+                    "The current free nflverse source does not provide opening juice "
+                    "for spread or total."
+                ),
+            }
+        )
+
+    expected_stage = (
+        pl.when(price_verified)
+        .then(pl.lit("archive_open_price"))
+        .when(line_observed)
+        .then(pl.lit("archive_open_line_final_price"))
+        .otherwise(pl.lit("archive_final_fallback"))
+    )
+    stage_mismatch = frame.filter(
+        pl.col("entry_price_stage").cast(pl.String) != expected_stage
+    ).height
+    if stage_mismatch:
+        issues.append(
+            {
+                "severity": "ERROR",
+                "code": "entry_price_stage_mismatch",
+                "rows": stage_mismatch,
+            }
+        )
+
+    observed_lines = int(
+        frame.get_column("entry_line_observed")
+        .cast(pl.Boolean, strict=False)
+        .fill_null(False)
+        .sum()
+    )
+    verified_prices = int(
+        frame.get_column("entry_price_verified")
+        .cast(pl.Boolean, strict=False)
+        .fill_null(False)
+        .sum()
+    )
+    final_fallbacks = frame.height - observed_lines
+    line_only = observed_lines - verified_prices
+    research_only = frame.height - verified_prices
+
+    if final_fallbacks:
         issues.append(
             {
                 "severity": "WARNING",
                 "code": "archive_final_fallback_present",
-                "rows": fallback,
-                "meaning": "valid research rows; excluded from promotion-quality entry evidence",
+                "rows": final_fallbacks,
+                "meaning": "valid research rows; no separate opening line was observed",
+            }
+        )
+    if line_only:
+        issues.append(
+            {
+                "severity": "WARNING",
+                "code": "opening_line_without_opening_price",
+                "rows": line_only,
+                "meaning": (
+                    "opening line observed, but simulated price uses archive-final juice; "
+                    "excluded from promotion-quality entry-price evidence"
+                ),
             }
         )
 
     if "clv_proxy" in frame.columns:
         manufactured = frame.filter(
-            (~pl.col("has_distinct_open").cast(pl.Boolean, strict=False).fill_null(False))
-            & pl.col("clv_proxy").is_not_null()
+            (~line_observed) & pl.col("clv_proxy").is_not_null()
         ).height
         if manufactured:
             issues.append(
                 {
                     "severity": "ERROR",
-                    "code": "clv_proxy_on_unverified_entry",
+                    "code": "clv_proxy_without_opening_line",
                     "rows": manufactured,
                 }
             )
 
     if "opening_book" in frame.columns:
-        verified_missing_book = frame.filter(
-            pl.col("has_distinct_open").cast(pl.Boolean, strict=False).fill_null(False)
+        observed_missing_book = frame.filter(
+            line_observed
             & (
                 pl.col("opening_book").is_null()
                 | (pl.col("opening_book").cast(pl.String).str.strip_chars() == "")
             )
         ).height
-        if verified_missing_book:
+        if observed_missing_book:
             issues.append(
                 {
                     "severity": "ERROR",
-                    "code": "verified_open_missing_source_book",
-                    "rows": verified_missing_book,
+                    "code": "observed_open_missing_source_book",
+                    "rows": observed_missing_book,
                 }
             )
 
     errors = sum(issue["severity"] == "ERROR" for issue in issues)
     warnings = sum(issue["severity"] == "WARNING" for issue in issues)
+    verified_rate = verified_prices / frame.height
     return {
         "status": "FAIL" if errors else "WARN" if warnings else "PASS",
         "errors": errors,
@@ -132,12 +249,17 @@ def audit_backtest_bets(frame: pl.DataFrame) -> dict[str, object]:
         "issues": issues,
         "quote_integrity": {
             "all_archive_bets": frame.height,
-            "verified_opening_entry_bets": verified,
-            "unverified_or_final_fallback_bets": fallback,
-            "verified_opening_entry_rate": verified / frame.height,
+            "opening_line_observed_bets": observed_lines,
+            "opening_price_verified_bets": verified_prices,
+            "verified_opening_entry_bets": verified_prices,
+            "research_only_entry_price_bets": research_only,
+            "final_fallback_bets": final_fallbacks,
+            "unverified_or_final_fallback_bets": research_only,
+            "opening_price_verified_rate": verified_rate,
+            "verified_opening_entry_rate": verified_rate,
             "promotion_rule": (
-                "only has_distinct_open=true rows may contribute to verified-entry "
-                "promotion evidence"
+                "only entry_price_verified=true rows may contribute to promotion-quality "
+                "historical entry evidence"
             ),
         },
     }
