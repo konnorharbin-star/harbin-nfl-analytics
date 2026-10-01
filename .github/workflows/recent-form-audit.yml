@@ -32,9 +32,21 @@ jobs:
         run: python -m pip install -e .
 
       - name: Run recent-form rolling-origin audit
+        shell: bash
         run: |
+          set -o pipefail
           mkdir -p reports
-          python run_recent_form_audit.py --refresh | tee reports/recent_form_audit.json
+          for attempt in 1 2 3; do
+            echo "Recent-form source audit attempt ${attempt}/3"
+            if python run_recent_form_audit.py --refresh | tee reports/recent_form_audit.json; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              sleep 10
+            fi
+          done
+          echo "Recent-form source audit failed after 3 attempts" >&2
+          exit 1
 
       - name: Upload audit report
         uses: actions/upload-artifact@v4
