@@ -7,7 +7,9 @@ on:
     paths:
       - "history/**"
       - "nfl/grading.py"
+      - "nfl/recent_form_forward.py"
       - "grade_live.py"
+      - "grade_recent_form_forward.py"
       - ".github/workflows/live-grade.yml"
   schedule:
     - cron: "37 10,16,22 * * *"
@@ -33,17 +35,30 @@ jobs:
       - run: python -m pip install -e ".[dev]"
 
       - name: Unit tests
-        run: python -m pytest -q tests/test_operational_parity.py
+        run: |
+          python -m pytest -q \
+            tests/test_operational_parity.py \
+            tests/test_recent_form_forward.py
 
       - name: Grade completed paper/shadow bets
         run: python grade_live.py
+
+      - name: Grade prospective recent-form totals shadow
+        run: python grade_recent_form_forward.py
 
       - name: Commit live evidence
         shell: bash
         run: |
           git config user.name "harbin-nfl-grade-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for f in reports/live_performance.json reports/live_graded_bets.csv outputs/live_performance.json docs/live_performance.json; do
+          for f in \
+            reports/live_performance.json \
+            reports/live_graded_bets.csv \
+            outputs/live_performance.json \
+            docs/live_performance.json \
+            reports/recent_form_forward.json \
+            reports/recent_form_forward_graded.csv \
+            docs/recent_form_forward.json; do
             [ -f "$f" ] && git add "$f" || true
           done
           if ! git diff --cached --quiet; then
@@ -51,5 +66,5 @@ jobs:
             git pull --rebase origin main
             git push
           else
-            echo "No new completed NFL bets to grade."
+            echo "No new completed NFL evidence to grade."
           fi
