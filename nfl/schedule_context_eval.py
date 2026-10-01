@@ -249,7 +249,11 @@ def _select_target(
     candidates.sort(key=lambda item: (item.relative_score, item.alpha))
     best = candidates[0]
     eligible = [candidate for candidate in candidates if candidate.eligible]
-    selected = min(eligible, key=lambda item: (item.relative_score, item.alpha)) if eligible else None
+    selected = (
+        min(eligible, key=lambda item: (item.relative_score, item.alpha))
+        if eligible
+        else None
+    )
 
     if selected is None:
         adjusted_mae = best.baseline_mae
