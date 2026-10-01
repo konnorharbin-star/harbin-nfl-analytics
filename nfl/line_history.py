@@ -12,6 +12,7 @@ import polars as pl
 
 from .contracts import require_columns
 from .espn_market import ESPNTwoWayMarket
+from .schedule_market import is_research_only_market
 
 NFL_SCHEDULE_TIMEZONE = ZoneInfo("America/New_York")
 
@@ -67,7 +68,7 @@ def append_market_snapshots(
     *,
     path: str | Path = "history/market_snapshots.csv",
 ) -> dict[str, object]:
-    """Append only new verified market snapshots, preserving provider/timestamp provenance."""
+    """Append only verified market snapshots with sportsbook/timestamp provenance."""
 
     require_columns(
         targets,
@@ -88,7 +89,13 @@ def append_market_snapshots(
     known = {_signature(row) for row in old_rows}
 
     new_rows: list[dict[str, object]] = []
+    skipped_research_only = 0
+    eligible_markets = 0
     for market in markets:
+        if is_research_only_market(market):
+            skipped_research_only += 1
+            continue
+        eligible_markets += 1
         target = target_map.get(market.game_id)
         if target is None:
             continue
@@ -125,6 +132,8 @@ def append_market_snapshots(
     return {
         "path": str(source),
         "captured_markets": len(markets),
+        "eligible_verified_markets": eligible_markets,
+        "skipped_research_only": skipped_research_only,
         "appended_rows": len(new_rows),
         "total_rows": len(combined),
     }
