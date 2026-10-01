@@ -34,8 +34,12 @@ def build_evidence_report(
 
     backtest = _read_json(backtest_path)
     overall = backtest.get("overall") if isinstance(backtest.get("overall"), dict) else {}
-    by_market = backtest.get("by_market") if isinstance(backtest.get("by_market"), dict) else {}
-    by_season = backtest.get("by_season") if isinstance(backtest.get("by_season"), dict) else {}
+    by_market = (
+        backtest.get("by_market") if isinstance(backtest.get("by_market"), dict) else {}
+    )
+    by_season = (
+        backtest.get("by_season") if isinstance(backtest.get("by_season"), dict) else {}
+    )
 
     raw_rows = 0
     verified_bets = 0
@@ -49,12 +53,13 @@ def build_evidence_report(
             bets = pl.DataFrame()
         raw_rows = bets.height
         if not bets.is_empty() and "has_distinct_open" in bets.columns:
-            verified = bets.filter(pl.col("has_distinct_open") == True)  # noqa: E712
+            verified = bets.filter(pl.col("has_distinct_open"))
             verified_bets = verified.height
             excluded_unverified = raw_rows - verified_bets
             if "clv_proxy" in verified.columns:
                 verified_clv_values = [
-                    float(value) for value in verified.get_column("clv_proxy").drop_nulls().to_list()
+                    float(value)
+                    for value in verified.get_column("clv_proxy").drop_nulls().to_list()
                 ]
 
     positive_markets = sum(
@@ -76,7 +81,9 @@ def build_evidence_report(
         ci = [None, None]
 
     avg_verified_clv = (
-        sum(verified_clv_values) / len(verified_clv_values) if verified_clv_values else None
+        sum(verified_clv_values) / len(verified_clv_values)
+        if verified_clv_values
+        else None
     )
     robust = (
         verified_bets >= 1000
@@ -87,7 +94,12 @@ def build_evidence_report(
         and positive_markets >= 2
         and positive_seasons >= 2
     )
-    status = "ROBUST" if robust else "ESTABLISHED SAMPLE" if raw_rows >= 500 else "EARLY SAMPLE"
+    if robust:
+        status = "ROBUST"
+    elif raw_rows >= 500:
+        status = "ESTABLISHED SAMPLE"
+    else:
+        status = "EARLY SAMPLE"
     return {
         "status": status,
         "overall": overall,
