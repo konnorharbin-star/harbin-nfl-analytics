@@ -21,7 +21,9 @@ def main() -> None:
         print(json.dumps(payload, indent=2, sort_keys=True))
         return
 
-    seasons = sorted({int(value) for value in decisions.get_column("season").drop_nulls().to_list()})
+    seasons = sorted(
+        {int(value) for value in decisions.get_column("season").drop_nulls().to_list()}
+    )
     client = NFLDataClient()
     schedules = client.load_schedules(seasons, refresh=True)
     _, summary = grade_live_from_files(schedules)
