@@ -1,4 +1,4 @@
-"""Capture verified pre-kickoff NFL market snapshots from the free ESPN source."""
+"""Capture verified pre-kickoff NFL market snapshots from canonical current sources."""
 
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ from pathlib import Path
 
 from nfl.current import next_unplayed_regular_week, unplayed_regular_games
 from nfl.data import NFLDataClient
-from nfl.espn_market import ESPNMarketClient
 from nfl.line_history import append_market_snapshots
+from nfl.pro_market import collect_current_markets
 
 
 def _default_season() -> int:
@@ -29,13 +29,14 @@ def main() -> None:
     schedules = client.load_schedules([args.season], refresh=args.refresh)
     week = args.week or next_unplayed_regular_week(schedules, args.season)
     targets = unplayed_regular_games(schedules, args.season, week)
-    markets = ESPNMarketClient().current_markets(targets, week=week)
+    markets, source_meta = collect_current_markets(targets, week=week)
     report = append_market_snapshots(markets, targets)
     payload = {
         "status": "READY",
         "season": args.season,
         "week": week,
-        "source": "ESPN public endpoints",
+        "source": "canonical current NFL market aggregation",
+        "source_breadth": source_meta,
         **report,
     }
     target = Path("outputs/line_capture_status.json")
