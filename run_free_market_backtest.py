@@ -19,6 +19,45 @@ from nfl.free_market_backtest import (
 from nfl.proof import write_evidence_report
 
 
+def _initial_line_coverage(
+    initial_lines: object,
+    *,
+    start_season: int,
+    end_season: int,
+) -> dict[str, object]:
+    if initial_lines is None:
+        return {
+            "available": False,
+            "rows": 0,
+            "seasons": [],
+            "market_types": [],
+            "backtest_window_rows": 0,
+            "overlaps_backtest_window": False,
+        }
+
+    season_column = initial_lines.get_column("season").drop_nulls()
+    seasons = sorted({int(value) for value in season_column.to_list()})
+    market_types = sorted(
+        {
+            str(value).upper()
+            for value in initial_lines.get_column("type").drop_nulls().to_list()
+        }
+    )
+    window_rows = sum(
+        start_season <= int(value) <= end_season for value in season_column.to_list()
+    )
+    return {
+        "available": True,
+        "rows": initial_lines.height,
+        "seasons": seasons,
+        "first_season": seasons[0] if seasons else None,
+        "last_season": seasons[-1] if seasons else None,
+        "market_types": market_types,
+        "backtest_window_rows": window_rows,
+        "overlaps_backtest_window": window_rows > 0,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Run the free nflverse NFL market archive backtest."
@@ -46,6 +85,11 @@ def main() -> None:
     except DataContractError as exc:
         initial_lines = None
         initial_error = str(exc)
+    initial_coverage = _initial_line_coverage(
+        initial_lines,
+        start_season=args.start_season,
+        end_season=args.end_season,
+    )
 
     market_store = FreeNFLMarketStore(schedules, initial_lines=initial_lines)
     projections = build_archive_projection_dataset(
@@ -101,11 +145,11 @@ def main() -> None:
             "opening_market": "nflverse nfldata initial_lines.csv when available",
             "api_key_required": False,
             "initial_lines_error": initial_error,
+            "initial_lines_coverage": initial_coverage,
             "clv_label": "opening-to-archive-final CLV proxy",
             "entry_price_rule": (
-                "Moneyline opening prices may qualify as observed entry prices. "
-                "Spread/total initial-line observations do not include opening juice, "
-                "so those rows remain research-only for promotion evidence."
+                "Only the exact price observed at entry can qualify as verified entry-price "
+                "evidence. Opening spread/total lines without opening juice remain research-only."
             ),
             "notes": (
                 "Archive-final values are not claimed to be timestamped official closes. "
