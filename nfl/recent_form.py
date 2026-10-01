@@ -139,7 +139,9 @@ def recent_matchup_signals(
             home_matchup = float(home[offense_key]) - float(away[defense_key])
             away_matchup = float(away[offense_key]) - float(home[defense_key])
         except (KeyError, TypeError, ValueError) as exc:
-            raise DataContractError(f"missing/non-numeric recent-form feature for {metric}") from exc
+            raise DataContractError(
+                f"missing/non-numeric recent-form feature for {metric}"
+            ) from exc
         if not math.isfinite(home_matchup) or not math.isfinite(away_matchup):
             raise DataContractError(f"non-finite recent-form matchup value for {metric}")
         values[f"recent_{metric}_margin_signal"] = home_matchup - away_matchup
