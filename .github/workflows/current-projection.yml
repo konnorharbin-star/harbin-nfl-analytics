@@ -42,18 +42,20 @@ jobs:
       - name: Install package
         run: python -m pip install -e .
 
-      - name: Generate independent football projections
+      - name: Audit independent football projections
         run: |
           mkdir -p reports
           if [ -n "$TARGET_WEEK" ]; then
-            python run_current_projection.py "$TARGET_SEASON" --week "$TARGET_WEEK" --refresh \
+            python run_current_projection.py "$TARGET_SEASON" \
+              --week "$TARGET_WEEK" --refresh --blocked-report \
               | tee reports/current_projection.json
           else
-            python run_current_projection.py "$TARGET_SEASON" --refresh \
+            python run_current_projection.py "$TARGET_SEASON" \
+              --refresh --blocked-report \
               | tee reports/current_projection.json
           fi
 
-      - name: Upload projection report
+      - name: Upload projection or blocked report
         uses: actions/upload-artifact@v4
         with:
           name: current-nfl-football-projection
