@@ -8,11 +8,11 @@ point-in-time market-history contract.
 
 from __future__ import annotations
 
-from collections.abc import Iterable
-from datetime import date, datetime, timedelta, timezone
-from hashlib import sha256
 import json
 import os
+from collections.abc import Iterable
+from datetime import UTC, date, datetime
+from hashlib import sha256
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -70,13 +70,13 @@ def _parse_iso_utc(value: str) -> datetime:
     parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if parsed.tzinfo is None:
         raise DataContractError(f"provider timestamp is not timezone-aware: {value}")
-    return parsed.astimezone(timezone.utc)
+    return parsed.astimezone(UTC)
 
 
 def _require_utc(value: datetime) -> datetime:
     if value.tzinfo is None or value.utcoffset() is None:
         raise DataContractError("historical odds timestamps must be timezone-aware")
-    return value.astimezone(timezone.utc)
+    return value.astimezone(UTC)
 
 
 def _iso_z(value: datetime) -> str:
