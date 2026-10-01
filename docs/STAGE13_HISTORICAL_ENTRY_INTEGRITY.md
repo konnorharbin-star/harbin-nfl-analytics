@@ -4,7 +4,15 @@ Stage 13 tightens the free nflverse historical market proof layer without changi
 
 ## Why this exists
 
-The free `initial_lines.csv` source can provide separate opening observations. For moneyline, the opening observation is itself a price. For spread and total, the opening observation supplies the line but not opening juice. The existing research backtest can still pair that opening line with archive-final juice, but that hybrid is not an observed opening entry price and therefore must not count as promotion-quality evidence.
+The free `initial_lines.csv` source can provide separate opening observations. For spread and total, an opening observation supplies the line but not opening juice. A research backtest may pair that opening line with archive-final juice, but that hybrid is not an observed opening entry price and therefore must not count as promotion-quality evidence.
+
+The provenance contract also supports a future source with explicit opening moneyline prices. Such a row could qualify as a verified opening price only when the exact price used by the simulated bet is present in the opening observation. The current nflverse `initial_lines.csv` file does **not** provide moneyline rows.
+
+## Current free-source coverage
+
+The upstream nflverse `initial_lines.csv` currently contains 2021 regular-season spread/total opening lines only. It has no 2022+ rows and no moneyline rows. Therefore the canonical 2022–2025 free historical backtest has zero distinct opening observations and zero promotion-quality opening prices. That is an upstream coverage limitation, not a game-ID matching fallback.
+
+This is intentionally fail-closed: 2022–2025 archive-final prices remain useful for research grading and diagnostics, but they cannot satisfy the historical-entry release gate. A future verified source can populate the same provenance fields without changing the release-gate contract.
 
 ## Provenance fields
 
@@ -16,7 +24,7 @@ Historical backtest rows now distinguish:
 - `entry_price_stage=archive_open_line_final_price`: useful research row with an opening line but archive-final juice.
 - `entry_price_stage=archive_final_fallback`: no separate opening observation; research-only archive fallback.
 
-With the current free source, only qualifying moneyline rows can have `entry_price_verified=true`. Spread and total opening-line rows remain valid for research and CLV-proxy diagnostics but cannot satisfy the historical entry-price release gate.
+Spread and total opening-line rows remain valid for research and CLV-proxy diagnostics but cannot satisfy the historical entry-price release gate when opening juice is unavailable.
 
 ## Promotion proof
 
