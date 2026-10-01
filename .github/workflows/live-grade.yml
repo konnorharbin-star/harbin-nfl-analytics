@@ -1,0 +1,55 @@
+name: NFL Live Shadow Grading
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "history/**"
+      - "nfl/grading.py"
+      - "grade_live.py"
+      - ".github/workflows/live-grade.yml"
+  schedule:
+    - cron: "37 10,16,22 * * *"
+permissions:
+  contents: write
+concurrency:
+  group: nfl-live-grade
+  cancel-in-progress: true
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONUNBUFFERED: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -e ".[dev]"
+
+      - name: Unit tests
+        run: python -m pytest -q tests/test_operational_parity.py
+
+      - name: Grade completed paper/shadow bets
+        run: python grade_live.py
+
+      - name: Commit live evidence
+        shell: bash
+        run: |
+          git config user.name "harbin-nfl-grade-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for f in reports/live_performance.json reports/live_graded_bets.csv outputs/live_performance.json docs/live_performance.json; do
+            [ -f "$f" ] && git add "$f" || true
+          done
+          if ! git diff --cached --quiet; then
+            git commit -m "grade: refresh independent NFL live shadow evidence"
+            git pull --rebase origin main
+            git push
+          else
+            echo "No new completed NFL bets to grade."
+          fi
