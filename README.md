@@ -64,7 +64,14 @@ The first six-feature linear PBP residual candidate also remains disabled after 
 - total MAE: baseline `10.484` vs adjusted `10.632`;
 - total RMSE: baseline `13.303` vs adjusted `13.413`.
 
-These negative results are retained as evidence: advanced features must earn their place on later data rather than being forced into the projection.
+A second PBP experiment explicitly adjusted each efficiency metric for schedule strength by fitting offense/defense ridge decompositions to historical offense-vs-defense game observations. Validation selected the compact EPA + success-rate feature set, with separate margin and total signals, but it also failed on the untouched 2025 holdout:
+
+- margin MAE: baseline `10.607` vs adjusted `10.640`;
+- margin RMSE: baseline `13.200` vs adjusted `13.266`;
+- total MAE: baseline `10.484` vs adjusted `10.507`;
+- total RMSE: baseline `13.303` vs adjusted `13.313`.
+
+These negative results are retained as evidence: advanced features must earn their place on later data rather than being forced into the projection. They also indicate that the next Stage 2 work should target structural state changes—especially quarterback state—rather than adding more highly correlated team-average efficiency signals.
 
 ## Anti-leakage rule
 
@@ -84,6 +91,7 @@ python run_walkforward.py 2025 --start-week 5 --end-week 10 --refresh
 python run_recency_audit.py --refresh
 python run_prior_audit.py --refresh
 python run_residual_audit.py --refresh
+python run_oa_audit.py --refresh
 ```
 
 The corresponding source and holdout audits also run in GitHub Actions.
@@ -98,10 +106,12 @@ The corresponding source and holdout audits also run in GitHub Actions.
 - `nfl/evaluation.py` — baseline football-projection error metrics.
 - `nfl/recency.py` — recency-weight research and holdout evaluation.
 - `nfl/priors.py` — prior-season scoring-prior research and holdout evaluation.
-- `nfl/residuals.py` — nested chronological residual-candidate validation.
+- `nfl/residuals.py` — nested chronological raw-PBP residual-candidate validation.
+- `nfl/opponent_adjusted.py` — schedule-adjusted PBP offense/defense decompositions.
+- `nfl/oa_dataset.py` / `nfl/oa_residuals.py` — chronological opponent-adjusted residual evaluation.
 - `nfl/stage1.py` / `nfl/stage2.py` — source integration audits.
 - `nfl/walkforward.py` — week-by-week reconstruction audit.
-- `nfl/residual_audit.py` — multi-season validation/holdout audit.
+- `nfl/residual_audit.py` / `nfl/oa_audit.py` — multi-season validation/holdout audits.
 
 ## Non-negotiable model rules
 
