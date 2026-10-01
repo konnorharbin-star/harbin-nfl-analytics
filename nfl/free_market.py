@@ -199,7 +199,12 @@ class FreeNFLMarketStore:
         candidates: list[tuple[int, str]] = []
         for book_rows in rows.partition_by("sportsbook", maintain_order=True):
             book = str(book_rows.get_column("sportsbook")[0])
-            market_count = book_rows.get_column("type").cast(pl.String).str.to_uppercase().n_unique()
+            market_count = (
+                book_rows.get_column("type")
+                .cast(pl.String)
+                .str.to_uppercase()
+                .n_unique()
+            )
             candidates.append((-int(market_count), book))
         candidates.sort()
         chosen = candidates[0][1]
