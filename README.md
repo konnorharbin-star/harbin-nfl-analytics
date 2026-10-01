@@ -1,152 +1,184 @@
 # Harbin NFL Analytics
 
-Leakage-safe NFL projection, probability, market-analysis, backtesting, risk-management, grading, monitoring, and release-control platform.
+Leakage-safe NFL projection, probability, market-analysis, backtesting, context, risk-management, grading, monitoring, publication, and release-control platform.
 
-> **Current state:** the football/probability/market research stack is implemented through Stage 3, and the CFB-style operational shell is now present: policy, capped Kelly, portfolio controls, line capture, forward decision ledger, independent grading, evidence reports, monitoring, health, model card, canonical reporting, and hard `RESEARCH -> PAPER -> SHADOW -> PRODUCTION` gates. The remaining major parity gap is Stage 4 NFL context: timestamp-safe injuries/personnel, rest/travel, stadium/roof, and weather. Until those and the independent evidence gates pass, the model must remain non-production.
+> **Current state:** the NFL repository now closely mirrors the operating architecture of `harbin-sports-analytics`: independent fair scores, chronological probabilities, free/optional multi-book markets, context, policy, capped Kelly, portfolio controls, forward line/decision ledgers, independent grading, audit reports, monitoring, health, model card, weekly publication, and hard `RESEARCH -> PAPER -> SHADOW -> PRODUCTION` gates. Structural parity does **not** transfer NCAA betting evidence to the NFL. The NFL remains fail-closed until its own historical-entry and forward live/shadow evidence satisfy the release gate.
 
 ## Design
 
-The NFL platform intentionally mirrors the architecture of `harbin-sports-analytics` while keeping NFL football data, coefficients, probability calibration, betting thresholds, and release evidence independent.
+The NFL platform intentionally mirrors the NCAA model's architecture while keeping NFL data, coefficients, context behavior, probability calibration, betting thresholds, and release evidence independent.
 
-1. **Data foundation** — schedules/results, play-by-play, team statistics, rosters, injuries, depth charts, caching, schema contracts, and anti-leakage primitives.
-2. **Fair-score engine** — NFL scoring ratings and NFL-specific dynamic features. Sportsbook prices do not enter the football score projection.
-3. **Probability + market layer** — score distributions, win/cover/total probabilities, no-vig market comparison, free nflverse archive research, free ESPN current markets, optional richer provider provenance, line movement, CLV, and chronological market-rule evidence.
-4. **Context layer** — quarterback state, personnel/injuries, offensive-line availability, rest, travel, stadium/roof, and weather. QB state exists now; the broader point-in-time context layer remains under construction.
+1. **Data foundation** — schedules/results, play-by-play, team/player statistics, rosters, injuries, depth charts, caching, schema contracts, and anti-leakage primitives.
+2. **Fair-score engine** — NFL scoring ratings and NFL-specific dynamic research features. Sportsbook prices never enter the football score projection.
+3. **Probability + market layer** — score distributions, win/cover/total probabilities, no-vig comparison, free nflverse historical research, free ESPN current markets, optional multi-book enrichment, line movement, CLV, and chronological market-rule evidence.
+4. **Context layer** — quarterback state, injuries/personnel, depth-chart/roster availability, offensive-line/skill/defensive availability summaries, rest, travel, stadium/roof, and weather. Context remains post-prediction confidence/risk unless an NFL point-in-time holdout validates a score adjustment.
 5. **Risk + execution layer** — policy-driven PASS/LEAN/BET/STRONG classification, capped fractional Kelly, game/team/market/book/kickoff/slate caps, drawdown throttles, quote validation, and fail-closed stake approval.
-6. **Proof + release layer** — historical evidence reports, line-capture ledger, portfolio-decision ledger, independent live grading, monitoring, health, model card, canonical reporting, and hard release gates.
+6. **Proof + release layer** — historical evidence, backtest/runtime audits, forward market snapshots, portfolio decisions, independent grading, monitoring, health, model card, weekly publication, and hard release gates.
 
-Structural parity does **not** transfer CFB evidence to the NFL. An NFL feature, threshold, risk setting, or release state must be earned with NFL data.
-
-## What is implemented now
+## What is implemented
 
 ### Stage 1 — data foundation
 
-The free source layer uses `nflreadpy`/nflverse for schedules, play-by-play, team statistics, rosters, injuries, and depth charts. Source frames are cached locally as parquet and validated against minimum platform contracts.
+The free source layer uses `nflreadpy`/nflverse for schedules, play-by-play, team/player statistics, weekly rosters, injuries, and depth charts. Source frames are cached locally as parquet and validated against platform contracts.
 
 A live 2025 source audit validated 285 schedule rows, 285 completed games, 570 team-game rows and 48,771 PBP rows.
 
 ### Stage 2 — independent football model
 
-The canonical fair-score model estimates team scoring from completed football games only:
+The canonical fair-score baseline estimates scoring from completed football games only:
 
 ```text
 expected_points = league_points + offense(team) - defense(opponent) + home_field
 ```
 
-Team offense/defense effects are ridge-regularized. The active season's completed pregame team-game rows receive full sample weight. The immediately prior regular season is a validated low-weight scoring prior: each prior-season team-game row receives weight `0.10`. Postseason, seasons older than `N-1`, target-week results and future results are excluded.
+Team offense/defense effects are ridge-regularized. The active season's completed pregame rows receive full weight. The immediately prior regular season is a validated low-weight scoring prior (`0.10` per prior-season team-game row). Postseason, older seasons, target-week outcomes and future outcomes are excluded.
 
-The `0.10` prior was selected on 2024 data and then scored once on the untouched 2025 holdout. Over 256 holdout games it improved all four score-error gates versus the same-season-only baseline:
+That `0.10` prior was selected on 2024 and then evaluated on the 2025 holdout. Over 256 holdout games it improved all four score-error gates versus the same-season-only baseline:
 
-- margin MAE: `10.707` → `10.607`;
-- margin RMSE: `13.452` → `13.340`;
-- total MAE: `10.753` → `10.585`;
-- total RMSE: `13.549` → `13.380`.
+- margin MAE: `10.707` -> `10.607`;
+- margin RMSE: `13.452` -> `13.340`;
+- total MAE: `10.753` -> `10.585`;
+- total RMSE: `13.549` -> `13.380`.
 
-The model outputs projected home points, away points, margin and total without reading sportsbook prices.
+The PBP layer includes pregame-only EPA/play, success rate, pass EPA/dropback, rush EPA/attempt, explosive-play rate and early-down EPA. Historical game-level features are reconstructed independently week by week from exact prior regular-season game IDs.
 
-The PBP layer adds pregame-only matchup features for EPA/play, success rate, passing EPA/dropback, rushing EPA/attempt, explosive-play rate, and early-down EPA. Historical game-level datasets are reconstructed independently week by week using only exact prior regular-season game IDs for PBP features. Preseason games and target-week PBP are excluded from regular-season predictors.
+Several advanced candidates remain disabled because later holdout evidence did not improve the promoted baseline. Negative results are retained; an advanced-looking feature is not promoted merely because it is available.
 
-The current/upcoming-game pipeline emits the canonical fair score separately from research/shadow quarterback adjustments. Research or shadow output is never silently substituted for the canonical baseline.
+### Quarterback layer
 
-### Stage 2 candidate evidence retained
-
-A simple exponential recency-weighting candidate selected a 12-week half-life on 2024. On the untouched 2025 holdout it improved MAE slightly but worsened both margin and total RMSE, so it failed closed and was not promoted.
-
-The first six-feature linear PBP residual candidate also remains disabled after the scoring-prior promotion. Against the promoted baseline on the untouched 2025 holdout:
-
-- margin MAE: baseline `10.607` vs adjusted `10.671`;
-- margin RMSE: baseline `13.200` vs adjusted `13.265`;
-- total MAE: baseline `10.484` vs adjusted `10.632`;
-- total RMSE: baseline `13.303` vs adjusted `13.413`.
-
-A second opponent-adjusted EPA/success-rate candidate also failed the untouched 2025 holdout and remains disabled. Negative results are retained as evidence: advanced-looking features do not enter the canonical score simply because they are available.
+NFL QB state is a first-class subsystem rather than an arbitrary manual point adjustment. Current projections emit last-observed QB state and validated QB research/shadow structures separately from the canonical baseline. The release labels remain explicit so a research adjustment cannot silently replace the fair score.
 
 ### Stage 3 — probability and market layer
 
-The probability layer fits Gaussian residual distributions around independently generated margin and total projections. Distribution parameters come only from earlier chronological football residuals. Sportsbook lines are thresholds evaluated afterward; they are not football-model inputs.
+The probability layer fits Gaussian residual distributions around independently generated margin and total projections. Distribution parameters come only from earlier chronological football residuals. Sportsbook lines are evaluated afterward as thresholds.
 
-The first dispersion-scaling experiment selected scale `1.0` for both margin and total. On the untouched 2025 holdout of 208 games, the research Gaussian baseline recorded approximately:
+The initial dispersion experiment selected scale `1.0` for margin and total. On the 2025 holdout of 208 games, the research Gaussian baseline recorded approximately:
 
 - margin NLL: `4.00844`;
 - total NLL: `4.00855`;
-- home-win Brier score: `0.23405`;
-- margin 50% / 80% interval coverage: `46.15% / 75.96%`;
-- total 50% / 80% interval coverage: `54.81% / 79.81%`.
+- home-win Brier: `0.23405`;
+- margin 50% / 80% coverage: `46.15% / 75.96%`;
+- total 50% / 80% coverage: `54.81% / 79.81%`.
 
-A direct logistic home-win calibration finished marginally worse on the untouched holdout and remains disabled.
+A direct logistic home-win calibration finished marginally worse and remains disabled.
 
-The sportsbook layer supports American/decimal conversion, implied and no-vig probabilities, ML/spread/total model probabilities, executable-price EV, model-vs-market probability edge, timestamp provenance, grading, and one selected opportunity per game/market in research summaries.
+The sportsbook layer supports American/decimal odds conversion, implied/no-vig probabilities, ML/spread/total model probabilities, executable-price EV, probability edge, price provenance, grading, and one selected opportunity per game/market.
 
-### Free historical and current markets — same philosophy as NCAA
+### Historical market research
 
-The primary historical-market path is free. `nfl/free_market.py` uses nflverse/nfldata schedule-market fields for archived moneylines, spreads, totals and available prices, plus the public nflverse `initial_lines.csv` when a distinct opening spread/total exists.
+The primary historical path is free. `nfl/free_market.py` uses nflverse/nfldata schedule-market fields plus public `initial_lines.csv` when distinct opening values exist.
 
-The archive path follows the same discipline as the NCAA model:
+Rules match the NCAA evidence philosophy:
 
-- reconstruct football projections before attaching market data;
-- use a distinct archived opening line when available;
-- otherwise label the archive-final value as an explicit fallback;
-- use `-110` only when a spread/total exists but the archived side price is missing;
+- build the football projection before attaching market data;
+- use a distinct archived opening when available;
+- otherwise label archive-final values as explicit fallbacks;
 - never invent a moneyline;
 - grade one selected side per game/market;
-- report units, ROI, drawdown, uncertainty and available opening-to-archive-final CLV proxy;
+- report units, ROI, drawdown, uncertainty and available CLV proxy;
 - never relabel an archive-final fallback as a verified opening or official close.
 
-For live weeks, `nfl/espn_market.py` uses free ESPN NFL scoreboard/Core odds. The Odds API remains optional enrichment for richer timestamped/multi-book research; it is not required for the core model.
+`nfl/backtest_runtime.py` adds NCAA-style runtime diagnostics without changing selection: week-block bootstrap ROI intervals, probability-equivalent CLV, and market/season/week/role/location segment reports.
+
+### Current markets and line shopping
+
+`nfl/espn_market.py` remains the free primary source. `nfl/pro_market.py` adds an optional professional/multi-book layer using The Odds API when `THE_ODDS_API_KEY` is configured.
+
+The canonical current-market path:
+
+- tries free ESPN first;
+- optionally adds professional books;
+- preserves sportsbook update timestamps where available;
+- counts unique sportsbook identity rather than feed/provider identity;
+- evaluates every quote downstream of the independent projection;
+- retains one best executable quote per game/market;
+- records per-market book count and game-level multi-book coverage;
+- uses the same aggregation path for scheduled forward line capture.
+
+A duplicated sportsbook exposed through two providers does not count as two books.
+
+### Stage 4 — current NFL context
+
+The context layer now mirrors the NCAA current-only philosophy:
+
+- nflverse injury reports filtered by target week and as-of timestamp;
+- latest admissible player status supersedes older reports;
+- separate QB injury risk;
+- modern timestamped and legacy weekly depth-chart support;
+- weekly roster availability and active-QB checks;
+- top-depth, offensive-line, skill-position and defensive injury-risk summaries;
+- home/away rest-day context;
+- deterministic travel miles and timezone-shift context;
+- neutral-site venue lookup;
+- indoor/closed-roof weather bypass;
+- free Open-Meteo outdoor forecasts near kickoff;
+- temperature, precipitation, wind, gust and bounded weather-risk diagnostics.
+
+Current context refuses historical-season attachment by default. Missing context lowers coverage or blocks a path; it is not converted into a favorable assumption. `score_adjustment_enabled` remains false until a point-in-time NFL historical test demonstrates improvement.
 
 ### CFB-style operational shell
 
-The NFL repository now has the same major operational boundaries as the NCAA repository:
+The canonical path now follows the same shape as NCAA:
 
 ```text
 football data
 -> independent fair score
 -> chronological probability distribution
--> verified current market
+-> canonical current market aggregation
+-> line shop / no-vig / EV
 -> policy signal
 -> capped fractional Kelly
 -> execution validation
 -> portfolio concentration controls
 -> forward decision ledger
 -> independent grading
--> historical/live evidence
--> monitoring + health
+-> historical + forward evidence
+-> monitoring + health + audit snapshot
 -> hard release gate
--> canonical report
+-> canonical JSON/CSV + weekly HTML/PNG publication
 ```
 
 Key controls:
 
-- `nfl/policy.py` supplies conservative NFL-specific PASS/LEAN/BET/STRONG research thresholds and capped fractional Kelly. These defaults are **not** claimed to be production-validated thresholds.
-- `nfl/execution_market.py` fails closed on missing/invalid odds, required line, sportsbook provenance, quote timestamp, future timestamp, or stale quote.
-- `nfl/portfolio.py` applies slate, game, team, market, book and kickoff-cluster caps plus drawdown/trailing-performance throttles. PAPER/SHADOW allocations can be recorded, but real `portfolio_stake_units` remain zero unless the hard production gate is open.
-- `nfl/line_history.py` writes timestamped forward market snapshots and uses explicit UTC kickoff times so pre-kickoff CLV evidence cannot depend on the runner's local timezone.
-- `nfl/decision_ledger.py` persists only cap-constrained PAPER/SHADOW/BET decisions and appends a new row only when the executable portfolio state changes.
-- `nfl/grading.py` grades the earliest persisted decision per game/market against final NFL scores and can attach a later same-book pre-kickoff CLV observation.
-- `nfl/proof.py` separates the broad free archive research sample from the stronger promotion sample. Archive-final fallbacks are excluded from verified-entry promotion evidence.
-- `nfl/monitoring.py`, `nfl/health.py`, `nfl/model_card.py`, and `nfl/reporting.py` provide the same operational observability pattern as the CFB system.
-- `nfl/release_gate.py` is a hard deployment gate. No weighted readiness score can override missing historical entry integrity, live evidence, context coverage, or other hard blockers.
+- `nfl/policy.py` — NFL-specific PASS/LEAN/BET/STRONG research policy and capped fractional Kelly.
+- `nfl/execution_market.py` — fails closed on invalid odds/line, sportsbook provenance, market-book count, stale/future quote, or a quote that is not strictly pre-kickoff.
+- `nfl/portfolio.py` — slate/game/team/market/book/kickoff caps plus drawdown and trailing-performance throttles. Real stake stays zero unless the production gate opens.
+- `nfl/line_history.py` — timestamped forward market snapshots with explicit UTC kickoff.
+- `nfl/decision_ledger.py` — append-only cap-constrained PAPER/SHADOW/BET decisions.
+- `nfl/grading.py` — independent grading of the earliest eligible decision per game/market and later pre-kickoff CLV observations.
+- `nfl/proof.py` — separates broad archive research from stronger promotion-quality entry evidence.
+- `nfl/monitoring.py`, `nfl/health.py`, `nfl/model_card.py` — operational observability.
+- `nfl/release_gate.py` — hard state machine; a weighted score cannot override failed evidence gates.
+- `nfl/render.py` — NCAA-style one-row-per-game weekly HTML/PNG board with release-state labeling.
 
-### Release states
+### NCAA-style audit suite
 
-The model follows the same deployment-state concept as NCAA:
+The NFL repository also has explicit machine-readable audits:
+
+- `nfl/feature_audit.py` — feature parity, leakage-name checks, missingness and drift;
+- `nfl/backtest_audit.py` — quote provenance, opening/final separation and CLV integrity;
+- `nfl/grading_audit.py` — strict pre-kickoff forward decisions and closing chronology;
+- `nfl/portfolio_audit.py` — cap enforcement, execution eligibility and production-gate checks;
+- `nfl/audit_snapshot.py` — consolidated feature/backtest/grading/portfolio/health/release snapshot.
+
+The `NFL Audit Snapshot` GitHub Actions workflow produces the same PASS/WARN/FAIL style used operationally by the NCAA project.
+
+## Release states
 
 - **RESEARCH** — one or more engineering/data/context/calibration hard gates fail.
 - **PAPER** — engineering gates pass, but historical promotion evidence is not robust enough.
-- **SHADOW** — robust NFL historical evidence exists, but independent live/forward evidence is not yet sufficient for production.
-- **PRODUCTION** — engineering, verified historical entry evidence, market breadth, portfolio-verified forward grading, ROI/CLV requirements, and live sample requirements all pass.
+- **SHADOW** — robust NFL historical evidence exists, but independent forward evidence is insufficient for production.
+- **PRODUCTION** — engineering, verified historical entry evidence, market breadth, portfolio-verified forward grading, ROI/CLV and sample requirements all pass.
 
-No state is manually promoted merely because the code runs.
+No state is manually promoted merely because the code executes successfully.
 
-### Current intentional blocker: Stage 4 context
-
-The QB subsystem exists, but broad timestamp-safe NFL context is not yet complete. Until injuries/personnel, rest/travel, stadium/roof, and weather are implemented with point-in-time-safe contracts, the canonical pipeline deliberately reports partial context coverage and the release gate remains closed. This is preferable to silently filling historical games with current information.
+The weekly HTML/PNG board always prints its release state. A PAPER/SHADOW opportunity may be displayed for evaluation, but it is not labeled as a production bet.
 
 ## Anti-leakage rules
 
-For a target game in season `S`, week `W`, team state must be created only from information known before kickoff. Target-week/future results and PBP are excluded. The prior-season scoring state is restricted to the immediately preceding completed regular season.
+For a target game in season `S`, week `W`, team state must be created only from information known before kickoff. Target-week/future results and PBP are excluded. Prior-season scoring state is restricted to the immediately preceding completed regular season.
 
-Sportsbook data remains downstream. Timestamped simulations may use only quotes observable at the simulated decision time. Free archive opening/final values remain labeled by their actual archive stage. Current injuries/depth-chart/weather information cannot be backfilled into historical games without a timestamp-correct source.
+Sportsbook data remains downstream. Timestamped simulations may use only quotes observable at the simulated decision time. Current injuries/depth/weather cannot be backfilled into historical games without timestamp-correct evidence. Closing prices and CLV are evaluation evidence, never football-model features.
 
 ## Quick start
 
@@ -162,77 +194,75 @@ python run_walkforward.py 2025 --start-week 5 --end-week 10 --refresh
 python run_prior_audit.py --refresh
 python run_probability_audit.py --refresh
 
-# current football-only projection
+# current independent projection
 python run_current_projection.py 2026 --refresh
 
-# free historical market research
+# free historical market research + NCAA-style runtime diagnostics
 python run_free_market_backtest.py --start-season 2022 --end-season 2025 \
   --validation-season 2024 --holdout-season 2025 --refresh
 
-# canonical CFB-style NFL operational run
+# canonical NCAA-style NFL operational run + weekly board
 python harbin_nfl_model.py 2026 --refresh
 
-# independent forward evidence utilities
+# forward evidence utilities
 python capture_lines.py --season 2026 --refresh
 python grade_live.py
+python run_audit_snapshot.py
 ```
 
-GitHub Actions also provide a canonical NFL model run, hourly line capture, scheduled live grading, free historical backtesting, current-market comparison, and the existing football/probability holdout audits.
+If `THE_ODDS_API_KEY` is absent, the canonical current path still runs on free ESPN data. The optional source only enriches breadth and price shopping.
 
 ## Key files
 
 ### Football and probability
-- `nfl/contracts.py` — schema and fail-closed data contracts.
-- `nfl/data.py` — nflverse ingestion, caching and schedule anti-leakage helpers.
-- `nfl/ratings.py` — canonical ridge fair-score baseline and validated prior-season weight.
-- `nfl/advanced.py` — leak-free PBP efficiency features.
-- `nfl/dataset.py` — chronological game-level modeling dataset construction.
-- `nfl/evaluation.py` — baseline football-projection error metrics.
-- `nfl/recency.py`, `nfl/priors.py` — candidate validation for recency/prior behavior.
-- `nfl/residuals.py`, `nfl/opponent_adjusted.py`, `nfl/oa_dataset.py`, `nfl/oa_residuals.py` — advanced residual research.
-- `nfl/probability.py`, `nfl/win_probability.py` — chronological probability research/calibration.
-- `nfl/quarterbacks.py` and QB dataset/validation modules — NFL-specific QB state and shadow research.
 
-### Market research
+- `nfl/contracts.py` — schema/fail-closed data contracts.
+- `nfl/data.py` — nflverse ingestion, caching and anti-leakage helpers.
+- `nfl/ratings.py` — canonical fair-score baseline and validated prior-season weight.
+- `nfl/advanced.py`, `nfl/dataset.py` — leak-free PBP features and chronological datasets.
+- `nfl/probability.py`, `nfl/win_probability.py` — chronological score/win probability research.
+- QB dataset/state/validation modules — NFL-specific quarterback research and release labels.
+
+### Context
+
+- `nfl/injuries.py` — point-in-time injury normalization.
+- `nfl/personnel.py` — depth-chart/roster availability.
+- `nfl/weather.py` — venue, travel and Open-Meteo weather context.
+- `nfl/context.py` — current-only context aggregation and coverage metadata.
+
+### Markets and proof
+
 - `nfl/market.py` — odds math, no-vig probabilities and model-market comparison.
-- `nfl/free_market.py` — free nflverse opening/archive-final market adapter.
-- `nfl/free_market_backtest.py` — free archive grading, ROI/CLV proxy and holdout evidence.
-- `nfl/espn_market.py` — free current ESPN market adapter.
-- `nfl/odds_api.py` — optional richer historical provider adapter.
-- `nfl/clv.py`, `nfl/market_history.py`, `nfl/market_backtest.py`, `nfl/market_validation.py` — timestamped provider research and validation.
+- `nfl/free_market.py`, `nfl/free_market_backtest.py` — free archive adapter and chronological grading.
+- `nfl/backtest_runtime.py` — block-bootstrap/CLV/segment runtime diagnostics.
+- `nfl/espn_market.py` — free current ESPN adapter.
+- `nfl/pro_market.py` — optional multi-book current aggregation.
+- `nfl/odds_api.py` — optional timestamped historical-provider adapter.
+- `nfl/market_intel.py` — canonical current line shopping and market-intelligence rows.
 
-### CFB-style operational parity
-- `nfl/market_intel.py` — canonical current market-intelligence schema.
-- `nfl/policy.py` — signal policy and capped fractional Kelly.
-- `nfl/execution_market.py` — executable quote validation.
-- `nfl/portfolio.py` — concentration caps and bankroll/drawdown throttles.
-- `nfl/line_history.py` — forward market snapshot ledger.
-- `nfl/decision_ledger.py` — append-only cap-constrained decision ledger.
-- `nfl/grading.py` — independent forward grading.
-- `nfl/proof.py` — historical evidence/promotion sample report.
-- `nfl/monitoring.py` — live readiness and distribution drift.
-- `nfl/release_gate.py` — hard deployment state machine.
-- `nfl/health.py` — source/model operational health.
-- `nfl/model_card.py` — machine-readable model card.
-- `nfl/reporting.py` — canonical report/publication bundle.
-- `nfl/pipeline.py` — canonical end-to-end operational run.
+### Operations
+
+- `nfl/policy.py`, `nfl/execution_market.py`, `nfl/portfolio.py` — policy, execution and risk controls.
+- `nfl/line_history.py`, `nfl/decision_ledger.py`, `nfl/grading.py` — forward evidence ledgers and grading.
+- `nfl/proof.py`, `nfl/monitoring.py`, `nfl/release_gate.py`, `nfl/health.py`, `nfl/model_card.py` — proof and release controls.
+- `nfl/reporting.py`, `nfl/render.py`, `nfl/pipeline.py` — canonical machine + human publication path.
 - `harbin_nfl_model.py` — primary operational entrypoint.
-- `capture_lines.py` / `grade_live.py` — forward evidence entrypoints.
 
-See `docs/parity_plan.md` plus the Stage 1–3 documents under `docs/` for architecture and validation contracts.
+See `docs/parity_plan.md` and the staged architecture/validation documents under `docs/` for the development contracts.
 
-## Non-negotiable model rules
+## Non-negotiable rules
 
 - No sportsbook line may leak into the independent fair-score engine.
 - No target-week/future result may enter a pregame feature.
 - Missing data lowers confidence or blocks a path; it is not silently invented.
-- Historical evaluation is chronological, not random train/test shuffling across time.
-- A learned adjustment stays disabled if it fails later untouched data.
+- Historical evaluation is chronological, not random time-shuffled train/test validation.
+- A learned adjustment stays disabled if it fails later holdout data.
 - Current context is not backfilled historically without timestamp-correct evidence.
 - A timestamped sportsbook backtest may use only quotes observable at the simulated decision time.
 - Archive-final values are never promoted by calling them verified openings or official closes.
 - Closing prices/CLV are evaluation evidence, not football-model features.
-- Multiple books do not create multiple independent bets on the same modeled game/market.
+- Multiple books do not create multiple independent bets on the same game/market.
+- Multiple data feeds exposing the same sportsbook do not create synthetic multi-book breadth.
 - No uncapped Kelly and no stake outside the production-controlled portfolio path.
-- NFL thresholds, weights, calibration, and release evidence remain independent of CFB.
-- A model reaches production only through independent evidence, not because code executes successfully.
+- NFL thresholds, weights, calibration and release evidence remain independent of NCAA.
+- Production is earned through independent NFL evidence, not because the architecture matches NCAA.

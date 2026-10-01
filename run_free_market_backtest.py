@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from nfl.backtest_audit import audit_backtest_bets
+from nfl.backtest_runtime import write_backtest_runtime
 from nfl.contracts import DataContractError
 from nfl.data import NFLDataClient
 from nfl.free_market import FreeNFLMarketStore, load_nflverse_initial_lines
@@ -88,6 +89,7 @@ def main() -> None:
     )
     if backtest_audit["errors"]:
         raise RuntimeError("historical quote-integrity audit failed")
+    runtime = write_backtest_runtime(bets, projections, reports_dir=reports)
 
     payload = {
         "source": {
@@ -112,6 +114,7 @@ def main() -> None:
         "by_market": by_market,
         "by_season": by_season,
         "holdout_evaluations": evaluations,
+        "runtime_diagnostics": runtime,
         "quote_integrity": backtest_audit["quote_integrity"],
         "backtest_audit_status": backtest_audit["status"],
     }
