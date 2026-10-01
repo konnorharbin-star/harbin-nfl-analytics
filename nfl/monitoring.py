@@ -56,7 +56,10 @@ def build_live_monitoring(
     market = meta.get("market_coverage")
     if not isinstance(market, dict):
         market = {}
-    games = max(1, int(market.get("games", current.get_column("game_id").n_unique() if "game_id" in current.columns else 0) or 0))
+    current_games = (
+        current.get_column("game_id").n_unique() if "game_id" in current.columns else 0
+    )
+    games = max(1, int(market.get("games", current_games) or 0))
     complete = min(
         int(market.get("moneyline", 0) or 0),
         int(market.get("spread", 0) or 0),
@@ -67,7 +70,9 @@ def build_live_monitoring(
     intelligence = meta.get("market_intelligence")
     if not isinstance(intelligence, dict):
         intelligence = {}
-    scores["multi_book"] = _clip(100.0 * float(intelligence.get("multi_book_coverage", 0.0) or 0.0))
+    scores["multi_book"] = _clip(
+        100.0 * float(intelligence.get("multi_book_coverage", 0.0) or 0.0)
+    )
 
     probability = meta.get("probability")
     if not isinstance(probability, dict):
@@ -106,9 +111,13 @@ def build_live_monitoring(
         missing_rate = 1.0
     else:
         total_cells = max(1, current.height * len(current.columns))
-        missing_cells = sum(current.get_column(column).null_count() for column in current.columns)
+        missing_cells = sum(
+            current.get_column(column).null_count() for column in current.columns
+        )
         missing_rate = missing_cells / total_cells
-    scores["output_completeness"] = _clip(100.0 * (1.0 - min(0.5, missing_rate) / 0.5))
+    scores["output_completeness"] = _clip(
+        100.0 * (1.0 - min(0.5, missing_rate) / 0.5)
+    )
 
     reference_path = Path(reports_dir) / "free_market_predictions.csv"
     drift_details: dict[str, object] = {}
@@ -154,7 +163,9 @@ def build_live_monitoring(
         "output_completeness": 0.10,
     }
     score = sum(weights[name] * scores.get(name, 0.0) for name in weights)
-    severe_drift = any(float(value["stability_score"]) < 40 for value in drift_details.values())
+    severe_drift = any(
+        float(value["stability_score"]) < 40 for value in drift_details.values()
+    )
     status = "ALERT" if score < 60 or severe_drift else "WARN" if alerts else "OK"
     return {
         "status": status,
