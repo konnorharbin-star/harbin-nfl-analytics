@@ -9,7 +9,7 @@ import polars as pl
 
 from .contracts import DataContractError, require_columns
 
-REQUIRED = {
+BASE_REQUIRED = {
     "season",
     "week",
     "game_id",
@@ -18,16 +18,47 @@ REQUIRED = {
     "american_odds",
     "price_stage",
     "has_distinct_open",
+    "result",
+    "net_units",
+}
+ENTRY_REQUIRED = {
     "entry_line_observed",
     "entry_price_verified",
     "entry_price_stage",
-    "result",
-    "net_units",
 }
 
 
 def _bool_expr(name: str) -> pl.Expr:
     return pl.col(name).cast(pl.Boolean, strict=False).fill_null(False)
+
+
+def _normalize_entry_provenance(frame: pl.DataFrame) -> tuple[pl.DataFrame, bool]:
+    """Accept legacy research rows while refusing to infer verified entry prices.
+
+    Older backtest CSVs only carried ``has_distinct_open``. That is enough to preserve
+    opening-line coverage for diagnostics, but it is not enough to prove the simulated
+    price itself was observed at open. Missing Stage 13 fields therefore default to
+    research-only provenance.
+    """
+
+    legacy = not ENTRY_REQUIRED.issubset(frame.columns)
+    output = frame
+    if "entry_line_observed" not in output.columns:
+        output = output.with_columns(
+            _bool_expr("has_distinct_open").alias("entry_line_observed")
+        )
+    if "entry_price_verified" not in output.columns:
+        output = output.with_columns(pl.lit(False).alias("entry_price_verified"))
+    if "entry_price_stage" not in output.columns:
+        output = output.with_columns(
+            pl.when(_bool_expr("entry_price_verified"))
+            .then(pl.lit("archive_open_price"))
+            .when(_bool_expr("entry_line_observed"))
+            .then(pl.lit("archive_open_line_final_price"))
+            .otherwise(pl.lit("archive_final_fallback"))
+            .alias("entry_price_stage")
+        )
+    return output, legacy
 
 
 def audit_backtest_bets(frame: pl.DataFrame) -> dict[str, object]:
@@ -52,9 +83,23 @@ def audit_backtest_bets(frame: pl.DataFrame) -> dict[str, object]:
                 "verified_opening_entry_rate": 0.0,
             },
         }
-    require_columns(frame, REQUIRED, "free_market_backtest_bets")
+    require_columns(frame, BASE_REQUIRED, "free_market_backtest_bets")
+    frame, legacy_provenance = _normalize_entry_provenance(frame)
+    require_columns(frame, BASE_REQUIRED | ENTRY_REQUIRED, "free_market_backtest_bets")
 
     issues: list[dict[str, object]] = []
+    if legacy_provenance:
+        issues.append(
+            {
+                "severity": "WARNING",
+                "code": "legacy_entry_provenance_fail_closed",
+                "meaning": (
+                    "legacy rows preserve opening-line coverage but count zero verified "
+                    "entry prices until regenerated with Stage 13 provenance"
+                ),
+            }
+        )
+
     duplicate_groups = (
         frame.group_by(["game_id", "market_type"]).len().filter(pl.col("len") > 1).height
     )
