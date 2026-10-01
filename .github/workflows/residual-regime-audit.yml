@@ -1,0 +1,48 @@
+name: NFL Residual Regime Audit
+
+on:
+  pull_request:
+    paths:
+      - "nfl/residual_regimes.py"
+      - "nfl/residual_regime_audit.py"
+      - "nfl/schedule_context.py"
+      - "nfl/ratings.py"
+      - "tests/test_residual_regimes.py"
+      - "run_residual_regime_audit.py"
+      - ".github/workflows/residual-regime-audit.yml"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+      - name: Unit tests
+        run: python -m pytest -q tests/test_residual_regimes.py
+      - name: Ruff
+        run: >-
+          ruff check nfl/residual_regimes.py nfl/residual_regime_audit.py
+          run_residual_regime_audit.py tests/test_residual_regimes.py
+      - name: Run 2022-2025 residual-regime diagnostic
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports
+          python run_residual_regime_audit.py --refresh |
+            tee reports/residual_regime_audit.log
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-residual-regime-audit
+          path: |
+            reports/residual_regime_audit.json
+            reports/residual_regime_audit.log
+          if-no-files-found: error
