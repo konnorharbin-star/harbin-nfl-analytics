@@ -7,6 +7,7 @@ available before the target week.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 
 import numpy as np
@@ -40,7 +41,8 @@ class FairScoreModel:
         league_points + offense(team) - defense(opponent) + home_field
 
     Team effects are shrunk toward zero with ridge regularization. The intercept and
-    home-field coefficient are not penalized.
+    home-field coefficient are not penalized. Optional positive sample weights allow
+    later games to receive more influence without changing the model specification.
     """
 
     def __init__(self, ridge: float = 8.0) -> None:
@@ -54,12 +56,33 @@ class FairScoreModel:
         self.defense: dict[str, float] = {}
         self.residual_std: float | None = None
         self.training_rows: int = 0
+        self.training_weight: float = 0.0
 
     @property
     def fitted(self) -> bool:
         return self.league_points is not None
 
-    def fit(self, team_games: pl.DataFrame) -> FairScoreModel:
+    @staticmethod
+    def _weights(
+        n_rows: int,
+        sample_weight: Sequence[float] | np.ndarray | None,
+    ) -> np.ndarray:
+        if sample_weight is None:
+            return np.ones(n_rows, dtype=float)
+        weights = np.asarray(sample_weight, dtype=float)
+        if weights.shape != (n_rows,):
+            raise DataContractError(
+                f"sample_weight must have shape ({n_rows},), got {weights.shape}"
+            )
+        if not np.isfinite(weights).all() or np.any(weights <= 0):
+            raise DataContractError("sample_weight must contain finite positive values")
+        return weights
+
+    def fit(
+        self,
+        team_games: pl.DataFrame,
+        sample_weight: Sequence[float] | np.ndarray | None = None,
+    ) -> FairScoreModel:
         required = {"team", "opponent", "points_for", "is_home"}
         require_columns(team_games, required, "team_games")
         if team_games.height < 4:
@@ -82,6 +105,7 @@ class FairScoreModel:
         home = np.asarray(team_games.get_column("is_home").cast(pl.Float64), dtype=float)
         team_values = team_games.get_column("team").to_list()
         opponent_values = team_games.get_column("opponent").to_list()
+        weights = self._weights(n_rows, sample_weight)
 
         x[:, 0] = 1.0
         x[:, 1] = home
@@ -89,10 +113,17 @@ class FairScoreModel:
             x[row, 2 + team_index[team]] = 1.0
             x[row, 2 + n_teams + team_index[opponent]] = -1.0
 
+        sqrt_weight = np.sqrt(weights)
+        weighted_x = x * sqrt_weight[:, None]
+        weighted_y = y * sqrt_weight
+
         penalty = np.eye(n_columns, dtype=float) * self.ridge
         penalty[0, 0] = 0.0
         penalty[1, 1] = 0.0
-        beta = np.linalg.solve(x.T @ x + penalty, x.T @ y)
+        beta = np.linalg.solve(
+            weighted_x.T @ weighted_x + penalty,
+            weighted_x.T @ weighted_y,
+        )
 
         raw_offense = beta[2 : 2 + n_teams]
         raw_defense = beta[2 + n_teams :]
@@ -112,8 +143,11 @@ class FairScoreModel:
         }
         fitted_values = x @ beta
         residuals = y - fitted_values
-        self.residual_std = float(np.sqrt(np.mean(np.square(residuals))))
+        self.residual_std = float(
+            np.sqrt(np.sum(weights * np.square(residuals)) / np.sum(weights))
+        )
         self.training_rows = n_rows
+        self.training_weight = float(np.sum(weights))
         return self
 
     def _check_team(self, team: str) -> None:
