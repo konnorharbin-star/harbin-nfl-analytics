@@ -70,7 +70,7 @@ def test_prior_week_scores_change_later_state() -> None:
 def _zero_residual_dataset(config_name: str) -> pl.DataFrame:
     rows = []
     for season in (2022, 2023, 2024, 2025):
-        for i in range(100):
+        for i in range(180):
             baseline_margin = ((i % 11) - 5) * 0.5
             baseline_total = 42.0 + (i % 9)
             row = {
