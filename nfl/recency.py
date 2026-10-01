@@ -1,8 +1,8 @@
-"""Chronological recency-weighting experiments for the NFL fair-score baseline.
+"""Chronological recency validation for the NFL fair-score baseline.
 
-This module tests one narrow hypothesis: recent completed games may deserve more
-weight than older games when estimating team scoring strength. The experiment stays
-inside the football-only fair-score layer. Sportsbook prices are never inputs.
+Recency is treated as a candidate model change, not an assumption. Half-life choices
+are selected on one completed validation season and then evaluated once on a later
+untouched holdout season. Sportsbook prices are never inputs.
 """
 
 from __future__ import annotations
@@ -14,8 +14,8 @@ import numpy as np
 import polars as pl
 
 from .contracts import DataContractError, require_columns
-from .data import completed_games, schedule_to_team_games
-from .ratings import FairScoreModel
+from .data import completed_games
+from .ratings import fit_pregame_fair_score
 
 
 @dataclass(frozen=True)
@@ -33,58 +33,20 @@ class ScoreMetrics:
 class RecencyHoldoutEvaluation:
     validation_season: int
     holdout_season: int
-    selected_half_life_weeks: float
+    selected_half_life_weeks: float | None
     validation_baseline: ScoreMetrics
-    validation_recency: ScoreMetrics
+    validation_recency: ScoreMetrics | None
     holdout_baseline: ScoreMetrics
-    holdout_recency: ScoreMetrics
-    margin_mae_improvement: float
-    margin_rmse_improvement: float
-    total_mae_improvement: float
-    total_rmse_improvement: float
+    holdout_recency: ScoreMetrics | None
+    margin_mae_improvement: float | None
+    margin_rmse_improvement: float | None
+    total_mae_improvement: float | None
+    total_rmse_improvement: float | None
+    validation_candidate_pass: bool
     candidate_pass: bool
 
     def to_dict(self) -> dict[str, object]:
         return asdict(self)
-
-
-def exponential_week_weights(
-    team_games: pl.DataFrame,
-    *,
-    target_week: int,
-    half_life_weeks: float,
-) -> np.ndarray:
-    """Return positive exponential weights anchored to the latest eligible week.
-
-    A game from ``target_week - 1`` receives weight 1.0. Every ``half_life_weeks``
-    of additional age halves the weight. The function fails closed if target/future
-    rows are supplied.
-    """
-
-    require_columns(team_games, {"week"}, "team_games")
-    if target_week < 2:
-        raise ValueError("target_week must be >= 2")
-    if half_life_weeks <= 0:
-        raise ValueError("half_life_weeks must be > 0")
-
-    weeks = np.asarray(team_games.get_column("week"), dtype=float)
-    ages = (target_week - 1) - weeks
-    if not np.isfinite(ages).all() or np.any(ages < 0):
-        raise DataContractError("recency history contains target/future or invalid week rows")
-    return np.power(0.5, ages / float(half_life_weeks))
-
-
-def _regular_history(schedules: pl.DataFrame, season: int, week: int) -> pl.DataFrame:
-    require_columns(
-        schedules,
-        {"season", "week", "game_type", "game_id"},
-        "schedules",
-    )
-    return completed_games(schedules).filter(
-        (pl.col("season") == season)
-        & (pl.col("game_type") == "REG")
-        & (pl.col("week") < week)
-    )
 
 
 def _target_games(schedules: pl.DataFrame, season: int, week: int) -> pl.DataFrame:
@@ -103,27 +65,21 @@ def build_week_score_predictions(
     ridge: float = 8.0,
     half_life_weeks: float | None = None,
 ) -> pl.DataFrame:
-    """Project one completed week from strictly earlier same-season games."""
+    """Project one completed week from the canonical pregame scoring history."""
 
     if week < 2:
         raise ValueError("week must be >= 2")
-    history = _regular_history(schedules, season, week)
     targets = _target_games(schedules, season, week)
     if targets.is_empty():
         return pl.DataFrame()
-    if history.height < 2:
-        raise DataContractError("at least two prior regular-season games are required")
 
-    team_games = schedule_to_team_games(history)
-    sample_weight = None
-    if half_life_weeks is not None:
-        sample_weight = exponential_week_weights(
-            team_games,
-            target_week=week,
-            half_life_weeks=half_life_weeks,
-        )
-    model = FairScoreModel(ridge=ridge).fit(team_games, sample_weight=sample_weight)
-
+    model = fit_pregame_fair_score(
+        schedules,
+        season,
+        week,
+        ridge=ridge,
+        current_season_half_life=half_life_weeks,
+    )
     rows: list[dict[str, object]] = []
     for game in targets.iter_rows(named=True):
         home_team = str(game["home_team"])
@@ -156,7 +112,7 @@ def build_score_walkforward(
     ridge: float = 8.0,
     half_life_weeks: float | None = None,
 ) -> pl.DataFrame:
-    """Reconstruct a season of score projections with an explicit pregame boundary."""
+    """Reconstruct a season with an explicit weekly pregame boundary."""
 
     if start_week < 2:
         raise ValueError("start_week must be >= 2")
@@ -217,10 +173,22 @@ def score_predictions(frame: pl.DataFrame) -> ScoreMetrics:
     )
 
 
-def _selection_objective(metrics: ScoreMetrics) -> float:
-    """Joint score objective used only on the validation season."""
+def _strictly_improves(candidate: ScoreMetrics, baseline: ScoreMetrics) -> bool:
+    return (
+        candidate.margin_mae < baseline.margin_mae
+        and candidate.margin_rmse < baseline.margin_rmse
+        and candidate.total_mae < baseline.total_mae
+        and candidate.total_rmse < baseline.total_rmse
+    )
 
-    return metrics.margin_rmse + metrics.total_rmse
+
+def _relative_score(candidate: ScoreMetrics, baseline: ScoreMetrics) -> float:
+    return (
+        candidate.margin_mae / baseline.margin_mae
+        + candidate.margin_rmse / baseline.margin_rmse
+        + candidate.total_mae / baseline.total_mae
+        + candidate.total_rmse / baseline.total_rmse
+    )
 
 
 def evaluate_recency_holdout(
@@ -232,34 +200,48 @@ def evaluate_recency_holdout(
     start_week: int = 5,
     ridge: float = 8.0,
 ) -> RecencyHoldoutEvaluation:
-    """Tune recency on one season, then score the later holdout exactly once."""
+    """Tune recency on one season, then score the later holdout exactly once.
+
+    A half-life becomes eligible only if it improves all four primary score metrics on
+    the validation season. The later holdout uses the selected half-life exactly once,
+    and promotion requires all four metrics to improve there as well.
+    """
 
     if validation_season >= holdout_season:
         raise ValueError("validation_season must be earlier than holdout_season")
     if not half_life_grid or any(value <= 0 for value in half_life_grid):
         raise ValueError("half_life_grid must contain positive values")
 
-    validation_baseline_frame = build_score_walkforward(
-        schedules,
-        validation_season,
-        start_week=start_week,
-        ridge=ridge,
-    )
-    validation_baseline = score_predictions(validation_baseline_frame)
-
-    candidates: list[tuple[float, float, ScoreMetrics]] = []
-    for half_life in half_life_grid:
-        frame = build_score_walkforward(
+    validation_baseline = score_predictions(
+        build_score_walkforward(
             schedules,
             validation_season,
             start_week=start_week,
             ridge=ridge,
-            half_life_weeks=half_life,
         )
-        metrics = score_predictions(frame)
-        candidates.append((_selection_objective(metrics), float(half_life), metrics))
-    candidates.sort(key=lambda item: (item[0], item[1]))
-    _, selected_half_life, validation_recency = candidates[0]
+    )
+
+    eligible: list[tuple[float, float, ScoreMetrics]] = []
+    for half_life in half_life_grid:
+        metrics = score_predictions(
+            build_score_walkforward(
+                schedules,
+                validation_season,
+                start_week=start_week,
+                ridge=ridge,
+                half_life_weeks=half_life,
+            )
+        )
+        if _strictly_improves(metrics, validation_baseline):
+            eligible.append(
+                (_relative_score(metrics, validation_baseline), float(half_life), metrics)
+            )
+
+    selected_half_life: float | None = None
+    validation_recency: ScoreMetrics | None = None
+    if eligible:
+        eligible.sort(key=lambda item: (item[0], item[1]))
+        _, selected_half_life, validation_recency = eligible[0]
 
     holdout_baseline = score_predictions(
         build_score_walkforward(
@@ -269,29 +251,32 @@ def evaluate_recency_holdout(
             ridge=ridge,
         )
     )
-    holdout_recency = score_predictions(
-        build_score_walkforward(
-            schedules,
-            holdout_season,
-            start_week=start_week,
-            ridge=ridge,
-            half_life_weeks=selected_half_life,
-        )
-    )
 
-    margin_mae_improvement = holdout_baseline.margin_mae - holdout_recency.margin_mae
-    margin_rmse_improvement = holdout_baseline.margin_rmse - holdout_recency.margin_rmse
-    total_mae_improvement = holdout_baseline.total_mae - holdout_recency.total_mae
-    total_rmse_improvement = holdout_baseline.total_rmse - holdout_recency.total_rmse
-    candidate_pass = all(
-        value > 0
-        for value in (
-            margin_mae_improvement,
-            margin_rmse_improvement,
-            total_mae_improvement,
-            total_rmse_improvement,
-        )
+    holdout_recency: ScoreMetrics | None = None
+    improvements: tuple[float | None, float | None, float | None, float | None] = (
+        None,
+        None,
+        None,
+        None,
     )
+    candidate_pass = False
+    if selected_half_life is not None:
+        holdout_recency = score_predictions(
+            build_score_walkforward(
+                schedules,
+                holdout_season,
+                start_week=start_week,
+                ridge=ridge,
+                half_life_weeks=selected_half_life,
+            )
+        )
+        improvements = (
+            holdout_baseline.margin_mae - holdout_recency.margin_mae,
+            holdout_baseline.margin_rmse - holdout_recency.margin_rmse,
+            holdout_baseline.total_mae - holdout_recency.total_mae,
+            holdout_baseline.total_rmse - holdout_recency.total_rmse,
+        )
+        candidate_pass = all(value is not None and value > 0 for value in improvements)
 
     return RecencyHoldoutEvaluation(
         validation_season=validation_season,
@@ -301,9 +286,10 @@ def evaluate_recency_holdout(
         validation_recency=validation_recency,
         holdout_baseline=holdout_baseline,
         holdout_recency=holdout_recency,
-        margin_mae_improvement=margin_mae_improvement,
-        margin_rmse_improvement=margin_rmse_improvement,
-        total_mae_improvement=total_mae_improvement,
-        total_rmse_improvement=total_rmse_improvement,
+        margin_mae_improvement=improvements[0],
+        margin_rmse_improvement=improvements[1],
+        total_mae_improvement=improvements[2],
+        total_rmse_improvement=improvements[3],
+        validation_candidate_pass=selected_half_life is not None,
         candidate_pass=candidate_pass,
     )
