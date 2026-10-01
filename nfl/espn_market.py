@@ -7,10 +7,10 @@ prices are consumed only after the independent football projection already exist
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
 import json
 import re
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -349,7 +349,6 @@ class ESPNMarketClient:
             raise DataContractError("ESPN NFL scoreboard response is missing events")
 
         markets: list[ESPNTwoWayMarket] = []
-        matched_games: set[str] = set()
         for event in events:
             if not isinstance(event, dict):
                 continue
@@ -361,7 +360,9 @@ class ESPNMarketClient:
             if not event_id:
                 continue
             competitions = event.get("competitions")
-            competition = competitions[0] if isinstance(competitions, list) and competitions else {}
+            competition = (
+                competitions[0] if isinstance(competitions, list) and competitions else {}
+            )
             odds_list = competition.get("odds") if isinstance(competition, dict) else None
             normalized: list[ESPNTwoWayMarket] = []
             if isinstance(odds_list, list):
@@ -390,7 +391,6 @@ class ESPNMarketClient:
                         )
                     )
             if normalized:
-                matched_games.add(str(target["game_id"]))
                 by_market: dict[str, ESPNTwoWayMarket] = {}
                 for market in normalized:
                     by_market.setdefault(market.market_type, market)
