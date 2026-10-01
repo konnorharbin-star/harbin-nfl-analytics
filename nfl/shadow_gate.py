@@ -51,7 +51,10 @@ def _validate_arrays(
     baseline: np.ndarray,
     adjusted: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    values = tuple(np.asarray(array, dtype=float).reshape(-1) for array in (actual, baseline, adjusted))
+    values = tuple(
+        np.asarray(array, dtype=float).reshape(-1)
+        for array in (actual, baseline, adjusted)
+    )
     lengths = {array.shape[0] for array in values}
     if len(lengths) != 1 or not lengths or next(iter(lengths)) == 0:
         raise ValueError("actual, baseline, and adjusted must be non-empty equal-length arrays")
