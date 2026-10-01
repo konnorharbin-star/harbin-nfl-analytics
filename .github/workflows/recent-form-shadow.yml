@@ -1,0 +1,44 @@
+name: Recent Form 2026 Shadow Audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/recent_form.py"
+      - "nfl/recent_form_dataset.py"
+      - "nfl/recent_form_residuals.py"
+      - "nfl/recent_form_shadow.py"
+      - "nfl/shadow_gate.py"
+      - "run_recent_form_shadow.py"
+      - "tests/test_recent_form_shadow.py"
+      - ".github/workflows/recent-form-shadow.yml"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e .
+
+      - name: Run frozen recent-form totals shadow audit
+        run: |
+          mkdir -p reports
+          python run_recent_form_shadow.py --refresh | tee reports/recent_form_2026_shadow.json
+
+      - name: Upload shadow report
+        uses: actions/upload-artifact@v4
+        with:
+          name: recent-form-2026-shadow
+          path: reports/recent_form_2026_shadow.json
