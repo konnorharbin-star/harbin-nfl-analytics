@@ -166,7 +166,10 @@ def build_release_gate(
             multi_book >= 0.75,
             round(multi_book, 4),
             ">=75% current games covered by 2+ verified books",
-            "ESPN remains the free primary source; an optional source may supplement breadth.",
+            (
+                "ESPN remains the free primary source; an optional source may "
+                "supplement breadth."
+            ),
         ),
         _check(
             "historical_entry_integrity",
@@ -175,7 +178,10 @@ def build_release_gate(
                 "verified_bets": promotion.get("verified_bets", 0),
                 "excluded_unverified_bets": promotion.get("excluded_unverified_bets", 0),
             },
-            "promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
+            (
+                "promotion sample uses explicit opening-entry observations, not "
+                "archive-final fallbacks"
+            ),
         ),
         _check(
             "historical_market_edge",
@@ -186,7 +192,10 @@ def build_release_gate(
                 "positive_markets": promotion.get("positive_markets", 0),
                 "positive_seasons": promotion.get("positive_seasons", 0),
             },
-            "ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
+            (
+                "ROBUST NFL evidence with positive ROI confidence lower bound and "
+                "CLV across markets/seasons"
+            ),
         ),
         _check(
             "portfolio_verified_forward_ledger",
@@ -227,20 +236,27 @@ def build_release_gate(
     ]
     next_steps: list[str] = []
     if context_coverage < 0.90:
-        next_steps.append("Complete timestamp-safe NFL injuries/rest/weather/travel context coverage.")
+        next_steps.append(
+            "Complete timestamp-safe NFL injuries/rest/weather/travel context coverage."
+        )
     if multi_book < 0.75:
-        next_steps.append("Accumulate or supplement verified multi-book current pricing coverage.")
+        next_steps.append(
+            "Accumulate or supplement verified multi-book current pricing coverage."
+        )
     if not bool(promotion.get("entry_quote_verified", False)):
         next_steps.append(
-            "Accumulate explicit forward/opening entry snapshots; archive-final fallbacks cannot promote the model."
+            "Accumulate explicit forward/opening entry snapshots; archive-final "
+            "fallbacks cannot promote the model."
         )
     if not historical_ready:
         next_steps.append(
-            "Keep NFL policy in paper research until verified-entry chronological ROI/CLV evidence clears the hard gates."
+            "Keep NFL policy in paper research until verified-entry chronological "
+            "ROI/CLV evidence clears the hard gates."
         )
     if not live_ready:
         next_steps.append(
-            "Accumulate independently graded portfolio decisions; historical backtests do not substitute for live evidence."
+            "Accumulate independently graded portfolio decisions; historical "
+            "backtests do not substitute for live evidence."
         )
 
     return {
