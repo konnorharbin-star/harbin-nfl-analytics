@@ -8,6 +8,7 @@ from nfl.backtest_audit import audit_backtest_bets
 from nfl.backtest_runtime import write_backtest_runtime
 from nfl.contracts import DataContractError
 from nfl.data import NFLDataClient
+from nfl.entry_integrity import annotate_historical_entry_integrity
 from nfl.free_market import FreeNFLMarketStore, load_nflverse_initial_lines
 from nfl.free_market_backtest import (
     build_archive_projection_dataset,
@@ -15,6 +16,7 @@ from nfl.free_market_backtest import (
     evaluate_archive_holdout,
     summarize_archive_bets,
 )
+from nfl.proof import write_evidence_report
 
 
 def main() -> None:
@@ -51,7 +53,9 @@ def main() -> None:
         start_season=args.start_season,
         end_season=args.end_season,
     )
-    bets = build_free_archive_bets(projections, market_store)
+    bets = annotate_historical_entry_integrity(
+        build_free_archive_bets(projections, market_store)
+    )
     if bets.is_empty():
         raise SystemExit("free archive backtest produced no market opportunities")
 
@@ -98,6 +102,11 @@ def main() -> None:
             "api_key_required": False,
             "initial_lines_error": initial_error,
             "clv_label": "opening-to-archive-final CLV proxy",
+            "entry_price_rule": (
+                "Moneyline opening prices may qualify as observed entry prices. "
+                "Spread/total initial-line observations do not include opening juice, "
+                "so those rows remain research-only for promotion evidence."
+            ),
             "notes": (
                 "Archive-final values are not claimed to be timestamped official closes. "
                 "When a distinct opening is unavailable, the final archive value is an "
@@ -120,7 +129,22 @@ def main() -> None:
     }
     output = reports / "free_market_backtest.json"
     output.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+    evidence = write_evidence_report(
+        output=reports / "evidence_report.json",
+        backtest_path=output,
+        bets_path=reports / "free_market_bets.csv",
+    )
     print(json.dumps(payload, indent=2, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "evidence_status": evidence["status"],
+                "promotion_sample": evidence["promotion_sample"],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":
