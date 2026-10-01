@@ -14,7 +14,7 @@ import numpy as np
 import polars as pl
 
 from .advanced import _eligible_scrimmage_plays
-from .contracts import DataContractError, require_columns
+from .contracts import DataContractError
 
 PBP_METRICS = (
     "epa_per_play",
