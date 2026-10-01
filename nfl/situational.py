@@ -161,7 +161,10 @@ def _role_aggregate(
     early_prior = 80.0
     game_prior = 2.0
     output = grouped.with_columns(
-        ((pl.col("_rz_sum") + rz_prior * priors["red_zone_epa"]) / (pl.col("_rz_n") + rz_prior)).alias(
+        (
+            (pl.col("_rz_sum") + rz_prior * priors["red_zone_epa"])
+            / (pl.col("_rz_n") + rz_prior)
+        ).alias(
             f"{prefix}_red_zone_epa" if role == "offense" else "def_red_zone_epa_allowed"
         ),
         (
