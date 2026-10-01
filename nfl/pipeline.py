@@ -86,7 +86,10 @@ def _context_meta(projection: pl.DataFrame) -> dict[str, object]:
             "weather_stadium": 0.0,
             "rest_travel": 0.0,
         },
-        "note": "QB state is implemented; the remaining timestamp-safe Stage 4 context layers are not yet promoted.",
+        "note": (
+            "QB state is implemented; the remaining timestamp-safe Stage 4 context "
+            "layers are not yet promoted."
+        ),
     }
 
 
