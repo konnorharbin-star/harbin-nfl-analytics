@@ -8,16 +8,20 @@
     "status": "OK",
     "target_games": 16
   },
-  "live_readiness_score": 92.4,
+  "live_readiness_score": 84.4,
   "meaning": "operational health; not a profitability or staking signal",
-  "monitor_alerts": [],
+  "monitor_alerts": [
+    "multi-book consensus is limited"
+  ],
   "production_eligible": false,
   "release_blockers": [
+    "live_monitoring: live readiness >=90/100",
+    "multi_book_consensus: >=75% current games covered by 2+ verified books",
     "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
     "historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
     "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV"
   ],
-  "release_state": "PAPER",
+  "release_state": "RESEARCH",
   "source_failures": [],
   "sources": {
     "current_market": "espn",
