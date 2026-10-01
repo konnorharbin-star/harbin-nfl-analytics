@@ -137,7 +137,7 @@ def build_market_intelligence(
         books_by_game.setdefault(market.game_id, set()).add(_book_key(market))
 
     rows: list[dict[str, object]] = []
-    for (game_id, market_type), candidates in sorted(grouped.items()):
+    for (game_id, _market_type), candidates in sorted(grouped.items()):
         game = projected[game_id]
         distinct_books = sorted({_book_key(market) for _, market in candidates})
         chosen, source_market = max(
