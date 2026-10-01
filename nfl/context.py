@@ -108,9 +108,11 @@ def build_current_context(
     stamp = (as_of or datetime.now(UTC)).astimezone(UTC)
     expected = current_nfl_season(stamp)
     if season != expected and not allow_historical:
-        raise DataContractError(
-            f"current context is disabled for historical season {season}; current season is {expected}"
+        message = (
+            f"current context is disabled for historical season {season}; "
+            f"current season is {expected}"
         )
+        raise DataContractError(message)
     if week < 1:
         raise DataContractError("week must be >= 1")
 
@@ -118,25 +120,33 @@ def build_current_context(
     depth_source = depth_charts if depth_charts is not None else pl.DataFrame()
     roster_source = rosters if rosters is not None else pl.DataFrame()
 
-    normalized_injuries = normalize_injuries(
-        injury_source,
-        season=season,
-        week=week,
-        as_of=stamp,
-    ) if not injury_source.is_empty() else pl.DataFrame()
+    normalized_injuries = (
+        normalize_injuries(
+            injury_source,
+            season=season,
+            week=week,
+            as_of=stamp,
+        )
+        if not injury_source.is_empty()
+        else pl.DataFrame()
+    )
     injury_summary = summarize_team_injuries(normalized_injuries)
 
-    normalized_depth = normalize_depth_charts(
-        depth_source,
-        season=season,
-        week=week,
-        as_of=stamp,
-    ) if not depth_source.is_empty() else pl.DataFrame()
-    normalized_rosters = normalize_rosters(
-        roster_source,
-        season=season,
-        week=week,
-    ) if not roster_source.is_empty() else pl.DataFrame()
+    normalized_depth = (
+        normalize_depth_charts(
+            depth_source,
+            season=season,
+            week=week,
+            as_of=stamp,
+        )
+        if not depth_source.is_empty()
+        else pl.DataFrame()
+    )
+    normalized_rosters = (
+        normalize_rosters(roster_source, season=season, week=week)
+        if not roster_source.is_empty()
+        else pl.DataFrame()
+    )
     personnel_summary = summarize_team_personnel(
         normalized_depth,
         normalized_rosters,
@@ -176,11 +186,17 @@ def build_current_context(
         roof = game.get("roof")
         indoor = is_indoor_roof(roof)
         kickoff = kickoff_utc(game.get("gameday"), game.get("gametime"))
-        coordinates = weather.venue_coordinates(
-            home_team=home_team,
-            stadium=stadium,
-            neutral=neutral,
-        )
+        venue_error: str | None = None
+        try:
+            coordinates = weather.venue_coordinates(
+                home_team=home_team,
+                stadium=stadium,
+                neutral=neutral,
+            )
+        except DataContractError as exc:
+            coordinates = None
+            venue_error = str(exc)
+
         travel = (
             _neutral_travel(
                 home_team=home_team,
@@ -194,7 +210,7 @@ def build_current_context(
 
         forecast: dict[str, object] = {}
         weather_available = False
-        weather_error: str | None = None
+        weather_error: str | None = venue_error
         if indoor:
             forecast = {
                 "temperature_f": None,
@@ -205,6 +221,9 @@ def build_current_context(
                 "weather_source": "indoor",
             }
             weather_available = True
+            weather_error = None
+        elif weather_error is not None:
+            pass
         elif kickoff is None:
             weather_error = "missing kickoff time"
         elif coordinates is None:
@@ -261,18 +280,30 @@ def build_current_context(
                 "context_weather_stadium_available": weather_stadium_available,
                 "home_injury_count": int(home_injury.get("injury_count", 0) or 0),
                 "away_injury_count": int(away_injury.get("injury_count", 0) or 0),
-                "home_injury_risk": float(home_injury.get("injury_risk", 0.0) or 0.0),
-                "away_injury_risk": float(away_injury.get("injury_risk", 0.0) or 0.0),
-                "home_qb_injury_risk": float(home_injury.get("qb_injury_risk", 0.0) or 0.0),
-                "away_qb_injury_risk": float(away_injury.get("qb_injury_risk", 0.0) or 0.0),
+                "home_injury_risk": float(
+                    home_injury.get("injury_risk", 0.0) or 0.0
+                ),
+                "away_injury_risk": float(
+                    away_injury.get("injury_risk", 0.0) or 0.0
+                ),
+                "home_qb_injury_risk": float(
+                    home_injury.get("qb_injury_risk", 0.0) or 0.0
+                ),
+                "away_qb_injury_risk": float(
+                    away_injury.get("qb_injury_risk", 0.0) or 0.0
+                ),
                 "home_starter_injury_risk": float(
                     home_personnel.get("starter_injury_risk", 0.0) or 0.0
                 ),
                 "away_starter_injury_risk": float(
                     away_personnel.get("starter_injury_risk", 0.0) or 0.0
                 ),
-                "home_ol_injury_risk": float(home_personnel.get("ol_injury_risk", 0.0) or 0.0),
-                "away_ol_injury_risk": float(away_personnel.get("ol_injury_risk", 0.0) or 0.0),
+                "home_ol_injury_risk": float(
+                    home_personnel.get("ol_injury_risk", 0.0) or 0.0
+                ),
+                "away_ol_injury_risk": float(
+                    away_personnel.get("ol_injury_risk", 0.0) or 0.0
+                ),
                 "home_skill_injury_risk": float(
                     home_personnel.get("skill_injury_risk", 0.0) or 0.0
                 ),
@@ -285,8 +316,12 @@ def build_current_context(
                 "away_defense_injury_risk": float(
                     away_personnel.get("defense_injury_risk", 0.0) or 0.0
                 ),
-                "home_active_qb_count": int(home_personnel.get("active_qb_count", 0) or 0),
-                "away_active_qb_count": int(away_personnel.get("active_qb_count", 0) or 0),
+                "home_active_qb_count": int(
+                    home_personnel.get("active_qb_count", 0) or 0
+                ),
+                "away_active_qb_count": int(
+                    away_personnel.get("active_qb_count", 0) or 0
+                ),
                 "home_rest_days": home_rest,
                 "away_rest_days": away_rest,
                 "home_rest_advantage_days": rest_diff,
@@ -310,11 +345,11 @@ def build_current_context(
 
     context = pl.DataFrame(rows).sort("game_id") if rows else pl.DataFrame()
     games = max(1, targets.height)
-    coverage = {
-        name: count / games for name, count in component_counts.items()
-    }
+    coverage = {name: count / games for name, count in component_counts.items()}
     meta = {
-        "status": "READY" if min(coverage.values(), default=0.0) >= 0.90 else "PARTIAL",
+        "status": (
+            "READY" if min(coverage.values(), default=0.0) >= 0.90 else "PARTIAL"
+        ),
         "games": targets.height,
         "components": coverage,
         "coverage": sum(coverage.values()) / len(coverage) if coverage else 0.0,
