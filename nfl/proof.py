@@ -7,6 +7,8 @@ from pathlib import Path
 
 import polars as pl
 
+from .free_market_backtest import summarize_archive_bets
+
 
 def _read_json(path: str | Path) -> dict[str, object]:
     source = Path(path)
@@ -23,6 +25,24 @@ def _segment_positive(summary: dict[str, object], minimum_bets: int) -> bool:
     bets = int(summary.get("bets", 0) or 0)
     roi = summary.get("roi", summary.get("roi_per_unit_staked"))
     return bets >= minimum_bets and roi is not None and float(roi) > 0
+
+
+def _bool_column(frame: pl.DataFrame, name: str) -> pl.Series:
+    return frame.get_column(name).cast(pl.Boolean, strict=False).fill_null(False)
+
+
+def _verified_segments(
+    frame: pl.DataFrame,
+    column: str,
+) -> dict[str, dict[str, object]]:
+    if frame.is_empty() or column not in frame.columns:
+        return {}
+    values = sorted(str(value) for value in frame.get_column(column).unique().to_list())
+    output: dict[str, dict[str, object]] = {}
+    for value in values:
+        segment = frame.filter(pl.col(column).cast(pl.String) == value)
+        output[value] = summarize_archive_bets(segment).to_dict()
+    return output
 
 
 def build_evidence_report(
@@ -42,9 +62,10 @@ def build_evidence_report(
     )
 
     raw_rows = 0
+    opening_line_observed_bets = 0
     verified_bets = 0
     excluded_unverified = 0
-    verified_clv_values: list[float] = []
+    verified = pl.DataFrame()
     source = Path(bets_path)
     if source.exists():
         try:
@@ -52,45 +73,47 @@ def build_evidence_report(
         except Exception:
             bets = pl.DataFrame()
         raw_rows = bets.height
-        if not bets.is_empty() and "has_distinct_open" in bets.columns:
-            verified = bets.filter(pl.col("has_distinct_open"))
-            verified_bets = verified.height
-            excluded_unverified = raw_rows - verified_bets
-            if "clv_proxy" in verified.columns:
-                verified_clv_values = [
-                    float(value)
-                    for value in verified.get_column("clv_proxy").drop_nulls().to_list()
-                ]
+        if not bets.is_empty():
+            if "entry_line_observed" in bets.columns:
+                opening_line_observed_bets = int(
+                    _bool_column(bets, "entry_line_observed").sum()
+                )
+            elif "has_distinct_open" in bets.columns:
+                opening_line_observed_bets = int(
+                    _bool_column(bets, "has_distinct_open").sum()
+                )
+            if "entry_price_verified" in bets.columns:
+                verified = bets.filter(_bool_column(bets, "entry_price_verified"))
+                verified_bets = verified.height
+        excluded_unverified = raw_rows - verified_bets
 
+    verified_summary = (
+        summarize_archive_bets(verified).to_dict() if verified_bets else {}
+    )
+    verified_by_market = _verified_segments(verified, "market_type")
+    verified_by_season = _verified_segments(verified, "season")
     positive_markets = sum(
         1
-        for value in by_market.values()
-        if isinstance(value, dict) and _segment_positive(value, 50)
+        for value in verified_by_market.values()
+        if _segment_positive(value, 50)
     )
     positive_seasons = sum(
         1
-        for value in by_season.values()
-        if isinstance(value, dict) and _segment_positive(value, 100)
+        for value in verified_by_season.values()
+        if _segment_positive(value, 100)
     )
-    ci = overall.get("roi_ci_95")
-    if ci is None:
-        low = overall.get("roi_ci_95_low")
-        high = overall.get("roi_ci_95_high")
-        ci = [low, high]
-    if not isinstance(ci, list) or len(ci) != 2:
-        ci = [None, None]
 
-    avg_verified_clv = (
-        sum(verified_clv_values) / len(verified_clv_values)
-        if verified_clv_values
-        else None
-    )
+    verified_ci = [
+        verified_summary.get("roi_ci_95_low"),
+        verified_summary.get("roi_ci_95_high"),
+    ]
+    avg_verified_clv = verified_summary.get("average_clv_proxy")
     robust = (
         verified_bets >= 1000
-        and ci[0] is not None
-        and float(ci[0]) > 0
+        and verified_ci[0] is not None
+        and float(verified_ci[0]) > 0
         and avg_verified_clv is not None
-        and avg_verified_clv > 0
+        and float(avg_verified_clv) > 0
         and positive_markets >= 2
         and positive_seasons >= 2
     )
@@ -100,6 +123,7 @@ def build_evidence_report(
         status = "ESTABLISHED SAMPLE"
     else:
         status = "EARLY SAMPLE"
+
     return {
         "status": status,
         "overall": overall,
@@ -107,18 +131,27 @@ def build_evidence_report(
         "by_season": by_season,
         "promotion_sample": {
             "entry_quote_verified": verified_bets > 0,
+            "entry_price_verified": verified_bets > 0,
             "verified_bets": verified_bets,
             "raw_archive_bets": raw_rows,
+            "opening_line_observed_bets": opening_line_observed_bets,
             "excluded_unverified_bets": excluded_unverified,
+            "verified_roi_per_unit_staked": verified_summary.get(
+                "roi_per_unit_staked"
+            ),
+            "verified_roi_ci_95": verified_ci,
             "avg_verified_clv_proxy": avg_verified_clv,
             "positive_markets": positive_markets,
             "positive_seasons": positive_seasons,
+            "by_market": verified_by_market,
+            "by_season": verified_by_season,
         },
         "source": backtest.get("source", {}),
         "note": (
-            "Free nflverse archive-final fallbacks are valid research observations but are not "
-            "promotion-quality opening entries. ROBUST status requires explicit distinct opening "
-            "entry evidence plus positive uncertainty-adjusted ROI/CLV across markets and seasons."
+            "Free nflverse archive-final fallbacks and opening-line observations without "
+            "opening juice remain valid research observations, but they are not promotion-quality "
+            "entry-price evidence. ROBUST status requires observed entry prices plus positive "
+            "uncertainty-adjusted ROI/CLV across multiple markets and seasons."
         ),
     }
 
