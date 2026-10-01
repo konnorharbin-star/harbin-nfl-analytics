@@ -1,0 +1,41 @@
+name: NFL Depth Chart Diagnostic
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "run_depth_chart_diagnostic.py"
+      - ".github/workflows/depth-chart-diagnostic.yml"
+  workflow_dispatch:
+    inputs:
+      season:
+        description: "NFL season"
+        required: true
+        default: "2026"
+        type: string
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TARGET_SEASON: ${{ inputs.season || '2026' }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -e ".[dev]"
+      - name: Inspect live nflverse depth charts
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports
+          python run_depth_chart_diagnostic.py "$TARGET_SEASON" \
+            | tee reports/depth_chart_diagnostic.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nfl-depth-chart-diagnostic
+          path: reports/depth_chart_diagnostic.json
