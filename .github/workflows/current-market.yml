@@ -1,0 +1,51 @@
+name: Current NFL Market Comparison
+
+on:
+  workflow_dispatch:
+    inputs:
+      season:
+        description: NFL season
+        required: true
+        default: "2026"
+      week:
+        description: Optional target week; blank selects next unplayed regular-season week
+        required: false
+        default: ""
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TARGET_SEASON: ${{ inputs.season }}
+      TARGET_WEEK: ${{ inputs.week }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e .
+
+      - name: Compare fair scores with free ESPN markets
+        run: |
+          mkdir -p reports
+          if [ -n "$TARGET_WEEK" ]; then
+            python run_live_market.py "$TARGET_SEASON" --week "$TARGET_WEEK" --refresh \
+              | tee reports/current_market.json
+          else
+            python run_live_market.py "$TARGET_SEASON" --refresh \
+              | tee reports/current_market.json
+          fi
+
+      - name: Upload current market report
+        uses: actions/upload-artifact@v4
+        with:
+          name: current-nfl-market-comparison
+          path: reports/current_market.json
