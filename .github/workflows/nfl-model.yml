@@ -22,11 +22,14 @@ on:
     branches: [main]
     paths:
       - "nfl/pipeline.py"
+      - "nfl/data.py"
+      - "nfl/personnel.py"
       - "nfl/pro_market.py"
       - "nfl/schedule_market.py"
       - "nfl/market_intel.py"
       - "nfl/execution_market.py"
       - "nfl/line_history.py"
+      - "tests/test_depth_chart_loader.py"
       - "tests/test_market_outage_failclosed.py"
       - "tests/test_schedule_market.py"
       - ".github/workflows/nfl-model.yml"
