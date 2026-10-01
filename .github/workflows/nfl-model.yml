@@ -23,12 +23,14 @@ on:
     paths:
       - "nfl/pipeline.py"
       - "nfl/data.py"
+      - "nfl/weather.py"
       - "nfl/pro_market.py"
       - "nfl/schedule_market.py"
       - "nfl/market_intel.py"
       - "nfl/execution_market.py"
       - "nfl/line_history.py"
       - "tests/test_depth_source.py"
+      - "tests/test_weather_resilience.py"
       - "tests/test_market_outage_failclosed.py"
       - "tests/test_schedule_market.py"
       - ".github/workflows/nfl-model.yml"
@@ -95,6 +97,7 @@ jobs:
           print(f"- Distinct verified books: **{intel.get('distinct_books',0)}** · Multi-book coverage: **{float(intel.get('multi_book_coverage',0) or 0):.1%}**")
           print(f"- Brier: **{prob.get('home_win_brier','n/a')}** · Margin/Total 80% coverage: **{prob.get('margin_80_coverage','n/a')} / {prob.get('total_80_coverage','n/a')}**")
           print(f"- QB coverage: **{ctx.get('qb_coverage',0):.1%}** · Broad context: **{ctx.get('coverage',0):.1%}** · Depth feed: **{ctx.get('depth_feed_available',False)}**")
+          print(f"- Weather errors: **{len(ctx.get('weather_errors',[]) or [])}**")
           print(f"- Portfolio mode: **{str(port.get('mode','paper')).upper()}** · Approved stake: **{port.get('approved_units',0)}u**")
           print(f"- Live readiness: **{mon.get('live_readiness_score','n/a')}/100**")
           print(f"- Weekly board: **{pub.get('html','not produced')}**")
@@ -116,4 +119,3 @@ jobs:
             git push
           else
             echo "No generated changes to commit."
-          fi
