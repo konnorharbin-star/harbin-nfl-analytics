@@ -119,3 +119,4 @@ jobs:
             git push
           else
             echo "No generated changes to commit."
+          fi
