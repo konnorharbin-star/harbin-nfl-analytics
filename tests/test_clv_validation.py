@@ -1,6 +1,6 @@
-from datetime import datetime, timedelta, timezone
-
 import math
+from datetime import UTC, datetime, timedelta
+
 import polars as pl
 
 from nfl.clv import attach_closing_line_value, summarize_clv
@@ -11,7 +11,7 @@ from nfl.market_validation import (
 
 
 def _decision_comparisons() -> pl.DataFrame:
-    captured = datetime(2025, 10, 5, 12, 0, tzinfo=timezone.utc)
+    captured = datetime(2025, 10, 5, 12, 0, tzinfo=UTC)
     return pl.DataFrame(
         {
             "game_id": ["g1", "g1"],
@@ -31,7 +31,7 @@ def _decision_comparisons() -> pl.DataFrame:
 
 
 def _closing_quotes() -> pl.DataFrame:
-    captured = datetime(2025, 10, 5, 16, 55, tzinfo=timezone.utc)
+    captured = datetime(2025, 10, 5, 16, 55, tzinfo=UTC)
     return pl.DataFrame(
         {
             "game_id": ["g1", "g1"],
@@ -121,8 +121,8 @@ def test_closing_timestamp_can_be_later_than_decision() -> None:
     attached = attach_closing_line_value(_decision_comparisons(), frame)
 
     assert attached.get_column("closing_captured_at").min() == datetime(
-        2025, 10, 5, 17, 0, tzinfo=timezone.utc
+        2025, 10, 5, 17, 0, tzinfo=UTC
     )
     assert attached.get_column("closing_captured_at").min() > (
-        datetime(2025, 10, 5, 12, 0, tzinfo=timezone.utc) + timedelta(0)
+        datetime(2025, 10, 5, 12, 0, tzinfo=UTC) + timedelta(0)
     )
