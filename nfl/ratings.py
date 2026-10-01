@@ -210,6 +210,48 @@ def fair_score_history(schedules: pl.DataFrame, season: int, week: int) -> pl.Da
     )
 
 
+def pregame_sample_weights(
+    team_games: pl.DataFrame,
+    season: int,
+    week: int,
+    *,
+    prior_season_weight: float = VALIDATED_PRIOR_SEASON_WEIGHT,
+    current_season_half_life: float | None = None,
+) -> np.ndarray:
+    """Return leakage-safe weights for a pregame scoring history.
+
+    Prior-season rows retain a fixed low weight. When ``current_season_half_life`` is
+    supplied, current-season games decay exponentially by completed-week age, with the
+    immediately preceding week receiving weight 1.0. A half-life is deliberately not
+    enabled by default; it must first earn promotion through chronological validation.
+    """
+
+    require_columns(team_games, {"season", "week"}, "team_games")
+    if week < 1:
+        raise DataContractError("week must be >= 1")
+    if not 0 < prior_season_weight <= 1:
+        raise ValueError("prior_season_weight must be in (0, 1]")
+    if current_season_half_life is not None and current_season_half_life <= 0:
+        raise ValueError("current_season_half_life must be > 0")
+
+    seasons = np.asarray(team_games.get_column("season"), dtype=int)
+    weeks = np.asarray(team_games.get_column("week"), dtype=int)
+    allowed = (seasons == season - 1) | ((seasons == season) & (weeks < week))
+    if not np.all(allowed):
+        raise DataContractError("team_games contains rows outside the canonical pregame history")
+
+    weights = np.full(team_games.height, float(prior_season_weight), dtype=float)
+    current = seasons == season
+    if current_season_half_life is None:
+        weights[current] = 1.0
+    else:
+        age = (week - 1) - weeks[current]
+        if np.any(age < 0):
+            raise DataContractError("current-season history contains target/future week rows")
+        weights[current] = np.power(0.5, age / float(current_season_half_life))
+    return weights
+
+
 def fit_pregame_fair_score(
     schedules: pl.DataFrame,
     season: int,
@@ -217,14 +259,17 @@ def fit_pregame_fair_score(
     *,
     ridge: float = 8.0,
     prior_season_weight: float = VALIDATED_PRIOR_SEASON_WEIGHT,
+    current_season_half_life: float | None = None,
 ) -> FairScoreModel:
     """Fit the canonical fair-score model at the pregame information boundary."""
 
-    if not 0 < prior_season_weight <= 1:
-        raise ValueError("prior_season_weight must be in (0, 1]")
-
     history = fair_score_history(schedules, season, week)
     team_games = schedule_to_team_games(history)
-    seasons = np.asarray(team_games.get_column("season"), dtype=int)
-    weights = np.where(seasons == season, 1.0, float(prior_season_weight))
+    weights = pregame_sample_weights(
+        team_games,
+        season,
+        week,
+        prior_season_weight=prior_season_weight,
+        current_season_half_life=current_season_half_life,
+    )
     return FairScoreModel(ridge=ridge).fit(team_games, sample_weight=weights)
