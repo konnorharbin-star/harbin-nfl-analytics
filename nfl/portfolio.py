@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import csv
 import json
-from datetime import datetime
+from collections.abc import Mapping
+from datetime import UTC, datetime
 from math import isfinite
 from pathlib import Path
-from typing import Mapping
 
 import polars as pl
 
@@ -45,10 +45,16 @@ def build_bankroll_risk_state(
     hard = max(soft + 1e-9, _number(config.get("drawdown_hard_stop_units"), 15.0))
     floor = min(1.0, max(0.0, _number(config.get("drawdown_floor_multiplier"), 0.25)))
     trail_n = max(10, int(_number(config.get("trailing_window_bets"), 50)))
-    min_trail = max(10, int(_number(config.get("min_trailing_bets_for_throttle"), 30)))
+    min_trail = max(
+        10,
+        int(_number(config.get("min_trailing_bets_for_throttle"), 30)),
+    )
     roi_trigger = _number(config.get("trailing_roi_throttle"), -0.10)
     clv_trigger = _number(config.get("trailing_clv_throttle"), 0.0)
-    adverse = min(1.0, max(0.0, _number(config.get("adverse_run_multiplier"), 0.50)))
+    adverse = min(
+        1.0,
+        max(0.0, _number(config.get("adverse_run_multiplier"), 0.50)),
+    )
 
     source = Path(live_bets_path)
     empty = {
@@ -151,6 +157,8 @@ def _kickoff_bucket(value: object, hours: int) -> str:
         stamp = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
     except ValueError:
         return "unknown"
+    if stamp.tzinfo is None:
+        stamp = stamp.replace(tzinfo=UTC)
     seconds = max(1, hours) * 3600
     epoch = int(stamp.timestamp())
     return str(epoch - (epoch % seconds))
@@ -200,7 +208,12 @@ def apply_portfolio_controls(
         and history_ok
         and not bool(bankroll["hard_stop"])
     )
-    effective_mode = "production" if production_allowed else "shadow" if gate_state == "SHADOW" else "paper"
+    if production_allowed:
+        effective_mode = "production"
+    elif gate_state == "SHADOW":
+        effective_mode = "shadow"
+    else:
+        effective_mode = "paper"
 
     if candidates.is_empty():
         return candidates, {
@@ -266,7 +279,10 @@ def apply_portfolio_controls(
         game = str(row.get("game_id") or "unknown")
         market = str(row.get("quant_market") or "unknown").lower()
         book = str(row.get("quant_book") or "unattributed")
-        window = _kickoff_bucket(row.get("kickoff", row.get("gameday")), bucket_hours)
+        window = _kickoff_bucket(
+            row.get("kickoff", row.get("gameday")),
+            bucket_hours,
+        )
         teams = _team_keys(row)
 
         residuals = [
@@ -279,7 +295,10 @@ def apply_portfolio_controls(
         residuals.extend(caps["team"] - by_team.get(team, 0.0) for team in teams)
         allocation = max(0.0, min([proposed, *residuals]))
         if allocation < min_allocation:
-            row["portfolio_limit_reason"] = row["portfolio_limit_reason"] or "portfolio cap below minimum allocation"
+            row["portfolio_limit_reason"] = (
+                row["portfolio_limit_reason"]
+                or "portfolio cap below minimum allocation"
+            )
             continue
 
         row["portfolio_candidate_units"] = round(allocation, 6)
@@ -307,7 +326,10 @@ def apply_portfolio_controls(
         "release_state": gate_state,
         "production_eligible": production_allowed,
         "bankroll_risk": bankroll,
-        "proposed_units": round(sum(_number(row.get("paper_stake_units")) for row in rows), 6),
+        "proposed_units": round(
+            sum(_number(row.get("paper_stake_units")) for row in rows),
+            6,
+        ),
         "risk_adjusted_proposed_units": round(
             sum(_number(row.get("bankroll_adjusted_units")) for row in rows), 6
         ),
@@ -318,6 +340,8 @@ def apply_portfolio_controls(
             sum(_number(row.get("portfolio_candidate_units")) for row in rows), 6
         ),
         "bets": allocated,
-        "approved_bets": sum(1 for row in rows if row.get("portfolio_action") == "BET"),
+        "approved_bets": sum(
+            1 for row in rows if row.get("portfolio_action") == "BET"
+        ),
         "execution_blocked_bets": blocked,
     }
