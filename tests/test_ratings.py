@@ -119,4 +119,4 @@ def test_default_prior_weight_is_applied_to_prior_team_rows() -> None:
     expected_weight = 2.0 + (4.0 * VALIDATED_PRIOR_SEASON_WEIGHT)
 
     assert model.training_rows == 6
-    assert model.training_weight == expected_weight
+    assert abs(model.training_weight - expected_weight) < 1e-12
