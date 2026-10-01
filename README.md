@@ -2,7 +2,7 @@
 
 Leakage-safe NFL projection, probability, market-analysis, backtesting, risk-management, and monitoring platform.
 
-> **Current state:** Stage 3 — independent football projections, research probability distributions, point-in-time sportsbook comparison, historical-provider ingestion, CLV diagnostics, and chronological market-rule validation. The repository is research software. A successful workflow run is not evidence of a profitable betting edge.
+> **Current state:** Stage 3 — independent football projections, research probability distributions, free historical/current market comparison, optional point-in-time provider ingestion, CLV diagnostics, and chronological market-rule validation. The repository is research software. A successful workflow run is not evidence of a profitable betting edge.
 
 ## Design
 
@@ -10,7 +10,7 @@ The NFL platform follows the same separation-of-concerns philosophy as the CFB s
 
 1. **Data foundation** — schedules/results, play-by-play, team statistics, rosters, injuries, depth charts, caching, schema contracts, and anti-leakage primitives.
 2. **Fair-score engine** — opponent-adjusted football ratings and NFL-specific dynamic features. Sportsbook prices do not enter the football score projection.
-3. **Probability + market layer** — score distributions, win/cover/total probabilities, no-vig market comparison, point-in-time price provenance, line movement, CLV, and chronological market-rule evidence.
+3. **Probability + market layer** — score distributions, win/cover/total probabilities, no-vig market comparison, free nflverse archive research, free ESPN current markets, optional point-in-time provider provenance, line movement, CLV, and chronological market-rule evidence.
 4. **Context layer** — quarterback state, personnel/injuries, offensive-line availability, rest, travel, stadium/roof, and weather.
 5. **Risk + execution layer** — fractional Kelly, concentration caps, drawdown throttles, price provenance, and fail-closed stake approval.
 6. **Proof + release layer** — chronological walk-forward backtests, calibration, ROI/CLV, max drawdown, confidence intervals, shadow/live grading, monitoring, and RESEARCH/PAPER/SHADOW/PRODUCTION gates.
@@ -88,27 +88,45 @@ The sportsbook layer now supports:
 - executable-price EV;
 - model-vs-no-vig probability edge;
 - complete two-way snapshot validation;
-- explicit decision-time selection and quote-age limits;
+- explicit decision-time selection and quote-age limits for timestamped sources;
 - win/loss/push grading and realized net units;
-- one best executable line-shopped opportunity per game/market for research backtests.
+- one best opportunity per game/market for research backtests.
 
-Historical quote rows preserve provider, sportsbook, snapshot, source event, capture time, and decision time. Opposite sides are never synthesized across unrelated snapshots.
+### Free historical and current markets — NCAA-style path
 
-### Historical odds provider and CLV
+The primary historical-market path is free and requires no API key. `nfl/free_market.py` uses nflverse/nfldata schedule-market fields for archived moneylines, spreads, totals and available prices. It also consumes the public nflverse `initial_lines.csv` when a distinct opening spread/total exists.
 
-`nfl/odds_api.py` adds an optional The Odds API historical adapter for NFL moneyline, spread, and total snapshots. It requires `THE_ODDS_API_KEY`, uses timezone-aware historical decision timestamps, maps provider events to nflverse game IDs, preserves source provenance, and caches responses without putting the API key in cache paths or files.
+The free archive behaves like the NCAA backtest:
 
-`nfl/clv.py` compares a simulated decision quote with a later pre-kickoff quote from the same provider/book/market/side. It records no-vig probability CLV plus side-aware spread/total line CLV. Closing information remains evidence only and never feeds the football model.
+- reconstruct the football projection before attaching any market data;
+- use a distinct opening line when the free archive has one;
+- otherwise use the archive-final line as an explicit fallback;
+- use `-110` only when a spread/total line exists but its archived side price is missing;
+- never invent a missing moneyline;
+- grade one selected side per game/market;
+- report ROI, units, max drawdown, bootstrap ROI intervals and available opening-to-archive-final CLV proxy.
 
-`nfl/market_validation.py` selects probability-edge and EV thresholds on one validation season, freezes them, and scores a later holdout season once. A research candidate requires minimum holdout volume, positive units/ROI, and positive average probability CLV. Separate Stage 5 risk and release controls will still be required before any real staking path exists.
+Archive-final values are not claimed to be official timestamped closing prices. When no distinct opening exists, CLV remains missing rather than being manufactured.
 
-The provider adapter and validation machinery are tested, but this repository does not contain a paid historical provider credential. Therefore no historical ROI/CLV profitability claim is made from The Odds API data yet.
+For current weeks, `nfl/espn_market.py` uses ESPN public NFL scoreboard/Core odds as the primary no-key source, matching the NCAA platform. `run_live_market.py` compares those observed markets with the canonical independent fair score and its chronologically trained probability distribution. The highest-EV side is labeled only as a **RESEARCH** comparison until historical and forward release gates are satisfied.
+
+Manual GitHub Actions workflows are available for both **Free NFL Market Backtest** and **Current NFL Market Comparison**. Neither requires an odds API key.
+
+### Optional timestamped/multi-book provider and CLV
+
+`nfl/odds_api.py` remains an optional The Odds API historical adapter for richer timestamped NFL moneyline, spread, and total snapshots. It requires `THE_ODDS_API_KEY`, preserves provider/sportsbook/event/capture provenance, and caches responses without putting the API key in cache paths or files.
+
+`nfl/clv.py` can compare a simulated timestamped decision quote with a later pre-kickoff quote from the same provider/book/market/side. Closing information remains evidence only and never feeds the football model.
+
+`nfl/market_validation.py` selects probability-edge and EV thresholds on one validation season, freezes them, and scores a later holdout season once. Separate Stage 5 risk and release controls are still required before any real staking path exists.
+
+The paid provider is therefore an enrichment path, not a dependency for historical NFL research or current-week market comparison.
 
 ## Anti-leakage rule
 
 For a target game in season `S`, week `W`, rolling team state must be created only from information known before that game. Target-week/future results and PBP are excluded from predictor construction. The prior-season scoring state is restricted to the immediately preceding completed regular season and is known before the active season begins.
 
-Sportsbook history is also point-in-time. A simulated decision may use only complete provider snapshots captured on or before its explicit decision timestamp. Closing observations and later line moves may be used only for post-decision CLV evidence.
+Sportsbook data remains downstream. Timestamped historical simulations may use only provider snapshots captured on or before the explicit decision timestamp. The free archive path separately labels opening/archive-final stages and never represents an archive-final fallback as an official timestamped opening or close.
 
 Current injury/depth-chart data must never be backfilled into historical games unless point-in-time historical records prove it was known at the simulated decision time.
 
@@ -128,9 +146,11 @@ python run_oa_audit.py --refresh
 python run_probability_audit.py --refresh
 python run_win_probability_audit.py --refresh
 python run_current_projection.py 2026 --refresh
+python run_live_market.py 2026 --refresh
+python run_free_market_backtest.py --refresh
 ```
 
-The corresponding source and holdout audits also run in GitHub Actions. Historical provider retrieval is optional and requires `THE_ODDS_API_KEY`; it is intentionally excluded from ordinary CI so secrets and paid API usage are not required to test the core model.
+The corresponding source and holdout audits also run in GitHub Actions. The core historical backtest and ESPN current-market comparison are free and need no odds API key. `THE_ODDS_API_KEY` is optional for richer multi-book/timestamped provider research.
 
 ## Key files
 
@@ -148,10 +168,13 @@ The corresponding source and holdout audits also run in GitHub Actions. Historic
 - `nfl/probability.py` — research Gaussian score distributions and holdout calibration metrics.
 - `nfl/win_probability.py` — direct home-win calibration experiment.
 - `nfl/market.py` — odds math, no-vig probabilities, and football-model market comparison.
+- `nfl/free_market.py` — free nflverse opening/archive-final market adapter.
+- `nfl/free_market_backtest.py` — NCAA-style free archive grading, ROI/CLV-proxy and holdout evidence.
+- `nfl/espn_market.py` — free current ESPN scoreboard/Core market adapter.
 - `nfl/market_history.py` — reproducible point-in-time quote selection.
-- `nfl/market_backtest.py` — market grading and research summaries.
+- `nfl/market_backtest.py` — timestamped market grading and research summaries.
 - `nfl/odds_api.py` — optional historical The Odds API adapter.
-- `nfl/clv.py` — closing-line value diagnostics.
+- `nfl/clv.py` — timestamped closing-line value diagnostics.
 - `nfl/market_validation.py` — line shopping plus validation/holdout threshold evaluation.
 - `nfl/current.py` — current/upcoming independent projection pipeline.
 - `nfl/stage1.py` / `nfl/stage2.py` — source integration audits.
@@ -164,8 +187,9 @@ The corresponding source and holdout audits also run in GitHub Actions. Historic
 - Missing data lowers confidence or blocks a path; it is not silently invented.
 - Historical evaluation is chronological, not random train/test shuffling across time.
 - A learned adjustment stays disabled if it fails later untouched data.
-- A sportsbook backtest may only use quotes that were actually observable at the simulated decision time.
-- Closing prices are evaluation evidence, not football-model features.
+- A timestamped sportsbook backtest may only use quotes observable at the simulated decision time.
+- Free archive opening/final values must be labeled by their actual archive stage; archive-final is not called an official close.
+- Closing prices and CLV proxies are evaluation evidence, not football-model features.
 - Multiple books do not create multiple independent bets on the same modeled game/market in research summaries.
 - A model reaches production only through independent evidence, not because code executes successfully.
 - NFL thresholds, weights, calibration, and release evidence are independent of the CFB system.
