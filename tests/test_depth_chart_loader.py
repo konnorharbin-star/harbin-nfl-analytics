@@ -23,7 +23,10 @@ def _depth_frame(*, dt: str, team: str = "ARI") -> pl.DataFrame:
     )
 
 
-def test_depth_loader_uses_one_source_request_per_season_and_never_dt_year() -> None:
+def test_depth_loader_uses_one_source_request_per_season_and_never_dt_year(
+    tmp_path,
+    monkeypatch,
+) -> None:
     calls: list[list[int]] = []
 
     def fake_load_depth_charts(years: list[int]) -> pl.DataFrame:
@@ -37,13 +40,9 @@ def test_depth_loader_uses_one_source_request_per_season_and_never_dt_year() -> 
             return _depth_frame(dt="2026-10-01T14:25:58Z", team="ATL")
         raise AssertionError(f"unexpected season {season}")
 
-    original = data.nfl.load_depth_charts
-    data.nfl.load_depth_charts = fake_load_depth_charts
-    try:
-        client = NFLDataClient(cache_dir="/tmp/harbin_depth_test_scope")
-        frame = client.load_depth_charts([2025, 2026], refresh=True)
-    finally:
-        data.nfl.load_depth_charts = original
+    monkeypatch.setattr(data.nfl, "load_depth_charts", fake_load_depth_charts)
+    client = NFLDataClient(cache_dir=tmp_path)
+    frame = client.load_depth_charts([2025, 2026], refresh=True)
 
     assert calls == [[2025], [2026]]
     assert frame.height == 2
