@@ -80,7 +80,9 @@ class ValidatedQBAdjustment:
         adjusted_margin = np.asarray(frame.get_column("baseline_home_margin"), dtype=float) + (
             margin_correction
         )
-        adjusted_total = np.asarray(frame.get_column("baseline_total"), dtype=float) + total_correction
+        adjusted_total = (
+            np.asarray(frame.get_column("baseline_total"), dtype=float) + total_correction
+        )
         adjusted_home = (adjusted_total + adjusted_margin) / 2.0
         adjusted_away = (adjusted_total - adjusted_margin) / 2.0
 
