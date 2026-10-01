@@ -26,6 +26,42 @@ from .contracts import (
 )
 
 
+def _normalize_depth_chart_season_frame(
+    frame: pl.DataFrame,
+    season: int,
+) -> pl.DataFrame:
+    """Attach the explicit source-request season when modern depth rows omit it.
+
+    Modern nflverse depth charts are timestamped by ``dt`` but the timestamp year is
+    not the NFL season key: a 2025 season request legitimately contains early-2026
+    timestamps. The season therefore comes from the one-season source request, never
+    from calendar-year inference.
+    """
+
+    if not isinstance(frame, pl.DataFrame):
+        raise DataContractError("depth_charts loader did not return a Polars DataFrame")
+    require_columns(frame, {"team"}, "depth_charts")
+
+    if "season" not in frame.columns:
+        return frame.with_columns(pl.lit(season).cast(pl.Int32).alias("season"))
+
+    if frame.get_column("season").null_count():
+        raise DataContractError("depth_charts native season column contains null values")
+    native = frame.get_column("season").cast(pl.Int64, strict=False)
+    if native.null_count():
+        raise DataContractError("depth_charts native season values are not numeric")
+    unexpected = sorted(
+        int(value)
+        for value in native.filter(native != season).unique().to_list()
+    )
+    if unexpected:
+        raise DataContractError(
+            f"depth_charts request for {season} returned unexpected season(s): "
+            + ", ".join(str(value) for value in unexpected)
+        )
+    return frame.with_columns(pl.col("season").cast(pl.Int32))
+
+
 class NFLDataClient:
     """Thin, contract-checked wrapper around nflreadpy/nflverse datasets."""
 
@@ -131,15 +167,51 @@ class NFLDataClient:
     def load_depth_charts(
         self, seasons: int | list[int], *, refresh: bool = False
     ) -> pl.DataFrame:
-        # nflverse depth charts are date-based in the modern feed. We intentionally do
-        # not assume player/depth column names until Stage 4 personnel work is validated.
-        return self._load(
-            "depth_charts",
-            seasons,
-            lambda years: nfl.load_depth_charts(years),
-            {"season", "team"},
-            refresh=refresh,
+        """Load season-scoped depth history while preserving modern timestamp semantics.
+
+        nflreadpy currently returns modern depth rows without a ``season`` column even
+        though its one-season request partitions the underlying NFL season correctly.
+        Each season is therefore loaded independently and tagged with that explicit
+        request key. Calendar year from ``dt`` is never used as the NFL season.
+        """
+
+        years = normalize_seasons(seasons)
+        cache_path = self._cache_path("depth_charts", years)
+
+        if cache_path.exists() and not refresh:
+            cached = pl.read_parquet(cache_path)
+            # Old caches created before the modern-schema adapter lack season. They
+            # cannot be repaired safely when several source seasons are combined, so
+            # rebuild them from season-scoped source requests.
+            if {"season", "team"}.issubset(cached.columns):
+                season_values = cached.get_column("season").cast(pl.Int64, strict=False)
+                if not season_values.null_count():
+                    unexpected = sorted(
+                        int(value)
+                        for value in season_values.unique().to_list()
+                        if int(value) not in years
+                    )
+                    if unexpected:
+                        raise DataContractError(
+                            "depth_charts cache contains unexpected season(s): "
+                            + ", ".join(str(value) for value in unexpected)
+                        )
+                    return cached.with_columns(pl.col("season").cast(pl.Int32))
+
+        frames: list[pl.DataFrame] = []
+        for season in years:
+            raw = nfl.load_depth_charts([season])
+            frames.append(_normalize_depth_chart_season_frame(raw, season))
+
+        frame = (
+            pl.concat(frames, how="vertical_relaxed")
+            if frames
+            else pl.DataFrame(schema={"season": pl.Int32, "team": pl.String})
         )
+        require_columns(frame, {"season", "team"}, "depth_charts")
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        frame.write_parquet(cache_path)
+        return frame
 
 
 def _coerce_date(value: date | datetime | str) -> date:
