@@ -63,7 +63,7 @@ def test_http_json_retries_transient_url_errors(monkeypatch, tmp_path) -> None:
     attempts = 0
 
     class Response:
-        def __enter__(self) -> "Response":
+        def __enter__(self) -> Response:
             return self
 
         def __exit__(self, *_: object) -> None:
