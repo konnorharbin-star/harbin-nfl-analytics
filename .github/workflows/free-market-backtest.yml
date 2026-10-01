@@ -54,4 +54,12 @@ jobs:
           path: |
             reports/free_market_predictions.csv
             reports/free_market_bets.csv
+            reports/free_market_bets_runtime.csv
             reports/free_market_backtest.json
+            reports/free_market_runtime.json
+            reports/free_market_by_market.csv
+            reports/free_market_by_season.csv
+            reports/free_market_by_week.csv
+            reports/free_market_by_role.csv
+            reports/free_market_by_side_location.csv
+            reports/backtest_audit.json
