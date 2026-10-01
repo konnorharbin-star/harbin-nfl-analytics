@@ -56,10 +56,25 @@ def validate_execution_row(
     if bool(config.get("require_executable_book", True)) and not book:
         return False, "missing executable sportsbook provenance"
 
+    minimum_books = max(
+        1,
+        int(float(config.get("min_market_book_count_for_execution", 1) or 1)),
+    )
+    if not _finite(row.get("market_book_count")):
+        return False, "missing market book count"
+    if int(float(row["market_book_count"])) < minimum_books:
+        return False, f"market book count below {minimum_books}"
+
     if bool(config.get("require_quote_timestamp_for_execution", True)):
         quote_at = _parse_datetime(row.get("quant_quote_at"))
         if quote_at is None:
             return False, "missing or invalid quote timestamp"
+        kickoff = _parse_datetime(row.get("kickoff", row.get("date")))
+        if kickoff is None:
+            return False, "missing kickoff timestamp for quote validation"
+        if quote_at >= kickoff:
+            return False, "executable quote is not strictly pre-kickoff"
+
         reference = (now or datetime.now(UTC)).astimezone(UTC)
         if quote_at > reference:
             return False, "quote timestamp is in the future"
