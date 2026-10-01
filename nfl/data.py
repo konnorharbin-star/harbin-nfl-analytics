@@ -26,6 +26,50 @@ from .contracts import (
 )
 
 
+def _normalize_depth_chart_schema(frame: pl.DataFrame) -> pl.DataFrame:
+    """Map legacy and modern nflverse depth charts onto one temporal contract.
+
+    The source changed after 2024. Legacy files use ``season``/``club_code`` and
+    week-oriented snapshots, while 2025+ files use ``dt``/``team`` and date-based
+    snapshots. The downstream personnel layer expects ``season`` and ``team`` but
+    otherwise preserves the source-specific temporal columns for leakage-safe filtering.
+    """
+
+    if not isinstance(frame, pl.DataFrame):
+        raise DataContractError("depth_charts loader did not return a Polars DataFrame")
+    if frame.is_empty():
+        return frame
+
+    normalized = frame
+    if "team" not in normalized.columns:
+        if "club_code" not in normalized.columns:
+            raise DataContractError("depth_charts missing required team identifier")
+        normalized = normalized.rename({"club_code": "team"})
+
+    if "season" not in normalized.columns:
+        if "dt" not in normalized.columns:
+            raise DataContractError(
+                "depth_charts missing season and modern dt timestamp"
+            )
+        date_text = pl.col("dt").cast(pl.String)
+        year = date_text.str.slice(0, 4).cast(pl.Int32, strict=False)
+        month = date_text.str.slice(5, 2).cast(pl.Int32, strict=False)
+        normalized = normalized.with_columns(
+            pl.when(year.is_not_null() & month.is_not_null())
+            .then(pl.when(month <= 2).then(year - 1).otherwise(year))
+            .otherwise(None)
+            .cast(pl.Int32)
+            .alias("season")
+        )
+        if normalized.get_column("season").null_count():
+            raise DataContractError(
+                "depth_charts contains modern dt values that cannot be mapped to NFL season"
+            )
+
+    require_columns(normalized, {"season", "team"}, "depth_charts")
+    return normalized
+
+
 class NFLDataClient:
     """Thin, contract-checked wrapper around nflreadpy/nflverse datasets."""
 
@@ -131,15 +175,16 @@ class NFLDataClient:
     def load_depth_charts(
         self, seasons: int | list[int], *, refresh: bool = False
     ) -> pl.DataFrame:
-        # nflverse depth charts are date-based in the modern feed. We intentionally do
-        # not assume player/depth column names until Stage 4 personnel work is validated.
-        return self._load(
+        # nflverse changed depth-chart providers after 2024. Load the source schema
+        # permissively, then normalize the shared temporal/team keys before downstream use.
+        frame = self._load(
             "depth_charts",
             seasons,
             lambda years: nfl.load_depth_charts(years),
-            {"season", "team"},
+            set(),
             refresh=refresh,
         )
+        return _normalize_depth_chart_schema(frame)
 
 
 def _coerce_date(value: date | datetime | str) -> date:
