@@ -34,7 +34,6 @@ class ResidualAudit:
         return asdict(self)
 
 
-
 def run_residual_audit(
     *,
     seasons: tuple[int, ...] = (2022, 2023, 2024, 2025),
@@ -51,7 +50,8 @@ def run_residual_audit(
         raise ValueError("validation and holdout seasons must be included in seasons")
 
     source = client or NFLDataClient()
-    schedules = source.load_schedules(list(seasons), refresh=refresh)
+    schedule_seasons = sorted({min(seasons) - 1, *seasons})
+    schedules = source.load_schedules(schedule_seasons, refresh=refresh)
     pbp = source.load_pbp(list(seasons), refresh=refresh)
     frames = [
         build_walkforward_dataset(

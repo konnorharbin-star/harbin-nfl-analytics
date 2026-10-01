@@ -6,7 +6,7 @@ from dataclasses import asdict, dataclass
 
 from .advanced import pregame_pbp, pregame_team_pbp_features
 from .data import NFLDataClient
-from .ratings import fit_pregame_fair_score
+from .ratings import VALIDATED_PRIOR_SEASON_WEIGHT, fit_pregame_fair_score
 
 
 @dataclass(frozen=True)
@@ -17,6 +17,8 @@ class Stage2Audit:
     feature_team_count: int
     fair_score_team_count: int
     fair_score_training_rows: int
+    fair_score_training_weight: float
+    prior_season_weight: float
     league_points: float
     home_field: float
     residual_std: float
@@ -32,10 +34,10 @@ def run_stage2_audit(
     client: NFLDataClient | None = None,
     refresh: bool = False,
 ) -> Stage2Audit:
-    """Validate real-source PBP features and the independent pregame baseline."""
+    """Validate real-source PBP features and the canonical pregame baseline."""
 
     source = client or NFLDataClient()
-    schedules = source.load_schedules(season, refresh=refresh)
+    schedules = source.load_schedules([season - 1, season], refresh=refresh)
     pbp = source.load_pbp(season, refresh=refresh)
 
     history = pregame_pbp(pbp, season, week)
@@ -56,6 +58,8 @@ def run_stage2_audit(
         feature_team_count=features.get_column("team").n_unique(),
         fair_score_team_count=len(model.teams),
         fair_score_training_rows=model.training_rows,
+        fair_score_training_weight=model.training_weight,
+        prior_season_weight=VALIDATED_PRIOR_SEASON_WEIGHT,
         league_points=model.league_points,
         home_field=model.home_field,
         residual_std=model.residual_std,

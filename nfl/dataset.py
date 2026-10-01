@@ -13,8 +13,8 @@ import polars as pl
 
 from .advanced import team_pbp_features
 from .contracts import DataContractError, require_columns
-from .data import completed_games, schedule_to_team_games
-from .ratings import FairScoreModel
+from .data import completed_games
+from .ratings import fit_pregame_fair_score
 
 FEATURE_NAMES = (
     "epa_per_play",
@@ -24,7 +24,6 @@ FEATURE_NAMES = (
     "explosive_rate",
     "early_down_epa",
 )
-
 
 
 def _regular_season_history(schedules: pl.DataFrame, season: int, week: int) -> pl.DataFrame:
@@ -40,7 +39,6 @@ def _regular_season_history(schedules: pl.DataFrame, season: int, week: int) -> 
     )
 
 
-
 def _target_games(schedules: pl.DataFrame, season: int, week: int) -> pl.DataFrame:
     """Return completed regular-season games in the target week."""
 
@@ -51,7 +49,6 @@ def _target_games(schedules: pl.DataFrame, season: int, week: int) -> pl.DataFra
     )
 
 
-
 def _pbp_for_games(pbp: pl.DataFrame, game_ids: Iterable[str]) -> pl.DataFrame:
     require_columns(pbp, {"game_id"}, "pbp")
     ids = list(game_ids)
@@ -60,10 +57,8 @@ def _pbp_for_games(pbp: pl.DataFrame, game_ids: Iterable[str]) -> pl.DataFrame:
     return pbp.filter(pl.col("game_id").is_in(ids))
 
 
-
 def _team_feature_map(features: pl.DataFrame) -> dict[str, dict[str, object]]:
     return {row["team"]: row for row in features.iter_rows(named=True)}
-
 
 
 def _matchup_feature_row(
@@ -94,7 +89,6 @@ def _matchup_feature_row(
     return values
 
 
-
 def build_week_snapshot(
     schedules: pl.DataFrame,
     pbp: pl.DataFrame,
@@ -103,7 +97,7 @@ def build_week_snapshot(
     *,
     ridge: float = 8.0,
 ) -> pl.DataFrame:
-    """Build pregame features and baseline projections for one completed NFL week."""
+    """Build pregame features and canonical baseline projections for one NFL week."""
 
     history = _regular_season_history(schedules, season, week)
     targets = _target_games(schedules, season, week)
@@ -117,7 +111,7 @@ def build_week_snapshot(
     team_features = team_pbp_features(history_pbp)
     feature_map = _team_feature_map(team_features)
 
-    model = FairScoreModel(ridge=ridge).fit(schedule_to_team_games(history))
+    model = fit_pregame_fair_score(schedules, season, week, ridge=ridge)
     rows: list[dict[str, object]] = []
 
     for game in targets.iter_rows(named=True):
@@ -158,7 +152,6 @@ def build_week_snapshot(
         rows.append(row)
 
     return pl.DataFrame(rows).sort(["week", "game_id"])
-
 
 
 def build_walkforward_dataset(

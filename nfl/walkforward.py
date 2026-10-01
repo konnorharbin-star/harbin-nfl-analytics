@@ -27,7 +27,6 @@ class WalkForwardAudit:
         return asdict(self)
 
 
-
 def run_walkforward_audit(
     season: int,
     *,
@@ -36,10 +35,10 @@ def run_walkforward_audit(
     client: NFLDataClient | None = None,
     refresh: bool = False,
 ) -> WalkForwardAudit:
-    """Reconstruct several historical weeks and report independent baseline error."""
+    """Reconstruct several historical weeks and report canonical baseline error."""
 
     source = client or NFLDataClient()
-    schedules = source.load_schedules(season, refresh=refresh)
+    schedules = source.load_schedules([season - 1, season], refresh=refresh)
     pbp = source.load_pbp(season, refresh=refresh)
     dataset = build_walkforward_dataset(
         schedules,
