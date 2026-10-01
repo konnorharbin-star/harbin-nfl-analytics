@@ -1,0 +1,35 @@
+{
+  "appended_rows": 48,
+  "captured_markets": 48,
+  "eligible_verified_markets": 48,
+  "path": "history/market_snapshots.csv",
+  "season": 2026,
+  "skipped_research_only": 0,
+  "source": "canonical current NFL market aggregation",
+  "source_breadth": {
+    "books": 1,
+    "execution_note": "nflverse schedule fallback has no sportsbook identity or quote-update timestamp and is research-only",
+    "games": 16,
+    "games_with_any_market": 16,
+    "multi_book_coverage": 0.0,
+    "multi_book_games": 0,
+    "optional_source_configured": false,
+    "optional_source_rows": 0,
+    "primary_source": "ESPN public endpoints",
+    "research_fallback_rows": 0,
+    "research_fallback_source": "nflverse schedule market fields",
+    "source_errors": [],
+    "sources": [
+      "espn"
+    ],
+    "status": "READY",
+    "verified_games_with_any_market": 16,
+    "verified_rows": 48,
+    "verified_sources": [
+      "espn"
+    ]
+  },
+  "status": "READY",
+  "total_rows": 144,
+  "week": 4
+}
