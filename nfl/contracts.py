@@ -41,6 +41,21 @@ PBP_REQUIRED = {
 
 TEAM_STATS_REQUIRED = {"season", "week", "team"}
 ROSTER_REQUIRED = {"season", "team", "position"}
+PLAYER_STATS_REQUIRED = {
+    "player_id",
+    "player_name",
+    "position",
+    "season",
+    "week",
+    "season_type",
+    "game_id",
+    "team",
+    "attempts",
+    "passing_interceptions",
+    "sacks_suffered",
+    "passing_epa",
+    "passing_cpoe",
+}
 
 
 def normalize_seasons(seasons: int | Iterable[int]) -> list[int]:
