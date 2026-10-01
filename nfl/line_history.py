@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import csv
+from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Sequence
 from zoneinfo import ZoneInfo
 
 import polars as pl
