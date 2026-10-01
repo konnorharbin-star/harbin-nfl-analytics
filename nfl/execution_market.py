@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from math import isfinite
-from typing import Mapping
 
 
 def _finite(value: object) -> bool:
