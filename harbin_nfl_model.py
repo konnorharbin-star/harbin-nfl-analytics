@@ -6,6 +6,8 @@ import argparse
 import json
 
 from nfl.pipeline import run_operational_pipeline
+from nfl.policy import load_policy
+from nfl.portfolio_audit import write_portfolio_audit
 
 
 def main() -> None:
@@ -26,6 +28,19 @@ def main() -> None:
         capture_lines=not args.no_line_capture,
         persist_decisions=not args.no_decision_ledger,
     )
+    bankroll = report["portfolio"].get("bankroll_risk", {})
+    multiplier = (
+        float(bankroll.get("risk_multiplier", 1.0))
+        if isinstance(bankroll, dict)
+        else 1.0
+    )
+    portfolio_audit = write_portfolio_audit(
+        current,
+        policy=load_policy(),
+        release_gate=report["release_gate"],
+        bankroll_multiplier=multiplier,
+    )
+
     summary = {
         "status": "READY",
         "season": report["meta"]["season"],
@@ -35,6 +50,7 @@ def main() -> None:
         "games": current.get_column("game_id").n_unique() if not current.is_empty() else 0,
         "market_candidates": current.height,
         "portfolio": report["portfolio"],
+        "portfolio_audit": portfolio_audit["status"],
         "release_blockers": report["release_gate"].get("blockers", []),
         "outputs": {
             "json": "outputs/current_model.json",
@@ -42,6 +58,7 @@ def main() -> None:
             "health": "outputs/health.json",
             "release_gate": "outputs/release_gate.json",
             "model_card": "outputs/model_card.json",
+            "portfolio_audit": "reports/portfolio_audit.json",
         },
     }
     print(json.dumps(summary, indent=2, sort_keys=True, default=str))
