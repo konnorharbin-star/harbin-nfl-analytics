@@ -53,6 +53,57 @@ def unplayed_regular_games(
     ).sort("game_id")
 
 
+def assert_target_week_schedule_integrity(
+    targets: pl.DataFrame,
+    season: int,
+    week: int,
+) -> None:
+    """Fail closed when an upcoming regular-season slate is structurally impossible.
+
+    An NFL team can appear at most once in a regular-season week. This check protects
+    the live projection path from publishing projections when an upstream future
+    schedule feed contains duplicate team-week assignments or malformed games.
+    """
+
+    require_columns(targets, {"game_id", "away_team", "home_team"}, "target_games")
+    if targets.is_empty():
+        raise DataContractError(
+            f"no unplayed regular-season games found for {season} week {week}"
+        )
+
+    duplicate_game_ids = (
+        targets.group_by("game_id").len().filter(pl.col("len") > 1).get_column("game_id")
+    )
+    if duplicate_game_ids.len():
+        values = sorted(str(value) for value in duplicate_game_ids.to_list())
+        raise DataContractError(
+            "target week contains duplicate game IDs: " + ", ".join(values)
+        )
+
+    self_games = targets.filter(pl.col("home_team") == pl.col("away_team"))
+    if self_games.height:
+        values = sorted(str(value) for value in self_games.get_column("game_id").to_list())
+        raise DataContractError(
+            "target week contains game(s) with the same home and away team: "
+            + ", ".join(values)
+        )
+
+    teams = pl.concat(
+        [
+            targets.select(pl.col("away_team").alias("team")),
+            targets.select(pl.col("home_team").alias("team")),
+        ],
+        how="vertical",
+    )
+    duplicates = teams.group_by("team").len().filter(pl.col("len") > 1).sort("team")
+    if duplicates.height:
+        values = [str(value) for value in duplicates.get_column("team").to_list()]
+        raise DataContractError(
+            f"{season} week {week} schedule assigns team(s) to multiple games: "
+            + ", ".join(values)
+        )
+
+
 def next_unplayed_regular_week(schedules: pl.DataFrame, season: int) -> int:
     """Return the earliest regular-season week containing any unplayed game."""
 
@@ -82,8 +133,7 @@ def build_current_qb_projection(
     if week < 2:
         raise DataContractError("QB-assisted current projection requires week >= 2")
     targets = unplayed_regular_games(schedules, season, week)
-    if targets.is_empty():
-        raise DataContractError(f"no unplayed regular-season games found for {season} week {week}")
+    assert_target_week_schedule_integrity(targets, season, week)
 
     qb_state = team_qb_state(
         player_stats,
@@ -187,10 +237,12 @@ def run_current_projection(
     source = client or NFLDataClient()
     schedule_seasons = sorted({min(training) - 1, *training, season})
     schedules = source.load_schedules(schedule_seasons, refresh=refresh)
+    target_week = next_unplayed_regular_week(schedules, season) if week is None else week
+    targets = unplayed_regular_games(schedules, season, target_week)
+    assert_target_week_schedule_integrity(targets, season, target_week)
+
     stats_seasons = sorted({*training, season})
     player_stats = source.load_player_stats(stats_seasons, refresh=refresh)
-    target_week = next_unplayed_regular_week(schedules, season) if week is None else week
-
     adjustment = fit_validated_qb_adjustment(
         schedules,
         player_stats,
