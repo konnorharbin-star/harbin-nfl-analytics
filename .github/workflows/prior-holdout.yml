@@ -1,0 +1,60 @@
+name: Prior Season Holdout Audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/ratings.py"
+      - "nfl/recency.py"
+      - "nfl/priors.py"
+      - "nfl/prior_audit.py"
+      - "run_prior_audit.py"
+      - "tests/test_priors.py"
+      - ".github/workflows/prior-holdout.yml"
+  workflow_dispatch:
+    inputs:
+      validation_season:
+        description: "Season used only for prior-weight selection"
+        required: true
+        default: "2024"
+        type: string
+      holdout_season:
+        description: "Later untouched season"
+        required: true
+        default: "2025"
+        type: string
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      VALIDATION_SEASON: ${{ inputs.validation_season || '2024' }}
+      HOLDOUT_SEASON: ${{ inputs.holdout_season || '2025' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e .
+
+      - name: Run prior-season holdout audit
+        run: |
+          mkdir -p reports
+          python run_prior_audit.py \
+            --validation-season "$VALIDATION_SEASON" \
+            --holdout-season "$HOLDOUT_SEASON" \
+            --refresh | tee reports/prior_holdout_audit.json
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: prior-season-holdout-audit
+          path: reports/prior_holdout_audit.json
