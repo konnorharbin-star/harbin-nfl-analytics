@@ -33,9 +33,21 @@ jobs:
         run: python -m pip install -e .
 
       - name: Run frozen recent-form totals shadow audit
+        shell: bash
         run: |
+          set -o pipefail
           mkdir -p reports
-          python run_recent_form_shadow.py --refresh | tee reports/recent_form_2026_shadow.json
+          for attempt in 1 2 3; do
+            echo "Recent-form 2026 shadow attempt ${attempt}/3"
+            if python run_recent_form_shadow.py --refresh | tee reports/recent_form_2026_shadow.json; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              sleep 10
+            fi
+          done
+          echo "Recent-form 2026 shadow audit failed after 3 attempts" >&2
+          exit 1
 
       - name: Upload shadow report
         uses: actions/upload-artifact@v4
