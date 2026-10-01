@@ -75,3 +75,26 @@ Stage 20 hard-codes canonical_score_adjustment_enabled=false and promotion_eligi
 The 2023–2025 folds are development evidence. A surviving fixed candidate may justify a separate frozen 2026 prospective shadow ledger, but historical selection cannot alter current betting decisions.
 
 The real-source GitHub Action also verifies the schedule-source contract and reruns the strict chronology tests before producing its JSON audit.
+
+
+## Real-source result
+
+The 2021–2025 real-source audit completed successfully. Each predeclared state profile produced 831 chronological modeling rows, and the evaluation window contained 624 games: 208 each in 2023, 2024, and 2025.
+
+Neither margin nor total produced a fixed state-profile + ridge + blend specification that improved both MAE and RMSE in every development fold. The fail-closed selector therefore returned the baseline / weight-0 state for both targets.
+
+Aggregate baseline metrics over the 624 evaluation games were:
+
+- margin MAE: 10.1966;
+- margin RMSE: 13.0138;
+- total MAE: 10.4926;
+- total RMSE: 13.4427.
+
+The selected outputs are therefore:
+
+- margin state_config = disabled, blend_weight = 0.0, shadow_candidate = false;
+- total state_config = disabled, blend_weight = 0.0, shadow_candidate = false;
+- canonical_score_adjustment_enabled = false;
+- promotion_eligible = false.
+
+Stage 20 creates no 2026 online-state shadow candidate and makes no change to the canonical fair-score model. The negative result is retained because it narrows the useful NFL design space: the NCAA-style sequential state representation does not add robust linear residual value under the predeclared NFL gate.
