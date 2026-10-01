@@ -19,7 +19,7 @@ def test_feature_audit_flags_market_and_outcome_leakage() -> None:
     assert leaking == ["closing_spread", "actual_home_margin"]
 
 
-def test_backtest_audit_separates_verified_open_and_final_fallback() -> None:
+def test_backtest_audit_fails_closed_on_legacy_opening_line_rows() -> None:
     bets = pl.DataFrame(
         [
             {
@@ -55,11 +55,17 @@ def test_backtest_audit_separates_verified_open_and_final_fallback() -> None:
     report = audit_backtest_bets(bets)
     assert report["errors"] == 0
     assert report["status"] == "WARN"
-    assert report["quote_integrity"]["verified_opening_entry_bets"] == 1
-    assert report["quote_integrity"]["unverified_or_final_fallback_bets"] == 1
+    integrity = report["quote_integrity"]
+    assert integrity["opening_line_observed_bets"] == 1
+    assert integrity["verified_opening_entry_bets"] == 0
+    assert integrity["unverified_or_final_fallback_bets"] == 2
+    assert any(
+        issue["code"] == "legacy_entry_provenance_fail_closed"
+        for issue in report["issues"]
+    )
 
 
-def test_backtest_audit_rejects_clv_on_unverified_entry() -> None:
+def test_backtest_audit_rejects_clv_without_opening_line() -> None:
     bets = pl.DataFrame(
         [
             {
@@ -80,7 +86,10 @@ def test_backtest_audit_rejects_clv_on_unverified_entry() -> None:
     )
     report = audit_backtest_bets(bets)
     assert report["status"] == "FAIL"
-    assert any(issue["code"] == "clv_proxy_on_unverified_entry" for issue in report["issues"])
+    assert any(
+        issue["code"] == "clv_proxy_without_opening_line"
+        for issue in report["issues"]
+    )
 
 
 def test_execution_market_rejects_post_kickoff_quote() -> None:
