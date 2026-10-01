@@ -6,8 +6,10 @@ on:
     paths:
       - "nfl/qb_validated.py"
       - "nfl/qb_shadow.py"
+      - "nfl/shadow_gate.py"
       - "run_qb_shadow.py"
       - "tests/test_qb_validated.py"
+      - "tests/test_shadow_gate.py"
       - ".github/workflows/qb-shadow.yml"
   workflow_dispatch:
 
