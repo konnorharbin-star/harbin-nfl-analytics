@@ -15,6 +15,7 @@ import polars as pl
 
 from .contracts import (
     PBP_REQUIRED,
+    PLAYER_STATS_REQUIRED,
     ROSTER_REQUIRED,
     SCHEDULE_REQUIRED,
     TEAM_STATS_REQUIRED,
@@ -90,6 +91,17 @@ class NFLDataClient:
             seasons,
             lambda years: nfl.load_team_stats(years),
             TEAM_STATS_REQUIRED,
+            refresh=refresh,
+        )
+
+    def load_player_stats(
+        self, seasons: int | list[int], *, refresh: bool = False
+    ) -> pl.DataFrame:
+        return self._load(
+            "player_stats",
+            seasons,
+            lambda years: nfl.load_player_stats(years),
+            PLAYER_STATS_REQUIRED,
             refresh=refresh,
         )
 
