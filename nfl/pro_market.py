@@ -37,6 +37,18 @@ def _american(value: object) -> int | None:
     return rounded
 
 
+def _quote_time(value: object, fallback: datetime) -> datetime:
+    if value in {None, ""}:
+        return fallback
+    try:
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return fallback
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
+
+
 def _market_pair(
     market: dict[str, Any],
     *,
@@ -157,7 +169,7 @@ class CurrentOddsAPIClient:
         if not isinstance(payload, list):
             raise DataContractError("The Odds API current response is not a list")
 
-        captured_at = datetime.now(UTC)
+        fetched_at = datetime.now(UTC)
         rows: list[ESPNTwoWayMarket] = []
         for event in payload:
             if not isinstance(event, dict):
@@ -181,6 +193,7 @@ class CurrentOddsAPIClient:
                 book = str(
                     bookmaker.get("title") or bookmaker.get("key") or "the_odds_api"
                 )
+                captured_at = _quote_time(bookmaker.get("last_update"), fetched_at)
                 markets = bookmaker.get("markets")
                 if not isinstance(markets, list):
                     continue
@@ -240,7 +253,6 @@ def collect_current_markets(
         except DataContractError as exc:
             source_errors.append(f"the_odds_api: {exc}")
 
-    # A source retry or duplicated feed row must not create synthetic breadth.
     unique: dict[tuple[object, ...], ESPNTwoWayMarket] = {}
     for market in markets:
         key = (
@@ -255,7 +267,9 @@ def collect_current_markets(
             market.second_line,
             market.second_american_odds,
         )
-        unique.setdefault(key, market)
+        previous = unique.get(key)
+        if previous is None or market.captured_at > previous.captured_at:
+            unique[key] = market
     values = sorted(
         unique.values(),
         key=lambda item: (item.game_id, item.market_type, item.book, item.provider),
@@ -268,14 +282,14 @@ def collect_current_markets(
     games = targets.height
     book_counts: dict[str, set[str]] = {}
     for row in values:
-        book_counts.setdefault(row.game_id, set()).add(f"{row.provider}:{row.book}")
+        book_counts.setdefault(row.game_id, set()).add(str(row.book).strip().lower())
     multi_book_games = sum(len(books) >= 2 for books in book_counts.values())
     return values, {
         "primary_source": "ESPN public endpoints",
         "optional_source_configured": optional.configured,
         "optional_source_rows": len(pro_rows),
         "sources": sorted({row.provider for row in values}),
-        "books": len({f"{row.provider}:{row.book}" for row in values}),
+        "books": len({str(row.book).strip().lower() for row in values}),
         "games": games,
         "games_with_any_market": len(book_counts),
         "multi_book_games": multi_book_games,
