@@ -1,9 +1,9 @@
 """Current/upcoming NFL projections from the independent football model.
 
-The canonical score baseline is always emitted. The validated quarterback residual
-structures are also emitted with explicit release labels: margin remains RESEARCH and
-total remains SHADOW while forward evidence accumulates. Sportsbook prices are not
-accepted by this module.
+The canonical score baseline is always emitted. Stage 15 rejected every fixed QB
+margin specification, so the published QB margin correction is disabled. The fixed
+QB-total specification remains SHADOW while prospective evidence accumulates.
+Sportsbook prices are not accepted by this module.
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ from .qb_state import QB_PRIOR_DROPBACKS, qb_matchup_signals, team_qb_state
 from .qb_validated import ValidatedQBAdjustment
 from .ratings import fit_pregame_fair_score
 
-QB_MARGIN_RELEASE_STATE = "RESEARCH"
+QB_MARGIN_RELEASE_STATE = "DISABLED"
 QB_TOTAL_RELEASE_STATE = "SHADOW"
 
 
