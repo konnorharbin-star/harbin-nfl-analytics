@@ -189,6 +189,28 @@ def _attach_recent_form_shadow(
     return shadowed, meta, errors
 
 
+def _collect_current_markets_fail_closed(
+    targets: pl.DataFrame,
+    *,
+    week: int,
+) -> tuple[list[object], dict[str, object]]:
+    """Keep football publication alive while blocking betting on market-source failure."""
+
+    try:
+        markets, meta = collect_current_markets(targets, week=week)
+        return list(markets), dict(meta)
+    except Exception as exc:
+        message = f"current-market ERROR: {type(exc).__name__}: {exc}"
+        return [], {
+            "status": "BLOCKED",
+            "sources": [],
+            "books": 0,
+            "multi_book_coverage": 0.0,
+            "source_errors": [message],
+            "reason": message,
+        }
+
+
 def run_operational_pipeline(
     season: int,
     week: int | None = None,
@@ -231,7 +253,10 @@ def run_operational_pipeline(
         capture_predictions=capture_lines,
     )
 
-    markets, market_source_meta = collect_current_markets(targets, week=target_week)
+    markets, market_source_meta = _collect_current_markets_fail_closed(
+        targets,
+        week=target_week,
+    )
 
     historical = build_archive_projection_dataset(
         schedules,
