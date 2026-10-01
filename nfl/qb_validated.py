@@ -1,8 +1,9 @@
-"""Frozen quarterback-adjustment structure selected before the 2026 shadow period.
+"""Frozen quarterback total-shadow structure selected before forward 2026 grading.
 
-The structure here is not retuned on 2026 data. Margin uses the EPA-only QB signal;
-total uses QB EPA + CPOE. Both ridge penalties were selected on 2024 and cleared the
-untouched 2025 holdout before being frozen for forward evaluation.
+Stage 15's fixed-spec rolling audit rejected every constant QB margin specification, so
+published QB margin correction is forced to zero. The fixed total specification is QB
+EPA + CPOE with ridge 0.1 and is development-selected for prospective SHADOW tracking
+only. Neither target changes the canonical fair score used for market probabilities.
 """
 
 from __future__ import annotations
@@ -16,10 +17,16 @@ import polars as pl
 from .contracts import DataContractError, require_columns
 from .qb_residuals import QBRidgeModel, qb_feature_columns
 
+# Retained only for fit/backwards compatibility with historical research artifacts.
+# Stage 15 invalidated this as a deployable/fixed margin specification.
 VALIDATED_QB_MARGIN_FEATURE_SET = "epa"
 VALIDATED_QB_MARGIN_ALPHA = 0.1
+QB_MARGIN_ENABLED = False
+
+# Stage 15 fixed-spec winner across 2023, 2024, and 2025 development folds.
 VALIDATED_QB_TOTAL_FEATURE_SET = "quality"
 VALIDATED_QB_TOTAL_ALPHA = 0.1
+QB_TOTAL_SHADOW_ENABLED = True
 
 
 @dataclass(frozen=True)
@@ -42,9 +49,11 @@ class QBAdjustedMetrics:
 
 
 class ValidatedQBAdjustment:
-    """Target-specific QB residual adjustment with frozen structure/hyperparameters."""
+    """Frozen total QB residual model with a hard-disabled margin adjustment."""
 
     def __init__(self) -> None:
+        # Keep the historical model fit so older fixtures/artifacts remain schema-compatible.
+        # Its predictions are never published after Stage 15.
         self.margin_model = QBRidgeModel(
             qb_feature_columns(VALIDATED_QB_MARGIN_FEATURE_SET, "margin_residual"),
             VALIDATED_QB_MARGIN_ALPHA,
@@ -56,7 +65,7 @@ class ValidatedQBAdjustment:
         self.training_rows = 0
 
     def fit(self, training_dataset: pl.DataFrame) -> ValidatedQBAdjustment:
-        """Fit frozen QB structures on all football data available before deployment."""
+        """Fit frozen QB structures on completed pre-deployment football data."""
 
         if training_dataset.height < 100:
             raise DataContractError("validated QB adjustment requires at least 100 training games")
@@ -66,7 +75,7 @@ class ValidatedQBAdjustment:
         return self
 
     def apply(self, frame: pl.DataFrame) -> pl.DataFrame:
-        """Append QB-adjusted margin, total, and implied team points."""
+        """Append disabled margin and frozen total SHADOW diagnostics."""
 
         if self.training_rows <= 0:
             raise RuntimeError("validated QB adjustment has not been fitted")
@@ -75,11 +84,12 @@ class ValidatedQBAdjustment:
             {"baseline_home_margin", "baseline_total"},
             "qb_adjustment_frame",
         )
-        margin_correction = self.margin_model.predict(frame)
+
+        # Stage 15 fixed-spec audit rejected all QB margin candidates. Zero is the
+        # only allowed published margin correction until a future independent gate says otherwise.
+        margin_correction = np.zeros(frame.height, dtype=float)
         total_correction = self.total_model.predict(frame)
-        adjusted_margin = np.asarray(frame.get_column("baseline_home_margin"), dtype=float) + (
-            margin_correction
-        )
+        adjusted_margin = np.asarray(frame.get_column("baseline_home_margin"), dtype=float)
         adjusted_total = (
             np.asarray(frame.get_column("baseline_total"), dtype=float) + total_correction
         )
@@ -91,6 +101,8 @@ class ValidatedQBAdjustment:
             pl.Series("qb_total_correction", total_correction),
             pl.Series("qb_adjusted_home_margin", adjusted_margin),
             pl.Series("qb_adjusted_total", adjusted_total),
+            pl.Series("qb_total_shadow_correction", total_correction),
+            pl.Series("qb_total_shadow_total", adjusted_total),
             pl.Series("qb_adjusted_home_points", np.maximum(0.0, adjusted_home)),
             pl.Series("qb_adjusted_away_points", np.maximum(0.0, adjusted_away)),
         )
@@ -102,7 +114,7 @@ def _errors(actual: np.ndarray, predicted: np.ndarray) -> tuple[float, float]:
 
 
 def score_qb_adjustment(frame: pl.DataFrame) -> QBAdjustedMetrics:
-    """Compare a fitted QB-adjusted frame with its independent baseline."""
+    """Compare the diagnostic QB frame with its independent baseline."""
 
     required = {
         "actual_home_margin",
@@ -147,6 +159,6 @@ def score_qb_adjustment(frame: pl.DataFrame) -> QBAdjustedMetrics:
         adjusted_total_rmse=adjusted_total_rmse,
         total_mae_improvement=total_mae_improvement,
         total_rmse_improvement=total_rmse_improvement,
-        margin_pass=margin_mae_improvement > 0 and margin_rmse_improvement > 0,
+        margin_pass=False,
         total_pass=total_mae_improvement > 0 and total_rmse_improvement > 0,
     )
