@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from datetime import UTC, datetime
+from zoneinfo import ZoneInfo
 
 import polars as pl
 
@@ -12,15 +14,25 @@ from .market import MarketQuote, compare_two_way_market
 from .policy import fractional_kelly_units, load_policy, signal_from_policy
 from .probability import GaussianScoreDistribution
 
+NFL_SCHEDULE_TIMEZONE = ZoneInfo("America/New_York")
+
 
 def _kickoff_map(targets: pl.DataFrame) -> dict[str, object]:
     require_columns(targets, {"game_id", "gameday"}, "current_targets")
     mapping: dict[str, object] = {}
     for row in targets.iter_rows(named=True):
         game_id = str(row["game_id"])
-        kickoff = row.get("gameday")
-        if row.get("gametime") not in {None, ""}:
-            kickoff = f"{row['gameday']}T{row['gametime']}"
+        day = row.get("gameday")
+        time = row.get("gametime")
+        kickoff: str | None = None
+        if day is not None and time not in {None, ""}:
+            try:
+                local = datetime.fromisoformat(f"{day}T{time}")
+                if local.tzinfo is None:
+                    local = local.replace(tzinfo=NFL_SCHEDULE_TIMEZONE)
+                kickoff = local.astimezone(UTC).isoformat()
+            except ValueError:
+                kickoff = None
         mapping[game_id] = kickoff
     return mapping
 
