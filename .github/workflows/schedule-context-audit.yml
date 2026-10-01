@@ -1,0 +1,51 @@
+name: NFL Schedule Context Audit
+
+on:
+  pull_request:
+    paths:
+      - "nfl/schedule_context.py"
+      - "nfl/schedule_context_eval.py"
+      - "nfl/schedule_context_audit.py"
+      - "nfl/ratings.py"
+      - "nfl/data.py"
+      - "nfl/weather.py"
+      - "tests/test_schedule_context.py"
+      - "run_schedule_context_audit.py"
+      - ".github/workflows/schedule-context-audit.yml"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+      - name: Unit tests
+        run: python -m pytest -q tests/test_schedule_context.py
+      - name: Ruff
+        run: >-
+          ruff check nfl/schedule_context.py nfl/schedule_context_eval.py
+          nfl/schedule_context_audit.py run_schedule_context_audit.py
+          tests/test_schedule_context.py
+      - name: Run 2022-2025 schedule-context rolling audit
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports
+          python run_schedule_context_audit.py --refresh |
+            tee reports/schedule_context_audit.log
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-schedule-context-audit
+          path: |
+            reports/schedule_context_audit.json
+            reports/schedule_context_audit.log
+          if-no-files-found: error
