@@ -7,6 +7,7 @@ import polars as pl
 from nfl.backtest_audit import audit_backtest_bets
 from nfl.entry_integrity import annotate_historical_entry_integrity
 from nfl.proof import build_evidence_report
+from run_free_market_backtest import _initial_line_coverage
 
 
 def _annotated_three_market_rows() -> pl.DataFrame:
@@ -52,6 +53,23 @@ def test_backtest_audit_counts_only_observed_entry_prices_as_verified() -> None:
     assert integrity["opening_price_verified_bets"] == 1
     assert integrity["verified_opening_entry_bets"] == 1
     assert integrity["research_only_entry_price_bets"] == 2
+
+
+def test_initial_line_coverage_reports_non_overlapping_source_window() -> None:
+    source = pl.DataFrame(
+        {
+            "season": [2021, 2021, 2021],
+            "type": ["SPREAD", "TOTAL", "SPREAD"],
+        }
+    )
+
+    coverage = _initial_line_coverage(source, start_season=2022, end_season=2025)
+
+    assert coverage["available"] is True
+    assert coverage["seasons"] == [2021]
+    assert coverage["market_types"] == ["SPREAD", "TOTAL"]
+    assert coverage["backtest_window_rows"] == 0
+    assert coverage["overlaps_backtest_window"] is False
 
 
 def test_proof_uses_verified_price_subset_for_promotion(tmp_path) -> None:
