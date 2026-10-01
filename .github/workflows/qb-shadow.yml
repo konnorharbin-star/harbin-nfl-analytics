@@ -1,0 +1,41 @@
+name: Quarterback 2026 Shadow Audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/qb_validated.py"
+      - "nfl/qb_shadow.py"
+      - "run_qb_shadow.py"
+      - "tests/test_qb_validated.py"
+      - ".github/workflows/qb-shadow.yml"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e .
+
+      - name: Run forward quarterback shadow audit
+        run: |
+          mkdir -p reports
+          python run_qb_shadow.py --refresh | tee reports/qb_2026_shadow.json
+
+      - name: Upload shadow report
+        uses: actions/upload-artifact@v4
+        with:
+          name: quarterback-2026-shadow
+          path: reports/qb_2026_shadow.json
