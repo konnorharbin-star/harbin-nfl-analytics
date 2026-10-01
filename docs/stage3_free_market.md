@@ -1,6 +1,6 @@
-# Stage 3 Free NFL Market Archive
+# Stage 3 Free NFL Market Data
 
-The NFL model now follows the same free-data philosophy as the NCAA model for historical sportsbook research.
+The NFL model follows the same free-data philosophy as the NCAA model for both historical sportsbook research and current-week market comparison.
 
 ## Historical source
 
@@ -15,6 +15,14 @@ The primary free archive is nflverse/nfldata. The regular schedule dataset alrea
 The separate public `initial_lines.csv` file is used when it contains an opening spread or total for a game. No API key is required.
 
 The Odds API remains optional. It can still be used for richer multi-book and timestamped historical observations, but the model no longer depends on a paid historical plan in order to run an NFL backtest.
+
+## Current-week source
+
+The primary free live source is ESPN's public NFL scoreboard/Core odds data, matching the NCAA platform's source hierarchy. `nfl/espn_market.py` maps the target nflverse slate to ESPN events, parses moneyline/spread/total markets, and falls back to ESPN Core when the scoreboard object is incomplete.
+
+No API key is required. Missing moneylines are not invented. When ESPN supplies a spread or total but omits the side price, the research comparison uses `-110`, matching the NCAA convention. Every live comparison records the ESPN event, provider/book label, and fetch timestamp.
+
+The current market path remains research-only until a betting rule separately earns promotion through historical and forward evidence.
 
 ## NCAA-style archive behavior
 
@@ -36,15 +44,13 @@ The nflverse schedule field `spread_line` is a favorite-margin representation: p
 
 The score distribution is trained only on earlier chronological football-projection residuals. A target week cannot contribute to its own probability calibration.
 
-That gives the research path:
-
 ```text
 pregame football history
 -> independent fair score
 -> chronological residual distribution
--> free archive line/price
+-> free archive or current ESPN line/price
 -> model probability + EV
--> historical grading
+-> historical grading or current research comparison
 ```
 
 Sportsbook prices never enter the fair-score fit.
@@ -65,6 +71,8 @@ A positive archive holdout is research evidence only. It does not bypass the pla
 
 ## Run it
 
+Historical backtest:
+
 ```bash
 python run_free_market_backtest.py \
   --start-season 2022 \
@@ -74,10 +82,16 @@ python run_free_market_backtest.py \
   --refresh
 ```
 
-Outputs:
+Current market comparison:
+
+```bash
+python run_live_market.py 2026 --refresh
+```
+
+Historical outputs:
 
 - `reports/free_market_predictions.csv`
 - `reports/free_market_bets.csv`
 - `reports/free_market_backtest.json`
 
-The same command is available as a manual GitHub Actions workflow so historical research can be reproduced without a local Python environment.
+The repository also provides manual **Free NFL Market Backtest** and **Current NFL Market Comparison** GitHub Actions workflows. Neither requires an odds API key.
