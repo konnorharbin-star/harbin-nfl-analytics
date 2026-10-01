@@ -1,13 +1,13 @@
 {
   "current_context": {
-    "as_of": "2026-10-01T16:13:55.814532+00:00",
+    "as_of": "2026-10-01T16:30:29.674696+00:00",
     "components": {
       "injuries_personnel": 1.0,
       "quarterback": 1.0,
-      "rest_travel": 0.9375,
-      "weather_stadium": 0.8125
+      "rest_travel": 1.0,
+      "weather_stadium": 0.9375
     },
-    "coverage": 0.9375,
+    "coverage": 0.984375,
     "depth_feed_available": true,
     "games": 16,
     "injury_feed_available": true,
@@ -15,11 +15,8 @@
     "qb_coverage": 1.0,
     "roster_feed_available": true,
     "score_adjustment_enabled": false,
-    "status": "PARTIAL",
-    "weather_errors": [
-      "2026_04_IND_WAS: missing venue coordinates",
-      "2026_04_NYJ_CHI: weather source request failed: <urlopen error _ssl.c:993: The handshake operation timed out>"
-    ]
+    "status": "READY",
+    "weather_errors": []
   },
   "current_recent_form": {
     "blend_weight": 0.5,
@@ -64,7 +61,7 @@
     "status": "OK",
     "target_games": 16
   },
-  "generated_at": "2026-10-01T16:13:55.814532+00:00",
+  "generated_at": "2026-10-01T16:30:29.674696+00:00",
   "market_coverage": {
     "games": 16,
     "moneyline": 16,

@@ -34,7 +34,7 @@
       "name": "context_coverage",
       "passed": true,
       "requirement": ">=90% current injury/rest/weather/travel context coverage",
-      "value": 0.9375
+      "value": 0.9844
     },
     {
       "detail": "",
@@ -52,7 +52,7 @@
       "name": "live_monitoring",
       "passed": false,
       "requirement": "live readiness >=90/100",
-      "value": 83.5
+      "value": 84.4
     },
     {
       "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",

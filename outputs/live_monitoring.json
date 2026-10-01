@@ -4,16 +4,16 @@
   ],
   "drift_details": {},
   "drift_reference": null,
-  "live_readiness_score": 83.5,
+  "live_readiness_score": 84.4,
   "meaning": "operational/model-monitoring score; not a profitability guarantee",
   "scores": {
     "calibration": 91.80250233233778,
-    "context": 93.75,
+    "context": 98.4375,
     "distribution_stability": 65.0,
     "freshness": 100.0,
     "market_coverage": 100.0,
     "multi_book": 0.0,
-    "output_completeness": 95.34534534534535
+    "output_completeness": 96.69669669669669
   },
   "status": "WARN"
 }

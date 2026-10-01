@@ -1,6 +1,6 @@
 {
   "coverage": {
-    "context": 0.9375,
+    "context": 0.984375,
     "games": 16,
     "moneyline": 16,
     "multi_book": 0.0,
@@ -17,7 +17,7 @@
     "status": "OK",
     "target_games": 16
   },
-  "generated_at": "2026-10-01T16:14:42.997462+00:00",
+  "generated_at": "2026-10-01T16:30:56.067719+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
@@ -28,7 +28,7 @@
       "status": "OK",
       "target_games": 16
     },
-    "live_readiness_score": 83.5,
+    "live_readiness_score": 84.4,
     "meaning": "operational health; not a profitability or staking signal",
     "monitor_alerts": [
       "multi-book consensus is limited"
@@ -70,7 +70,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-01T16:13:55.814532+00:00",
+    "model_generated_at": "2026-10-01T16:30:29.674696+00:00",
     "prediction_games": 16,
     "prediction_rows": 48,
     "season": 2026,
@@ -94,16 +94,16 @@
       "multi-book consensus is limited"
     ],
     "drift_details": {},
-    "live_readiness_score": 83.5,
-    "recent_readiness_delta": 22.6,
+    "live_readiness_score": 84.4,
+    "recent_readiness_delta": 18.60000000000001,
     "scores": {
       "calibration": 91.80250233233778,
-      "context": 93.75,
+      "context": 98.4375,
       "distribution_stability": 65.0,
       "freshness": 100.0,
       "market_coverage": 100.0,
       "multi_book": 0.0,
-      "output_completeness": 95.34534534534535
+      "output_completeness": 96.69669669669669
     },
     "status": "WARN"
   },
@@ -252,7 +252,7 @@
         "name": "context_coverage",
         "passed": true,
         "requirement": ">=90% current injury/rest/weather/travel context coverage",
-        "value": 0.9375
+        "value": 0.9844
       },
       {
         "detail": "",
@@ -270,7 +270,7 @@
         "name": "live_monitoring",
         "passed": false,
         "requirement": "live readiness >=90/100",
-        "value": 83.5
+        "value": 84.4
       },
       {
         "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -360,6 +360,18 @@
       "generated_at": "2026-10-01T15:14:26.992036+00:00",
       "live_readiness_score": 65.8,
       "model_generated_at": "2026-10-01T15:14:12.741511+00:00",
+      "publication_status": "WARN",
+      "release_state": "RESEARCH",
+      "season": 2026,
+      "week": 4
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 65.0,
+      "generated_at": "2026-10-01T16:14:42.997462+00:00",
+      "live_readiness_score": 83.5,
+      "model_generated_at": "2026-10-01T16:13:55.814532+00:00",
       "publication_status": "WARN",
       "release_state": "RESEARCH",
       "season": 2026,
