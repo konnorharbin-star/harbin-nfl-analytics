@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import csv
 import json
+from collections.abc import Iterable
 from datetime import UTC, datetime
 from math import isfinite, sqrt
 from pathlib import Path
-from typing import Iterable
 
 import numpy as np
 import polars as pl
