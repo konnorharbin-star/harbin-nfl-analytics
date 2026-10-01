@@ -1,0 +1,51 @@
+name: NFL Nonlinear State Audit
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "pyproject.toml"
+      - "nfl/nonlinear_state.py"
+      - "nfl/nonlinear_state_fixed.py"
+      - "nfl/nonlinear_state_audit.py"
+      - "nfl/online_state.py"
+      - "nfl/online_state_dataset.py"
+      - "run_nonlinear_state_audit.py"
+      - "tests/test_nonlinear_state.py"
+      - "docs/STAGE21_NONLINEAR_STATE.md"
+      - ".github/workflows/nonlinear-state-audit.yml"
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+      - name: Unit tests
+        run: python -m pytest -q tests/test_online_state.py tests/test_nonlinear_state.py
+      - name: Ruff
+        run: ruff check .
+      - name: Run 2021-2025 nonlinear state audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if python run_nonlinear_state_audit.py --refresh --output nonlinear_state_audit.json; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+            sleep $((attempt * 10))
+          done
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: nonlinear-state-audit
+          path: nonlinear_state_audit.json
