@@ -1,0 +1,62 @@
+name: Current NFL Football Projection
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/current.py"
+      - "run_current_projection.py"
+      - "tests/test_current_projection.py"
+      - ".github/workflows/current-projection.yml"
+  workflow_dispatch:
+    inputs:
+      season:
+        description: "NFL season"
+        required: true
+        default: "2026"
+        type: string
+      week:
+        description: "Optional target week; blank selects next unplayed regular-season week"
+        required: false
+        default: ""
+        type: string
+
+jobs:
+  project:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TARGET_SEASON: ${{ inputs.season || '2026' }}
+      TARGET_WEEK: ${{ inputs.week || '' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e .
+
+      - name: Audit independent football projections
+        run: |
+          mkdir -p reports
+          if [ -n "$TARGET_WEEK" ]; then
+            python run_current_projection.py "$TARGET_SEASON" \
+              --week "$TARGET_WEEK" --refresh --blocked-report \
+              | tee reports/current_projection.json
+          else
+            python run_current_projection.py "$TARGET_SEASON" \
+              --refresh --blocked-report \
+              | tee reports/current_projection.json
+          fi
+
+      - name: Upload projection or blocked report
+        uses: actions/upload-artifact@v4
+        with:
+          name: current-nfl-football-projection
+          path: reports/current_projection.json
