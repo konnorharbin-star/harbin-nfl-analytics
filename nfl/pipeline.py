@@ -21,6 +21,12 @@ from .portfolio import apply_portfolio_controls
 from .pro_market import collect_current_markets
 from .probability import evaluate_probability_holdout
 from .proof import write_evidence_report
+from .recent_form_current import (
+    attach_current_recent_form_shadow,
+    blocked_recent_form_shadow,
+)
+from .recent_form_forward import append_recent_form_forward_predictions
+from .recent_form_shadow import FROZEN_SELECTION_SEASONS
 from .release_gate import write_release_gate
 from .reporting import write_canonical_report
 
@@ -126,6 +132,63 @@ def _merge_context_meta(
     return output
 
 
+def _attach_recent_form_shadow(
+    projection: pl.DataFrame,
+    schedules: pl.DataFrame,
+    targets: pl.DataFrame,
+    source: NFLDataClient,
+    *,
+    season: int,
+    week: int,
+    captured_at: datetime,
+    refresh: bool,
+    capture_predictions: bool,
+) -> tuple[pl.DataFrame, dict[str, object], list[str]]:
+    """Attach optional SHADOW state without allowing it to break the canonical path."""
+
+    errors: list[str] = []
+    try:
+        pbp_seasons = sorted({*FROZEN_SELECTION_SEASONS, season})
+        pbp = source.load_pbp(pbp_seasons, refresh=refresh)
+        shadowed, audit = attach_current_recent_form_shadow(
+            projection,
+            schedules,
+            pbp,
+            season=season,
+            week=week,
+        )
+        meta: dict[str, object] = {"status": "READY", **audit.to_dict()}
+    except Exception as exc:
+        message = f"recent-form shadow ERROR: {type(exc).__name__}: {exc}"
+        errors.append(message)
+        return (
+            blocked_recent_form_shadow(projection),
+            {
+                "status": "BLOCKED",
+                "release_state": "BLOCKED",
+                "reason": message,
+                "score_adjustment_enabled": False,
+            },
+            errors,
+        )
+
+    if capture_predictions:
+        try:
+            meta["forward_capture"] = append_recent_form_forward_predictions(
+                shadowed,
+                targets,
+                captured_at=captured_at,
+            )
+        except Exception as exc:
+            message = f"recent-form forward capture ERROR: {type(exc).__name__}: {exc}"
+            errors.append(message)
+            meta["forward_capture"] = {"status": "ERROR", "reason": message}
+    else:
+        meta["forward_capture"] = {"status": "disabled"}
+    meta["score_adjustment_enabled"] = False
+    return shadowed, meta, errors
+
+
 def run_operational_pipeline(
     season: int,
     week: int | None = None,
@@ -155,6 +218,19 @@ def run_operational_pipeline(
         refresh=refresh,
     )
     targets = unplayed_regular_games(schedules, season, target_week)
+
+    projection, recent_form_meta, recent_form_errors = _attach_recent_form_shadow(
+        projection,
+        schedules,
+        targets,
+        source,
+        season=season,
+        week=target_week,
+        captured_at=run_at,
+        refresh=refresh,
+        capture_predictions=capture_lines,
+    )
+
     markets, market_source_meta = collect_current_markets(targets, week=target_week)
 
     historical = build_archive_projection_dataset(
@@ -223,7 +299,7 @@ def run_operational_pipeline(
         value for value in context_source_status.values() if value.startswith("ERROR:")
     ]
     market_errors = [str(value) for value in market_source_meta.get("source_errors", [])]
-    source_errors = context_errors + market_errors
+    source_errors = context_errors + market_errors + recent_form_errors
     data_quality = {
         "status": "WARN" if source_errors else "OK",
         "projection_games": projection.height,
@@ -231,13 +307,20 @@ def run_operational_pipeline(
         "market_rows": candidates.height,
         "context_source_errors": context_errors,
         "market_source_errors": market_errors,
+        "recent_form_source_errors": recent_form_errors,
     }
     market_sources = ", ".join(str(value) for value in market_source_meta.get("sources", []))
+    recent_form_source = (
+        "nflverse"
+        if recent_form_meta.get("status") == "READY"
+        else str(recent_form_meta.get("reason", "blocked"))
+    )
     meta: dict[str, object] = {
         "generated_at": run_at.isoformat(),
         "season": season,
         "week": target_week,
         "projection_audit": projection_audit.to_dict(),
+        "current_recent_form": recent_form_meta,
         "market_coverage": {
             "games": market_meta.get("games", projection.height),
             "moneyline": market_meta.get("moneyline", 0),
@@ -250,6 +333,7 @@ def run_operational_pipeline(
         "data_quality": data_quality,
         "sources": {
             "football": "nflverse",
+            "recent_form_pbp": recent_form_source,
             "current_market": market_sources or "unavailable",
             "historical_market": "nflverse public archive",
             **context_source_status,
