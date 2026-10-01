@@ -206,6 +206,20 @@ def _summary(frame: pl.DataFrame) -> dict[str, object]:
     }
 
 
+def _csv_summary(frame: pl.DataFrame) -> dict[str, object]:
+    """Flatten nested runtime fields so segment diagnostics remain valid CSV."""
+
+    summary = dict(_summary(frame))
+    interval = summary.pop("roi_ci_95", [None, None])
+    if isinstance(interval, list) and len(interval) == 2:
+        low, high = interval
+    else:
+        low, high = None, None
+    summary["roi_ci_95_low"] = low
+    summary["roi_ci_95_high"] = high
+    return summary
+
+
 def _grouped(frame: pl.DataFrame, column: str) -> dict[str, object]:
     if frame.is_empty() or column not in frame.columns:
         return {}
@@ -305,7 +319,7 @@ def write_backtest_runtime(
                 rows.append(
                     {
                         column: value,
-                        **_summary(enriched.filter(pl.col(column) == value)),
+                        **_csv_summary(enriched.filter(pl.col(column) == value)),
                     }
                 )
         if rows:

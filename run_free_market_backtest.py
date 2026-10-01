@@ -8,6 +8,7 @@ from nfl.backtest_audit import audit_backtest_bets
 from nfl.backtest_runtime import write_backtest_runtime
 from nfl.contracts import DataContractError
 from nfl.data import NFLDataClient
+from nfl.entry_integrity import annotate_historical_entry_integrity
 from nfl.free_market import FreeNFLMarketStore, load_nflverse_initial_lines
 from nfl.free_market_backtest import (
     build_archive_projection_dataset,
@@ -15,6 +16,46 @@ from nfl.free_market_backtest import (
     evaluate_archive_holdout,
     summarize_archive_bets,
 )
+from nfl.proof import write_evidence_report
+
+
+def _initial_line_coverage(
+    initial_lines: object,
+    *,
+    start_season: int,
+    end_season: int,
+) -> dict[str, object]:
+    if initial_lines is None:
+        return {
+            "available": False,
+            "rows": 0,
+            "seasons": [],
+            "market_types": [],
+            "backtest_window_rows": 0,
+            "overlaps_backtest_window": False,
+        }
+
+    season_column = initial_lines.get_column("season").drop_nulls()
+    seasons = sorted({int(value) for value in season_column.to_list()})
+    market_types = sorted(
+        {
+            str(value).upper()
+            for value in initial_lines.get_column("type").drop_nulls().to_list()
+        }
+    )
+    window_rows = sum(
+        start_season <= int(value) <= end_season for value in season_column.to_list()
+    )
+    return {
+        "available": True,
+        "rows": initial_lines.height,
+        "seasons": seasons,
+        "first_season": seasons[0] if seasons else None,
+        "last_season": seasons[-1] if seasons else None,
+        "market_types": market_types,
+        "backtest_window_rows": window_rows,
+        "overlaps_backtest_window": window_rows > 0,
+    }
 
 
 def main() -> None:
@@ -44,6 +85,11 @@ def main() -> None:
     except DataContractError as exc:
         initial_lines = None
         initial_error = str(exc)
+    initial_coverage = _initial_line_coverage(
+        initial_lines,
+        start_season=args.start_season,
+        end_season=args.end_season,
+    )
 
     market_store = FreeNFLMarketStore(schedules, initial_lines=initial_lines)
     projections = build_archive_projection_dataset(
@@ -51,7 +97,9 @@ def main() -> None:
         start_season=args.start_season,
         end_season=args.end_season,
     )
-    bets = build_free_archive_bets(projections, market_store)
+    bets = annotate_historical_entry_integrity(
+        build_free_archive_bets(projections, market_store)
+    )
     if bets.is_empty():
         raise SystemExit("free archive backtest produced no market opportunities")
 
@@ -97,7 +145,12 @@ def main() -> None:
             "opening_market": "nflverse nfldata initial_lines.csv when available",
             "api_key_required": False,
             "initial_lines_error": initial_error,
+            "initial_lines_coverage": initial_coverage,
             "clv_label": "opening-to-archive-final CLV proxy",
+            "entry_price_rule": (
+                "Only the exact price observed at entry can qualify as verified entry-price "
+                "evidence. Opening spread/total lines without opening juice remain research-only."
+            ),
             "notes": (
                 "Archive-final values are not claimed to be timestamped official closes. "
                 "When a distinct opening is unavailable, the final archive value is an "
@@ -120,7 +173,22 @@ def main() -> None:
     }
     output = reports / "free_market_backtest.json"
     output.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+    evidence = write_evidence_report(
+        output=reports / "evidence_report.json",
+        backtest_path=output,
+        bets_path=reports / "free_market_bets.csv",
+    )
     print(json.dumps(payload, indent=2, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "evidence_status": evidence["status"],
+                "promotion_sample": evidence["promotion_sample"],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":
