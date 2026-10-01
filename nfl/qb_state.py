@@ -96,27 +96,25 @@ def primary_qb_games(history: pl.DataFrame) -> pl.DataFrame:
         if dropbacks <= 0:
             continue
         player_id = str(row["player_id"])
-        # Maximize dropbacks, then attempts; deterministic player-ID tie break.
-        rank = (dropbacks, attempts, "".join(chr(255 - ord(c)) for c in player_id))
+        rank = (dropbacks, attempts, player_id)
         key = (team, game_id)
         if key not in best or rank > best[key][0]:
-            selected = dict(row)
-            selected["dropbacks"] = dropbacks
+            selected = {
+                "season": int(row["season"]),
+                "week": int(row["week"]),
+                "game_id": game_id,
+                "team": team,
+                "player_id": player_id,
+                "player_name": None if row["player_name"] is None else str(row["player_name"]),
+                "dropbacks": float(dropbacks),
+            }
             best[key] = (rank, selected)
 
     if not best:
         raise DataContractError("no primary QB game observations are available")
 
     rows = [value[1] for value in best.values()]
-    return pl.DataFrame(rows).select(
-        "season",
-        "week",
-        "game_id",
-        "team",
-        "player_id",
-        "player_name",
-        "dropbacks",
-    ).sort(["team", "week", "game_id"])
+    return pl.DataFrame(rows).sort(["team", "week", "game_id"])
 
 
 def _shrunk_rates(
