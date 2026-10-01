@@ -80,7 +80,12 @@ def closing_quote_probabilities(closing_quotes: pl.DataFrame) -> pl.DataFrame:
     )
 
 
-def _line_clv(market_type: str, side: str, decision_line: object, closing_line: object) -> float | None:
+def _line_clv(
+    market_type: str,
+    side: str,
+    decision_line: object,
+    closing_line: object,
+) -> float | None:
     if market_type == "moneyline":
         return None
     if decision_line is None or closing_line is None:
