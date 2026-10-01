@@ -1,0 +1,46 @@
+{
+  "data_quality": {
+    "context_source_errors": [
+      "ERROR: DataContractError: depth_charts missing required columns: season"
+    ],
+    "market_rows": 0,
+    "market_source_errors": [
+      "current-market ERROR: DataContractError: no usable current NFL markets from ESPN or optional professional source"
+    ],
+    "projection_games": 16,
+    "recent_form_source_errors": [],
+    "status": "WARN",
+    "target_games": 16
+  },
+  "live_readiness_score": 56.0,
+  "meaning": "operational health; not a profitability or staking signal",
+  "monitor_alerts": [
+    "verified ML/spread/total coverage below 90%",
+    "multi-book consensus is limited"
+  ],
+  "production_eligible": false,
+  "release_blockers": [
+    "complete_market_coverage: >=95% current games with ML + spread + total",
+    "live_monitoring: live readiness >=90/100",
+    "multi_book_consensus: >=75% current games covered by 2+ verified books",
+    "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
+    "historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
+    "portfolio_verified_forward_ledger: forward evidence comes from cap-constrained persisted portfolio decisions",
+    "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV"
+  ],
+  "release_state": "RESEARCH",
+  "source_failures": [
+    "depth_charts"
+  ],
+  "sources": {
+    "current_market": "unavailable",
+    "depth_charts": "ERROR: DataContractError: depth_charts missing required columns: season",
+    "football": "nflverse",
+    "historical_market": "nflverse public archive",
+    "injuries": "OK",
+    "recent_form_pbp": "nflverse",
+    "rosters_weekly": "OK",
+    "weather": "Open-Meteo"
+  },
+  "status": "FAIL"
+}

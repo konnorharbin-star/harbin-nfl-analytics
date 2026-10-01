@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Harbin NFL Audit</title><style>
+body{margin:24px;background:#0f1113;color:#f3f4f5;
+font-family:Arial,sans-serif}
+a{color:#74a7ff}
+.card{background:#171a1e;border:1px solid #292d32;border-radius:10px;
+padding:16px;margin:12px 0}
+pre{white-space:pre-wrap}</style></head><body>
+<h1>Harbin NFL · System Audit</h1>
+<p>One reconciled publication snapshot. Readiness is not a profitability guarantee.</p>
+<p><a href="./">← Weekly board</a> · 
+<a href="run_report.md">Run report</a> · 
+<a href="quant.html">Quant card</a></p>
+<div id="status" class="card">Loading audit snapshot…</div>
+<div id="detail" class="card"></div>
+<script>
+fetch('audit_snapshot.json?t='+Date.now()).then(r=>r.json()).then(s=>{
+const rel=(s.release||{}).state;
+const ready=(s.monitoring||{}).live_readiness_score??'—';
+document.getElementById('status').innerHTML=
+'<b>Publication:</b> '+s.status+' · <b>Release:</b> '+rel+
+' · <b>Readiness:</b> '+ready+'/100';
+const detail={reconciliation:s.reconciliation,warnings:s.warnings,
+coverage:s.coverage,historical_evidence:s.historical_evidence,
+live_evidence:s.live_evidence};
+document.getElementById('detail').innerHTML=
+'<pre>'+JSON.stringify(detail,null,2)+'</pre>';
+}).catch(()=>{document.getElementById('status').textContent=
+'No audit snapshot has been published.'});
+</script></body></html>

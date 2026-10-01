@@ -1,0 +1,32 @@
+# Harbin NFL Run Report
+
+**Season / Week:** 2026 / 4  
+**Publication status:** FAIL  
+**Release state:** RESEARCH  
+**Reconciliation:** FAIL  
+
+## Probability validation
+- Home-win Brier: **0.2300**.
+- Margin / total 80% coverage: **78.31% / 80.51%**.
+
+## Monitoring and execution
+- Live readiness: **56.0/100**.
+- Portfolio mode: **PAPER**; proposed **—u**; approved **0.00u**.
+- Historical evidence: **0 bets**, ROI **—**, CLV **—**.
+- Independent forward evidence: **0 bets**, ROI **—**, CLV **—**.
+
+## Current blockers
+- complete_market_coverage: >=95% current games with ML + spread + total
+- live_monitoring: live readiness >=90/100
+- multi_book_consensus: >=75% current games covered by 2+ verified books
+- historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks
+- historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons
+- portfolio_verified_forward_ledger: forward evidence comes from cap-constrained persisted portfolio decisions
+- live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV
+
+## Operational alerts
+- verified ML/spread/total coverage below 90%
+- multi-book consensus is limited
+
+## Interpretation
+A green software run, high readiness score, or low model error does not establish a profitable betting edge. Historical and independently graded forward evidence remain separate release requirements.

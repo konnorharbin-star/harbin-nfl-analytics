@@ -1,0 +1,20 @@
+{
+  "alerts": [
+    "verified ML/spread/total coverage below 90%",
+    "multi-book consensus is limited"
+  ],
+  "drift_details": {},
+  "drift_reference": null,
+  "live_readiness_score": 56.0,
+  "meaning": "operational/model-monitoring score; not a profitability guarantee",
+  "scores": {
+    "calibration": 91.80250233233775,
+    "context": 93.75,
+    "distribution_stability": 65.0,
+    "freshness": 100.0,
+    "market_coverage": 0.0,
+    "multi_book": 0.0,
+    "output_completeness": 0.0
+  },
+  "status": "ALERT"
+}

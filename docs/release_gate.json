@@ -1,0 +1,124 @@
+{
+  "blockers": [
+    "complete_market_coverage: >=95% current games with ML + spread + total",
+    "live_monitoring: live readiness >=90/100",
+    "multi_book_consensus: >=75% current games covered by 2+ verified books",
+    "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
+    "historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
+    "portfolio_verified_forward_ledger: forward evidence comes from cap-constrained persisted portfolio decisions",
+    "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV"
+  ],
+  "checks": [
+    {
+      "detail": "",
+      "name": "data_contracts",
+      "passed": true,
+      "requirement": "no ERROR-level data-contract violations",
+      "value": "WARN"
+    },
+    {
+      "detail": "",
+      "name": "complete_market_coverage",
+      "passed": false,
+      "requirement": ">=95% current games with ML + spread + total",
+      "value": 0.0
+    },
+    {
+      "detail": "",
+      "name": "quarterback_context_coverage",
+      "passed": true,
+      "requirement": ">=95% current games with starting-QB state",
+      "value": 1.0
+    },
+    {
+      "detail": "",
+      "name": "context_coverage",
+      "passed": true,
+      "requirement": ">=90% current injury/rest/weather/travel context coverage",
+      "value": 0.9375
+    },
+    {
+      "detail": "",
+      "name": "probability_calibration",
+      "passed": true,
+      "requirement": "chronological NFL probability holdout meets calibration guardrails",
+      "value": {
+        "brier": 0.22995807657360534,
+        "margin_80_coverage": 0.7830882352941176,
+        "total_80_coverage": 0.8051470588235294
+      }
+    },
+    {
+      "detail": "",
+      "name": "live_monitoring",
+      "passed": false,
+      "requirement": "live readiness >=90/100",
+      "value": 56.0
+    },
+    {
+      "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
+      "name": "multi_book_consensus",
+      "passed": false,
+      "requirement": ">=75% current games covered by 2+ verified books",
+      "value": 0.0
+    },
+    {
+      "detail": "",
+      "name": "historical_entry_integrity",
+      "passed": false,
+      "requirement": "promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
+      "value": {
+        "excluded_unverified_bets": 0,
+        "verified_bets": 0
+      }
+    },
+    {
+      "detail": "",
+      "name": "historical_market_edge",
+      "passed": false,
+      "requirement": "ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
+      "value": {
+        "positive_markets": 0,
+        "positive_seasons": 0,
+        "roi_ci_95": [
+          null,
+          null
+        ],
+        "status": "EARLY SAMPLE"
+      }
+    },
+    {
+      "detail": "",
+      "name": "portfolio_verified_forward_ledger",
+      "passed": false,
+      "requirement": "forward evidence comes from cap-constrained persisted portfolio decisions",
+      "value": {
+        "graded_bets": 0,
+        "source": null
+      }
+    },
+    {
+      "detail": "",
+      "name": "live_shadow_evidence",
+      "passed": false,
+      "requirement": ">=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV",
+      "value": {
+        "avg_clv": null,
+        "graded_bets": 0,
+        "roi": null
+      }
+    }
+  ],
+  "engineering_ready": false,
+  "historical_edge_ready": false,
+  "live_evidence_ready": false,
+  "meaning": "Hard NFL deployment gate. Structural parity with CFB does not transfer CFB evidence; PRODUCTION requires independent NFL engineering, historical entry, market breadth, and portfolio-verified live evidence.",
+  "next_requirements": [
+    "Accumulate or supplement verified multi-book current pricing coverage.",
+    "Accumulate explicit forward/opening entry snapshots; archive-final fallbacks cannot promote the model.",
+    "Keep NFL policy in paper research until verified-entry chronological ROI/CLV evidence clears the hard gates.",
+    "Accumulate independently graded portfolio decisions; historical backtests do not substitute for live evidence."
+  ],
+  "production_eligible": false,
+  "release_state": "RESEARCH"
+}

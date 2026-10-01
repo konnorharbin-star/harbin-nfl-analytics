@@ -1,0 +1,89 @@
+{
+  "deployment_mode": "paper",
+  "markets": {
+    "moneyline": {
+      "bet": {
+        "min_edge": 0.025,
+        "min_ev": 0.04,
+        "min_prob": 0.54
+      },
+      "enabled": true,
+      "excluded_weeks": [],
+      "lean": {
+        "min_edge": 0.015,
+        "min_ev": 0.02,
+        "min_prob": 0.52
+      },
+      "strong": {
+        "min_edge": 0.04,
+        "min_ev": 0.07,
+        "min_prob": 0.56
+      }
+    },
+    "spread": {
+      "bet": {
+        "min_edge": 0.03,
+        "min_ev": 0.04,
+        "min_prob": 0.54
+      },
+      "enabled": true,
+      "excluded_weeks": [],
+      "lean": {
+        "min_edge": 0.02,
+        "min_ev": 0.02,
+        "min_prob": 0.52
+      },
+      "strong": {
+        "min_edge": 0.05,
+        "min_ev": 0.07,
+        "min_prob": 0.57
+      }
+    },
+    "total": {
+      "bet": {
+        "min_edge": 0.04,
+        "min_ev": 0.04,
+        "min_prob": 0.54
+      },
+      "enabled": true,
+      "excluded_weeks": [],
+      "lean": {
+        "min_edge": 0.025,
+        "min_ev": 0.02,
+        "min_prob": 0.52
+      },
+      "strong": {
+        "min_edge": 0.06,
+        "min_ev": 0.07,
+        "min_prob": 0.57
+      }
+    }
+  },
+  "portfolio": {
+    "adverse_run_multiplier": 0.5,
+    "drawdown_floor_multiplier": 0.25,
+    "drawdown_hard_stop_units": 15.0,
+    "drawdown_soft_stop_units": 8.0,
+    "kelly_fraction": 0.2,
+    "kickoff_window_hours": 3,
+    "max_bets": 20,
+    "max_book_units": 2.0,
+    "max_game_units": 1.0,
+    "max_kickoff_window_units": 2.0,
+    "max_market_units": 2.5,
+    "max_quote_age_minutes": 60,
+    "max_single_bet_units": 1.0,
+    "max_slate_units": 5.0,
+    "max_team_units": 1.5,
+    "min_allocation_units": 0.05,
+    "min_trailing_bets_for_throttle": 30,
+    "require_executable_book": true,
+    "require_live_history_for_production": true,
+    "require_quote_timestamp_for_execution": true,
+    "trailing_clv_throttle": 0.0,
+    "trailing_roi_throttle": -0.1,
+    "trailing_window_bets": 50
+  },
+  "source": "conservative NFL defaults; not promoted production thresholds",
+  "version": 1
+}

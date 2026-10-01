@@ -1,0 +1,67 @@
+{
+  "core_model": {
+    "fair_score": "ridge-regularized team offense/defense scoring model",
+    "prior_season_weight": 0.1,
+    "quarterback_layer": "separate NFL-specific research/shadow subsystem",
+    "sportsbook_prices_in_score_model": false
+  },
+  "evidence": {
+    "historical": {},
+    "historical_status": "EARLY SAMPLE",
+    "promotion_sample": {
+      "avg_verified_clv_proxy": null,
+      "entry_quote_verified": false,
+      "excluded_unverified_bets": 0,
+      "positive_markets": 0,
+      "positive_seasons": 0,
+      "raw_archive_bets": 0,
+      "verified_bets": 0
+    }
+  },
+  "league": "NFL",
+  "markets": {
+    "clv_policy": "proxy labels remain explicit unless timestamped forward snapshots exist",
+    "current_primary": "ESPN public endpoints",
+    "historical_primary": "free nflverse archive",
+    "optional_enrichment": "The Odds API or other verified multi-book source"
+  },
+  "name": "Harbin NFL Analytics",
+  "non_negotiables": [
+    "No target-week/future leakage.",
+    "No sportsbook line in the independent fair-score engine.",
+    "NFL parameters are validated independently from CFB.",
+    "Missing quotes/context are not invented.",
+    "Historical archive fallbacks do not become verified opening entries by relabeling.",
+    "No production staking until every hard release gate passes."
+  ],
+  "probability": {
+    "holdout": {
+      "candidate_pass": false,
+      "holdout_games": 272,
+      "holdout_season": 2025,
+      "home_win_brier": 0.22995807657360534,
+      "margin_50_coverage": 0.5110294117647058,
+      "margin_80_coverage": 0.7830882352941176,
+      "margin_nll": 3.9948617498156644,
+      "margin_scale": 1.0,
+      "status": "READY",
+      "total_50_coverage": 0.5147058823529411,
+      "total_80_coverage": 0.8051470588235294,
+      "total_nll": 4.019776337747561,
+      "total_scale": 1.0,
+      "training_games": 815,
+      "validation_season": 2024
+    },
+    "method": "chronologically fitted Gaussian score residual distribution",
+    "sportsbook_lines_as_inputs": false
+  },
+  "production_eligible": false,
+  "purpose": "Leakage-safe NFL fair-score, probability, market-research, portfolio-risk, grading, and monitoring platform.",
+  "release_state": "RESEARCH",
+  "risk": {
+    "drawdown_throttle": true,
+    "portfolio_caps": true,
+    "production_requires_release_gate": true,
+    "staking": "capped fractional Kelly"
+  }
+}

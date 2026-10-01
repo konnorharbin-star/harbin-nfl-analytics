@@ -1,0 +1,18 @@
+{
+  "approved_bets": 0,
+  "approved_units": 0.0,
+  "bankroll_risk": {
+    "cumulative_units": 0.0,
+    "current_drawdown_units": 0.0,
+    "graded_bets": 0,
+    "hard_stop": false,
+    "history_available": false,
+    "max_drawdown_units": 0.0,
+    "reason": "no independent graded NFL live/shadow history",
+    "risk_multiplier": 1.0,
+    "trailing_avg_clv": null,
+    "trailing_roi": null,
+    "trailing_window_bets": 0
+  },
+  "mode": "paper"
+}

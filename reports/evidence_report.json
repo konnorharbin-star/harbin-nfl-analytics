@@ -1,0 +1,17 @@
+{
+  "by_market": {},
+  "by_season": {},
+  "note": "Free nflverse archive-final fallbacks are valid research observations but are not promotion-quality opening entries. ROBUST status requires explicit distinct opening entry evidence plus positive uncertainty-adjusted ROI/CLV across markets and seasons.",
+  "overall": {},
+  "promotion_sample": {
+    "avg_verified_clv_proxy": null,
+    "entry_quote_verified": false,
+    "excluded_unverified_bets": 0,
+    "positive_markets": 0,
+    "positive_seasons": 0,
+    "raw_archive_bets": 0,
+    "verified_bets": 0
+  },
+  "source": {},
+  "status": "EARLY SAMPLE"
+}

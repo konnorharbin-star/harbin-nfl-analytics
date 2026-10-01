@@ -1,0 +1,13 @@
+{
+  "context_source_errors": [
+    "ERROR: DataContractError: depth_charts missing required columns: season"
+  ],
+  "market_rows": 0,
+  "market_source_errors": [
+    "current-market ERROR: DataContractError: no usable current NFL markets from ESPN or optional professional source"
+  ],
+  "projection_games": 16,
+  "recent_form_source_errors": [],
+  "status": "WARN",
+  "target_games": 16
+}

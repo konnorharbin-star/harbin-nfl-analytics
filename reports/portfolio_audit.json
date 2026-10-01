@@ -1,0 +1,13 @@
+{
+  "candidate_units": 0.0,
+  "errors": 0,
+  "issues": [
+    {
+      "code": "empty_portfolio",
+      "severity": "WARNING"
+    }
+  ],
+  "real_stake_units": 0.0,
+  "status": "WARN",
+  "warnings": 1
+}
