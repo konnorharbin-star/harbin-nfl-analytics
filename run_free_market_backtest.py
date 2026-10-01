@@ -1,0 +1,114 @@
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+
+from nfl.contracts import DataContractError
+from nfl.data import NFLDataClient
+from nfl.free_market import FreeNFLMarketStore, load_nflverse_initial_lines
+from nfl.free_market_backtest import (
+    build_archive_projection_dataset,
+    build_free_archive_bets,
+    evaluate_archive_holdout,
+    summarize_archive_bets,
+)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Run the free nflverse NFL market archive backtest."
+    )
+    parser.add_argument("--start-season", type=int, default=2022)
+    parser.add_argument("--end-season", type=int, default=2025)
+    parser.add_argument("--validation-season", type=int, default=2024)
+    parser.add_argument("--holdout-season", type=int, default=2025)
+    parser.add_argument("--refresh", action="store_true")
+    parser.add_argument("--reports-dir", default="reports")
+    args = parser.parse_args()
+
+    if args.start_season >= args.end_season:
+        raise SystemExit("--start-season must be earlier than --end-season")
+    if args.validation_season >= args.holdout_season:
+        raise SystemExit("--validation-season must be earlier than --holdout-season")
+
+    client = NFLDataClient()
+    seasons = list(range(args.start_season - 1, args.end_season + 1))
+    schedules = client.load_schedules(seasons, refresh=args.refresh)
+
+    initial_error: str | None = None
+    try:
+        initial_lines = load_nflverse_initial_lines(refresh=args.refresh)
+    except DataContractError as exc:
+        initial_lines = None
+        initial_error = str(exc)
+
+    market_store = FreeNFLMarketStore(schedules, initial_lines=initial_lines)
+    projections = build_archive_projection_dataset(
+        schedules,
+        start_season=args.start_season,
+        end_season=args.end_season,
+    )
+    bets = build_free_archive_bets(projections, market_store)
+    if bets.is_empty():
+        raise SystemExit("free archive backtest produced no market opportunities")
+
+    evaluations = {}
+    for market_type in ("moneyline", "spread", "total"):
+        evaluations[market_type] = evaluate_archive_holdout(
+            bets,
+            market_type=market_type,
+            validation_season=args.validation_season,
+            holdout_season=args.holdout_season,
+        ).to_dict()
+
+    by_market = {
+        market_type: summarize_archive_bets(
+            bets.filter(bets.get_column("market_type") == market_type)
+        ).to_dict()
+        for market_type in ("moneyline", "spread", "total")
+    }
+    by_season = {
+        str(season): summarize_archive_bets(
+            bets.filter(bets.get_column("season") == season)
+        ).to_dict()
+        for season in range(args.start_season, args.end_season + 1)
+        if bets.filter(bets.get_column("season") == season).height
+    }
+
+    reports = Path(args.reports_dir)
+    reports.mkdir(parents=True, exist_ok=True)
+    projections.write_csv(reports / "free_market_predictions.csv")
+    bets.write_csv(reports / "free_market_bets.csv")
+
+    payload = {
+        "source": {
+            "historical_market": "nflverse schedules/nfldata public archive",
+            "opening_market": "nflverse nfldata initial_lines.csv when available",
+            "api_key_required": False,
+            "initial_lines_error": initial_error,
+            "clv_label": "opening-to-archive-final CLV proxy",
+            "notes": (
+                "Archive-final values are not claimed to be timestamped official closes. "
+                "When a distinct opening is unavailable, the final archive value is an "
+                "explicit execution fallback and no CLV proxy is recorded."
+            ),
+        },
+        "start_season": args.start_season,
+        "end_season": args.end_season,
+        "validation_season": args.validation_season,
+        "holdout_season": args.holdout_season,
+        "projection_games": projections.height,
+        "market_opportunities": bets.height,
+        "overall": summarize_archive_bets(bets).to_dict(),
+        "by_market": by_market,
+        "by_season": by_season,
+        "holdout_evaluations": evaluations,
+    }
+    output = reports / "free_market_backtest.json"
+    output.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+    print(json.dumps(payload, indent=2, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()
