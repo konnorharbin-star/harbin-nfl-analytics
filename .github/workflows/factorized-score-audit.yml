@@ -1,0 +1,65 @@
+name: NFL Factorized Score Audit
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/factorized_score.py"
+      - "nfl/factorized_eval.py"
+      - "nfl/factorized_audit.py"
+      - "run_factorized_audit.py"
+      - "tests/test_factorized_score.py"
+      - ".github/workflows/factorized-score-audit.yml"
+  push:
+    branches: [main]
+    paths:
+      - "nfl/factorized_score.py"
+      - "nfl/factorized_eval.py"
+      - "nfl/factorized_audit.py"
+      - "run_factorized_audit.py"
+      - ".github/workflows/factorized-score-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      PYTHONUNBUFFERED: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+
+      - name: Unit tests
+        run: python -m pytest -q tests/test_factorized_score.py
+
+      - name: Ruff
+        run: >-
+          ruff check nfl/factorized_score.py nfl/factorized_eval.py
+          nfl/factorized_audit.py run_factorized_audit.py tests/test_factorized_score.py
+
+      - name: Run 2023-2025 factorized architecture audit
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports
+          python run_factorized_audit.py --refresh | tee reports/factorized_audit.log
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-factorized-score-audit
+          path: |
+            reports/factorized_audit.json
+            reports/factorized_audit.log
+          if-no-files-found: error
