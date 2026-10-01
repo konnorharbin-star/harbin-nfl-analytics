@@ -40,6 +40,9 @@ def main() -> None:
         release_gate=report["release_gate"],
         bankroll_multiplier=multiplier,
     )
+    publication = report.get("publication", {})
+    if not isinstance(publication, dict):
+        publication = {}
 
     summary = {
         "status": "READY",
@@ -59,6 +62,8 @@ def main() -> None:
             "release_gate": "outputs/release_gate.json",
             "model_card": "outputs/model_card.json",
             "portfolio_audit": "reports/portfolio_audit.json",
+            "weekly_html": publication.get("html"),
+            "weekly_png_pages": publication.get("png_pages", []),
         },
     }
     print(json.dumps(summary, indent=2, sort_keys=True, default=str))
