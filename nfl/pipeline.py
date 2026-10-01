@@ -10,7 +10,6 @@ from .context import build_current_context
 from .current import run_current_projection, unplayed_regular_games
 from .data import NFLDataClient
 from .decision_ledger import append_portfolio_decisions
-from .espn_market import ESPNMarketClient
 from .free_market_backtest import build_archive_projection_dataset
 from .health import write_health
 from .line_history import append_market_snapshots
@@ -19,6 +18,7 @@ from .model_card import write_model_card
 from .monitoring import write_live_monitoring
 from .policy import load_policy
 from .portfolio import apply_portfolio_controls
+from .pro_market import collect_current_markets
 from .probability import evaluate_probability_holdout
 from .proof import write_evidence_report
 from .release_gate import write_release_gate
@@ -155,7 +155,7 @@ def run_operational_pipeline(
         refresh=refresh,
     )
     targets = unplayed_regular_games(schedules, season, target_week)
-    markets = ESPNMarketClient().current_markets(targets, week=target_week)
+    markets, market_source_meta = collect_current_markets(targets, week=target_week)
 
     historical = build_archive_projection_dataset(
         schedules,
@@ -173,6 +173,19 @@ def run_operational_pipeline(
         markets,
         historical,
         policy=policy,
+    )
+    market_meta.update(
+        {
+            "source_breadth": market_source_meta,
+            "multi_book_coverage": market_source_meta.get(
+                "multi_book_coverage",
+                market_meta.get("multi_book_coverage", 0.0),
+            ),
+            "distinct_books": market_source_meta.get(
+                "books",
+                market_meta.get("distinct_books", 0),
+            ),
+        }
     )
 
     context_frames, context_source_status = _context_sources(
@@ -209,13 +222,17 @@ def run_operational_pipeline(
     context_errors = [
         value for value in context_source_status.values() if value.startswith("ERROR:")
     ]
+    market_errors = [str(value) for value in market_source_meta.get("source_errors", [])]
+    source_errors = context_errors + market_errors
     data_quality = {
-        "status": "WARN" if context_errors else "OK",
+        "status": "WARN" if source_errors else "OK",
         "projection_games": projection.height,
         "target_games": targets.height,
         "market_rows": candidates.height,
         "context_source_errors": context_errors,
+        "market_source_errors": market_errors,
     }
+    market_sources = ", ".join(str(value) for value in market_source_meta.get("sources", []))
     meta: dict[str, object] = {
         "generated_at": run_at.isoformat(),
         "season": season,
@@ -233,7 +250,7 @@ def run_operational_pipeline(
         "data_quality": data_quality,
         "sources": {
             "football": "nflverse",
-            "current_market": "ESPN public endpoints",
+            "current_market": market_sources or "unavailable",
             "historical_market": "nflverse public archive",
             **context_source_status,
             "weather": "Open-Meteo",
