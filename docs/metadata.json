@@ -1,14 +1,14 @@
 {
   "current_context": {
-    "as_of": "2026-10-01T15:14:12.741511+00:00",
+    "as_of": "2026-10-01T16:13:55.814532+00:00",
     "components": {
       "injuries_personnel": 1.0,
       "quarterback": 1.0,
       "rest_travel": 0.9375,
-      "weather_stadium": 0.875
+      "weather_stadium": 0.8125
     },
-    "coverage": 0.953125,
-    "depth_feed_available": false,
+    "coverage": 0.9375,
+    "depth_feed_available": true,
     "games": 16,
     "injury_feed_available": true,
     "note": "Context is post-prediction risk/confidence only until NFL point-in-time historical validation earns a score adjustment.",
@@ -17,7 +17,8 @@
     "score_adjustment_enabled": false,
     "status": "PARTIAL",
     "weather_errors": [
-      "2026_04_IND_WAS: missing venue coordinates"
+      "2026_04_IND_WAS: missing venue coordinates",
+      "2026_04_NYJ_CHI: weather source request failed: <urlopen error _ssl.c:993: The handshake operation timed out>"
     ]
   },
   "current_recent_form": {
@@ -55,43 +56,39 @@
     "week": 4
   },
   "data_quality": {
-    "context_source_errors": [
-      "ERROR: DataContractError: depth_charts missing required columns: season"
-    ],
+    "context_source_errors": [],
     "market_rows": 48,
-    "market_source_errors": [
-      "espn: ESPN NFL odds request failed: HTTP Error 403: Forbidden"
-    ],
+    "market_source_errors": [],
     "projection_games": 16,
     "recent_form_source_errors": [],
-    "status": "WARN",
+    "status": "OK",
     "target_games": 16
   },
-  "generated_at": "2026-10-01T15:14:12.741511+00:00",
+  "generated_at": "2026-10-01T16:13:55.814532+00:00",
   "market_coverage": {
     "games": 16,
-    "moneyline": 0,
-    "spread": 0,
-    "total": 0
+    "moneyline": 16,
+    "spread": 16,
+    "total": 16
   },
   "market_intelligence": {
     "api_key_required": false,
-    "complete_market_coverage": 0.0,
-    "distinct_books": 0,
+    "complete_market_coverage": 1.0,
+    "distinct_books": 1,
     "games": 16,
     "market_source": "canonical current NFL market aggregation",
-    "moneyline": 0,
+    "moneyline": 16,
     "multi_book_coverage": 0.0,
     "multi_book_games": 0,
     "probability_training_games": 1135,
     "release_state": "RESEARCH",
-    "research_fallback_rows": 48,
+    "research_fallback_rows": 0,
     "research_market_coverage": 1.0,
     "research_moneyline": 16,
     "research_spread": 16,
     "research_total": 16,
     "source_breadth": {
-      "books": 0,
+      "books": 1,
       "execution_note": "nflverse schedule fallback has no sportsbook identity or quote-update timestamp and is research-only",
       "games": 16,
       "games_with_any_market": 16,
@@ -100,22 +97,22 @@
       "optional_source_configured": false,
       "optional_source_rows": 0,
       "primary_source": "ESPN public endpoints",
-      "research_fallback_rows": 48,
+      "research_fallback_rows": 0,
       "research_fallback_source": "nflverse schedule market fields",
-      "source_errors": [
-        "espn: ESPN NFL odds request failed: HTTP Error 403: Forbidden"
-      ],
+      "source_errors": [],
       "sources": [
-        "nflverse_schedule_snapshot"
+        "espn"
       ],
-      "status": "RESEARCH_FALLBACK",
-      "verified_games_with_any_market": 0,
-      "verified_rows": 0,
-      "verified_sources": []
+      "status": "READY",
+      "verified_games_with_any_market": 16,
+      "verified_rows": 48,
+      "verified_sources": [
+        "espn"
+      ]
     },
-    "spread": 0,
-    "total": 0,
-    "verified_market_rows": 0
+    "spread": 16,
+    "total": 16,
+    "verified_market_rows": 48
   },
   "probability": {
     "candidate_pass": false,
@@ -150,8 +147,8 @@
   },
   "season": 2026,
   "sources": {
-    "current_market": "nflverse_schedule_snapshot",
-    "depth_charts": "ERROR: DataContractError: depth_charts missing required columns: season",
+    "current_market": "espn",
+    "depth_charts": "OK",
     "football": "nflverse",
     "historical_market": "nflverse public archive",
     "injuries": "OK",

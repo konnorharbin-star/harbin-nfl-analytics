@@ -1,50 +1,40 @@
 {
   "coverage": {
-    "context": 0.953125,
+    "context": 0.9375,
     "games": 16,
-    "moneyline": 0,
+    "moneyline": 16,
     "multi_book": 0.0,
     "quarterback": 1.0,
-    "spread": 0,
-    "total": 0
+    "spread": 16,
+    "total": 16
   },
   "data_quality": {
-    "context_source_errors": [
-      "ERROR: DataContractError: depth_charts missing required columns: season"
-    ],
+    "context_source_errors": [],
     "market_rows": 48,
-    "market_source_errors": [
-      "espn: ESPN NFL odds request failed: HTTP Error 403: Forbidden"
-    ],
+    "market_source_errors": [],
     "projection_games": 16,
     "recent_form_source_errors": [],
-    "status": "WARN",
+    "status": "OK",
     "target_games": 16
   },
-  "generated_at": "2026-10-01T15:14:26.992036+00:00",
+  "generated_at": "2026-10-01T16:14:42.997462+00:00",
   "health": {
     "data_quality": {
-      "context_source_errors": [
-        "ERROR: DataContractError: depth_charts missing required columns: season"
-      ],
+      "context_source_errors": [],
       "market_rows": 48,
-      "market_source_errors": [
-        "espn: ESPN NFL odds request failed: HTTP Error 403: Forbidden"
-      ],
+      "market_source_errors": [],
       "projection_games": 16,
       "recent_form_source_errors": [],
-      "status": "WARN",
+      "status": "OK",
       "target_games": 16
     },
-    "live_readiness_score": 65.8,
+    "live_readiness_score": 83.5,
     "meaning": "operational health; not a profitability or staking signal",
     "monitor_alerts": [
-      "verified ML/spread/total coverage below 90%",
       "multi-book consensus is limited"
     ],
     "production_eligible": false,
     "release_blockers": [
-      "complete_market_coverage: >=95% current games with ML + spread + total",
       "live_monitoring: live readiness >=90/100",
       "multi_book_consensus: >=75% current games covered by 2+ verified books",
       "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
@@ -53,12 +43,10 @@
       "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV"
     ],
     "release_state": "RESEARCH",
-    "source_failures": [
-      "depth_charts"
-    ],
+    "source_failures": [],
     "sources": {
-      "current_market": "nflverse_schedule_snapshot",
-      "depth_charts": "ERROR: DataContractError: depth_charts missing required columns: season",
+      "current_market": "espn",
+      "depth_charts": "OK",
       "football": "nflverse",
       "historical_market": "nflverse public archive",
       "injuries": "OK",
@@ -66,7 +54,7 @@
       "rosters_weekly": "OK",
       "weather": "Open-Meteo"
     },
-    "status": "FAIL"
+    "status": "OK"
   },
   "historical_evidence": {
     "avg_clv": null,
@@ -82,7 +70,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-01T15:14:12.741511+00:00",
+    "model_generated_at": "2026-10-01T16:13:55.814532+00:00",
     "prediction_games": 16,
     "prediction_rows": 48,
     "season": 2026,
@@ -103,20 +91,19 @@
   "meaning": "NFL publication/audit snapshot. Readiness, model error, historical evidence, and forward evidence remain separate; none guarantees future profitability.",
   "monitoring": {
     "alerts": [
-      "verified ML/spread/total coverage below 90%",
       "multi-book consensus is limited"
     ],
     "drift_details": {},
-    "live_readiness_score": 65.8,
-    "recent_readiness_delta": 9.799999999999997,
+    "live_readiness_score": 83.5,
+    "recent_readiness_delta": 22.6,
     "scores": {
       "calibration": 91.80250233233778,
-      "context": 95.3125,
+      "context": 93.75,
       "distribution_stability": 65.0,
       "freshness": 100.0,
-      "market_coverage": 0.0,
+      "market_coverage": 100.0,
       "multi_book": 0.0,
-      "output_completeness": 95.9084084084084
+      "output_completeness": 95.34534534534535
     },
     "status": "WARN"
   },
@@ -136,15 +123,15 @@
       "trailing_roi": null,
       "trailing_window_bets": 0
     },
-    "bets": 0,
-    "execution_blocked_bets": 48,
+    "bets": 5,
+    "execution_blocked_bets": 0,
     "mode": "paper",
-    "paper_or_shadow_allocated_units": 0.0,
+    "paper_or_shadow_allocated_units": 0.322104,
     "policy_mode": "paper",
     "production_eligible": false,
-    "proposed_units": 0.0,
+    "proposed_units": 1.070627,
     "release_state": "RESEARCH",
-    "risk_adjusted_proposed_units": 0.0
+    "risk_adjusted_proposed_units": 1.070627
   },
   "probability": {
     "candidate_pass": false,
@@ -196,7 +183,7 @@
         "severity": "ERROR"
       },
       {
-        "detail": "status=WARN",
+        "detail": "status=OK",
         "name": "data_contracts_publishable",
         "passed": true,
         "severity": "ERROR"
@@ -208,7 +195,7 @@
         "severity": "ERROR"
       },
       {
-        "detail": "approved=0.000 allocated=0.000",
+        "detail": "approved=0.000 allocated=0.322",
         "name": "approved_not_above_allocation",
         "passed": true,
         "severity": "ERROR"
@@ -231,7 +218,6 @@
   },
   "release": {
     "blockers": [
-      "complete_market_coverage: >=95% current games with ML + spread + total",
       "live_monitoring: live readiness >=90/100",
       "multi_book_consensus: >=75% current games covered by 2+ verified books",
       "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
@@ -245,14 +231,14 @@
         "name": "data_contracts",
         "passed": true,
         "requirement": "no ERROR-level data-contract violations",
-        "value": "WARN"
+        "value": "OK"
       },
       {
         "detail": "",
         "name": "complete_market_coverage",
-        "passed": false,
+        "passed": true,
         "requirement": ">=95% current games with ML + spread + total",
-        "value": 0.0
+        "value": 1.0
       },
       {
         "detail": "",
@@ -266,7 +252,7 @@
         "name": "context_coverage",
         "passed": true,
         "requirement": ">=90% current injury/rest/weather/travel context coverage",
-        "value": 0.9531
+        "value": 0.9375
       },
       {
         "detail": "",
@@ -284,7 +270,7 @@
         "name": "live_monitoring",
         "passed": false,
         "requirement": "live readiness >=90/100",
-        "value": 65.8
+        "value": 83.5
       },
       {
         "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -366,12 +352,22 @@
       "release_state": "RESEARCH",
       "season": 2026,
       "week": 4
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "WARN",
+      "distribution_stability": 65.0,
+      "generated_at": "2026-10-01T15:14:26.992036+00:00",
+      "live_readiness_score": 65.8,
+      "model_generated_at": "2026-10-01T15:14:12.741511+00:00",
+      "publication_status": "WARN",
+      "release_state": "RESEARCH",
+      "season": 2026,
+      "week": 4
     }
   ],
   "warnings": [
-    "verified ML/spread/total coverage below 90%",
     "multi-book consensus is limited",
-    "complete_market_coverage: >=95% current games with ML + spread + total",
     "live_monitoring: live readiness >=90/100",
     "multi_book_consensus: >=75% current games covered by 2+ verified books",
     "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",

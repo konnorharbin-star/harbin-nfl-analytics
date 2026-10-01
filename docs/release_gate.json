@@ -1,6 +1,5 @@
 {
   "blockers": [
-    "complete_market_coverage: >=95% current games with ML + spread + total",
     "live_monitoring: live readiness >=90/100",
     "multi_book_consensus: >=75% current games covered by 2+ verified books",
     "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
@@ -14,14 +13,14 @@
       "name": "data_contracts",
       "passed": true,
       "requirement": "no ERROR-level data-contract violations",
-      "value": "WARN"
+      "value": "OK"
     },
     {
       "detail": "",
       "name": "complete_market_coverage",
-      "passed": false,
+      "passed": true,
       "requirement": ">=95% current games with ML + spread + total",
-      "value": 0.0
+      "value": 1.0
     },
     {
       "detail": "",
@@ -35,7 +34,7 @@
       "name": "context_coverage",
       "passed": true,
       "requirement": ">=90% current injury/rest/weather/travel context coverage",
-      "value": 0.9531
+      "value": 0.9375
     },
     {
       "detail": "",
@@ -53,7 +52,7 @@
       "name": "live_monitoring",
       "passed": false,
       "requirement": "live readiness >=90/100",
-      "value": 65.8
+      "value": 83.5
     },
     {
       "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",

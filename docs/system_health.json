@@ -1,26 +1,20 @@
 {
   "data_quality": {
-    "context_source_errors": [
-      "ERROR: DataContractError: depth_charts missing required columns: season"
-    ],
+    "context_source_errors": [],
     "market_rows": 48,
-    "market_source_errors": [
-      "espn: ESPN NFL odds request failed: HTTP Error 403: Forbidden"
-    ],
+    "market_source_errors": [],
     "projection_games": 16,
     "recent_form_source_errors": [],
-    "status": "WARN",
+    "status": "OK",
     "target_games": 16
   },
-  "live_readiness_score": 65.8,
+  "live_readiness_score": 83.5,
   "meaning": "operational health; not a profitability or staking signal",
   "monitor_alerts": [
-    "verified ML/spread/total coverage below 90%",
     "multi-book consensus is limited"
   ],
   "production_eligible": false,
   "release_blockers": [
-    "complete_market_coverage: >=95% current games with ML + spread + total",
     "live_monitoring: live readiness >=90/100",
     "multi_book_consensus: >=75% current games covered by 2+ verified books",
     "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
@@ -29,12 +23,10 @@
     "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV"
   ],
   "release_state": "RESEARCH",
-  "source_failures": [
-    "depth_charts"
-  ],
+  "source_failures": [],
   "sources": {
-    "current_market": "nflverse_schedule_snapshot",
-    "depth_charts": "ERROR: DataContractError: depth_charts missing required columns: season",
+    "current_market": "espn",
+    "depth_charts": "OK",
     "football": "nflverse",
     "historical_market": "nflverse public archive",
     "injuries": "OK",
@@ -42,5 +34,5 @@
     "rosters_weekly": "OK",
     "weather": "Open-Meteo"
   },
-  "status": "FAIL"
+  "status": "OK"
 }

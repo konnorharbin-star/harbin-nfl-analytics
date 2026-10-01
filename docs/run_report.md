@@ -10,13 +10,12 @@
 - Margin / total 80% coverage: **78.31% / 80.51%**.
 
 ## Monitoring and execution
-- Live readiness: **65.8/100**.
-- Portfolio mode: **PAPER**; proposed **0.00u**; approved **0.00u**.
+- Live readiness: **83.5/100**.
+- Portfolio mode: **PAPER**; proposed **1.07u**; approved **0.00u**.
 - Historical evidence: **0 bets**, ROI **—**, CLV **—**.
 - Independent forward evidence: **0 bets**, ROI **—**, CLV **—**.
 
 ## Current blockers
-- complete_market_coverage: >=95% current games with ML + spread + total
 - live_monitoring: live readiness >=90/100
 - multi_book_consensus: >=75% current games covered by 2+ verified books
 - historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks
@@ -25,7 +24,6 @@
 - live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV
 
 ## Operational alerts
-- verified ML/spread/total coverage below 90%
 - multi-book consensus is limited
 
 ## Interpretation
