@@ -1,0 +1,48 @@
+name: Fixed QB Rolling Audit
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/qb_rolling.py"
+      - "nfl/qb_fixed_audit.py"
+      - "nfl/qb_dataset.py"
+      - "nfl/qb_state.py"
+      - "nfl/qb_residuals.py"
+      - "run_qb_fixed_audit.py"
+      - "tests/test_qb_rolling.py"
+      - ".github/workflows/qb-fixed-audit.yml"
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+
+      - name: Run fixed QB rolling audit
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports
+          python run_qb_fixed_audit.py --refresh | tee reports/qb_fixed_audit.log
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: fixed-qb-rolling-audit
+          path: |
+            reports/qb_fixed_audit.json
+            reports/qb_fixed_audit.log
