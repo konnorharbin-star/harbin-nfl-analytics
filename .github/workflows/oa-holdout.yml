@@ -1,0 +1,43 @@
+name: Opponent Adjusted PBP Holdout Audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/opponent_adjusted.py"
+      - "nfl/oa_dataset.py"
+      - "nfl/oa_residuals.py"
+      - "nfl/oa_audit.py"
+      - "run_oa_audit.py"
+      - "tests/test_opponent_adjusted.py"
+      - ".github/workflows/oa-holdout.yml"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e .
+
+      - name: Run opponent-adjusted PBP holdout audit
+        run: |
+          mkdir -p reports
+          python run_oa_audit.py --refresh | tee reports/oa_holdout_audit.json
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: opponent-adjusted-pbp-holdout-audit
+          path: reports/oa_holdout_audit.json
