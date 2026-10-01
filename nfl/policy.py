@@ -151,7 +151,8 @@ def signal_from_policy(
     allowed, _ = market_allowed(market, week=week, policy=active)
     if not allowed:
         return "PASS"
-    if not all(math.isfinite(float(value)) for value in (expected_value, probability_edge, probability)):
+    finite_inputs = (expected_value, probability_edge, probability)
+    if not all(math.isfinite(float(value)) for value in finite_inputs):
         return "PASS"
     if expected_value <= 0 or not 0.0 <= probability <= 1.0:
         return "PASS"
