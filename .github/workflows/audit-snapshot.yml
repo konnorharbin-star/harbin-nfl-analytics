@@ -1,0 +1,46 @@
+name: NFL Audit Snapshot
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/**"
+      - "tests/**"
+      - "run_audit_snapshot.py"
+      - "harbin_nfl_model.py"
+      - "grade_live.py"
+      - "run_free_market_backtest.py"
+      - ".github/workflows/audit-snapshot.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "47 12 * * *"
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+
+      - name: Unit tests
+        run: python -m pytest -q
+
+      - name: Ruff
+        run: ruff check .
+
+      - name: Build canonical audit snapshot
+        run: python run_audit_snapshot.py --no-fail
+
+      - name: Upload audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-audit-snapshot
+          path: reports/audit_snapshot.json
