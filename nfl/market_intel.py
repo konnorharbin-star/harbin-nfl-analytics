@@ -13,6 +13,7 @@ from .espn_market import ESPNTwoWayMarket
 from .market import MarketComparison, MarketQuote, compare_two_way_market
 from .policy import fractional_kelly_units, load_policy, signal_from_policy
 from .probability import GaussianScoreDistribution
+from .schedule_market import is_research_only_market
 
 NFL_SCHEDULE_TIMEZONE = ZoneInfo("America/New_York")
 
@@ -90,10 +91,9 @@ def build_market_intelligence(
 ) -> tuple[pl.DataFrame, dict[str, object]]:
     """Line-shop downstream NFL opportunities without contaminating football ratings.
 
-    Each source quote is evaluated independently after the football projection exists.
-    The best expected-value quote is then retained once per game/market. Book breadth is
-    counted by sportsbook identity, not provider identity, so duplicate feeds cannot
-    manufacture multi-book consensus.
+    Research-only schedule snapshots can be compared to the model when verified live
+    sources are unavailable, but they never count as verified sportsbook breadth and
+    their policy signal is forced to PASS for allocation/execution purposes.
     """
 
     require_columns(
@@ -127,19 +127,26 @@ def build_market_intelligence(
         tuple[str, str],
         list[tuple[MarketComparison, ESPNTwoWayMarket]],
     ] = {}
-    books_by_game: dict[str, set[str]] = {}
+    verified_books_by_game: dict[str, set[str]] = {}
     for market in markets:
         game = projected.get(market.game_id)
         if game is None:
             continue
         chosen = _pair_best(distribution, game, market)
         grouped.setdefault((market.game_id, market.market_type), []).append((chosen, market))
-        books_by_game.setdefault(market.game_id, set()).add(_book_key(market))
+        if not is_research_only_market(market):
+            verified_books_by_game.setdefault(market.game_id, set()).add(_book_key(market))
 
     rows: list[dict[str, object]] = []
     for (game_id, _market_type), candidates in sorted(grouped.items()):
         game = projected[game_id]
-        distinct_books = sorted({_book_key(market) for _, market in candidates})
+        verified_books = sorted(
+            {
+                _book_key(market)
+                for _, market in candidates
+                if not is_research_only_market(market)
+            }
+        )
         chosen, source_market = max(
             candidates,
             key=lambda item: (
@@ -150,7 +157,7 @@ def build_market_intelligence(
                 str(item[1].book),
             ),
         )
-        signal = signal_from_policy(
+        research_signal = signal_from_policy(
             chosen.expected_value_per_unit,
             chosen.probability_edge,
             chosen.model_probability,
@@ -158,6 +165,8 @@ def build_market_intelligence(
             week=int(game["week"]),
             policy=active,
         )
+        execution_verified = not is_research_only_market(source_market)
+        signal = research_signal if execution_verified else "PASS"
         stake = 0.0
         if signal != "PASS":
             stake = fractional_kelly_units(
@@ -182,6 +191,7 @@ def build_market_intelligence(
             "model_total": float(game["baseline_total"]),
             "calibrated_home_probability": home_probability,
             "quant_signal": signal,
+            "research_signal": research_signal,
             "quant_market": chosen.market_type,
             "quant_side": chosen.side,
             "quant_book": chosen.book,
@@ -192,9 +202,12 @@ def build_market_intelligence(
             "quant_market_probability": chosen.no_vig_probability,
             "quant_ev": chosen.expected_value_per_unit,
             "quant_edge": chosen.probability_edge,
-            "market_book_count": len(distinct_books),
-            "market_books": ";".join(distinct_books),
+            "market_book_count": len(verified_books),
+            "market_books": ";".join(verified_books),
             "market_provider": source_market.provider,
+            "market_execution_verified": execution_verified,
+            "market_quote_timestamp_verified": execution_verified,
+            "market_source_role": "verified_live" if execution_verified else "research_fallback",
             "source_event_id": source_market.source_event_id,
             "stake_units": stake,
         }
@@ -204,21 +217,52 @@ def build_market_intelligence(
         rows.append(row)
 
     frame = pl.DataFrame(rows) if rows else pl.DataFrame()
-    market_counts = {market: 0 for market in ("moneyline", "spread", "total")}
+    research_counts = {market: 0 for market in ("moneyline", "spread", "total")}
+    verified_counts = {market: 0 for market in ("moneyline", "spread", "total")}
     if not frame.is_empty():
-        for market_name in market_counts:
-            market_counts[market_name] = frame.filter(
+        for market_name in research_counts:
+            research_counts[market_name] = frame.filter(
                 pl.col("quant_market") == market_name
             ).height
+            verified_counts[market_name] = frame.filter(
+                (pl.col("quant_market") == market_name)
+                & pl.col("market_execution_verified")
+            ).height
     games = projection.height
-    multi_book_games = sum(len(books) >= 2 for books in books_by_game.values())
+    multi_book_games = sum(
+        len(books) >= 2 for books in verified_books_by_game.values()
+    )
     metadata = {
         "games": games,
-        **market_counts,
-        "complete_market_coverage": min(market_counts.values()) / games if games else 0.0,
+        **verified_counts,
+        "research_moneyline": research_counts["moneyline"],
+        "research_spread": research_counts["spread"],
+        "research_total": research_counts["total"],
+        "complete_market_coverage": (
+            min(verified_counts.values()) / games if games else 0.0
+        ),
+        "research_market_coverage": (
+            min(research_counts.values()) / games if games else 0.0
+        ),
         "multi_book_games": multi_book_games,
         "multi_book_coverage": multi_book_games / games if games else 0.0,
-        "distinct_books": len({book for books in books_by_game.values() for book in books}),
+        "distinct_books": len(
+            {
+                book
+                for books in verified_books_by_game.values()
+                for book in books
+            }
+        ),
+        "research_fallback_rows": (
+            frame.filter(~pl.col("market_execution_verified")).height
+            if not frame.is_empty()
+            else 0
+        ),
+        "verified_market_rows": (
+            frame.filter(pl.col("market_execution_verified")).height
+            if not frame.is_empty()
+            else 0
+        ),
         "market_source": "canonical current NFL market aggregation",
         "api_key_required": False,
         "probability_training_games": historical.height,

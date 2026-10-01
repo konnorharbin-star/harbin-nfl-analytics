@@ -22,7 +22,13 @@ on:
     branches: [main]
     paths:
       - "nfl/pipeline.py"
+      - "nfl/pro_market.py"
+      - "nfl/schedule_market.py"
+      - "nfl/market_intel.py"
+      - "nfl/execution_market.py"
+      - "nfl/line_history.py"
       - "tests/test_market_outage_failclosed.py"
+      - "tests/test_schedule_market.py"
       - ".github/workflows/nfl-model.yml"
   push:
     branches: [main]
@@ -82,8 +88,9 @@ jobs:
           meta=report.get("meta",{}); market=meta.get("market_coverage",{}); intel=meta.get("market_intelligence",{}); port=report.get("portfolio",{}); gate=report.get("release_gate",{}); mon=report.get("monitoring",{}); prob=meta.get("probability",{}); ctx=meta.get("current_context",{}); pub=report.get("publication",{}); bundle=pub.get("bundle",{}) if isinstance(pub,dict) else {}
           print(f"## Harbin NFL Analytics — {meta.get('season')} Week {meta.get('week')}")
           print(f"- Release state: **{gate.get('release_state','UNKNOWN')}** · Production eligible: **{gate.get('production_eligible',False)}**")
-          print(f"- ML/Spread/Total: **{market.get('moneyline',0)}/{market.get('spread',0)}/{market.get('total',0)}**")
-          print(f"- Distinct books: **{intel.get('distinct_books',0)}** · Multi-book coverage: **{float(intel.get('multi_book_coverage',0) or 0):.1%}**")
+          print(f"- Verified ML/Spread/Total: **{market.get('moneyline',0)}/{market.get('spread',0)}/{market.get('total',0)}**")
+          print(f"- Research ML/Spread/Total: **{intel.get('research_moneyline',0)}/{intel.get('research_spread',0)}/{intel.get('research_total',0)}**")
+          print(f"- Distinct verified books: **{intel.get('distinct_books',0)}** · Multi-book coverage: **{float(intel.get('multi_book_coverage',0) or 0):.1%}**")
           print(f"- Brier: **{prob.get('home_win_brier','n/a')}** · Margin/Total 80% coverage: **{prob.get('margin_80_coverage','n/a')} / {prob.get('total_80_coverage','n/a')}**")
           print(f"- QB coverage: **{ctx.get('qb_coverage',0):.1%}** · Broad context: **{ctx.get('coverage',0):.1%}**")
           print(f"- Portfolio mode: **{str(port.get('mode','paper')).upper()}** · Approved stake: **{port.get('approved_units',0)}u**")
