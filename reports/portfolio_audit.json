@@ -1,13 +1,19 @@
 {
+  "allocated_bets": 0,
   "candidate_units": 0.0,
+  "caps": {
+    "book": 2.0,
+    "game": 1.0,
+    "market": 2.5,
+    "slate": 5.0,
+    "team": 1.5,
+    "window": 2.0
+  },
   "errors": 0,
-  "issues": [
-    {
-      "code": "empty_portfolio",
-      "severity": "WARNING"
-    }
-  ],
+  "issues": [],
+  "production_eligible": false,
   "real_stake_units": 0.0,
-  "status": "WARN",
-  "warnings": 1
+  "release_state": "RESEARCH",
+  "status": "PASS",
+  "warnings": 0
 }

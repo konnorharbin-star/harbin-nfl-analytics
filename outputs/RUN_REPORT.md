@@ -1,17 +1,17 @@
 # Harbin NFL Run Report
 
 **Season / Week:** 2026 / 4  
-**Publication status:** FAIL  
+**Publication status:** WARN  
 **Release state:** RESEARCH  
-**Reconciliation:** FAIL  
+**Reconciliation:** PASS  
 
 ## Probability validation
 - Home-win Brier: **0.2300**.
 - Margin / total 80% coverage: **78.31% / 80.51%**.
 
 ## Monitoring and execution
-- Live readiness: **56.0/100**.
-- Portfolio mode: **PAPER**; proposed **—u**; approved **0.00u**.
+- Live readiness: **65.8/100**.
+- Portfolio mode: **PAPER**; proposed **0.00u**; approved **0.00u**.
 - Historical evidence: **0 bets**, ROI **—**, CLV **—**.
 - Independent forward evidence: **0 bets**, ROI **—**, CLV **—**.
 

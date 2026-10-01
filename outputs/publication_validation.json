@@ -55,7 +55,7 @@
       "severity": "ERROR"
     },
     {
-      "detail": "docs=56.0 snapshot=56.0",
+      "detail": "docs=65.8 snapshot=65.8",
       "name": "monitor_copy",
       "passed": true,
       "severity": "ERROR"

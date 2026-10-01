@@ -14,5 +14,13 @@
     "trailing_roi": null,
     "trailing_window_bets": 0
   },
-  "mode": "paper"
+  "bets": 0,
+  "execution_blocked_bets": 48,
+  "mode": "paper",
+  "paper_or_shadow_allocated_units": 0.0,
+  "policy_mode": "paper",
+  "production_eligible": false,
+  "proposed_units": 0.0,
+  "release_state": "RESEARCH",
+  "risk_adjusted_proposed_units": 0.0
 }

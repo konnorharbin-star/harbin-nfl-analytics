@@ -3,16 +3,16 @@
     "context_source_errors": [
       "ERROR: DataContractError: depth_charts missing required columns: season"
     ],
-    "market_rows": 0,
+    "market_rows": 48,
     "market_source_errors": [
-      "current-market ERROR: DataContractError: no usable current NFL markets from ESPN or optional professional source"
+      "espn: ESPN NFL odds request failed: HTTP Error 403: Forbidden"
     ],
     "projection_games": 16,
     "recent_form_source_errors": [],
     "status": "WARN",
     "target_games": 16
   },
-  "live_readiness_score": 56.0,
+  "live_readiness_score": 65.8,
   "meaning": "operational health; not a profitability or staking signal",
   "monitor_alerts": [
     "verified ML/spread/total coverage below 90%",
@@ -33,7 +33,7 @@
     "depth_charts"
   ],
   "sources": {
-    "current_market": "unavailable",
+    "current_market": "nflverse_schedule_snapshot",
     "depth_charts": "ERROR: DataContractError: depth_charts missing required columns: season",
     "football": "nflverse",
     "historical_market": "nflverse public archive",
