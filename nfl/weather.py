@@ -1,9 +1,12 @@
-"""Free current NFL venue/weather context using deterministic team locations and Open-Meteo."""
+"""Free current NFL venue/weather context using deterministic locations and Open-Meteo."""
 
 from __future__ import annotations
 
 import json
 import math
+import re
+import time
+import unicodedata
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -55,6 +58,28 @@ TEAM_HOME: dict[str, tuple[float, float, str]] = {
     "TEN": (36.1665, -86.7713, "America/Chicago"),
     "WAS": (38.9078, -76.8645, "America/New_York"),
 }
+
+# Neutral/international venues need venue coordinates rather than the nominal home
+# team's stadium. Keep a small deterministic registry for recurring NFL venues; unknown
+# venues still go through geocoding and remain missing if that source cannot resolve them.
+KNOWN_NEUTRAL_VENUES: dict[str, tuple[float, float]] = {
+    "allianz arena": (48.2188, 11.6247),
+    "croke park": (53.3607, -6.2511),
+    "deutsche bank park": (50.0686, 8.6455),
+    "estadio azteca": (19.3029, -99.1505),
+    "estadio santiago bernabeu": (40.4531, -3.6883),
+    "neo quimica arena": (-23.5453, -46.4741),
+    "olympiastadion berlin": (52.5147, 13.2395),
+    "santiago bernabeu stadium": (40.4531, -3.6883),
+    "tottenham hotspur stadium": (51.6043, -0.0665),
+    "wembley stadium": (51.5560, -0.2796),
+}
+
+
+def _venue_key(value: object) -> str:
+    raw = unicodedata.normalize("NFKD", str(value or ""))
+    ascii_text = raw.encode("ascii", "ignore").decode("ascii").lower()
+    return " ".join(re.sub(r"[^a-z0-9]+", " ", ascii_text).split())
 
 
 def is_indoor_roof(value: object) -> bool:
@@ -151,9 +176,11 @@ class OpenMeteoNFLWeather:
         cache_path: str | Path = "data/cache/context/venue_geocodes.json",
         fetch_json: Callable[[str], dict[str, Any]] | None = None,
         timeout_seconds: float = 20.0,
+        max_attempts: int = 3,
     ) -> None:
         self.cache_path = Path(cache_path)
         self.timeout_seconds = float(timeout_seconds)
+        self.max_attempts = max(1, int(max_attempts))
         self._fetch_json = fetch_json or self._http_json
         self._geocodes = self._load_cache()
 
@@ -171,15 +198,35 @@ class OpenMeteoNFLWeather:
         self.cache_path.write_text(json.dumps(self._geocodes, indent=2, sort_keys=True))
 
     def _http_json(self, url: str) -> dict[str, Any]:
-        request = Request(url, headers={"User-Agent": "harbin-nfl-analytics/0.1"})
-        try:
-            with urlopen(request, timeout=self.timeout_seconds) as response:  # noqa: S310
-                return json.loads(response.read().decode("utf-8"))
-        except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
-            raise DataContractError(f"weather source request failed: {exc}") from exc
+        request = Request(
+            url,
+            headers={
+                "User-Agent": "harbin-nfl-analytics/0.1",
+                "Accept": "application/json,*/*",
+            },
+        )
+        last_error: Exception | None = None
+        for attempt in range(self.max_attempts):
+            try:
+                with urlopen(request, timeout=self.timeout_seconds) as response:  # noqa: S310
+                    return json.loads(response.read().decode("utf-8"))
+            except HTTPError as exc:
+                last_error = exc
+                retryable = exc.code == 429 or exc.code >= 500
+                if not retryable or attempt + 1 >= self.max_attempts:
+                    break
+            except (URLError, TimeoutError, json.JSONDecodeError) as exc:
+                last_error = exc
+                if attempt + 1 >= self.max_attempts:
+                    break
+            time.sleep(0.35 * (2**attempt))
+        raise DataContractError(f"weather source request failed: {last_error}") from last_error
 
     def geocode(self, query: str) -> tuple[float, float] | None:
-        key = query.strip().lower()
+        key = _venue_key(query)
+        known = KNOWN_NEUTRAL_VENUES.get(key)
+        if known is not None:
+            return known
         cached = self._geocodes.get(key)
         if isinstance(cached, list) and len(cached) == 2:
             return float(cached[0]), float(cached[1])
@@ -222,6 +269,8 @@ class OpenMeteoNFLWeather:
         latitude: float,
         longitude: float,
     ) -> dict[str, object]:
+        kickoff_utc_value = kickoff.astimezone(UTC)
+        day = kickoff_utc_value.date().isoformat()
         url = OPEN_METEO_FORECAST + "?" + urlencode(
             {
                 "latitude": latitude,
@@ -233,7 +282,8 @@ class OpenMeteoNFLWeather:
                 "temperature_unit": "fahrenheit",
                 "wind_speed_unit": "mph",
                 "timezone": "UTC",
-                "forecast_days": 16,
+                "start_date": day,
+                "end_date": day,
             }
         )
         payload = self._fetch_json(url)
@@ -244,7 +294,6 @@ class OpenMeteoNFLWeather:
         if not isinstance(times, list) or not times:
             raise DataContractError("Open-Meteo response missing hourly timestamps")
         parsed: list[tuple[float, int]] = []
-        kickoff_utc_value = kickoff.astimezone(UTC)
         for index, value in enumerate(times):
             try:
                 stamp = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
