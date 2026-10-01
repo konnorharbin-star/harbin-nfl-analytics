@@ -1,8 +1,11 @@
 from datetime import date
 
 import polars as pl
+import pytest
 
+from nfl.contracts import DataContractError
 from nfl.current import (
+    assert_target_week_schedule_integrity,
     build_current_qb_projection,
     next_unplayed_regular_week,
     unplayed_regular_games,
@@ -96,6 +99,32 @@ def test_next_unplayed_week_and_target_filter() -> None:
     assert unplayed_regular_games(schedules, 2025, 3).get_column("game_id").to_list() == [
         "g3"
     ]
+
+
+def test_duplicate_team_week_assignment_blocks_projection() -> None:
+    targets = pl.DataFrame(
+        {
+            "game_id": ["g3", "g3b"],
+            "away_team": ["B", "C"],
+            "home_team": ["A", "B"],
+        }
+    )
+
+    with pytest.raises(DataContractError, match="multiple games: B"):
+        assert_target_week_schedule_integrity(targets, 2025, 3)
+
+
+def test_same_team_on_both_sides_blocks_projection() -> None:
+    targets = pl.DataFrame(
+        {
+            "game_id": ["g3"],
+            "away_team": ["A"],
+            "home_team": ["A"],
+        }
+    )
+
+    with pytest.raises(DataContractError, match="same home and away team"):
+        assert_target_week_schedule_integrity(targets, 2025, 3)
 
 
 def test_current_projection_emits_canonical_and_shadow_states() -> None:
