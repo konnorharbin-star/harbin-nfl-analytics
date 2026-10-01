@@ -141,8 +141,11 @@ def test_current_projection_emits_canonical_and_shadow_states() -> None:
 
     assert row["game_id"] == "g3"
     assert row["baseline_release_state"] == "CANONICAL"
-    assert row["qb_margin_release_state"] == "RESEARCH"
+    assert row["qb_margin_release_state"] == "DISABLED"
     assert row["qb_total_release_state"] == "SHADOW"
+    assert row["qb_margin_correction"] == 0.0
+    assert row["qb_adjusted_home_margin"] == row["baseline_home_margin"]
+    assert row["qb_total_shadow_total"] == row["qb_adjusted_total"]
     assert row["home_qb_proxy_last_week"] == 2
     assert row["away_qb_proxy_last_week"] == 2
     assert "qb_adjusted_home_margin" in projection.columns
