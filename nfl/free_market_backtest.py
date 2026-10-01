@@ -396,7 +396,12 @@ def _max_drawdown(profits: np.ndarray) -> float:
     return float(np.max(running_peak - curve))
 
 
-def _roi_ci(profits: np.ndarray, *, seed: int = 26, samples: int = 3000) -> tuple[float | None, float | None]:
+def _roi_ci(
+    profits: np.ndarray,
+    *,
+    seed: int = 26,
+    samples: int = 3000,
+) -> tuple[float | None, float | None]:
     if profits.size < 30:
         return None, None
     rng = np.random.default_rng(seed)
@@ -422,7 +427,10 @@ def summarize_archive_bets(
         return ArchiveBetSummary(0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, None, 0, None, None)
 
     profits = np.asarray(selected.get_column("net_units"), dtype=float)
-    clv = selected.get_column("clv_proxy").drop_nulls() if "clv_proxy" in selected.columns else pl.Series([], dtype=pl.Float64)
+    if "clv_proxy" in selected.columns:
+        clv = selected.get_column("clv_proxy").drop_nulls()
+    else:
+        clv = pl.Series([], dtype=pl.Float64)
     low, high = _roi_ci(profits)
     net_units = float(profits.sum())
     return ArchiveBetSummary(
