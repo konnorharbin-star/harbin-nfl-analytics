@@ -6,11 +6,14 @@ import csv
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Sequence
+from zoneinfo import ZoneInfo
 
 import polars as pl
 
 from .contracts import require_columns
 from .espn_market import ESPNTwoWayMarket
+
+NFL_SCHEDULE_TIMEZONE = ZoneInfo("America/New_York")
 
 SNAPSHOT_FIELDS = (
     "captured_at",
@@ -34,13 +37,24 @@ SNAPSHOT_FIELDS = (
 
 
 def _kickoff(row: dict[str, object]) -> str:
+    """Return nflverse schedule kickoff as an explicit UTC timestamp.
+
+    nflverse ``gameday``/``gametime`` schedule values follow the NFL schedule's
+    Eastern-time convention. Persisting a UTC value prevents a runner's local timezone
+    from changing which market observations qualify as pre-kickoff evidence.
+    """
+
     day = row.get("gameday")
     time = row.get("gametime")
-    if day is None:
+    if day is None or time in {None, ""}:
         return ""
-    if time not in {None, ""}:
-        return f"{day}T{time}"
-    return str(day)
+    try:
+        local = datetime.fromisoformat(f"{day}T{time}")
+    except ValueError:
+        return ""
+    if local.tzinfo is None:
+        local = local.replace(tzinfo=NFL_SCHEDULE_TIMEZONE)
+    return local.astimezone(UTC).isoformat()
 
 
 def _signature(row: dict[str, object]) -> tuple[str, ...]:
@@ -161,7 +175,7 @@ def latest_pre_kickoff_snapshot(
         if captured.tzinfo is None:
             captured = captured.replace(tzinfo=UTC)
         if kickoff.tzinfo is None:
-            kickoff = kickoff.replace(tzinfo=UTC)
+            continue
         if decision < captured < kickoff:
             candidates.append((captured, row))
     if not candidates:
