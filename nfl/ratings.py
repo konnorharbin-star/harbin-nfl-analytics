@@ -14,7 +14,9 @@ import numpy as np
 import polars as pl
 
 from .contracts import DataContractError, require_columns
-from .data import pregame_history, schedule_to_team_games
+from .data import completed_games, schedule_to_team_games
+
+VALIDATED_PRIOR_SEASON_WEIGHT = 0.10
 
 
 @dataclass(frozen=True)
@@ -191,15 +193,38 @@ class FairScoreModel:
         )
 
 
+def fair_score_history(schedules: pl.DataFrame, season: int, week: int) -> pl.DataFrame:
+    """Return canonical scoring history for a target season/week.
+
+    The active season contributes only completed regular-season games strictly before
+    the target week. The immediately prior regular season is allowed as a validated
+    low-weight prior because all of it was known before the active season began.
+    """
+
+    if week < 1:
+        raise DataContractError("week must be >= 1")
+    history = completed_games(schedules).filter(pl.col("game_type") == "REG")
+    return history.filter(
+        (pl.col("season") == season - 1)
+        | ((pl.col("season") == season) & (pl.col("week") < week))
+    )
+
+
 def fit_pregame_fair_score(
     schedules: pl.DataFrame,
     season: int,
     week: int,
     *,
     ridge: float = 8.0,
+    prior_season_weight: float = VALIDATED_PRIOR_SEASON_WEIGHT,
 ) -> FairScoreModel:
-    """Fit the fair-score baseline using only games strictly before target week."""
+    """Fit the canonical fair-score model at the pregame information boundary."""
 
-    history = pregame_history(schedules, season, week)
+    if not 0 < prior_season_weight <= 1:
+        raise ValueError("prior_season_weight must be in (0, 1]")
+
+    history = fair_score_history(schedules, season, week)
     team_games = schedule_to_team_games(history)
-    return FairScoreModel(ridge=ridge).fit(team_games)
+    seasons = np.asarray(team_games.get_column("season"), dtype=int)
+    weights = np.where(seasons == season, 1.0, float(prior_season_weight))
+    return FairScoreModel(ridge=ridge).fit(team_games, sample_weight=weights)
