@@ -19,17 +19,38 @@ def _sample_values(frame: pl.DataFrame, column: str, limit: int = 8) -> list[obj
     return values
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("season", nargs="?", type=int, default=2026)
-    args = parser.parse_args()
+def _date_scope(frame: pl.DataFrame) -> dict[str, object]:
+    if "dt" not in frame.columns or frame.is_empty():
+        return {"min_dt": None, "max_dt": None, "dt_year_counts": {}}
+    parsed = frame.select(
+        pl.col("dt")
+        .cast(pl.String)
+        .str.to_datetime(strict=False, time_zone="UTC")
+        .alias("parsed_dt")
+    ).drop_nulls()
+    if parsed.is_empty():
+        return {"min_dt": None, "max_dt": None, "dt_year_counts": {}}
+    counts = (
+        parsed.with_columns(pl.col("parsed_dt").dt.year().alias("year"))
+        .group_by("year")
+        .len()
+        .sort("year")
+    )
+    return {
+        "min_dt": str(parsed.get_column("parsed_dt").min()),
+        "max_dt": str(parsed.get_column("parsed_dt").max()),
+        "dt_year_counts": {
+            str(row["year"]): int(row["len"])
+            for row in counts.iter_rows(named=True)
+        },
+    }
 
-    frame = nfl.load_depth_charts([args.season])
+
+def _frame_summary(frame: pl.DataFrame, requested_season: int) -> dict[str, object]:
     if not isinstance(frame, pl.DataFrame):
         raise RuntimeError(
             f"nflreadpy depth-chart loader returned {type(frame).__name__}, not Polars"
         )
-
     interesting = [
         column
         for column in frame.columns
@@ -60,13 +81,38 @@ def main() -> None:
         }
         for column in interesting
     }
-    output = {
-        "requested_season": args.season,
+    return {
+        "requested_season": requested_season,
         "rows": frame.height,
         "columns": frame.columns,
         "interesting_columns": meta,
         "has_season": "season" in frame.columns,
         "has_team": "team" in frame.columns,
+        "date_scope": _date_scope(frame),
+        "teams": (
+            sorted(str(value) for value in frame.get_column("team").unique().to_list())
+            if "team" in frame.columns
+            else []
+        ),
+    }
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("season", nargs="?", type=int, default=2026)
+    args = parser.parse_args()
+
+    seasons = sorted({args.season - 1, args.season})
+    summaries: dict[str, object] = {}
+    for season in seasons:
+        summaries[str(season)] = _frame_summary(
+            nfl.load_depth_charts([season]),
+            season,
+        )
+
+    output = {
+        "target_season": args.season,
+        "single_season_requests": summaries,
     }
     print(json.dumps(output, indent=2, sort_keys=True, default=str))
 
