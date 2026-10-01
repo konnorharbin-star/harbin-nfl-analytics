@@ -26,6 +26,17 @@ Development rows are reconstructed for 2022–2025 regular-season Weeks 5–18. 
 
 Margin and total use one predeclared feature set each. Ridge penalties are limited to `1.0`, `10.0`, and `100.0`. A nonzero candidate survives only when the same feature set and ridge improve both MAE and RMSE in every development fold and in aggregate. Baseline / zero adjustment remains admissible and wins automatically if no candidate clears the gate.
 
+## Live-source result
+
+The real nflverse audit completed successfully and verified the required schedule fields, including `home_rest`, `away_rest`, and `location`. The walk-forward dataset contained 831 rows across 2022–2025 and 624 evaluation games across the 2023–2025 folds.
+
+Neither target cleared the fixed gate:
+
+- **Margin:** selected adjustment `disabled`; best tested ridge `100.0`; positive folds `0/3`; baseline MAE `10.1966` versus best-tested `10.2702`; baseline RMSE `13.0138` versus best-tested `13.0624`.
+- **Total:** selected adjustment `disabled`; best tested ridge `100.0`; positive folds `0/3`; baseline MAE `10.4926` versus best-tested `10.5185`; baseline RMSE `13.4427` versus best-tested `13.5101`.
+
+The candidate therefore failed for predictive reasons, not because of missing source data or an engineering failure. No schedule-context shadow candidate is created and the canonical fair score remains unchanged.
+
 ## Evidence boundary
 
 The 2022–2025 seasons are development evidence only. `canonical_score_adjustment_enabled=false` and `promotion_eligible=false` are hard-coded. A surviving historical candidate could justify a newly frozen prospective 2026 shadow ledger, but historical results alone cannot change the canonical fair score.
