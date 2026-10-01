@@ -199,7 +199,7 @@ def build_market_intelligence(
             "stake_units": stake,
         }
         for key, value in game.items():
-            if key.startswith(("home_qb_", "away_qb_", "qb_")):
+            if key.startswith(("home_qb_", "away_qb_", "qb_", "recent_form_")):
                 row[key] = value
         rows.append(row)
 
