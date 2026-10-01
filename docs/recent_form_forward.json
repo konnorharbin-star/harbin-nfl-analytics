@@ -1,7 +1,7 @@
 {
   "graded_games": 0,
-  "ledger_rows": 0,
+  "ledger_rows": 16,
   "meaning": "Prospective recent-form evidence only. Reconstructed historical predictions are excluded from this ledger.",
   "promotion_eligible": false,
-  "status": "NO_PREDICTIONS"
+  "status": "NO_GRADED_GAMES"
 }

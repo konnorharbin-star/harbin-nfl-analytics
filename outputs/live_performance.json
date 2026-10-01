@@ -1,0 +1,24 @@
+{
+  "by_edge_bucket": {},
+  "by_market": {},
+  "by_season": {},
+  "by_signal": {},
+  "evidence_source": "portfolio_decisions_v1",
+  "graded_bets": 0,
+  "overall": {
+    "avg_clv": null,
+    "bets": 0,
+    "losses": 0,
+    "max_drawdown": 0.0,
+    "pushes": 0,
+    "roi": null,
+    "roi_ci_95": [
+      null,
+      null
+    ],
+    "units": 0.0,
+    "win_rate": null,
+    "wins": 0
+  },
+  "portfolio_verified": true
+}
