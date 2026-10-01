@@ -18,7 +18,7 @@ from zoneinfo import ZoneInfo
 import numpy as np
 import polars as pl
 
-from .contracts import DataContractError, require_columns
+from .contracts import require_columns
 from .recent_form_shadow import (
     FROZEN_BLEND_WEIGHT,
     FROZEN_FEATURE_SET,
