@@ -51,7 +51,7 @@ jobs:
     timeout-minutes: 75
     env:
       PYTHONUNBUFFERED: "1"
-      TZ: "America/Chicago"
+      TZ: America/Chicago
       THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
 
     steps:
@@ -113,6 +113,19 @@ jobs:
           git config user.name "harbin-nfl-model-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add outputs history reports docs
+
+          # Historical proof has a separate canonical writer: free-market-backtest.yml.
+          # Never include these files in a live-model commit, even if the operational
+          # pipeline recomputed them while building its in-memory release evidence.
+          HISTORICAL_PROOF=(
+            reports/free_market_backtest.json
+            reports/free_market_bets.csv
+            reports/backtest_audit.json
+            reports/evidence_report.json
+          )
+          git reset -- "${HISTORICAL_PROOF[@]}"
+          git restore -- "${HISTORICAL_PROOF[@]}"
+
           if ! git diff --cached --quiet; then
             git commit -m "model: automated NFL operational refresh"
             git pull --rebase origin main
