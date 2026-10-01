@@ -25,6 +25,7 @@ jobs:
     timeout-minutes: 15
     env:
       PYTHONUNBUFFERED: "1"
+      THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
 
     steps:
       - uses: actions/checkout@v4
