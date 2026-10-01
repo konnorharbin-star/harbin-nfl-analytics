@@ -18,8 +18,15 @@ def build_health(
     if not isinstance(sources, dict):
         sources = {}
 
-    source_failures = [name for name, value in sources.items() if str(value).upper() in {"FAIL", "ERROR"}]
-    data_ok = str(data_quality.get("status", "UNKNOWN")).upper() not in {"FAIL", "ERROR"}
+    source_failures = [
+        name
+        for name, value in sources.items()
+        if str(value).upper() in {"FAIL", "ERROR"}
+    ]
+    data_ok = str(data_quality.get("status", "UNKNOWN")).upper() not in {
+        "FAIL",
+        "ERROR",
+    }
     readiness = float(monitor.get("live_readiness_score", 0.0) or 0.0)
     status = "FAIL" if source_failures or not data_ok else "WARN" if readiness < 80 else "OK"
     return {
