@@ -43,6 +43,12 @@ def main() -> None:
     publication = report.get("publication", {})
     if not isinstance(publication, dict):
         publication = {}
+    context = report["meta"].get("current_context", {})
+    if not isinstance(context, dict):
+        context = {}
+    data_quality = report["meta"].get("data_quality", {})
+    if not isinstance(data_quality, dict):
+        data_quality = {}
 
     summary = {
         "status": "READY",
@@ -52,6 +58,18 @@ def main() -> None:
         "production_eligible": report["production_eligible"],
         "games": current.get_column("game_id").n_unique() if not current.is_empty() else 0,
         "market_candidates": current.height,
+        "context": {
+            "status": context.get("status"),
+            "coverage": context.get("coverage"),
+            "depth_feed_available": context.get("depth_feed_available", False),
+            "injury_feed_available": context.get("injury_feed_available", False),
+            "roster_feed_available": context.get("roster_feed_available", False),
+        },
+        "data_quality": {
+            "status": data_quality.get("status"),
+            "context_source_errors": data_quality.get("context_source_errors", []),
+            "market_source_errors": data_quality.get("market_source_errors", []),
+        },
         "portfolio": report["portfolio"],
         "portfolio_audit": portfolio_audit["status"],
         "release_blockers": report["release_gate"].get("blockers", []),
