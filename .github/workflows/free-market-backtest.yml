@@ -1,0 +1,57 @@
+name: Free NFL Market Backtest
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_season:
+        description: First projection season
+        required: true
+        default: "2022"
+      end_season:
+        description: Last projection season
+        required: true
+        default: "2025"
+      validation_season:
+        description: Threshold-selection season
+        required: true
+        default: "2024"
+      holdout_season:
+        description: Untouched holdout season
+        required: true
+        default: "2025"
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+
+      - name: Run free archive backtest
+        run: >-
+          python run_free_market_backtest.py
+          --start-season ${{ inputs.start_season }}
+          --end-season ${{ inputs.end_season }}
+          --validation-season ${{ inputs.validation_season }}
+          --holdout-season ${{ inputs.holdout_season }}
+          --refresh
+
+      - name: Upload backtest report
+        uses: actions/upload-artifact@v4
+        with:
+          name: free-nfl-market-backtest
+          path: |
+            reports/free_market_predictions.csv
+            reports/free_market_bets.csv
+            reports/free_market_backtest.json
