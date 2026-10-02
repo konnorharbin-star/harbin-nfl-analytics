@@ -33,6 +33,18 @@ The 2021 and 2022 regular seasons are warm-up history. Development evaluation co
 
 Margin and total may select different fixed configurations. A side survives only if one unchanged configuration improves both MAE and RMSE in every development season and in the aggregate sample. Otherwise the canonical direct-score baseline wins automatically.
 
+## Real-source result
+
+The real nflverse audit covered 624 evaluation games, 208 in each of 2023, 2024, and 2025. Full Ruff, pytest, Stage 1, and canonical audit checks passed.
+
+Neither margin nor total cleared the predeclared three-fold gate.
+
+- **Margin:** no configuration selected; canonical baseline retained at aggregate MAE/RMSE `10.1966 / 13.0138`.
+- The closest margin configuration was `alpha=0.08`, `offseason_carry=0.40`, `home_field=1.75`. It improved aggregate MAE to `10.1284` and RMSE to `12.9147`, and improved both metrics in 2024 and 2025, but regressed slightly in 2023. That is 2/3 positive folds, so it fails the gate.
+- **Total:** no configuration selected; canonical baseline retained at aggregate MAE/RMSE `10.4926 / 13.4427`. The tested online total variants were generally worse than the canonical total model.
+
+Stage 21 therefore creates no 2026 shadow candidate and makes no canonical-score change.
+
 ## Evidence boundary
 
 Stage 21 is development research only. The evaluator hard-codes:
@@ -40,4 +52,4 @@ Stage 21 is development research only. The evaluator hard-codes:
 - `canonical_score_change_enabled=false`
 - `promotion_eligible=false`
 
-Any historical survivor may only justify a separately frozen 2026 prospective shadow experiment. Historical selection alone cannot alter canonical projections, probabilities, market decisions, or stake sizing.
+Historical selection alone cannot alter canonical projections, probabilities, market decisions, or stake sizing.
