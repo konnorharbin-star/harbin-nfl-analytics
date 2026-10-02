@@ -43,12 +43,12 @@ permissions:
   contents: write
 concurrency:
   group: >-
-    ${{ github.event_name == 'pull_request'
-      && format('nfl-model-operations-pr-{0}', github.event.pull_request.number)
-      || github.event_name == 'workflow_run'
-      && format('nfl-generated-state-{0}', github.event.workflow_run.head_branch)
-      || format('nfl-generated-state-{0}', github.ref_name) }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    nfl-model-operations-${{
+      github.event_name == 'workflow_run'
+      && github.event.workflow_run.head_branch
+      || github.ref_name
+    }}
+  cancel-in-progress: true
 
 jobs:
   model:
@@ -133,8 +133,7 @@ jobs:
 
           if ! git diff --cached --quiet; then
             git commit -m "model: automated NFL operational refresh"
-            git pull --rebase origin main
-            git push
+            bash scripts/push_generated_state.sh
           else
             echo "No generated changes to commit."
           fi

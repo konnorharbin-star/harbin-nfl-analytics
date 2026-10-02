@@ -46,12 +46,12 @@ permissions:
 
 concurrency:
   group: >-
-    ${{ github.event_name == 'pull_request'
-      && format('nfl-candidate-benchmark-pr-{0}', github.event.pull_request.number)
-      || github.event_name == 'workflow_run'
-      && format('nfl-generated-state-{0}', github.event.workflow_run.head_branch)
-      || format('nfl-generated-state-{0}', github.ref_name) }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    nfl-candidate-benchmark-${{
+      github.event_name == 'workflow_run'
+      && github.event.workflow_run.head_branch
+      || github.ref_name
+    }}
+  cancel-in-progress: true
 
 jobs:
   benchmark:
@@ -101,8 +101,7 @@ jobs:
           git add reports/candidate_benchmark.json docs/candidate_benchmark.json
           if ! git diff --cached --quiet; then
             git commit -m "research: refresh NFL candidate benchmark"
-            git pull --rebase origin main
-            git push
+            bash scripts/push_generated_state.sh
           else
             echo "No candidate benchmark changes to commit."
           fi

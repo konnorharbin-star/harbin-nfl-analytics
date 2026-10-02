@@ -144,10 +144,17 @@ support release. The independent grading audit is persisted with live evidence.
 
 ### Stage 35 — generated-state writer serialization
 
-All workflows that push generated state now share one serialized writer lane on
-`main`, preventing cross-workflow ref-lock/non-fast-forward races. Pull-request
-validation remains workflow-scoped and cancellable, and CI automatically fails if a
-new `git push` workflow is added without the shared writer contract.
+The first attempt used one shared GitHub Actions concurrency lane for all writers.
+Post-merge validation showed that GitHub retains only one pending run per concurrency
+group, so legitimate pending writers could be cancelled. Stage 36 supersedes this
+approach.
+
+### Stage 36 — generated-state push reconciliation
+
+Generated-state workflows now keep workflow-scoped concurrency and all use
+`scripts/push_generated_state.sh`. Non-conflicting cross-workflow push races are
+fetch/rebase/retry reconciled, while true content conflicts fail closed instead of
+overwriting another writer. CI simulates both cases against a local bare Git remote.
 
 ### Stage 4 — current NFL context
 

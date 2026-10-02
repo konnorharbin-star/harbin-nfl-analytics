@@ -30,12 +30,12 @@ permissions:
 
 concurrency:
   group: >-
-    ${{ github.event_name == 'pull_request'
-      && format('nfl-research-status-pr-{0}', github.event.pull_request.number)
-      || github.event_name == 'workflow_run'
-      && format('nfl-generated-state-{0}', github.event.workflow_run.head_branch)
-      || format('nfl-generated-state-{0}', github.ref_name) }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    nfl-research-status-${{
+      github.event_name == 'workflow_run'
+      && github.event.workflow_run.head_branch
+      || github.ref_name
+    }}
+  cancel-in-progress: true
 
 jobs:
   summarize:
@@ -84,8 +84,7 @@ jobs:
           git add reports/research_status.json docs/research_status.json
           if ! git diff --cached --quiet; then
             git commit -m "research: refresh NFL research status"
-            git pull --rebase origin main
-            git push
+            bash scripts/push_generated_state.sh
           else
             echo "No research status changes to commit."
           fi
