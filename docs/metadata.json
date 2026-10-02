@@ -1,6 +1,6 @@
 {
   "current_context": {
-    "as_of": "2026-10-02T13:04:24.732862+00:00",
+    "as_of": "2026-10-02T16:32:56.538782+00:00",
     "components": {
       "injuries_personnel": 1.0,
       "quarterback": 1.0,
@@ -61,7 +61,7 @@
     "status": "OK",
     "target_games": 15
   },
-  "generated_at": "2026-10-02T13:04:24.732862+00:00",
+  "generated_at": "2026-10-02T16:32:56.538782+00:00",
   "market_coverage": {
     "games": 15,
     "moneyline": 15,
@@ -89,7 +89,7 @@
       "action_network_diagnostic": {
         "attempts": [
           {
-            "collector_observed_at": "2026-10-02T13:04:34.043118+00:00",
+            "collector_observed_at": "2026-10-02T16:33:07.914468+00:00",
             "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
             "games_with_markets": 16,
             "parsed_rows": 311,
@@ -158,15 +158,10 @@
                   "keys": [
                     "bet_info",
                     "book_id",
-                    "book_parent_id",
                     "deeplink_id",
                     "event_id",
                     "event_type",
-                    "future_id",
-                    "future_season",
-                    "is_alt_market",
                     "is_live",
-                    "league_id",
                     "line_status",
                     "market_id",
                     "odds",
@@ -190,15 +185,10 @@
                   "keys": [
                     "bet_info",
                     "book_id",
-                    "book_parent_id",
                     "deeplink_id",
                     "event_id",
                     "event_type",
-                    "future_id",
-                    "future_season",
-                    "is_alt_market",
                     "is_live",
-                    "league_id",
                     "line_status",
                     "market_id",
                     "odds",
@@ -211,26 +201,21 @@
                     "value"
                   ],
                   "last_update": null,
-                  "odds": -102,
-                  "side": "home",
+                  "odds": -115,
+                  "side": "away",
                   "timestamp": null,
                   "updated_at": null,
-                  "value": 3
+                  "value": -3
                 },
                 "total": {
                   "book_id": 15,
                   "keys": [
                     "bet_info",
                     "book_id",
-                    "book_parent_id",
                     "deeplink_id",
                     "event_id",
                     "event_type",
-                    "future_id",
-                    "future_season",
-                    "is_alt_market",
                     "is_live",
-                    "league_id",
                     "line_status",
                     "market_id",
                     "odds",
@@ -254,7 +239,7 @@
             "team_matches": 15
           }
         ],
-        "collector_observed_at": "2026-10-02T13:04:34.043118+00:00",
+        "collector_observed_at": "2026-10-02T16:33:07.914468+00:00",
         "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
         "games_with_markets": 16,
         "parsed_rows": 311,
@@ -323,15 +308,10 @@
               "keys": [
                 "bet_info",
                 "book_id",
-                "book_parent_id",
                 "deeplink_id",
                 "event_id",
                 "event_type",
-                "future_id",
-                "future_season",
-                "is_alt_market",
                 "is_live",
-                "league_id",
                 "line_status",
                 "market_id",
                 "odds",
@@ -355,15 +335,10 @@
               "keys": [
                 "bet_info",
                 "book_id",
-                "book_parent_id",
                 "deeplink_id",
                 "event_id",
                 "event_type",
-                "future_id",
-                "future_season",
-                "is_alt_market",
                 "is_live",
-                "league_id",
                 "line_status",
                 "market_id",
                 "odds",
@@ -376,26 +351,21 @@
                 "value"
               ],
               "last_update": null,
-              "odds": -102,
-              "side": "home",
+              "odds": -115,
+              "side": "away",
               "timestamp": null,
               "updated_at": null,
-              "value": 3
+              "value": -3
             },
             "total": {
               "book_id": 15,
               "keys": [
                 "bet_info",
                 "book_id",
-                "book_parent_id",
                 "deeplink_id",
                 "event_id",
                 "event_type",
-                "future_id",
-                "future_season",
-                "is_alt_market",
                 "is_live",
-                "league_id",
                 "line_status",
                 "market_id",
                 "odds",
@@ -454,15 +424,15 @@
     "candidate_pass": false,
     "holdout_games": 272,
     "holdout_season": 2025,
-    "home_win_brier": 0.22995807657360534,
+    "home_win_brier": 0.22995807657360515,
     "margin_50_coverage": 0.5110294117647058,
     "margin_80_coverage": 0.7830882352941176,
-    "margin_nll": 3.9948617498156636,
+    "margin_nll": 3.9948617498156627,
     "margin_scale": 1.0,
     "status": "READY",
     "total_50_coverage": 0.5147058823529411,
     "total_80_coverage": 0.8051470588235294,
-    "total_nll": 4.019776337747561,
+    "total_nll": 4.019776337747562,
     "total_scale": 1.0,
     "training_games": 815,
     "validation_season": 2024

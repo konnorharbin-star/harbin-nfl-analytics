@@ -42,7 +42,7 @@
       "passed": true,
       "requirement": "chronological NFL probability holdout meets calibration guardrails",
       "value": {
-        "brier": 0.22995807657360534,
+        "brier": 0.22995807657360515,
         "margin_80_coverage": 0.7830882352941176,
         "total_80_coverage": 0.8051470588235294
       }
@@ -93,8 +93,8 @@
         "status": "ESTABLISHED SAMPLE",
         "verified_clv_coverage": 0.7965686274509803,
         "verified_roi_ci_95": [
-          -0.13990352535795336,
-          -0.018059219312660715
+          -0.13932685037052445,
+          -0.020721141502525194
         ]
       }
     },
