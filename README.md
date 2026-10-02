@@ -2,7 +2,7 @@
 
 Leakage-safe NFL projection, probability, market-analysis, backtesting, context, risk-management, grading, monitoring, publication, and release-control platform.
 
-> **Current state:** the NFL repository now closely mirrors the operating architecture of `harbin-sports-analytics`: independent fair scores, chronological probabilities, free/optional multi-book markets, context, policy, capped Kelly, portfolio controls, forward line/decision ledgers, independent grading, audit reports, monitoring, health, model card, weekly publication, and hard `RESEARCH -> PAPER -> SHADOW -> PRODUCTION` gates. Structural parity does **not** transfer NCAA betting evidence to the NFL. The NFL remains fail-closed until its own historical-entry and forward live/shadow evidence satisfy the release gate.
+> **NFL Model v1.0 — COMPLETE / PAPER + SHADOW VALIDATION.** The model-build phase is frozen. The repository mirrors the CFB operating architecture with NFL-specific data, validation, context, market evidence, risk controls, grading, publication, and release gates. No further numbered modeling stage is required for v1.0. The system remains fail-closed for production betting until its existing historical and forward evidence gates pass. See [the v1.0 completion audit](docs/NFL_V1_COMPLETION_AUDIT.md).
 
 ## Design
 
