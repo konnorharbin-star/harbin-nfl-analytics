@@ -236,11 +236,46 @@ def render_html(
     release_state: str,
 ) -> None:
     state = release_state.upper()
-    status = "Live market data" if _has_live_market(board) else "Projection-only · no verified live lines"
+    status = (
+        "Live market data"
+        if _has_live_market(board)
+        else "Projection-only · no verified live lines"
+    )
     if state != "PRODUCTION":
         status = f"{status} · {state} validation"
 
-    css = """*{box-sizing:border-box}body{margin:0;background:#0f1113;color:#f0f1f2;font-family:Inter,Arial,sans-serif}.shell{max-width:1320px;margin:auto;padding:14px}.page{display:none}.head{display:flex;justify-content:space-between;align-items:flex-start}.title{font-size:24px;font-weight:800}.sub,.counter{font-size:12px;color:#8b8e92}.status{font-size:10px;color:#aeb1b5;margin-top:3px}.status.warn{color:#d6a44b}.counter{text-align:right;line-height:1.45}table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:8px}th{font-size:9px;letter-spacing:.08em;color:#777c81;text-align:left;padding:7px 8px;border-bottom:1px solid #272a2e}td{font-size:12px;padding:8px;border-bottom:1px solid #272a2e;height:36px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}tbody tr:nth-child(even){background:#16181b}.winner{font-weight:800}.at{color:#777c81}.proj{font-weight:800}.bar{display:inline-block;height:6px;background:#4c84e0;border-radius:5px;margin-right:6px;vertical-align:middle}.quiet{color:#64686d}.active{color:#f0f1f2;font-weight:700}.projtot{font-size:10px;color:#96999d}.badge{font-size:8px;font-weight:800;border-radius:4px;padding:3px 5px;margin-left:4px}.strong{background:#5fc468;color:#0c2c12}.bet{background:#1f462a;color:#63c76d}.lean{background:#483b1e;color:#e3b549}.nav{text-align:center;padding:14px}.nav button{background:#202328;border:1px solid #373b40;color:#eee;border-radius:5px;padding:6px 10px;margin:2px}.c1{width:23%}.c2{width:7%}.c3{width:9%}.c4{width:23%}.c5{width:23%}.c6{width:15%}@media(max-width:900px){.shell{overflow-x:auto}.page{min-width:1100px}}"""
+    css = "\n".join(
+        [
+            "*{box-sizing:border-box}",
+            "body{margin:0;background:#0f1113;color:#f0f1f2;",
+            "font-family:Inter,Arial,sans-serif}",
+            ".shell{max-width:1320px;margin:auto;padding:14px}.page{display:none}",
+            ".head{display:flex;justify-content:space-between;align-items:flex-start}",
+            ".title{font-size:24px;font-weight:800}",
+            ".sub,.counter{font-size:12px;color:#8b8e92}",
+            ".status{font-size:10px;color:#aeb1b5;margin-top:3px}",
+            ".status.warn{color:#d6a44b}.counter{text-align:right;line-height:1.45}",
+            "table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:8px}",
+            "th{font-size:9px;letter-spacing:.08em;color:#777c81;text-align:left;",
+            "padding:7px 8px;border-bottom:1px solid #272a2e}",
+            "td{font-size:12px;padding:8px;border-bottom:1px solid #272a2e;",
+            "height:36px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
+            "tbody tr:nth-child(even){background:#16181b}",
+            ".winner{font-weight:800}.at{color:#777c81}.proj{font-weight:800}",
+            ".bar{display:inline-block;height:6px;background:#4c84e0;border-radius:5px;",
+            "margin-right:6px;vertical-align:middle}.quiet{color:#64686d}",
+            ".active{color:#f0f1f2;font-weight:700}.projtot{font-size:10px;color:#96999d}",
+            ".badge{font-size:8px;font-weight:800;border-radius:4px;padding:3px 5px;",
+            "margin-left:4px}.strong{background:#5fc468;color:#0c2c12}",
+            ".bet{background:#1f462a;color:#63c76d}",
+            ".lean{background:#483b1e;color:#e3b549}.nav{text-align:center;padding:14px}",
+            ".nav button{background:#202328;border:1px solid #373b40;color:#eee;",
+            "border-radius:5px;padding:6px 10px;margin:2px}",
+            ".c1{width:23%}.c2{width:7%}.c3{width:9%}.c4{width:23%}",
+            ".c5{width:23%}.c6{width:15%}",
+            "@media(max-width:900px){.shell{overflow-x:auto}.page{min-width:1100px}}",
+        ]
+    )
 
     values = board.to_dicts()
     pages: list[str] = []
@@ -269,14 +304,30 @@ def render_html(
             )
             pct = int(row["win_pct"])
             bar = max(4, min(52, int((pct - 50) * 1.15)))
+            projected_total = float(row["proj_total"])
+            moneyline_html = _market_html(
+                row.get("moneyline"),
+                market="moneyline",
+                projected_total=projected_total,
+            )
+            spread_html = _market_html(
+                row.get("spread"),
+                market="spread",
+                projected_total=projected_total,
+            )
+            total_html = _market_html(
+                row.get("total"),
+                market="total",
+                projected_total=projected_total,
+            )
             rows.append(
                 "<tr>"
                 f"<td>{matchup}</td>"
                 f"<td class=\"proj\">{row['away_score']}–{row['home_score']}</td>"
                 f"<td><span class=\"bar\" style=\"width:{bar}px\"></span>{pct}%</td>"
-                f"<td>{_market_html(row.get('moneyline'), market='moneyline', projected_total=float(row['proj_total']))}</td>"
-                f"<td>{_market_html(row.get('spread'), market='spread', projected_total=float(row['proj_total']))}</td>"
-                f"<td>{_market_html(row.get('total'), market='total', projected_total=float(row['proj_total']))}</td>"
+                f"<td>{moneyline_html}</td>"
+                f"<td>{spread_html}</td>"
+                f"<td>{total_html}</td>"
                 "</tr>"
             )
         game_range = (
@@ -287,7 +338,8 @@ def render_html(
         pages.append(
             f'<section class="page" id="p{page}"><div class="head"><div>'
             f'<div class="title">NFL MODEL · WEEK {week} PICKS</div>'
-            f'<div class="sub">Projected scores &amp; best bets · Updated {html.escape(formatted_updated_at)}</div>'
+            '<div class="sub">Projected scores &amp; best bets · Updated '
+            f'{html.escape(formatted_updated_at)}</div>'
             f'<div class="status {warn_class}">{html.escape(status)}</div></div>'
             f'<div class="counter">{game_range}<br>{page} / {page_count}</div></div>'
             '<table><colgroup><col class="c1"><col class="c2"><col class="c3">'
