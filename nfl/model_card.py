@@ -27,6 +27,7 @@ def build_model_card(
     research_status: dict[str, object] | None = None,
 ) -> dict[str, object]:
     evidence = evidence or {}
+    production_policy = _read_optional_json("reports/production_policy.json")
     research = research_status
     if research is None:
         research = _read_optional_json("reports/research_status.json")
@@ -73,6 +74,12 @@ def build_model_card(
             "portfolio_caps": True,
             "drawdown_throttle": True,
             "production_requires_release_gate": True,
+            "production_policy_mode": production_policy.get(
+                "deployment_mode", "paper"
+            ),
+            "production_policy_ready": bool(
+                gate.get("production_policy_ready", False)
+            ),
         },
         "evidence": {
             "historical_status": evidence.get("status", "UNKNOWN"),

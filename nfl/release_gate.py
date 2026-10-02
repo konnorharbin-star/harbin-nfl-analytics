@@ -45,11 +45,13 @@ def build_release_gate(
     *,
     evidence_path: str | Path = "reports/evidence_report.json",
     live_path: str | Path = "reports/live_performance.json",
+    policy_path: str | Path = "reports/production_policy.json",
 ) -> dict[str, object]:
     monitor = monitor or {}
     data_quality = data_quality or {}
     evidence = _read(evidence_path)
     live = _read(live_path)
+    production_policy = _read(policy_path)
 
     market = meta.get("market_coverage")
     if not isinstance(market, dict):
@@ -120,6 +122,22 @@ def build_release_gate(
         and historical_clv_ready
         and int(promotion.get("positive_markets", 0) or 0) >= 2
         and int(promotion.get("positive_seasons", 0) or 0) >= 2
+    )
+
+    policy_markets = production_policy.get("markets")
+    if not isinstance(policy_markets, dict):
+        policy_markets = {}
+    enabled_policy_markets = sorted(
+        str(name)
+        for name, value in policy_markets.items()
+        if isinstance(value, dict) and bool(value.get("enabled", False))
+    )
+    production_policy_mode = str(
+        production_policy.get("deployment_mode") or "paper"
+    ).lower()
+    production_policy_ready = (
+        production_policy_mode == "production"
+        and len(enabled_policy_markets) >= 2
     )
 
     live_n = int(live.get("graded_bets", live.get("bets", 0)) or 0)
@@ -238,6 +256,20 @@ def build_release_gate(
             ),
         ),
         _check(
+            "production_policy",
+            production_policy_ready,
+            {
+                "deployment_mode": production_policy_mode,
+                "enabled_markets": enabled_policy_markets,
+                "source": production_policy.get("source"),
+                "split": production_policy.get("split"),
+            },
+            (
+                "frozen nested chronological policy is production-validated "
+                "with at least two enabled markets"
+            ),
+        ),
+        _check(
             "portfolio_verified_forward_ledger",
             portfolio_verified,
             {"source": live.get("evidence_source"), "graded_bets": live_n},
@@ -294,7 +326,12 @@ def build_release_gate(
     )
     if not engineering_ready:
         state = "RESEARCH"
-    elif historical_ready and multi_book >= 0.75 and live_ready:
+    elif (
+        historical_ready
+        and production_policy_ready
+        and multi_book >= 0.75
+        and live_ready
+    ):
         state = "PRODUCTION"
     elif historical_ready:
         state = "SHADOW"
@@ -323,6 +360,11 @@ def build_release_gate(
             "Keep NFL policy in paper research until verified-entry chronological "
             "ROI/CLV evidence clears the hard gates."
         )
+    if historical_ready and not production_policy_ready:
+        next_steps.append(
+            "Keep production disabled because the frozen nested policy has not "
+            "validated at least two markets on untouched evaluation data."
+        )
     if not forward_entry_integrity and live_n:
         next_steps.append(
             "Repair forward entry provenance; every graded bet must be execution-ready "
@@ -344,14 +386,15 @@ def build_release_gate(
         "production_eligible": state == "PRODUCTION",
         "engineering_ready": engineering_ready,
         "historical_edge_ready": historical_ready,
+        "production_policy_ready": production_policy_ready,
         "live_evidence_ready": live_ready,
         "checks": checks,
         "blockers": blockers,
         "next_requirements": next_steps,
         "meaning": (
             "Hard NFL deployment gate. Structural parity with CFB does not transfer CFB evidence; "
-            "PRODUCTION requires independent NFL engineering, historical entry, market breadth, "
-            "and portfolio-verified live evidence."
+            "PRODUCTION requires independent NFL engineering, historical entry, a "
+            "validated frozen policy, market breadth, and portfolio-verified live evidence."
         ),
     }
 
@@ -363,8 +406,14 @@ def write_release_gate(
     *,
     output_path: str | Path = "outputs/release_gate.json",
     report_path: str | Path = "reports/release_gate.json",
+    policy_path: str | Path = "reports/production_policy.json",
 ) -> dict[str, object]:
-    gate = build_release_gate(meta, monitor, data_quality)
+    gate = build_release_gate(
+        meta,
+        monitor,
+        data_quality,
+        policy_path=policy_path,
+    )
     for path in (output_path, report_path):
         target = Path(path)
         target.parent.mkdir(parents=True, exist_ok=True)

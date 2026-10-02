@@ -172,6 +172,13 @@ Free nflverse operation remains the default PAPER path; historical promotion sti
 requires the full verified-sample ROI, CLV, breadth-across-markets/seasons, and sample
 gates.
 
+### Stage 39 — release/policy state coherence
+
+The hard release gate now requires the frozen nested policy itself to be in production
+mode with at least two validated markets. This matches the allocator's existing safety
+rule, so the model card, release report, and executable staking state can no longer
+disagree about PRODUCTION eligibility.
+
 ### Stage 4 — current NFL context
 
 The context layer now mirrors the NCAA current-only philosophy:

@@ -42,6 +42,26 @@ def _meta(now: datetime) -> dict[str, object]:
     }
 
 
+def _write_policy(tmp_path, *, mode: str = "production"):
+    path = tmp_path / "production_policy.json"
+    path.write_text(
+        json.dumps(
+            {
+                "deployment_mode": mode,
+                "source": "fixture nested chronological calibration",
+                "split": "development/tune/evaluation",
+                "markets": {
+                    "moneyline": {"enabled": True},
+                    "spread": {"enabled": True},
+                    "total": {"enabled": False},
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
 def test_engineering_readiness_excludes_multibook_penalty(tmp_path) -> None:
     now = datetime.now(UTC)
     report = build_live_monitoring(
@@ -129,12 +149,72 @@ def test_release_gate_requires_broad_historical_clv_coverage(tmp_path) -> None:
         {"status": "OK"},
         evidence_path=evidence_path,
         live_path=live_path,
+        policy_path=_write_policy(tmp_path),
     )
     checks = {check["name"]: check for check in gate["checks"]}
 
     assert checks["historical_clv_coverage"]["passed"] is False
     assert gate["historical_edge_ready"] is False
     assert gate["release_state"] == "PAPER"
+    assert gate["production_eligible"] is False
+
+
+def test_release_gate_cannot_claim_production_with_paper_policy(tmp_path) -> None:
+    meta = _meta(datetime.now(UTC))
+    meta["market_intelligence"] = {"multi_book_coverage": 1.0}
+
+    evidence_path = tmp_path / "policy-evidence.json"
+    evidence_path.write_text(
+        json.dumps(
+            {
+                "status": "ROBUST",
+                "promotion_sample": {
+                    "entry_quote_verified": True,
+                    "verified_bets": 1200,
+                    "verified_roi_ci_95": [0.01, 0.05],
+                    "avg_verified_clv_proxy": 0.02,
+                    "verified_clv_samples": 1080,
+                    "verified_clv_coverage": 0.90,
+                    "positive_markets": 2,
+                    "positive_seasons": 2,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    live_path = tmp_path / "policy-live.json"
+    live_path.write_text(
+        json.dumps(
+            {
+                "evidence_source": "portfolio_decisions_v1",
+                "portfolio_verified": True,
+                "graded_bets": 300,
+                "roi": 0.01,
+                "avg_clv": 0.02,
+                "entry_quote_coverage": 1.0,
+                "execution_ready_coverage": 1.0,
+                "clv_samples": 270,
+                "clv_coverage": 0.90,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    gate = build_release_gate(
+        meta,
+        {"engineering_readiness_score": 95},
+        {"status": "OK"},
+        evidence_path=evidence_path,
+        live_path=live_path,
+        policy_path=_write_policy(tmp_path, mode="paper"),
+    )
+    checks = {check["name"]: check for check in gate["checks"]}
+
+    assert gate["historical_edge_ready"] is True
+    assert gate["live_evidence_ready"] is True
+    assert gate["production_policy_ready"] is False
+    assert checks["production_policy"]["passed"] is False
+    assert gate["release_state"] == "SHADOW"
     assert gate["production_eligible"] is False
 
 
@@ -189,6 +269,7 @@ def test_release_gate_requires_broad_forward_clv_coverage(tmp_path) -> None:
         {"status": "OK"},
         evidence_path=evidence_path,
         live_path=live_path,
+        policy_path=_write_policy(tmp_path),
     )
     checks = {check["name"]: check for check in gate["checks"]}
 
@@ -223,6 +304,7 @@ def test_release_gate_requires_broad_forward_clv_coverage(tmp_path) -> None:
         {"status": "OK"},
         evidence_path=evidence_path,
         live_path=live_path,
+        policy_path=_write_policy(tmp_path),
     )
 
     assert promoted["live_evidence_ready"] is True
