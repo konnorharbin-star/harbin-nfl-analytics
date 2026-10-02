@@ -17,6 +17,8 @@ SIGNATURE_FIELDS = (
     "quant_price",
     "quant_odds",
     "quant_quote_at",
+    "research_signal",
+    "portfolio_signal",
     "portfolio_candidate_units",
     "portfolio_stake_units",
     "execution_ready",
