@@ -1,0 +1,52 @@
+name: NFL Nonlinear Residual Audit
+
+on:
+  pull_request:
+    paths:
+      - "nfl/ensemble_residuals.py"
+      - "nfl/ensemble_audit.py"
+      - "run_ensemble_audit.py"
+      - "tests/test_ensemble_residuals.py"
+      - ".github/workflows/ensemble-audit.yml"
+      - "docs/STAGE20_NONLINEAR_RESIDUAL.md"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+      - name: Unit tests
+        run: python -m pytest -q tests/test_ensemble_residuals.py
+      - name: Ruff
+        run: ruff check .
+      - name: Run 2022-2025 ensemble audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          for attempt in 1 2 3; do
+            if python run_ensemble_audit.py --refresh --output reports/ensemble_audit.json \
+              | tee reports/ensemble_audit.log; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+            sleep $((attempt * 15))
+          done
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-nonlinear-residual-audit
+          path: |
+            reports/ensemble_audit.json
+            reports/ensemble_audit.log
+          if-no-files-found: error
