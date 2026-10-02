@@ -3,7 +3,9 @@
     "multi_book_consensus: >=75% current games covered by 2+ verified books",
     "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
     "historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
-    "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV"
+    "forward_entry_integrity: 100% graded forward bets have execution-ready, timestamp-valid entry quotes",
+    "forward_clv_coverage: >=90% of graded forward bets have a valid later pre-kickoff closing snapshot",
+    "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV, complete entry provenance, and >=90% CLV coverage"
   ],
   "checks": [
     {
@@ -96,12 +98,37 @@
     },
     {
       "detail": "",
+      "name": "forward_entry_integrity",
+      "passed": false,
+      "requirement": "100% graded forward bets have execution-ready, timestamp-valid entry quotes",
+      "value": {
+        "entry_quote_coverage": 0.0,
+        "execution_ready_coverage": 0.0
+      }
+    },
+    {
+      "detail": "",
+      "name": "forward_clv_coverage",
+      "passed": false,
+      "requirement": ">=90% of graded forward bets have a valid later pre-kickoff closing snapshot",
+      "value": {
+        "clv_coverage": 0.0,
+        "clv_samples": 0,
+        "graded_bets": 0
+      }
+    },
+    {
+      "detail": "",
       "name": "live_shadow_evidence",
       "passed": false,
-      "requirement": ">=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV",
+      "requirement": ">=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV, complete entry provenance, and >=90% CLV coverage",
       "value": {
         "avg_clv": null,
+        "clv_coverage": 0.0,
+        "entry_quote_coverage": 0.0,
+        "execution_ready_coverage": 0.0,
         "graded_bets": 0,
+        "minimum_bets": 300,
         "roi": null
       }
     }
