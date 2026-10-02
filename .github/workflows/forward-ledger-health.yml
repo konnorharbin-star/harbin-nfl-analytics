@@ -30,12 +30,12 @@ permissions:
 
 concurrency:
   group: >-
-    ${{ github.event_name == 'pull_request'
-      && format('nfl-forward-ledger-health-pr-{0}', github.event.pull_request.number)
-      || github.event_name == 'workflow_run'
-      && format('nfl-generated-state-{0}', github.event.workflow_run.head_branch)
-      || format('nfl-generated-state-{0}', github.ref_name) }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    nfl-forward-ledger-health-${{
+      github.event_name == 'workflow_run'
+      && github.event.workflow_run.head_branch
+      || github.ref_name
+    }}
+  cancel-in-progress: true
 
 jobs:
   audit:
@@ -78,8 +78,7 @@ jobs:
           git add reports/forward_ledger_health.json docs/forward_ledger_health.json
           if ! git diff --cached --quiet; then
             git commit -m "audit: refresh NFL forward ledger health"
-            git pull --rebase origin main
-            git push
+            bash scripts/push_generated_state.sh
           else
             echo "No forward ledger health changes to commit."
           fi
