@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import polars as pl
 
-from nfl.personnel_context import _non_qb_starter_risk
+from nfl.personnel_context import (
+    _latest_weekly_depth_snapshot,
+    _non_qb_starter_risk,
+)
 from nfl.personnel_context_eval import evaluate_fixed_personnel_rolling
 
 
@@ -105,3 +108,34 @@ def test_non_qb_starter_risk_excludes_quarterback_injury() -> None:
 
     assert _non_qb_starter_risk("AAA", depth, qb_only) == 0.0
     assert _non_qb_starter_risk("AAA", depth, mixed) == 0.5
+
+
+def test_latest_weekly_depth_snapshot_drops_stale_prior_starters() -> None:
+    depth = pl.DataFrame(
+        [
+            {
+                "team": "AAA",
+                "player_key": "old-wr",
+                "player_name": "Old WR",
+                "position": "WR",
+                "depth_rank": 1,
+                "depth_week": 4,
+                "depth_captured_at": None,
+            },
+            {
+                "team": "AAA",
+                "player_key": "new-wr",
+                "player_name": "New WR",
+                "position": "WR",
+                "depth_rank": 1,
+                "depth_week": 5,
+                "depth_captured_at": None,
+            },
+        ]
+    )
+
+    latest = _latest_weekly_depth_snapshot(depth)
+
+    assert latest.height == 1
+    assert latest.row(0, named=True)["player_key"] == "new-wr"
+    assert latest.row(0, named=True)["depth_week"] == 5
