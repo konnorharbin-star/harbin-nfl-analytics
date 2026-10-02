@@ -34,3 +34,21 @@ Evaluation results are reporting-only. They cannot retune hyperparameters or ref
 Stage 23 is a validation-architecture audit, not a production promotion. It hard-codes selection_uses_evaluation=false, canonical_probability_change_enabled=false, and promotion_eligible=false.
 
 Any future production probability change must be proposed separately after the Stage 23 evidence is recorded. The current canonical model, market edges, policy thresholds, and stake sizing are untouched.
+
+## Real-source result
+
+The 2021–2025 real-source audit reconstructed 1,039 canonical pregame games and produced complete-week partitions of 607 Core rows, 147 Tune rows, 134 Calibration rows, and 151 untouched Evaluation rows.
+
+Hyperparameters selected before evaluation were:
+
+- margin Gaussian scale: 1.0;
+- total Gaussian scale: 0.9;
+- logistic win regularization alpha: 0.0.
+
+On the untouched 151-game evaluation block, selected Gaussian margin NLL was unchanged at 3.96630 because the selected margin scale remained 1.0. Total NLL improved slightly from 4.03286 to 4.03231 with the 0.9 total scale.
+
+Gaussian home-win calibration reported Brier 0.23065, log loss 0.65123, and ECE 0.09639. The separately calibrated logistic model reported Brier 0.22913, log loss 0.64851, and ECE 0.08636. Relative to Gaussian, logistic improved Brier by 0.00152 and log loss by 0.00272 on this evaluation block.
+
+Selected Gaussian interval coverage was 53.6% for the nominal 50% margin interval and 81.5% for the nominal 80% margin interval. Total coverage was 51.7% and 75.5% for the nominal 50% and 80% intervals, respectively.
+
+These results validate the chronology architecture and provide development evidence for future probability research. They do not change the canonical probability model: selection_uses_evaluation=false, canonical_probability_change_enabled=false, and promotion_eligible=false remain enforced.
