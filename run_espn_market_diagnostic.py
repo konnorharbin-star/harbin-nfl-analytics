@@ -13,6 +13,7 @@ from urllib.request import Request, urlopen
 import polars as pl
 
 from nfl.book_identity import canonical_book_identity
+from nfl.contracts import DataContractError
 from nfl.current import next_unplayed_regular_week, unplayed_regular_games
 from nfl.data import NFLDataClient
 from nfl.espn_market import (
@@ -382,7 +383,7 @@ def main() -> None:
             "status": "READY",
             **_normalized_market_breadth(normalized_markets),
         }
-    except Exception as exc:
+    except DataContractError as exc:
         normalized_market_breadth = {
             "status": "ERROR",
             "error": f"{type(exc).__name__}: {exc}",
