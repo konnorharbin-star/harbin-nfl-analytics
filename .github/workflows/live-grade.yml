@@ -28,7 +28,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: nfl-live-grade
+  group: nfl-live-grade-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:
