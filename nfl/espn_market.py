@@ -17,6 +17,7 @@ from urllib.request import Request, urlopen
 
 import polars as pl
 
+from .book_identity import canonical_book_identity
 from .contracts import DataContractError, require_columns
 
 ESPN_SCOREBOARD_URL = (
@@ -378,23 +379,33 @@ class ESPNMarketClient:
                                 captured_at=captured_at,
                             )
                         )
-            if len({market.market_type for market in normalized}) < 3:
-                for odds in self._core_odds(event_id):
-                    normalized.extend(
-                        parse_espn_odds(
-                            odds,
-                            game_id=str(target["game_id"]),
-                            event_id=event_id,
-                            home_team=teams[0],
-                            away_team=teams[1],
-                            captured_at=captured_at,
-                        )
+            try:
+                core_odds = self._core_odds(event_id)
+            except DataContractError:
+                core_odds = []
+            for odds in core_odds:
+                normalized.extend(
+                    parse_espn_odds(
+                        odds,
+                        game_id=str(target["game_id"]),
+                        event_id=event_id,
+                        home_team=teams[0],
+                        away_team=teams[1],
+                        captured_at=captured_at,
                     )
+                )
             if normalized:
-                by_market: dict[str, ESPNTwoWayMarket] = {}
+                by_market_book: dict[
+                    tuple[str, str],
+                    ESPNTwoWayMarket,
+                ] = {}
                 for market in normalized:
-                    by_market.setdefault(market.market_type, market)
-                markets.extend(by_market.values())
+                    book = canonical_book_identity(
+                        market.book or market.provider
+                    )
+                    key = (market.market_type, book)
+                    by_market_book.setdefault(key, market)
+                markets.extend(by_market_book.values())
 
         if not markets:
             raise DataContractError("ESPN returned no usable NFL markets for the target slate")
