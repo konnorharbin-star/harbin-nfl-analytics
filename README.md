@@ -167,6 +167,15 @@ separate from canonical betting evidence. The canonical forward gate requires at
 score/probability candidate retains its own 128-game statistical gate. The consolidated
 report has no authority to change the canonical model or open PRODUCTION.
 
+### Phase 6 — production safety shell
+
+The production allocator now fails closed at the final execution boundary as well as
+at the release gate. When production is open, a stale/non-executable quote remains
+`PASS` with zero candidate allocation, so it cannot consume concentration capacity.
+If a downstream bankroll/history safety rule blocks an otherwise open production
+release, the portfolio reports `mode=halted`, zero allocation, and an explicit
+`production_block_reason`.
+
 ### NCAA-style audit suite
 
 The NFL repository also has explicit machine-readable audits:
@@ -262,7 +271,7 @@ If `THE_ODDS_API_KEY` is absent, the canonical current path still runs on free E
 
 ### Operations
 
-- `nfl/policy.py`, `nfl/execution_market.py`, `nfl/portfolio.py` — policy, execution and risk controls.
+- `nfl/policy.py`, `nfl/execution_market.py`, `nfl/portfolio.py` — policy, execution, concentration limits, bankroll throttles, and explicit production HALT controls.
 - `nfl/line_history.py`, `nfl/decision_ledger.py`, `nfl/grading.py` — forward evidence ledgers and grading.
 - `nfl/forward_shadow.py` — consolidated Phase 5 prospective evidence and acceptance state.
 - `nfl/proof.py`, `nfl/monitoring.py`, `nfl/release_gate.py`, `nfl/health.py`, `nfl/model_card.py` — proof and release controls.
