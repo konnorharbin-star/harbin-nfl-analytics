@@ -135,6 +135,13 @@ duplicate, wrong-spec, or schedule-inconsistent rows. Games that kicked off befo
 candidate's first persisted snapshot remain outside that candidate's prospective sample
 and are never backfilled.
 
+### Stage 34 — forward betting evidence integrity
+
+Forward betting grades now require execution-ready, timestamp-valid entry provenance.
+Phase 5 and the hard release gate also require 100% entry/execution coverage and at
+least 90% valid later pre-kickoff closing-snapshot coverage before positive CLV can
+support release. The independent grading audit is persisted with live evidence.
+
 ### Stage 4 — current NFL context
 
 The context layer now mirrors the NCAA current-only philosophy:
