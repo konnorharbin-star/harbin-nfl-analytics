@@ -169,6 +169,18 @@ def test_action_network_requires_provider_timestamp() -> None:
     assert rows == []
 
 
+def test_action_network_can_use_explicit_collector_observation_time() -> None:
+    observed = datetime(2026, 10, 1, 12, 30, tzinfo=UTC)
+    rows = parse_action_network_game(
+        _action_game(timestamp=None),
+        {("KC", "BUF"): "2026_04_BUF_KC"},
+        observed_at=observed,
+    )
+
+    assert len(rows) == 6
+    assert {row.captured_at for row in rows} == {observed}
+
+
 def test_action_network_client_uses_free_scoreboard_and_target_week() -> None:
     seen: list[str] = []
 
