@@ -19,6 +19,7 @@ from urllib.request import Request, urlopen
 
 import polars as pl
 
+from .book_identity import canonical_book_identity
 from .contracts import DataContractError, require_columns
 from .espn_market import ESPNMarketClient, ESPNTwoWayMarket
 from .odds_api import NFL_SPORT_KEY, TEAM_NAME_TO_NFLVERSE
@@ -302,12 +303,14 @@ def collect_current_markets(
     any_games = {row.game_id for row in values}
     verified_book_counts: dict[str, set[str]] = {}
     for row in verified:
-        verified_book_counts.setdefault(row.game_id, set()).add(
-            str(row.book).strip().lower()
-        )
+        book_identity = canonical_book_identity(row.book)
+        if book_identity:
+            verified_book_counts.setdefault(row.game_id, set()).add(book_identity)
     multi_book_games = sum(len(books) >= 2 for books in verified_book_counts.values())
     verified_books = {
-        str(row.book).strip().lower() for row in verified if str(row.book).strip()
+        identity
+        for row in verified
+        if (identity := canonical_book_identity(row.book))
     }
     return values, {
         "status": "READY" if verified else "RESEARCH_FALLBACK",

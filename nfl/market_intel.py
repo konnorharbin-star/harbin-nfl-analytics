@@ -8,6 +8,7 @@ from zoneinfo import ZoneInfo
 
 import polars as pl
 
+from .book_identity import canonical_book_identity
 from .contracts import DataContractError, require_columns
 from .espn_market import ESPNTwoWayMarket
 from .market import MarketComparison, MarketQuote, compare_two_way_market
@@ -39,7 +40,7 @@ def _kickoff_map(targets: pl.DataFrame) -> dict[str, object]:
 
 
 def _book_key(market: ESPNTwoWayMarket) -> str:
-    return str(market.book or market.provider).strip().lower()
+    return canonical_book_identity(market.book or market.provider)
 
 
 def _pair_best(

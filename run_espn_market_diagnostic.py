@@ -163,6 +163,15 @@ def _first_matched_event_id(summary: dict[str, object]) -> str | None:
     return value or None
 
 
+def _provider_identity(value: object) -> str:
+    if not isinstance(value, dict):
+        return ""
+    provider = value.get("provider")
+    if isinstance(provider, dict):
+        return str(provider.get("name") or provider.get("id") or "").strip()
+    return str(provider or "").strip()
+
+
 def _core_probe(
     event_id: str,
     *,
@@ -181,16 +190,41 @@ def _core_probe(
     output["item_count"] = len(items) if isinstance(items, list) else 0
     if not isinstance(items, list) or not items:
         return output
-    first = items[0]
-    output["first_item_shape"] = _odds_shape(first)
-    if isinstance(first, dict) and first.get("$ref"):
-        resolved, resolved_meta = _request_json(
-            str(first["$ref"]).replace("http://", "https://"),
-            params=None,
-            headers=headers,
-        )
-        output["first_ref_request"] = resolved_meta
-        output["first_resolved_shape"] = _odds_shape(resolved) if resolved else None
+
+    resolved_items: list[dict[str, object]] = []
+    resolution_errors: list[dict[str, object]] = []
+    for index, raw in enumerate(items):
+        if not isinstance(raw, dict):
+            continue
+        item = raw
+        reference = raw.get("$ref")
+        if reference:
+            resolved, resolved_meta = _request_json(
+                str(reference).replace("http://", "https://"),
+                params=None,
+                headers=headers,
+            )
+            if resolved is None:
+                resolution_errors.append(
+                    {"index": index, "request": resolved_meta}
+                )
+                continue
+            item = resolved
+        resolved_items.append(item)
+
+    output["resolved_item_count"] = len(resolved_items)
+    output["resolution_errors"] = resolution_errors
+    output["provider_identities"] = sorted(
+        {
+            identity
+            for identity in (_provider_identity(item) for item in resolved_items)
+            if identity
+        }
+    )
+    output["resolved_shapes"] = [
+        _odds_shape(item)
+        for item in resolved_items[:5]
+    ]
     return output
 
 
