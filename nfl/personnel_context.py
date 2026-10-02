@@ -7,8 +7,6 @@ prices are never read here.
 
 from __future__ import annotations
 
-from datetime import datetime
-
 import polars as pl
 
 from .contracts import DataContractError, require_columns
