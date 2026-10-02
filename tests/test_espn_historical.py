@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import polars as pl
 
+from run_espn_verified_market_backtest import schedule_seasons_for_evidence
+
 from nfl.espn_historical import (
     build_espn_archive_bets,
     fetch_espn_archive_quotes,
@@ -255,3 +257,12 @@ def test_espn_archive_bets_are_verified_without_fabricated_timestamps() -> None:
     assert bets.get_column("clv_proxy").null_count() == 0
     assert bets.get_column("captured_at").null_count() == 3
     assert bets.get_column("decision_time").null_count() == 3
+
+
+def test_espn_evidence_schedule_window_includes_2022_for_2024_start() -> None:
+    assert schedule_seasons_for_evidence(2024, 2025) == [
+        2022,
+        2023,
+        2024,
+        2025,
+    ]
