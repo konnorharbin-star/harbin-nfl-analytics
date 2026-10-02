@@ -1,0 +1,27 @@
+{
+  "decisions": {
+    "eligible_decisions": 160,
+    "errors": 0,
+    "evidence_source": "portfolio_decisions_v1",
+    "execution_excluded_rows": 0,
+    "issues": [],
+    "portfolio_verified": true,
+    "quote_timing_excluded_rows": 0,
+    "status": "PASS",
+    "timing_excluded_rows": 0,
+    "warnings": 0
+  },
+  "graded": {
+    "errors": 0,
+    "graded_bets": 0,
+    "issues": [
+      {
+        "code": "no_graded_forward_bets",
+        "severity": "WARNING"
+      }
+    ],
+    "status": "WARN",
+    "warnings": 1
+  },
+  "status": "WARN"
+}
