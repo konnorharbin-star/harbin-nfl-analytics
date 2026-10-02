@@ -141,6 +141,36 @@ def _temporal_mode(team: str, depth: pl.DataFrame) -> str:
     return "season_only"
 
 
+def _latest_weekly_depth_snapshot(
+    depth: pl.DataFrame,
+) -> pl.DataFrame:
+    """Keep one complete latest legacy weekly snapshot per team."""
+
+    if depth.is_empty() or "depth_week" not in depth.columns:
+        return depth
+    weekly = depth.filter(pl.col("depth_week").is_not_null())
+    timestamped = depth.filter(pl.col("depth_week").is_null())
+    frames: list[pl.DataFrame] = []
+    if not timestamped.is_empty():
+        frames.append(timestamped)
+    if not weekly.is_empty():
+        for team_frame in weekly.partition_by(
+            "team",
+            maintain_order=True,
+        ):
+            latest_week = int(
+                team_frame.get_column("depth_week").max()
+            )
+            frames.append(
+                team_frame.filter(pl.col("depth_week") == latest_week)
+            )
+    if not frames:
+        return depth
+    return pl.concat(frames, how="vertical_relaxed").sort(
+        ["team", "position", "depth_rank", "player_name"]
+    )
+
+
 def _personnel_map(
     injuries: pl.DataFrame,
     depth: pl.DataFrame,
@@ -218,17 +248,23 @@ def build_personnel_week_snapshot(
             continue
         cache_key = kickoff.isoformat()
         if cache_key not in state_cache:
+            week_injuries = injuries.filter(
+                (pl.col("season") == season)
+                & (pl.col("week").cast(pl.Int64, strict=False) == week)
+            )
             normalized_injuries = normalize_injuries(
-                injuries,
+                week_injuries,
                 season=season,
                 week=week,
                 as_of=kickoff,
             )
-            normalized_depth = normalize_depth_charts(
-                depth_charts,
-                season=season,
-                week=week,
-                as_of=kickoff,
+            normalized_depth = _latest_weekly_depth_snapshot(
+                normalize_depth_charts(
+                    depth_charts,
+                    season=season,
+                    week=week,
+                    as_of=kickoff,
+                )
             )
             state_cache[cache_key] = (
                 normalized_injuries,
