@@ -44,7 +44,7 @@ def _projection_targets(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--seasons", default="2023,2025")
+    parser.add_argument("--seasons", default="2023,2024,2025")
     parser.add_argument("--week", type=int, default=1)
     parser.add_argument("--max-workers", type=int, default=12)
     args = parser.parse_args()
@@ -88,6 +88,20 @@ def main() -> None:
             client=ESPNArchiveClient(max_workers=args.max_workers),
         )
         sample = coverage.to_dict()
+        sample["open_game_coverage"] = (
+            coverage.games_with_open / coverage.requested_games
+            if coverage.requested_games
+            else 0.0
+        )
+        sample["close_game_coverage"] = (
+            coverage.games_with_close / coverage.requested_games
+            if coverage.requested_games
+            else 0.0
+        )
+        sample["qualified_for_open_close_evidence"] = (
+            sample["open_game_coverage"] >= 0.90
+            and sample["close_game_coverage"] >= 0.90
+        )
         sample["entry_rows"] = entries.height
         sample["closing_rows"] = closings.height
         sample["entry_markets"] = (
@@ -108,6 +122,13 @@ def main() -> None:
         total_closing_pairs += coverage.closing_pairs
         books.update(coverage.books)
 
+    samples = output["samples"]
+    qualified_seasons = sorted(
+        int(season)
+        for season, sample in samples.items()
+        if isinstance(sample, dict)
+        and sample.get("qualified_for_open_close_evidence") is True
+    )
     output["summary"] = {
         "requested_games": total_games,
         "games_with_open": total_open,
@@ -121,12 +142,11 @@ def main() -> None:
         "entry_pairs": total_entry_pairs,
         "closing_pairs": total_closing_pairs,
         "books": sorted(books),
+        "qualified_seasons": qualified_seasons,
     }
     output["status"] = (
         "READY"
-        if total_games
-        and total_open / total_games >= 0.90
-        and total_close / total_games >= 0.90
+        if len(qualified_seasons) >= 2
         else "INSUFFICIENT_COVERAGE"
     )
     print(json.dumps(output, indent=2, sort_keys=True, default=str))
