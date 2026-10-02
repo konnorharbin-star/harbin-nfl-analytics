@@ -23,6 +23,7 @@ DEFAULT_REPORT_PATHS = {
     "recent_form_total": Path("reports/recent_form_forward.json"),
     "qb_total": Path("reports/qb_total_forward.json"),
     "probability": Path("reports/probability_forward.json"),
+    "ledger_health": Path("reports/forward_ledger_health.json"),
 }
 
 
@@ -103,6 +104,37 @@ def _shadow_candidate(
     }
 
 
+def _attach_ledger_health(
+    candidate: dict[str, object],
+    *,
+    name: str,
+    health_report: dict[str, Any],
+) -> None:
+    candidates = health_report.get("candidates")
+    if not isinstance(candidates, dict):
+        candidates = {}
+    row = candidates.get(name)
+    health = row if isinstance(row, dict) else {}
+    passed = (
+        str(health.get("status") or "").upper() == "PASS"
+        and bool(health.get("promotion_sample_eligible", False))
+    )
+    candidate["ledger_health_status"] = health.get("status", "MISSING")
+    candidate["ledger_capture_coverage"] = health.get("capture_coverage")
+    candidate["ledger_eligible_games"] = health.get("eligible_games")
+    candidate["ledger_captured_eligible_games"] = health.get(
+        "captured_eligible_games"
+    )
+    candidate["ledger_health_pass"] = passed
+    blockers = list(candidate.get("promotion_gate_blockers") or [])
+    if not passed:
+        blockers.append("forward_ledger_health")
+        candidate["promotion_eligible"] = False
+        if candidate.get("status") == "PROMOTION_EVIDENCE":
+            candidate["status"] = "LEDGER_HEALTH_FAIL"
+    candidate["promotion_gate_blockers"] = blockers
+
+
 def _canonical_betting(report: dict[str, Any]) -> dict[str, object]:
     overall = report.get("overall")
     if not isinstance(overall, dict):
@@ -156,6 +188,7 @@ def build_forward_shadow_summary(
     recent_form_report: dict[str, Any] | None = None,
     qb_total_report: dict[str, Any] | None = None,
     probability_report: dict[str, Any] | None = None,
+    ledger_health_report: dict[str, Any] | None = None,
 ) -> dict[str, object]:
     """Build the Phase 5 status from already-persisted forward evidence only."""
 
@@ -163,6 +196,7 @@ def build_forward_shadow_summary(
     recent = recent_form_report or {}
     qb = qb_total_report or {}
     probability = probability_report or {}
+    ledger_health = ledger_health_report or {}
 
     canonical = _canonical_betting(live)
 
@@ -263,6 +297,12 @@ def build_forward_shadow_summary(
         "probability_home_win": home_candidate,
         "probability_total_distribution": total_candidate,
     }
+    for name, candidate in candidates.items():
+        _attach_ledger_health(
+            candidate,
+            name=name,
+            health_report=ledger_health,
+        )
     promotion_candidates = [
         name
         for name, candidate in candidates.items()
@@ -285,8 +325,10 @@ def build_forward_shadow_summary(
             "first_persisted_pregame_snapshot_only": True,
             "retrospective_reconstruction_allowed": False,
             "candidate_retuning_on_forward_outcomes_allowed": False,
+            "ledger_health_required_for_promotion": True,
         },
         "canonical_betting": canonical,
+        "forward_ledger_health_status": ledger_health.get("status", "MISSING"),
         "candidates": candidates,
         "candidate_promotion_evidence": promotion_candidates,
         "candidate_promotion_evidence_count": len(promotion_candidates),
@@ -307,6 +349,7 @@ def write_forward_shadow_summary(
     recent_form_path: str | Path = DEFAULT_REPORT_PATHS["recent_form_total"],
     qb_total_path: str | Path = DEFAULT_REPORT_PATHS["qb_total"],
     probability_path: str | Path = DEFAULT_REPORT_PATHS["probability"],
+    ledger_health_path: str | Path = DEFAULT_REPORT_PATHS["ledger_health"],
     report_path: str | Path = "reports/forward_shadow_summary.json",
     docs_path: str | Path = "docs/forward_shadow_summary.json",
 ) -> dict[str, object]:
@@ -317,6 +360,7 @@ def write_forward_shadow_summary(
         recent_form_report=_load_json(recent_form_path),
         qb_total_report=_load_json(qb_total_path),
         probability_report=_load_json(probability_path),
+        ledger_health_report=_load_json(ledger_health_path),
     )
     payload = json.dumps(summary, indent=2, sort_keys=True, default=str)
     for path in (report_path, docs_path):
