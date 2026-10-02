@@ -95,7 +95,6 @@ def build_release_gate(
         or 0.0
     )
 
-    overall = evidence.get("overall") if isinstance(evidence.get("overall"), dict) else {}
     promotion = (
         evidence.get("promotion_sample")
         if isinstance(evidence.get("promotion_sample"), dict)
