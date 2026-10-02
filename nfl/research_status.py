@@ -97,6 +97,9 @@ def _forward_summary(report: dict[str, Any]) -> dict[str, object]:
             "graded_games": value.get("graded_games"),
             "minimum_games": value.get("minimum_games"),
             "promotion_eligible": bool(value.get("promotion_eligible", False)),
+            "ledger_health_status": value.get("ledger_health_status"),
+            "ledger_capture_coverage": value.get("ledger_capture_coverage"),
+            "promotion_gate_blockers": value.get("promotion_gate_blockers", []),
         }
         for name, value in candidates.items()
         if isinstance(value, dict)
