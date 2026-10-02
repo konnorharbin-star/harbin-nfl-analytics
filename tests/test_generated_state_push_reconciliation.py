@@ -10,6 +10,7 @@ PUSH_SCRIPT = ROOT / "scripts" / "push_generated_state.sh"
 
 EXPECTED_WRITERS = {
     "candidate-benchmark.yml",
+    "espn-verified-market-backtest.yml",
     "forward-ledger-health.yml",
     "forward-shadow-summary.yml",
     "free-market-backtest.yml",
