@@ -202,13 +202,30 @@ def apply_portfolio_controls(
     bankroll = build_bankroll_risk_state(live_bets_path, limits)
     require_history = bool(limits.get("require_live_history_for_production", True))
     history_ok = bool(bankroll["history_available"]) or not require_history
-    production_allowed = (
+    production_gate_open = (
         bool(gate.get("production_eligible"))
         and policy_mode == "production"
+    )
+    production_allowed = (
+        production_gate_open
         and history_ok
         and not bool(bankroll["hard_stop"])
     )
-    if production_allowed:
+    if production_gate_open and not history_ok:
+        production_block_reason = (
+            "production release gate is open but the independent live betting "
+            "ledger is unavailable"
+        )
+    elif production_gate_open and bool(bankroll["hard_stop"]):
+        production_block_reason = str(
+            bankroll.get("reason") or "bankroll hard stop is active"
+        )
+    else:
+        production_block_reason = ""
+
+    if production_gate_open and not production_allowed:
+        effective_mode = "halted"
+    elif production_allowed:
         effective_mode = "production"
     elif gate_state == "SHADOW":
         effective_mode = "shadow"
@@ -218,6 +235,11 @@ def apply_portfolio_controls(
     if candidates.is_empty():
         return candidates, {
             "mode": effective_mode,
+            "policy_mode": policy_mode,
+            "release_state": gate_state,
+            "production_gate_open": production_gate_open,
+            "production_eligible": production_allowed,
+            "production_block_reason": production_block_reason,
             "approved_bets": 0,
             "approved_units": 0.0,
             "bankroll_risk": bankroll,
@@ -270,6 +292,14 @@ def apply_portfolio_controls(
         if not executable:
             blocked += 1
             row["portfolio_limit_reason"] = reason
+            if production_gate_open:
+                continue
+
+        if production_gate_open and not production_allowed:
+            row["portfolio_limit_reason"] = (
+                production_block_reason or "production safety halt is active"
+            )
+            continue
 
         if signal == "PASS" or proposed <= 0 or allocated >= max_bets or multiplier <= 0:
             if allocated >= max_bets and signal != "PASS":
@@ -324,7 +354,9 @@ def apply_portfolio_controls(
         "mode": effective_mode,
         "policy_mode": policy_mode,
         "release_state": gate_state,
+        "production_gate_open": production_gate_open,
         "production_eligible": production_allowed,
+        "production_block_reason": production_block_reason,
         "bankroll_risk": bankroll,
         "proposed_units": round(
             sum(_number(row.get("paper_stake_units")) for row in rows),
