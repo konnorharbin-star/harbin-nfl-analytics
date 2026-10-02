@@ -139,6 +139,32 @@ def _temporal_mode(team: str, depth: pl.DataFrame) -> str:
     return "season_only"
 
 
+def _depth_source_for_week(
+    depth: pl.DataFrame,
+    *,
+    season: int,
+    week: int,
+) -> pl.DataFrame:
+    """Select the latest complete legacy weekly source snapshot before normalize."""
+
+    source = depth.filter(pl.col("season") == season)
+    if source.is_empty() or "week" not in source.columns:
+        return source
+    week_expr = pl.col("week").cast(pl.Int64, strict=False)
+    admissible = source.filter(
+        week_expr.is_null() | (week_expr <= week)
+    )
+    weekly = admissible.filter(week_expr.is_not_null())
+    if weekly.is_empty():
+        return admissible
+    latest_week = int(
+        weekly.select(week_expr.max()).item()
+    )
+    return admissible.filter(
+        week_expr.is_null() | (week_expr == latest_week)
+    )
+
+
 def _latest_weekly_depth_snapshot(
     depth: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -256,9 +282,14 @@ def build_personnel_week_snapshot(
                 week=week,
                 as_of=kickoff,
             )
+            depth_source = _depth_source_for_week(
+                depth_charts,
+                season=season,
+                week=week,
+            )
             normalized_depth = _latest_weekly_depth_snapshot(
                 normalize_depth_charts(
-                    depth_charts,
+                    depth_source,
                     season=season,
                     week=week,
                     as_of=kickoff,
