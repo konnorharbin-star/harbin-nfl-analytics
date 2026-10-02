@@ -208,6 +208,15 @@ the free nflverse backtest refreshes first, then the ESPN archived-price build r
 latest main and updates verified proof/policy, preventing concurrent evidence-writer
 conflicts.
 
+### Stage 44 — historical proof input isolation
+
+Pure evidence-report calculations no longer implicitly read the repository-global
+verified-provider CSV. Provider evidence must be explicitly supplied to
+`build_evidence_report()`; the production writer still supplies the canonical
+verified ESPN/provider file. This prevents fixture/test results from depending on
+unrelated generated state.
+
+
 ### Stage 4 — current NFL context
 
 The context layer now mirrors the NCAA current-only philosophy:

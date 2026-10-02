@@ -51,7 +51,7 @@ def build_evidence_report(
     *,
     backtest_path: str | Path = "reports/free_market_backtest.json",
     bets_path: str | Path = "reports/free_market_bets.csv",
-    verified_bets_path: str | Path = "reports/verified_market_bets.csv",
+    verified_bets_path: str | Path | None = None,
 ) -> dict[str, object]:
     """Summarize historical evidence without upgrading proxy prices to verified entries."""
 
@@ -91,8 +91,10 @@ def build_evidence_report(
         excluded_unverified = raw_rows - archive_verified.height
 
     provider_verified = pl.DataFrame()
-    provider_source = Path(verified_bets_path)
-    if provider_source.exists():
+    provider_source = (
+        None if verified_bets_path is None else Path(verified_bets_path)
+    )
+    if provider_source is not None and provider_source.exists():
         try:
             provider_bets = pl.read_csv(provider_source)
         except (OSError, pl.exceptions.PolarsError):
@@ -212,7 +214,9 @@ def build_evidence_report(
                 if isinstance(backtest.get("source"), dict)
                 else {}
             ),
-            "verified_provider_bets_path": str(verified_bets_path),
+            "verified_provider_bets_path": (
+                None if verified_bets_path is None else str(verified_bets_path)
+            ),
             "verified_provider_rows": provider_verified.height,
             "historical_entry_provenance": (
                 "explicit provider-labeled opening stage or timestamped provider entry"
