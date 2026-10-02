@@ -17,8 +17,8 @@
     },
     "spread": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.15080034679951348,
-      "average_probability_edge": 0.099285346624586,
+      "average_expected_value_per_unit": 0.15080034679951362,
+      "average_probability_edge": 0.09928534662458605,
       "bets": 868,
       "clv_samples": 0,
       "losses": 431,
@@ -32,8 +32,8 @@
     },
     "total": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.12019619008271465,
-      "average_probability_edge": 0.08421820000769722,
+      "average_expected_value_per_unit": 0.12019619008271412,
+      "average_probability_edge": 0.08421820000769696,
       "bets": 830,
       "clv_samples": 0,
       "losses": 422,
@@ -49,8 +49,8 @@
   "by_season": {
     "2022": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.1819468509974012,
-      "average_probability_edge": 0.08477160554180173,
+      "average_expected_value_per_unit": 0.18194685099740143,
+      "average_probability_edge": 0.08477160554180177,
       "bets": 551,
       "clv_samples": 0,
       "losses": 319,
@@ -64,8 +64,8 @@
     },
     "2023": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.1692436367319411,
-      "average_probability_edge": 0.09062108774578626,
+      "average_expected_value_per_unit": 0.16924363673194104,
+      "average_probability_edge": 0.09062108774578624,
       "bets": 687,
       "clv_samples": 0,
       "losses": 370,
@@ -79,8 +79,8 @@
     },
     "2024": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.18128399958845828,
-      "average_probability_edge": 0.0959252215034489,
+      "average_expected_value_per_unit": 0.1812839995884581,
+      "average_probability_edge": 0.09592522150344884,
       "bets": 671,
       "clv_samples": 0,
       "losses": 365,
@@ -94,8 +94,8 @@
     },
     "2025": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.21593433324330097,
-      "average_probability_edge": 0.10041430506907423,
+      "average_expected_value_per_unit": 0.2159343332433004,
+      "average_probability_edge": 0.10041430506907402,
       "bets": 675,
       "clv_samples": 0,
       "losses": 384,
@@ -111,8 +111,8 @@
   "note": "Free nflverse archive-final fallbacks and opening-line observations without opening juice remain valid research observations, but they are not promotion-quality entry-price evidence. ESPN provider-labeled archived opening/closing stages qualify without fabricating timestamps. ROBUST status requires verified entry prices plus positive uncertainty-adjusted ROI/CLV across multiple markets and seasons with broad closing-snapshot coverage.",
   "overall": {
     "average_clv_proxy": null,
-    "average_expected_value_per_unit": 0.18727567027766845,
-    "average_probability_edge": 0.09330933494014212,
+    "average_expected_value_per_unit": 0.18727567027766828,
+    "average_probability_edge": 0.09330933494014204,
     "bets": 2584,
     "clv_samples": 0,
     "losses": 1438,

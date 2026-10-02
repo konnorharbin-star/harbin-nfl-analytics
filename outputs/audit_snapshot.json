@@ -17,7 +17,7 @@
     "status": "OK",
     "target_games": 15
   },
-  "generated_at": "2026-10-02T11:42:24.180699+00:00",
+  "generated_at": "2026-10-02T11:48:48.742120+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
@@ -69,7 +69,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-02T11:41:59.683488+00:00",
+    "model_generated_at": "2026-10-02T11:48:24.179935+00:00",
     "prediction_games": 15,
     "prediction_rows": 45,
     "season": 2026,
@@ -96,9 +96,9 @@
         "live_n": 45,
         "live_std": 3.0577126376670383,
         "mean_z": 0.1056,
-        "reference_mean": 1.9658449964734717,
+        "reference_mean": 1.965844996473403,
         "reference_n": 1087,
-        "reference_std": 4.135525119268019,
+        "reference_std": 4.135525119268018,
         "stability_score": 89.8,
         "std_ratio": 0.7394
       },
@@ -107,9 +107,9 @@
         "live_n": 45,
         "live_std": 2.8853722701146007,
         "mean_z": 0.4104,
-        "reference_mean": 44.63397276559048,
+        "reference_mean": 44.63397276559055,
         "reference_n": 1087,
-        "reference_std": 3.5116770718711816,
+        "reference_std": 3.511677071871183,
         "stability_score": 84.8,
         "std_ratio": 0.8217
       }
@@ -438,18 +438,6 @@
       "approved_units": 0.0,
       "data_quality_status": "OK",
       "distribution_stability": 88.8,
-      "generated_at": "2026-10-02T02:39:46.857345+00:00",
-      "live_readiness_score": 88.0,
-      "model_generated_at": "2026-10-02T02:39:27.716229+00:00",
-      "publication_status": "WARN",
-      "release_state": "PAPER",
-      "season": 2026,
-      "week": 4
-    },
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 88.8,
       "generated_at": "2026-10-02T02:46:16.318188+00:00",
       "live_readiness_score": 88.0,
       "model_generated_at": "2026-10-02T02:45:56.832514+00:00",
@@ -573,6 +561,18 @@
       "generated_at": "2026-10-02T11:38:03.820686+00:00",
       "live_readiness_score": 95.7,
       "model_generated_at": "2026-10-02T11:37:47.755533+00:00",
+      "publication_status": "WARN",
+      "release_state": "PAPER",
+      "season": 2026,
+      "week": 4
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 87.3,
+      "generated_at": "2026-10-02T11:42:24.180699+00:00",
+      "live_readiness_score": 95.7,
+      "model_generated_at": "2026-10-02T11:41:59.683488+00:00",
       "publication_status": "WARN",
       "release_state": "PAPER",
       "season": 2026,
