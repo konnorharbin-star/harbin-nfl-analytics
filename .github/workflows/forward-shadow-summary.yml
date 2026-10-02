@@ -1,0 +1,90 @@
+name: NFL Forward Shadow Summary
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "NFL Live Shadow Grading"
+      - "NFL QB Total Forward Grade"
+      - "NFL Probability Forward Grade"
+    types: [completed]
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/forward_shadow.py"
+      - "run_forward_shadow.py"
+      - "tests/test_forward_shadow.py"
+      - "docs/STAGE26_FORWARD_SHADOW_BUILD.md"
+      - ".github/workflows/forward-shadow-summary.yml"
+  push:
+    branches: [main]
+    paths:
+      - "reports/live_performance.json"
+      - "reports/recent_form_forward.json"
+      - "reports/qb_total_forward.json"
+      - "reports/probability_forward.json"
+      - "nfl/forward_shadow.py"
+      - "run_forward_shadow.py"
+      - ".github/workflows/forward-shadow-summary.yml"
+  schedule:
+    - cron: "27 11,17,23 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nfl-forward-shadow-summary
+  cancel-in-progress: true
+
+jobs:
+  summarize:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+
+      - name: Integrity tests
+        run: python -m pytest -q tests/test_forward_shadow.py
+
+      - name: Build consolidated Phase 5 report
+        run: python run_forward_shadow.py
+
+      - name: Upload Phase 5 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-forward-shadow-summary
+          path: |
+            reports/forward_shadow_summary.json
+            docs/forward_shadow_summary.json
+
+      - name: Commit consolidated forward evidence
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          git config user.name "harbin-nfl-grade-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add             reports/forward_shadow_summary.json             docs/forward_shadow_summary.json
+          if ! git diff --cached --quiet; then
+            git commit -m "grade: refresh consolidated NFL forward shadow evidence"
+            git pull --rebase origin main
+            git push
+          else
+            echo "No consolidated forward evidence changes to commit."
+          fi
