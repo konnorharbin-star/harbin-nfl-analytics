@@ -50,6 +50,7 @@ def test_policy_and_kelly_are_conservative() -> None:
     portfolio = DEFAULT_POLICY["portfolio"]
     assert isinstance(portfolio, dict)
     assert portfolio["min_market_book_count_for_execution"] == 1
+    assert portfolio["require_open_exposure_ledger_for_production"] is True
     units = fractional_kelly_units(0.58, -110, kelly_fraction=0.20, max_units=1.0)
     assert 0.0 < units <= 1.0
 
@@ -72,6 +73,7 @@ def test_production_invalid_quote_does_not_consume_portfolio_capacity(tmp_path) 
     policy["portfolio"] = {
         **portfolio,
         "require_live_history_for_production": False,
+        "require_open_exposure_ledger_for_production": False,
     }
     policy["deployment_mode"] = "production"
 
@@ -105,7 +107,10 @@ def test_production_bankroll_hard_stop_is_explicitly_halted(tmp_path) -> None:
     policy = dict(DEFAULT_POLICY)
     portfolio = DEFAULT_POLICY["portfolio"]
     assert isinstance(portfolio, dict)
-    policy["portfolio"] = dict(portfolio)
+    policy["portfolio"] = {
+        **portfolio,
+        "require_open_exposure_ledger_for_production": False,
+    }
     policy["deployment_mode"] = "production"
 
     frame, summary = apply_portfolio_controls(
@@ -124,6 +129,102 @@ def test_production_bankroll_hard_stop_is_explicitly_halted(tmp_path) -> None:
     assert frame.get_column("portfolio_candidate_units").sum() == 0.0
     assert frame.get_column("portfolio_stake_units").sum() == 0.0
     assert frame.get_column("portfolio_action")[0] == "PASS"
+
+
+def test_production_requires_committed_exposure_ledger(tmp_path) -> None:
+    now = datetime.now(UTC)
+    policy = dict(DEFAULT_POLICY)
+    portfolio = DEFAULT_POLICY["portfolio"]
+    assert isinstance(portfolio, dict)
+    policy["portfolio"] = {
+        **portfolio,
+        "require_live_history_for_production": False,
+    }
+    policy["deployment_mode"] = "production"
+
+    frame, summary = apply_portfolio_controls(
+        pl.DataFrame([_candidate()]),
+        policy=policy,
+        release_gate={"release_state": "PRODUCTION", "production_eligible": True},
+        live_bets_path=tmp_path / "none.csv",
+        decision_ledger_path=tmp_path / "missing_decisions.csv",
+        now=now,
+    )
+
+    assert summary["production_gate_open"] is True
+    assert summary["production_eligible"] is False
+    assert summary["mode"] == "halted"
+    assert "committed-exposure ledger" in summary["production_block_reason"]
+    assert frame.get_column("portfolio_candidate_units").sum() == 0.0
+    assert frame.get_column("portfolio_stake_units").sum() == 0.0
+
+
+def test_committed_production_exposure_reserves_future_caps(tmp_path) -> None:
+    now = datetime.now(UTC)
+    decisions = tmp_path / "decisions.csv"
+    decisions.write_text(
+        "decision_at,game_id,season,week,kickoff,away_team,home_team,"
+        "quant_market,quant_side,quant_book,portfolio_stake_units,portfolio_action\n"
+        "2026-10-01T12:00:00+00:00,2026_04_AAA_BBB,2026,4,"
+        "2026-10-04T18:00:00+00:00,AAA,BBB,spread,home,ESPN BET,0.6,BET\n",
+        encoding="utf-8",
+    )
+
+    policy = dict(DEFAULT_POLICY)
+    portfolio = DEFAULT_POLICY["portfolio"]
+    assert isinstance(portfolio, dict)
+    policy["portfolio"] = {
+        **portfolio,
+        "require_live_history_for_production": False,
+        "max_slate_units": 1.0,
+        "max_game_units": 1.0,
+        "max_team_units": 1.5,
+        "max_market_units": 2.5,
+        "max_book_units": 2.0,
+        "max_kickoff_window_units": 2.0,
+    }
+    policy["deployment_mode"] = "production"
+
+    rows = [
+        _candidate(
+            game_id="2026_04_AAA_BBB",
+            quant_market="spread",
+            quant_ev=0.09,
+        ),
+        _candidate(
+            game_id="2026_04_CCC_DDD",
+            away_team="CCC",
+            home_team="DDD",
+            quant_market="total",
+            quant_side="over",
+            quant_price=44.5,
+            quant_ev=0.08,
+            stake_units=0.8,
+        ),
+    ]
+    frame, summary = apply_portfolio_controls(
+        pl.DataFrame(rows),
+        policy=policy,
+        release_gate={"release_state": "PRODUCTION", "production_eligible": True},
+        live_bets_path=tmp_path / "none.csv",
+        decision_ledger_path=decisions,
+        now=now,
+    )
+
+    same_market = frame.filter(pl.col("game_id") == "2026_04_AAA_BBB")
+    new_market = frame.filter(pl.col("game_id") == "2026_04_CCC_DDD")
+    assert same_market.get_column("portfolio_action")[0] == "PASS"
+    assert same_market.get_column("portfolio_stake_units")[0] == 0.0
+    assert "already committed" in same_market.get_column("portfolio_limit_reason")[0]
+
+    assert new_market.get_column("portfolio_action")[0] == "BET"
+    assert abs(new_market.get_column("portfolio_stake_units")[0] - 0.4) < 1e-9
+    committed = summary["committed_exposure"]
+    assert committed["open_bets"] == 1
+    assert abs(committed["reserved_open_units"] - 0.6) < 1e-9
+    assert committed["total_open_bets_after_allocation"] == 2
+    assert committed["total_open_units_after_allocation"] <= 1.0 + 1e-9
+    assert abs(summary["approved_units"] - 0.4) < 1e-9
 
 
 def test_paper_portfolio_applies_game_cap_without_real_stake(tmp_path) -> None:
