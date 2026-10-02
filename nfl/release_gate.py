@@ -5,6 +5,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+FORWARD_BET_MINIMUM = 300
+FORWARD_ENTRY_COVERAGE_MINIMUM = 1.0
+FORWARD_CLV_COVERAGE_MINIMUM = 0.90
+
 
 def _read(path: str | Path) -> dict[str, object]:
     source = Path(path)
@@ -117,13 +121,25 @@ def build_release_gate(
     live_roi = live.get("roi")
     live_clv = live.get("avg_clv")
     portfolio_verified = bool(live.get("portfolio_verified", False))
-    live_ready = (
+    entry_quote_coverage = float(live.get("entry_quote_coverage", 0.0) or 0.0)
+    execution_ready_coverage = float(
+        live.get("execution_ready_coverage", 0.0) or 0.0
+    )
+    clv_coverage = float(live.get("clv_coverage", 0.0) or 0.0)
+    forward_entry_integrity = (
         portfolio_verified
-        and live_n >= 300
+        and entry_quote_coverage >= FORWARD_ENTRY_COVERAGE_MINIMUM
+        and execution_ready_coverage >= FORWARD_ENTRY_COVERAGE_MINIMUM
+    )
+    forward_clv_integrity = clv_coverage >= FORWARD_CLV_COVERAGE_MINIMUM
+    live_ready = (
+        forward_entry_integrity
+        and live_n >= FORWARD_BET_MINIMUM
         and live_roi is not None
         and float(live_roi) >= 0
         and live_clv is not None
         and float(live_clv) > 0
+        and forward_clv_integrity
     )
 
     checks = [
@@ -210,10 +226,40 @@ def build_release_gate(
             "forward evidence comes from cap-constrained persisted portfolio decisions",
         ),
         _check(
+            "forward_entry_integrity",
+            forward_entry_integrity,
+            {
+                "entry_quote_coverage": entry_quote_coverage,
+                "execution_ready_coverage": execution_ready_coverage,
+            },
+            "100% graded forward bets have execution-ready, timestamp-valid entry quotes",
+        ),
+        _check(
+            "forward_clv_coverage",
+            forward_clv_integrity,
+            {
+                "clv_samples": live.get("clv_samples", 0),
+                "graded_bets": live_n,
+                "clv_coverage": clv_coverage,
+            },
+            ">=90% of graded forward bets have a valid later pre-kickoff closing snapshot",
+        ),
+        _check(
             "live_shadow_evidence",
             live_ready,
-            {"graded_bets": live_n, "roi": live_roi, "avg_clv": live_clv},
-            ">=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV",
+            {
+                "graded_bets": live_n,
+                "minimum_bets": FORWARD_BET_MINIMUM,
+                "roi": live_roi,
+                "avg_clv": live_clv,
+                "entry_quote_coverage": entry_quote_coverage,
+                "execution_ready_coverage": execution_ready_coverage,
+                "clv_coverage": clv_coverage,
+            },
+            (
+                ">=300 graded portfolio-verified live/shadow bets, non-negative ROI, "
+                "positive CLV, complete entry provenance, and >=90% CLV coverage"
+            ),
         ),
     ]
 
@@ -258,6 +304,16 @@ def build_release_gate(
         next_steps.append(
             "Keep NFL policy in paper research until verified-entry chronological "
             "ROI/CLV evidence clears the hard gates."
+        )
+    if not forward_entry_integrity and live_n:
+        next_steps.append(
+            "Repair forward entry provenance; every graded bet must be execution-ready "
+            "with a timestamp-valid quote at or before the decision and before kickoff."
+        )
+    if clv_coverage < FORWARD_CLV_COVERAGE_MINIMUM and live_n:
+        next_steps.append(
+            "Increase verified later pre-kickoff closing-snapshot coverage to at least 90% "
+            "of graded forward bets before CLV can support release."
         )
     if not live_ready:
         next_steps.append(
