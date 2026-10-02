@@ -242,7 +242,7 @@ def parse_action_network_game(
 
     source_event_id = str(game.get("id") or game.get("game_id") or "")
     output: list[ESPNTwoWayMarket] = []
-    for book_id, quote in grouped.items():
+    for quote in grouped.values():
         timestamps = quote.get("timestamps")
         if not isinstance(timestamps, list) or not timestamps:
             continue
