@@ -51,3 +51,26 @@ Stage 25 hard-codes:
 The 2021–2025 sample is development evidence only. Any surviving isotonic layer would
 require a separately frozen prospective 2026 ledger. The existing Stage 24 probability
 shadow remains unchanged while this audit runs.
+
+
+## Real-source result
+
+The real nflverse audit reconstructed 1,039 canonical pregame games from 2021–2025 and
+reused the Stage 23 whole-week partition: 607 Core, 147 Tune, 134 Calibration, and 151
+untouched Evaluation rows.
+
+Logistic alpha selected before evaluation was 0.0. On the 151-game evaluation block:
+
+- raw logistic Brier: 0.229127;
+- isotonic Brier: 0.229905, a regression of 0.000777;
+- raw logistic log loss: 0.648513;
+- isotonic log loss: 0.644847, an improvement of 0.003666;
+- raw logistic ECE: 0.086355;
+- isotonic ECE: 0.083457, an improvement of 0.002899.
+
+Because Brier score worsened, the isotonic layer fails the fixed all-three-metrics gate.
+candidate_pass=false, canonical_probability_change_enabled=false, and
+promotion_eligible=false remain enforced.
+
+Stage 25 therefore creates no new 2026 shadow and does not alter the already-frozen
+Stage 24 logistic/total-dispersion probability experiment.
