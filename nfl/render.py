@@ -93,10 +93,18 @@ def _team_side(row: dict[str, object]) -> str:
     return side.upper()
 
 
-def _signal(row: dict[str, object] | None) -> str:
+def _signal(
+    row: dict[str, object] | None,
+    *,
+    release_state: str,
+) -> str:
     if not row:
         return ""
-    value = str(row.get("quant_signal") or "PASS").upper()
+    if release_state.upper() == "PRODUCTION":
+        raw = row.get("quant_signal")
+    else:
+        raw = row.get("research_signal", row.get("quant_signal"))
+    value = str(raw or "PASS").upper()
     return "" if value == "PASS" else value
 
 
@@ -191,6 +199,7 @@ def _market_html(
     *,
     market: str,
     projected_total: float,
+    release_state: str,
 ) -> str:
     if market == "moneyline":
         text = _moneyline_text(row)
@@ -203,7 +212,7 @@ def _market_html(
     else:
         raise ValueError(f"unknown publication market: {market}")
 
-    signal = _signal(row)
+    signal = _signal(row, release_state=release_state)
     if text is None:
         quiet = '<span class="quiet">NO LINE</span>'
         if projection:
@@ -309,6 +318,7 @@ def render_html(
                 row.get("moneyline"),
                 market="moneyline",
                 projected_total=projected_total,
+                release_state=state,
             )
             spread_html = _market_html(
                 row.get("spread"),
@@ -399,6 +409,7 @@ def _draw_market(
     row: dict[str, object] | None,
     market: str,
     projected_total: float,
+    release_state: str,
     row_font: ImageFont.ImageFont,
     bold_font: ImageFont.ImageFont,
     small_font: ImageFont.ImageFont,
@@ -415,7 +426,7 @@ def _draw_market(
     else:
         raise ValueError(f"unknown publication market: {market}")
 
-    signal = _signal(row)
+    signal = _signal(row, release_state=release_state)
     if text is None:
         draw.text((x, y), "NO LINE", font=small_font, fill=(96, 100, 105))
         if projection:
@@ -464,7 +475,7 @@ def render_png(
     live_market = _has_live_market(board)
     status = "Live market data" if live_market else "Projection-only · no verified live lines"
     if state != "PRODUCTION":
-        status = f"{status} · {state} validation"
+        status = f"{status} · {state} evidence mode · not production staking"
 
     draw.text((17, 13), f"NFL MODEL · WEEK {week} PICKS", font=title_font, fill=TEXT)
     draw.text(
@@ -540,6 +551,7 @@ def render_png(
             row=row.get("moneyline"),
             market="moneyline",
             projected_total=projected_total,
+            release_state=state,
             row_font=row_font,
             bold_font=bold_font,
             small_font=small_font,
