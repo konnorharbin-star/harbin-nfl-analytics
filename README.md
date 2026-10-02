@@ -188,6 +188,14 @@ market, book, kickoff-window, and bet-count caps, and the same game/market canno
 approved twice while the earlier stake remains open. Production halts if this committed
 exposure cannot be read or verified rather than assuming prior exposure is zero.
 
+### Monitoring gate separation
+
+Operational monitoring now reports both an all-in live-readiness score and an
+engineering-readiness score. The engineering score excludes sportsbook breadth because
+multi-book consensus is already a separate production gate. This prevents a valid
+single-book PAPER/SHADOW build from being mislabeled RESEARCH while preserving the
+independent >=75% verified multi-book requirement for PRODUCTION.
+
 ### NCAA-style audit suite
 
 The NFL repository also has explicit machine-readable audits:
