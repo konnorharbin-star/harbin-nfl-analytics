@@ -1,8 +1,10 @@
 {
-  "alerts": [],
+  "alerts": [
+    "multi-book consensus is limited"
+  ],
   "drift_details": {},
   "drift_reference": null,
-  "live_readiness_score": 91.9,
+  "live_readiness_score": 84.4,
   "meaning": "operational/model-monitoring score; not a profitability guarantee",
   "scores": {
     "calibration": 91.80250233233778,
@@ -10,8 +12,8 @@
     "distribution_stability": 65.0,
     "freshness": 100.0,
     "market_coverage": 100.0,
-    "multi_book": 93.75,
+    "multi_book": 0.0,
     "output_completeness": 96.7551622418879
   },
-  "status": "OK"
+  "status": "WARN"
 }

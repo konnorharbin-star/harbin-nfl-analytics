@@ -8,8 +8,8 @@
   "evidence": {
     "historical": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.18727567027766828,
-      "average_probability_edge": 0.09330933494014204,
+      "average_expected_value_per_unit": 0.18727567027766845,
+      "average_probability_edge": 0.09330933494014212,
       "bets": 2584,
       "clv_samples": 0,
       "losses": 1438,
@@ -80,7 +80,7 @@
   },
   "production_eligible": false,
   "purpose": "Leakage-safe NFL fair-score, probability, market-research, portfolio-risk, grading, and monitoring platform.",
-  "release_state": "PAPER",
+  "release_state": "RESEARCH",
   "risk": {
     "drawdown_throttle": true,
     "portfolio_caps": true,

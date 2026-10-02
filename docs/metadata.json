@@ -1,6 +1,6 @@
 {
   "current_context": {
-    "as_of": "2026-10-02T01:26:22.081782+00:00",
+    "as_of": "2026-10-02T01:32:27.557022+00:00",
     "components": {
       "injuries_personnel": 1.0,
       "quarterback": 1.0,
@@ -61,7 +61,7 @@
     "status": "OK",
     "target_games": 16
   },
-  "generated_at": "2026-10-02T01:26:22.081782+00:00",
+  "generated_at": "2026-10-02T01:32:27.557022+00:00",
   "market_coverage": {
     "games": 16,
     "moneyline": 16,
@@ -71,12 +71,12 @@
   "market_intelligence": {
     "api_key_required": false,
     "complete_market_coverage": 1.0,
-    "distinct_books": 2,
+    "distinct_books": 1,
     "games": 16,
     "market_source": "canonical current NFL market aggregation",
     "moneyline": 16,
-    "multi_book_coverage": 0.9375,
-    "multi_book_games": 15,
+    "multi_book_coverage": 0.0,
+    "multi_book_games": 0,
     "probability_training_games": 1135,
     "release_state": "RESEARCH",
     "research_fallback_rows": 0,
@@ -85,12 +85,12 @@
     "research_spread": 16,
     "research_total": 16,
     "source_breadth": {
-      "books": 2,
+      "books": 1,
       "execution_note": "nflverse schedule fallback has no sportsbook identity or quote-update timestamp and is research-only",
       "games": 16,
       "games_with_any_market": 16,
-      "multi_book_coverage": 0.9375,
-      "multi_book_games": 15,
+      "multi_book_coverage": 0.0,
+      "multi_book_games": 0,
       "optional_source_configured": false,
       "optional_source_rows": 0,
       "primary_source": "ESPN public endpoints",

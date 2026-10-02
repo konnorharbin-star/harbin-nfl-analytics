@@ -43,7 +43,7 @@
       "severity": "ERROR"
     },
     {
-      "detail": "docs=PAPER snapshot=PAPER",
+      "detail": "docs=RESEARCH snapshot=RESEARCH",
       "name": "release_copy",
       "passed": true,
       "severity": "ERROR"
@@ -55,7 +55,7 @@
       "severity": "ERROR"
     },
     {
-      "detail": "docs=91.9 snapshot=91.9",
+      "detail": "docs=84.4 snapshot=84.4",
       "name": "monitor_copy",
       "passed": true,
       "severity": "ERROR"
