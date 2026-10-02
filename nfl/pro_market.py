@@ -337,6 +337,7 @@ def collect_current_markets(
                 if (identity := canonical_book_identity(row.book))
             }
         ),
+        "action_network_diagnostic": action.last_diagnostic,
         "optional_source_configured": optional.configured,
         "optional_source_rows": len(pro_rows),
         "research_fallback_rows": len(fallback_rows),
