@@ -82,6 +82,7 @@ def test_weekly_publication_matches_cfb_picks_layout(tmp_path) -> None:
     assert "O 42.5" in document
     assert "proj 44" in document
     assert "STRONG/PAPER" not in document
-    assert "PAPER validation" in document
+    assert "PAPER evidence mode" in document
+    assert "not production staking" in document
     assert result["presentation"] == "cfb_style_weekly_picks_v1"
     assert (tmp_path / "nfl_week_4_page1.png").exists()
