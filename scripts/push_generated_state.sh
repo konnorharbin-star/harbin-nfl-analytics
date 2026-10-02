@@ -17,10 +17,43 @@ else
   exit 2
 fi
 
+source_base="$(git rev-parse HEAD^)"
+is_generated_path() {
+  case "$1" in
+    outputs/*|history/*|reports/*)
+      return 0
+      ;;
+    docs/*.json|docs/*.html|docs/*.csv|docs/*.png)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
 for attempt in $(seq 1 "$max_attempts"); do
   echo "Generated-state push attempt ${attempt}/${max_attempts} -> ${remote}/${target_branch}"
 
   git fetch "$remote" "$target_branch"
+
+  if ! git merge-base --is-ancestor "$source_base" FETCH_HEAD; then
+    echo "::notice::Generated-state push skipped because the target branch history no longer descends from the writer's source revision."
+    exit 0
+  fi
+
+  unsafe_changes=""
+  while IFS= read -r path; do
+    [ -z "$path" ] && continue
+    if ! is_generated_path "$path"; then
+      unsafe_changes="${unsafe_changes}${unsafe_changes:+, }${path}"
+    fi
+  done < <(git diff --name-only "$source_base" FETCH_HEAD)
+
+  if [ -n "$unsafe_changes" ]; then
+    echo "::notice::Generated-state push skipped because newer source changes supersede this run: $unsafe_changes"
+    exit 0
+  fi
 
   if ! git rebase FETCH_HEAD; then
     git rebase --abort || true
