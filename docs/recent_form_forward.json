@@ -1,7 +1,33 @@
 {
-  "graded_games": 0,
+  "baseline_total_mae": 8.955766005541676,
+  "baseline_total_rmse": 8.955766005541676,
+  "evidence": {
+    "confidence": 0.95,
+    "games": 1,
+    "mae": {
+      "lower": -0.8131784741998302,
+      "point_improvement": -0.8131784741998302,
+      "probability_improvement": 0.0,
+      "upper": -0.8131784741998302
+    },
+    "minimum_games": 128,
+    "rmse": {
+      "lower": -0.8131784741998302,
+      "point_improvement": -0.8131784741998302,
+      "probability_improvement": 0.0,
+      "upper": -0.8131784741998302
+    },
+    "status": "SHADOW_INSUFFICIENT_SAMPLE"
+  },
+  "graded_games": 1,
   "ledger_rows": 16,
-  "meaning": "Prospective recent-form evidence only. Reconstructed historical predictions are excluded from this ledger.",
+  "meaning": "Prospective first-snapshot pre-kickoff evidence only. The frozen recent-form specification is not retuned on these outcomes.",
+  "minimum_games": 128,
   "promotion_eligible": false,
-  "status": "NO_GRADED_GAMES"
+  "shadow_total_mae": 9.768944479741506,
+  "shadow_total_rmse": 9.768944479741506,
+  "status": "SHADOW_INSUFFICIENT_SAMPLE",
+  "total_mae_improvement": -0.8131784741998302,
+  "total_rmse_improvement": -0.8131784741998302,
+  "valid_pregame_rows": 16
 }

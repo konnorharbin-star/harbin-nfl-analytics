@@ -1,0 +1,2 @@
+ledger_version,captured_at,kickoff,season,week,game_id,home_team,away_team,baseline_total,recent_form_shadow_total,recent_form_total_adjustment,recent_form_alpha,recent_form_ridge_alpha,recent_form_blend_weight,recent_form_feature_set,recent_form_total_release_state,home_score,away_score,actual_total,baseline_abs_error,shadow_abs_error
+1,2026-10-01T14:51:55.905008+00:00,2026-10-02T00:15:00+00:00,2026,4,2026_04_PIT_CLE,CLE,PIT,42.044233994458324,41.231055520258494,-0.8131784741998285,0.2,10.0,0.5,epa_per_play;success_rate,SHADOW,27,24,51.0,8.955766005541676,9.768944479741506
