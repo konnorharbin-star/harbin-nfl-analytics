@@ -494,16 +494,34 @@ def derive_policy_from_frame(
 def derive_production_policy(
     *,
     bets_path: str | Path = "reports/free_market_bets.csv",
+    verified_bets_path: str | Path = "reports/verified_market_bets.csv",
     evidence_path: str | Path = "reports/evidence_report.json",
     output_path: str | Path = "reports/production_policy.json",
 ) -> dict[str, object]:
     """Read canonical evidence, derive policy, and persist the frozen policy snapshot."""
 
+    frames: list[pl.DataFrame] = []
     bets_file = Path(bets_path)
     if bets_file.exists():
-        raw_bets = pl.read_csv(bets_file, try_parse_dates=True)
-    else:
-        raw_bets = pl.DataFrame()
+        frames.append(pl.read_csv(bets_file, try_parse_dates=True))
+
+    verified_file = Path(verified_bets_path)
+    if verified_file.exists():
+        frames.append(pl.read_csv(verified_file, try_parse_dates=True))
+
+    raw_bets = (
+        pl.concat(frames, how="diagonal_relaxed")
+        if frames
+        else pl.DataFrame()
+    )
+    if not raw_bets.is_empty():
+        dedupe = [
+            name
+            for name in ("season", "week", "game_id", "market_type", "entry_price_verified")
+            if name in raw_bets.columns
+        ]
+        if len(dedupe) >= 4:
+            raw_bets = raw_bets.unique(subset=dedupe, keep="last")
 
     evidence_file = Path(evidence_path)
     try:

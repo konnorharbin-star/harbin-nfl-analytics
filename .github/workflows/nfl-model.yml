@@ -18,6 +18,10 @@ on:
         required: false
         default: "4"
         type: string
+  workflow_run:
+    workflows:
+      - "NFL Verified Historical Market Backtest"
+    types: [completed]
   pull_request:
     branches: [main]
     paths:
@@ -52,6 +56,9 @@ concurrency:
 
 jobs:
   model:
+    if: >-
+      github.event_name != 'workflow_run'
+      || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 75
     env:

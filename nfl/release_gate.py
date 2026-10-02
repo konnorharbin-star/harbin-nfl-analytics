@@ -8,6 +8,7 @@ from pathlib import Path
 FORWARD_BET_MINIMUM = 300
 FORWARD_ENTRY_COVERAGE_MINIMUM = 1.0
 FORWARD_CLV_COVERAGE_MINIMUM = 0.90
+HISTORICAL_CLV_COVERAGE_MINIMUM = 0.90
 
 
 def _read(path: str | Path) -> dict[str, object]:
@@ -94,25 +95,29 @@ def build_release_gate(
         or 0.0
     )
 
-    overall = evidence.get("overall") if isinstance(evidence.get("overall"), dict) else {}
     promotion = (
         evidence.get("promotion_sample")
         if isinstance(evidence.get("promotion_sample"), dict)
         else {}
     )
-    ci = overall.get("roi_ci_95")
-    if ci is None:
-        ci = [overall.get("roi_ci_95_low"), overall.get("roi_ci_95_high")]
-    if not isinstance(ci, list) or len(ci) != 2:
-        ci = [None, None]
+    verified_ci = promotion.get("verified_roi_ci_95")
+    if not isinstance(verified_ci, list) or len(verified_ci) != 2:
+        verified_ci = [None, None]
+    historical_clv_coverage = float(
+        promotion.get("verified_clv_coverage", 0.0) or 0.0
+    )
+    historical_clv_ready = (
+        historical_clv_coverage >= HISTORICAL_CLV_COVERAGE_MINIMUM
+    )
     historical_ready = (
         str(evidence.get("status") or "").upper() == "ROBUST"
         and bool(promotion.get("entry_quote_verified", False))
         and int(promotion.get("verified_bets", 0) or 0) >= 1000
-        and ci[0] is not None
-        and float(ci[0]) > 0
+        and verified_ci[0] is not None
+        and float(verified_ci[0]) > 0
         and promotion.get("avg_verified_clv_proxy") is not None
         and float(promotion["avg_verified_clv_proxy"]) > 0
+        and historical_clv_ready
         and int(promotion.get("positive_markets", 0) or 0) >= 2
         and int(promotion.get("positive_seasons", 0) or 0) >= 2
     )
@@ -206,17 +211,30 @@ def build_release_gate(
             ),
         ),
         _check(
+            "historical_clv_coverage",
+            historical_clv_ready,
+            {
+                "verified_clv_samples": promotion.get(
+                    "verified_clv_samples", 0
+                ),
+                "verified_bets": promotion.get("verified_bets", 0),
+                "verified_clv_coverage": historical_clv_coverage,
+            },
+            ">=90% of verified historical bets have same-book closing CLV",
+        ),
+        _check(
             "historical_market_edge",
             historical_ready,
             {
                 "status": evidence.get("status"),
-                "roi_ci_95": ci,
+                "verified_roi_ci_95": verified_ci,
+                "verified_clv_coverage": historical_clv_coverage,
                 "positive_markets": promotion.get("positive_markets", 0),
                 "positive_seasons": promotion.get("positive_seasons", 0),
             },
             (
-                "ROBUST NFL evidence with positive ROI confidence lower bound and "
-                "CLV across markets/seasons"
+                "ROBUST verified-entry NFL evidence with positive ROI confidence "
+                "lower bound and CLV across markets/seasons"
             ),
         ),
         _check(
