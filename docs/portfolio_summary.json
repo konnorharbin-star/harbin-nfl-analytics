@@ -15,12 +15,12 @@
     "trailing_window_bets": 0
   },
   "bets": 5,
-  "execution_blocked_bets": 0,
+  "execution_blocked_bets": 3,
   "mode": "paper",
   "paper_or_shadow_allocated_units": 0.32361,
   "policy_mode": "paper",
   "production_eligible": false,
-  "proposed_units": 1.097787,
+  "proposed_units": 1.110153,
   "release_state": "RESEARCH",
-  "risk_adjusted_proposed_units": 1.097787
+  "risk_adjusted_proposed_units": 1.110153
 }
