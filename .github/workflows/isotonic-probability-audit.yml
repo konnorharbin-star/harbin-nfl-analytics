@@ -1,0 +1,60 @@
+name: NFL Isotonic Probability Audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/isotonic_probability.py"
+      - "nfl/isotonic_probability_audit.py"
+      - "run_isotonic_probability_audit.py"
+      - "tests/test_isotonic_probability.py"
+      - ".github/workflows/isotonic-probability-audit.yml"
+      - "docs/STAGE25_ISOTONIC_PROBABILITY.md"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+
+      - name: Unit tests
+        run: python -m pytest -q tests/test_isotonic_probability.py
+
+      - name: Ruff
+        run: ruff check .
+
+      - name: Run real-source isotonic audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          for attempt in 1 2 3; do
+            if python run_isotonic_probability_audit.py --refresh \
+              --output reports/isotonic_probability_audit.json \
+              | tee reports/isotonic_probability_audit.log; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+            sleep $((attempt * 15))
+          done
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-isotonic-probability-audit
+          path: |
+            reports/isotonic_probability_audit.json
+            reports/isotonic_probability_audit.log
+          if-no-files-found: error
