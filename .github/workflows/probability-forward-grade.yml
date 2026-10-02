@@ -27,8 +27,13 @@ permissions:
   contents: write
 
 concurrency:
-  group: nfl-probability-forward-grade
-  cancel-in-progress: true
+  group: >-
+    ${{ github.event_name == 'pull_request'
+      && format('nfl-probability-forward-grade-pr-{0}', github.event.pull_request.number)
+      || github.event_name == 'workflow_run'
+      && format('nfl-generated-state-{0}', github.event.workflow_run.head_branch)
+      || format('nfl-generated-state-{0}', github.ref_name) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   grade:
