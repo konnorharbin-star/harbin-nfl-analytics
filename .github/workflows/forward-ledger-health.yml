@@ -29,7 +29,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: nfl-forward-ledger-health
+  group: nfl-forward-ledger-health-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:
