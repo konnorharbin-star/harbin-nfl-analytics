@@ -108,7 +108,10 @@ def test_espn_current_market_preserves_distinct_core_books() -> None:
         }
     )
 
-    scoreboard_odds = _odds()
+    scoreboard_odds = {
+        **_odds(),
+        "provider": {"name": "Draft Kings"},
+    }
     core_odds = {
         **_odds(),
         "provider": {"name": "ESPN BET"},
@@ -157,8 +160,7 @@ def test_espn_current_market_preserves_distinct_core_books() -> None:
     markets = FixtureClient().current_markets(targets, week=4)
 
     assert len(markets) == 6
-    assert {market.book for market in markets} == {"ESPN BET"}
-        | {"ESPN BET" if scoreboard_odds["provider"]["name"] == "ESPN BET" else "Draft Kings"}
+    assert {market.book for market in markets} == {"Draft Kings", "ESPN BET"}
     assert len(
         {
             (market.market_type, market.book)
