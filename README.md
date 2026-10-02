@@ -216,6 +216,14 @@ verified-provider CSV. Provider evidence must be explicitly supplied to
 verified ESPN/provider file. This prevents fixture/test results from depending on
 unrelated generated state.
 
+### Stage 45 — fixed non-QB personnel context validation
+
+A leak-free historical audit now tests whether non-QB starter, offensive-line,
+skill-position, and defensive availability can improve the independent fair-score
+margin or total. Source coverage must clear 90% in every 2022–2025 development season
+before the same fixed feature/ridge specification may be evaluated across the
+2023–2025 rolling folds.
+
 
 ### Stage 4 — current NFL context
 
