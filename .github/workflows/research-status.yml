@@ -29,7 +29,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: nfl-research-status
+  group: >-
+    nfl-research-status-${{
+      github.event_name == 'workflow_run'
+      && github.event.workflow_run.head_branch
+      || github.ref_name
+    }}
   cancel-in-progress: true
 
 jobs:
