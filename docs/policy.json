@@ -1,5 +1,10 @@
 {
   "deployment_mode": "paper",
+  "diagnostics": {
+    "promotion_rows": 0,
+    "raw_archive_rows": 3069,
+    "selection_uses_evaluation": false
+  },
   "markets": {
     "moneyline": {
       "bet": {
@@ -84,6 +89,7 @@
     "trailing_roi_throttle": -0.1,
     "trailing_window_bets": 50
   },
-  "source": "conservative NFL defaults; not promoted production thresholds",
+  "source": "paper only; no verified archived opening-entry sample",
+  "split": "unavailable",
   "version": 1
 }
