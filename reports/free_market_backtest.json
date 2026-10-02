@@ -18,8 +18,8 @@
     },
     "spread": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.15080034679951348,
-      "average_probability_edge": 0.099285346624586,
+      "average_expected_value_per_unit": 0.15080034679951362,
+      "average_probability_edge": 0.09928534662458605,
       "bets": 868,
       "clv_samples": 0,
       "losses": 431,
@@ -33,8 +33,8 @@
     },
     "total": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.12019619008271465,
-      "average_probability_edge": 0.08421820000769722,
+      "average_expected_value_per_unit": 0.12019619008271412,
+      "average_probability_edge": 0.08421820000769696,
       "bets": 830,
       "clv_samples": 0,
       "losses": 422,
@@ -50,8 +50,8 @@
   "by_season": {
     "2022": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.1819468509974012,
-      "average_probability_edge": 0.08477160554180173,
+      "average_expected_value_per_unit": 0.18194685099740143,
+      "average_probability_edge": 0.08477160554180177,
       "bets": 551,
       "clv_samples": 0,
       "losses": 319,
@@ -65,8 +65,8 @@
     },
     "2023": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.1692436367319411,
-      "average_probability_edge": 0.09062108774578626,
+      "average_expected_value_per_unit": 0.16924363673194104,
+      "average_probability_edge": 0.09062108774578624,
       "bets": 687,
       "clv_samples": 0,
       "losses": 370,
@@ -80,8 +80,8 @@
     },
     "2024": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.18128399958845828,
-      "average_probability_edge": 0.0959252215034489,
+      "average_expected_value_per_unit": 0.1812839995884581,
+      "average_probability_edge": 0.09592522150344884,
       "bets": 671,
       "clv_samples": 0,
       "losses": 365,
@@ -95,8 +95,8 @@
     },
     "2025": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.21593433324330097,
-      "average_probability_edge": 0.10041430506907423,
+      "average_expected_value_per_unit": 0.2159343332433004,
+      "average_probability_edge": 0.10041430506907402,
       "bets": 675,
       "clv_samples": 0,
       "losses": 384,
@@ -134,7 +134,7 @@
       "validation": {
         "average_clv_proxy": null,
         "average_expected_value_per_unit": 0.3356535855268331,
-        "average_probability_edge": 0.11830653691608525,
+        "average_probability_edge": 0.11830653691608528,
         "bets": 182,
         "clv_samples": 0,
         "losses": 124,
@@ -170,8 +170,8 @@
       "rule": null,
       "validation": {
         "average_clv_proxy": null,
-        "average_expected_value_per_unit": 0.1455320376301681,
-        "average_probability_edge": 0.09934897684279753,
+        "average_expected_value_per_unit": 0.14553203763016828,
+        "average_probability_edge": 0.09934897684279767,
         "bets": 229,
         "clv_samples": 0,
         "losses": 109,
@@ -189,8 +189,8 @@
       "candidate_pass": false,
       "holdout": {
         "average_clv_proxy": null,
-        "average_expected_value_per_unit": 0.14927806785167727,
-        "average_probability_edge": 0.10139268041315071,
+        "average_expected_value_per_unit": 0.14927806785167697,
+        "average_probability_edge": 0.10139268041315055,
         "bets": 173,
         "clv_samples": 0,
         "losses": 83,
@@ -210,8 +210,8 @@
       },
       "validation": {
         "average_clv_proxy": null,
-        "average_expected_value_per_unit": 0.14489381197520335,
-        "average_probability_edge": 0.09948054825224432,
+        "average_expected_value_per_unit": 0.1448938119752027,
+        "average_probability_edge": 0.099480548252244,
         "bets": 176,
         "clv_samples": 0,
         "losses": 82,
@@ -230,8 +230,8 @@
   "market_opportunities": 3069,
   "overall": {
     "average_clv_proxy": null,
-    "average_expected_value_per_unit": 0.18727567027766845,
-    "average_probability_edge": 0.09330933494014212,
+    "average_expected_value_per_unit": 0.18727567027766828,
+    "average_probability_edge": 0.09330933494014204,
     "bets": 2584,
     "clv_samples": 0,
     "losses": 1438,
@@ -269,8 +269,8 @@
         "pushes": 2,
         "roi": -0.09116978194217676,
         "roi_ci_95": [
-          -0.16499309882996144,
-          -0.015816907659122664
+          -0.16709521056547919,
+          -0.014847460506123029
         ],
         "units": -93.26668692684683,
         "win_rate": 0.3751224289911851,
@@ -287,8 +287,8 @@
         "pushes": 26,
         "roi": -0.056527665751589684,
         "roi_ci_95": [
-          -0.1119032454127813,
-          0.002012887114505326
+          -0.11131681986385732,
+          -0.00012734147196370873
         ],
         "units": -57.82780206387625,
         "win_rate": 0.48946840521564694,
@@ -305,8 +305,8 @@
         "pushes": 7,
         "roi": -0.05758636306368288,
         "roi_ci_95": [
-          -0.11100648218103522,
-          -0.0015941906977481842
+          -0.10955347441702414,
+          -0.0035012189679299757
         ],
         "units": -58.910849414147584,
         "win_rate": 0.4911417322834646,
@@ -325,8 +325,8 @@
         "pushes": 5,
         "roi": -0.028244357102013583,
         "roi_ci_95": [
-          -0.13052179797862276,
-          0.07370826279633784
+          -0.13134299348148926,
+          0.07265280868397984
         ],
         "units": -13.811490622884643,
         "win_rate": 0.5557851239669421,
@@ -343,8 +343,8 @@
         "pushes": 4,
         "roi": -0.06537147330682833,
         "roi_ci_95": [
-          -0.15617749083186674,
-          0.020468217540526034
+          -0.15150157527890218,
+          0.02365942598526637
         ],
         "units": -36.150424738676065,
         "win_rate": 0.48816029143898,
@@ -361,8 +361,8 @@
         "pushes": 3,
         "roi": -0.04842643547972664,
         "roi_ci_95": [
-          -0.13001824063586917,
-          0.034105693312353906
+          -0.12849681230977544,
+          0.03496127653886869
         ],
         "units": -22.76042467547152,
         "win_rate": 0.49464668094218417,
@@ -379,8 +379,8 @@
         "pushes": 23,
         "roi": -0.08817148257407735,
         "roi_ci_95": [
-          -0.15572706422833224,
-          -0.0198109941349656
+          -0.15827892404731309,
+          -0.01873078021138671
         ],
         "units": -137.28299836783845,
         "win_rate": 0.3924380704041721,
@@ -399,8 +399,8 @@
         "pushes": 10,
         "roi": -0.10725348099111051,
         "roi_ci_95": [
-          -0.22000114548333569,
-          0.01350882587987956
+          -0.22196881340408092,
+          0.011644248236465354
         ],
         "units": -66.60441169547963,
         "win_rate": 0.425531914893617,
@@ -417,8 +417,8 @@
         "pushes": 16,
         "roi": -0.03722468613226236,
         "roi_ci_95": [
-          -0.10151850165590906,
-          0.040107083792204255
+          -0.10563043867191531,
+          0.03959031154524032
         ],
         "units": -30.37534388392609,
         "win_rate": 0.465,
@@ -435,8 +435,8 @@
         "pushes": 7,
         "roi": -0.06946502483971295,
         "roi_ci_95": [
-          -0.15222803189620926,
-          0.0019915804599497486
+          -0.15133503435391688,
+          0.00721445120433533
         ],
         "units": -56.68346026920577,
         "win_rate": 0.4635352286773795,
@@ -453,8 +453,8 @@
         "pushes": 2,
         "roi": -0.06904671881894506,
         "roi_ci_95": [
-          -0.14015001663920768,
-          0.004679456007316947
+          -0.14242867202485168,
+          0.0026587896497024485
         ],
         "units": -56.34212255625917,
         "win_rate": 0.44594594594594594,
@@ -473,8 +473,8 @@
         "pushes": 11,
         "roi": -0.083372612260876,
         "roi_ci_95": [
-          -0.18530970061620577,
-          0.017923492945275028
+          -0.18130191953934266,
+          0.022317780679125394
         ],
         "units": -74.03487968765789,
         "win_rate": 0.3933865450399088,
@@ -491,8 +491,8 @@
         "pushes": 17,
         "roi": -0.06654543117708565,
         "roi_ci_95": [
-          -0.13745045283953167,
-          0.0001721296392335171
+          -0.1385427137560019,
+          0.0015449475068327573
         ],
         "units": -77.05960930306519,
         "win_rate": 0.4609991235758107,
@@ -509,8 +509,8 @@
         "pushes": 4,
         "roi": -0.06537147330682833,
         "roi_ci_95": [
-          -0.1500217020077843,
-          0.022846069600249874
+          -0.15186317650650977,
+          0.018890852272032445
         ],
         "units": -36.150424738676065,
         "win_rate": 0.48816029143898,
@@ -527,8 +527,8 @@
         "pushes": 3,
         "roi": -0.04842643547972664,
         "roi_ci_95": [
-          -0.1276101584345554,
-          0.03621138956276397
+          -0.13074647329495562,
+          0.03379430010686069
         ],
         "units": -22.76042467547152,
         "win_rate": 0.49464668094218417,
@@ -877,16 +877,16 @@
       "pushes": 35,
       "roi": -0.06842793691914978,
       "roi_ci_95": [
-        -0.11052853473302468,
-        -0.026779666691135476
+        -0.11109996466905347,
+        -0.02501831993268633
       ],
       "units": -210.00533840487066,
       "win_rate": 0.4515491100856954,
       "wins": 1370
     },
     "residual_sigma": {
-      "margin": 12.976298003641652,
-      "total": 13.439285577397989
+      "margin": 12.97629800364165,
+      "total": 13.43928557739799
     }
   },
   "source": {
