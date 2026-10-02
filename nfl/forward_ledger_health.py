@@ -68,6 +68,13 @@ def _schedule_kickoff(row: dict[str, object]) -> datetime | None:
     return local.astimezone(UTC)
 
 
+def _int_equal(value: object, expected: int) -> bool:
+    try:
+        return int(value) == int(expected)
+    except (TypeError, ValueError):
+        return False
+
+
 def _float_equal(value: object, expected: float) -> bool:
     try:
         return abs(float(value) - float(expected)) <= 1e-12
@@ -81,7 +88,7 @@ def _training_signature(seasons: tuple[int, ...]) -> str:
 
 def _probability_valid(row: dict[str, object]) -> bool:
     return (
-        int(row.get("season", -1)) == PROBABILITY_FORWARD_SEASON
+        _int_equal(row.get("season"), PROBABILITY_FORWARD_SEASON)
         and str(row.get("spec_version", "")) == PROBABILITY_SPEC_VERSION
         and _float_equal(row.get("margin_scale"), FROZEN_MARGIN_SCALE)
         and _float_equal(row.get("total_scale"), FROZEN_TOTAL_SCALE)
@@ -94,7 +101,7 @@ def _probability_valid(row: dict[str, object]) -> bool:
 
 def _qb_total_valid(row: dict[str, object]) -> bool:
     return (
-        int(row.get("season", -1)) == QB_TOTAL_FORWARD_SEASON
+        _int_equal(row.get("season"), QB_TOTAL_FORWARD_SEASON)
         and str(row.get("spec_version", "")) == QB_TOTAL_SPEC_VERSION
         and str(row.get("qb_total_feature_set", ""))
         == VALIDATED_QB_TOTAL_FEATURE_SET
@@ -111,7 +118,7 @@ def _qb_total_valid(row: dict[str, object]) -> bool:
 
 def _recent_form_valid(row: dict[str, object]) -> bool:
     return (
-        int(row.get("season", -1)) == FORWARD_SEASON
+        _int_equal(row.get("season"), FORWARD_SEASON)
         and _float_equal(row.get("recent_form_alpha"), FROZEN_RECENT_ALPHA)
         and _float_equal(
             row.get("recent_form_ridge_alpha"),
