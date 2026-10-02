@@ -82,7 +82,13 @@ def build_release_gate(
         and 0.70 <= float(total_80) <= 0.90
     )
 
-    monitor_score = float(monitor.get("live_readiness_score", 0.0) or 0.0)
+    monitor_score = float(
+        monitor.get(
+            "engineering_readiness_score",
+            monitor.get("live_readiness_score", 0.0),
+        )
+        or 0.0
+    )
 
     overall = evidence.get("overall") if isinstance(evidence.get("overall"), dict) else {}
     promotion = (
@@ -159,7 +165,7 @@ def build_release_gate(
             "live_monitoring",
             monitor_score >= 90,
             monitor_score,
-            "live readiness >=90/100",
+            "engineering readiness >=90/100; multi-book breadth gated separately",
         ),
         _check(
             "multi_book_consensus",
