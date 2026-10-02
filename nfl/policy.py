@@ -64,6 +64,7 @@ DEFAULT_POLICY: dict[str, object] = {
         "require_quote_timestamp_for_execution": True,
         "max_quote_age_minutes": 60,
         "require_live_history_for_production": True,
+        "require_open_exposure_ledger_for_production": True,
     },
     "source": "conservative NFL defaults; not promoted production thresholds",
 }
