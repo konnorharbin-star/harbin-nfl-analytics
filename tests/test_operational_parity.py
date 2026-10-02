@@ -190,6 +190,7 @@ def test_committed_production_exposure_reserves_future_caps(tmp_path) -> None:
             game_id="2026_04_AAA_BBB",
             quant_market="spread",
             quant_ev=0.09,
+            quant_quote_at=now.isoformat(),
         ),
         _candidate(
             game_id="2026_04_CCC_DDD",
@@ -200,6 +201,7 @@ def test_committed_production_exposure_reserves_future_caps(tmp_path) -> None:
             quant_price=44.5,
             quant_ev=0.08,
             stake_units=0.8,
+            quant_quote_at=now.isoformat(),
         ),
     ]
     frame, summary = apply_portfolio_controls(
