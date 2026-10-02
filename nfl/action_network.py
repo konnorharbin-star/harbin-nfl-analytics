@@ -152,6 +152,8 @@ def _row_timestamp(
 def parse_action_network_game(
     game: dict[str, object],
     target_map: dict[tuple[str, str], str],
+    *,
+    observed_at: datetime | None = None,
 ) -> list[ESPNTwoWayMarket]:
     """Normalize one Action Network game into complete per-book NFL markets."""
 
@@ -244,9 +246,16 @@ def parse_action_network_game(
     output: list[ESPNTwoWayMarket] = []
     for quote in grouped.values():
         timestamps = quote.get("timestamps")
-        if not isinstance(timestamps, list) or not timestamps:
+        if isinstance(timestamps, list) and timestamps:
+            captured_at = max(timestamps)
+        elif observed_at is not None:
+            if observed_at.tzinfo is None or observed_at.utcoffset() is None:
+                raise DataContractError(
+                    "Action Network observed_at must be timezone-aware"
+                )
+            captured_at = observed_at.astimezone(UTC)
+        else:
             continue
-        captured_at = max(timestamps)
         book_name = str(quote["book"])
 
         home_ml = quote.get("home_ml")
@@ -451,6 +460,7 @@ class ActionNetworkNFLClient:
                 )
                 continue
 
+            observed_at = datetime.now(UTC)
             rows: list[ESPNTwoWayMarket] = []
             team_matches = 0
             games_with_markets = 0
@@ -564,7 +574,13 @@ class ActionNetworkNFLClient:
                                 str(key) for key in first_market
                             )[:30]
 
-                rows.extend(parse_action_network_game(game, target_map))
+                rows.extend(
+                    parse_action_network_game(
+                        game,
+                        target_map,
+                        observed_at=observed_at,
+                    )
+                )
 
             diagnostic = {
                 "endpoint": base_url,
@@ -573,6 +589,27 @@ class ActionNetworkNFLClient:
                 "team_matches": team_matches,
                 "games_with_markets": games_with_markets,
                 "parsed_rows": len(rows),
+                "collector_observed_at": observed_at.isoformat(),
+                "provider_timestamp_available": bool(
+                    sample.get("market_timestamp_fields")
+                    or sample.get("event_timestamp_fields")
+                    or any(
+                        isinstance(value, dict)
+                        and any(
+                            value.get(field) not in {None, ""}
+                            for field in (
+                                "last_update",
+                                "updated_at",
+                                "timestamp",
+                            )
+                        )
+                        for value in (
+                            sample.get("row_samples", {})
+                            if isinstance(sample.get("row_samples"), dict)
+                            else {}
+                        ).values()
+                    )
+                ),
                 "sample": sample,
             }
             diagnostics.append(diagnostic)
