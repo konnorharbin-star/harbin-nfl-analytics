@@ -29,7 +29,7 @@
         "status": "ACCUMULATING_FORWARD_EVIDENCE"
       },
       "qb_total": {
-        "graded_games": 0,
+        "graded_games": 1,
         "ledger_capture_coverage": 1.0,
         "ledger_health_status": "PASS",
         "minimum_games": 128,
@@ -38,7 +38,7 @@
         "status": "ACCUMULATING_FORWARD_EVIDENCE"
       },
       "recent_form_total": {
-        "graded_games": 0,
+        "graded_games": 1,
         "ledger_capture_coverage": 1.0,
         "ledger_health_status": "PASS",
         "minimum_games": 128,
@@ -72,7 +72,7 @@
     "interpretation": "Stage 14 architecture selection is development evidence only. Stage 15 is authoritative for fixed QB specifications.",
     "margin_architecture": "quarterback_state",
     "margin_architecture_state": "SHADOW_CANDIDATE",
-    "margin_robustness_score": 0.006160735998525098,
+    "margin_robustness_score": 0.006160735998525275,
     "status": "DEVELOPMENT_ONLY",
     "total_architecture": "baseline",
     "total_architecture_state": "DISABLED",
