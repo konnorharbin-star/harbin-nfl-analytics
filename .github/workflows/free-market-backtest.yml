@@ -28,8 +28,11 @@ on:
       - "nfl/entry_integrity.py"
       - "nfl/backtest_audit.py"
       - "nfl/proof.py"
+      - "nfl/policy_calibration.py"
       - "run_free_market_backtest.py"
+      - "run_policy_calibration.py"
       - "tests/test_entry_integrity.py"
+      - "tests/test_policy_calibration.py"
       - ".github/workflows/free-market-backtest.yml"
   push:
     branches: [main]
@@ -40,8 +43,11 @@ on:
       - "nfl/entry_integrity.py"
       - "nfl/backtest_audit.py"
       - "nfl/proof.py"
+      - "nfl/policy_calibration.py"
       - "run_free_market_backtest.py"
+      - "run_policy_calibration.py"
       - "tests/test_entry_integrity.py"
+      - "tests/test_policy_calibration.py"
       - ".github/workflows/free-market-backtest.yml"
   schedule:
     - cron: "43 10 * * 1"
@@ -102,6 +108,7 @@ jobs:
             reports/free_market_by_side_location.csv
             reports/backtest_audit.json
             reports/evidence_report.json
+            reports/production_policy.json
 
       - name: Commit canonical evidence snapshot
         if: github.event_name != 'pull_request'
@@ -113,7 +120,8 @@ jobs:
             reports/free_market_backtest.json \
             reports/free_market_bets.csv \
             reports/backtest_audit.json \
-            reports/evidence_report.json
+            reports/evidence_report.json \\
+            reports/production_policy.json
           if ! git diff --cached --quiet; then
             git commit -m "evidence: refresh free NFL historical market proof"
             git pull --rebase origin main
