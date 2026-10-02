@@ -222,3 +222,118 @@ def test_reconciler_skips_stale_output_after_source_change(tmp_path: Path) -> No
         cwd=tmp_path,
     ).stdout
     assert source_value == "VALUE = 'new-source'\n"
+
+
+def test_reconciler_skips_stale_writer_after_newer_source_change(tmp_path: Path) -> None:
+    remote, _ = _seed_remote(tmp_path)
+    stale = _clone(remote, tmp_path / "stale")
+    source = _clone(remote, tmp_path / "source")
+
+    (stale / "outputs").mkdir()
+    (stale / "outputs" / "state.json").write_text(
+        '{"version":"stale"}\n',
+        encoding="utf-8",
+    )
+    _git(stale, "add", "outputs/state.json")
+    _git(stale, "commit", "-m", "stale generated state")
+
+    (source / "nfl").mkdir()
+    (source / "nfl" / "release_gate.py").write_text(
+        "# newer source revision\n",
+        encoding="utf-8",
+    )
+    _git(source, "add", "nfl/release_gate.py")
+    _git(source, "commit", "-m", "newer source change")
+    _git(source, "push", "origin", "main")
+
+    env = os.environ.copy()
+    env["GITHUB_REF_NAME"] = "main"
+    result = _run(
+        ["bash", str(PUSH_SCRIPT), "origin", "main", "3"],
+        cwd=stale,
+        check=False,
+        env=env,
+    )
+
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert "newer source changes supersede this run" in result.stdout
+
+    remote_state = _run(
+        [
+            "git",
+            "--git-dir",
+            str(remote),
+            "show",
+            "main:outputs/state.json",
+        ],
+        cwd=tmp_path,
+        check=False,
+    )
+    assert remote_state.returncode != 0
+    newer_source = _run(
+        [
+            "git",
+            "--git-dir",
+            str(remote),
+            "show",
+            "main:nfl/release_gate.py",
+        ],
+        cwd=tmp_path,
+    ).stdout
+    assert newer_source == "# newer source revision\n"
+
+
+def test_reconciler_allows_generated_only_newer_commits(tmp_path: Path) -> None:
+    remote, _ = _seed_remote(tmp_path)
+    first = _clone(remote, tmp_path / "first")
+    second = _clone(remote, tmp_path / "second")
+
+    (first / "outputs").mkdir()
+    (first / "outputs" / "first.json").write_text(
+        '{"writer":"first"}\n',
+        encoding="utf-8",
+    )
+    _git(first, "add", "outputs/first.json")
+    _git(first, "commit", "-m", "first generated writer")
+
+    (second / "reports").mkdir()
+    (second / "reports" / "second.json").write_text(
+        '{"writer":"second"}\n',
+        encoding="utf-8",
+    )
+    _git(second, "add", "reports/second.json")
+    _git(second, "commit", "-m", "second generated writer")
+    _git(second, "push", "origin", "main")
+
+    env = os.environ.copy()
+    env["GITHUB_REF_NAME"] = "main"
+    result = _run(
+        ["bash", str(PUSH_SCRIPT), "origin", "main", "3"],
+        cwd=first,
+        check=False,
+        env=env,
+    )
+
+    assert result.returncode == 0, result.stderr + result.stdout
+    first_value = _run(
+        [
+            "git",
+            "--git-dir",
+            str(remote),
+            "show",
+            "main:outputs/first.json",
+        ],
+        cwd=tmp_path,
+    ).stdout
+    second_value = _run(
+        [
+            "git",
+            "--git-dir",
+            str(remote),
+            "show",
+            "main:reports/second.json",
+        ],
+        cwd=tmp_path,
+    ).stdout
+    assert first_value == '{"writer":"first"}\n'
+    assert second_value == '{"writer":"second"}\n'
