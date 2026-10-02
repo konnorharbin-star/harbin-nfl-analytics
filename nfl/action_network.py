@@ -352,6 +352,13 @@ class ActionNetworkNFLClient:
         self.enabled = env_enabled if enabled is None else bool(enabled)
         self.timeout_seconds = float(timeout_seconds)
         self._fetch_json = fetch_json or self._http_json
+        self.last_diagnostic: dict[str, object] = {
+            "status": "NOT_RUN",
+            "endpoint": None,
+            "payload_games": 0,
+            "team_matches": 0,
+            "parsed_rows": 0,
+        }
 
     def _http_json(self, url: str) -> object:
         request = Request(
@@ -407,28 +414,132 @@ class ActionNetworkNFLClient:
         )
 
         errors: list[str] = []
+        diagnostics: list[dict[str, object]] = []
         for base_url in ACTION_NETWORK_URLS:
             url = f"{base_url}?{params}"
             try:
                 payload = self._fetch_json(url)
             except DataContractError as exc:
                 errors.append(str(exc))
+                diagnostics.append(
+                    {
+                        "endpoint": base_url,
+                        "status": "ERROR",
+                        "error": str(exc),
+                    }
+                )
                 continue
             if not isinstance(payload, dict):
                 errors.append("Action Network response is not an object")
+                diagnostics.append(
+                    {
+                        "endpoint": base_url,
+                        "status": "INVALID",
+                        "payload_type": type(payload).__name__,
+                    }
+                )
                 continue
             games = payload.get("games")
             if not isinstance(games, list):
                 errors.append("Action Network response is missing games")
+                diagnostics.append(
+                    {
+                        "endpoint": base_url,
+                        "status": "INVALID",
+                        "payload_keys": sorted(str(key) for key in payload)[:30],
+                    }
+                )
                 continue
 
             rows: list[ESPNTwoWayMarket] = []
+            team_matches = 0
+            games_with_markets = 0
+            sample: dict[str, object] = {}
             for game in games:
-                if isinstance(game, dict):
-                    rows.extend(parse_action_network_game(game, target_map))
+                if not isinstance(game, dict):
+                    continue
+                home_codes, away_codes = _game_teams(game)
+                if any(
+                    home in home_codes and away in away_codes
+                    for home, away in target_map
+                ):
+                    team_matches += 1
+                markets = game.get("markets")
+                if isinstance(markets, (dict, list)) and markets:
+                    games_with_markets += 1
+                if not sample:
+                    sample = {
+                        "game_keys": sorted(str(key) for key in game)[:40],
+                        "home_codes": sorted(home_codes),
+                        "away_codes": sorted(away_codes),
+                        "home_team_id": game.get("home_team_id"),
+                        "away_team_id": game.get("away_team_id"),
+                    }
+                    if isinstance(markets, dict):
+                        sample["market_keys"] = sorted(
+                            str(key) for key in markets
+                        )[:20]
+                        first_market = next(
+                            (
+                                value
+                                for value in markets.values()
+                                if isinstance(value, dict)
+                            ),
+                            None,
+                        )
+                        if isinstance(first_market, dict):
+                            sample["first_market_keys"] = sorted(
+                                str(key) for key in first_market
+                            )[:30]
+                            event = first_market.get("event")
+                            if isinstance(event, dict):
+                                sample["event_keys"] = sorted(
+                                    str(key) for key in event
+                                )[:30]
+                    elif isinstance(markets, list):
+                        sample["market_list_length"] = len(markets)
+                        first_market = next(
+                            (
+                                value
+                                for value in markets
+                                if isinstance(value, dict)
+                            ),
+                            None,
+                        )
+                        if isinstance(first_market, dict):
+                            sample["first_market_keys"] = sorted(
+                                str(key) for key in first_market
+                            )[:30]
+
+                rows.extend(parse_action_network_game(game, target_map))
+
+            diagnostic = {
+                "endpoint": base_url,
+                "status": "READY" if rows else "NO_ROWS",
+                "payload_games": len(games),
+                "team_matches": team_matches,
+                "games_with_markets": games_with_markets,
+                "parsed_rows": len(rows),
+                "sample": sample,
+            }
+            diagnostics.append(diagnostic)
+            self.last_diagnostic = {
+                **diagnostic,
+                "attempts": diagnostics,
+            }
             if rows:
                 return rows
 
-        if errors:
+        self.last_diagnostic = {
+            "status": "ERROR" if errors else "NO_ROWS",
+            "payload_games": 0,
+            "team_matches": 0,
+            "parsed_rows": 0,
+            "attempts": diagnostics,
+        }
+        if errors and all(
+            item.get("status") in {"ERROR", "INVALID"}
+            for item in diagnostics
+        ):
             raise DataContractError("; ".join(errors[-2:]))
         return []
