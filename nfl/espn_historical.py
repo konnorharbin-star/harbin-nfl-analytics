@@ -124,6 +124,7 @@ def parse_espn_archive_item(
     provider_key = canonical_book_identity(provider_name)
     if not provider_key:
         return []
+    book_name = "ESPN BET" if provider_key == "espnbet" else provider_name
 
     output: list[dict[str, object]] = []
 
@@ -142,7 +143,7 @@ def parse_espn_archive_item(
                         "line": None,
                         "american_odds": odds,
                         "provider": "espn_archive",
-                        "book": provider_name,
+                        "book": book_name,
                         "canonical_book": provider_key,
                         "provider_id": provider_id,
                         "source_event_id": event_id,
@@ -177,7 +178,7 @@ def parse_espn_archive_item(
                         "line": line_value,
                         "american_odds": odds,
                         "provider": "espn_archive",
-                        "book": provider_name,
+                        "book": book_name,
                         "canonical_book": provider_key,
                         "provider_id": provider_id,
                         "source_event_id": event_id,
@@ -204,7 +205,7 @@ def parse_espn_archive_item(
                         "line": total,
                         "american_odds": odds,
                         "provider": "espn_archive",
-                        "book": provider_name,
+                        "book": book_name,
                         "canonical_book": provider_key,
                         "provider_id": provider_id,
                         "source_event_id": event_id,
