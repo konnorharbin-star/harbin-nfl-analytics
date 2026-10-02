@@ -1,6 +1,14 @@
 name: Current NFL Market Comparison
 
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/action_network.py"
+      - "nfl/pro_market.py"
+      - "run_live_market.py"
+      - "tests/test_action_network.py"
+      - ".github/workflows/current-market.yml"
   workflow_dispatch:
     inputs:
       season:
@@ -17,8 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      TARGET_SEASON: ${{ inputs.season }}
-      TARGET_WEEK: ${{ inputs.week }}
+      TARGET_SEASON: ${{ inputs.season || '2026' }}
+      TARGET_WEEK: ${{ inputs.week || '' }}
 
     steps:
       - name: Checkout
@@ -33,7 +41,10 @@ jobs:
       - name: Install package
         run: python -m pip install -e .
 
-      - name: Compare fair scores with free ESPN markets
+      - name: Validate Action Network normalization
+        run: python -m pytest -q tests/test_action_network.py
+
+      - name: Compare fair scores with free multi-book markets
         run: |
           mkdir -p reports
           if [ -n "$TARGET_WEEK" ]; then
