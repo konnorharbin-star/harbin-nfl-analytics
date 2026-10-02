@@ -1,9 +1,9 @@
 {
   "canonical_probability_change_enabled": false,
   "graded_games": 0,
-  "ledger_rows": 0,
+  "ledger_rows": 15,
   "meaning": "Prospective 2026 probability evidence only. Historical predictions are not reconstructed into this ledger.",
   "promotion_eligible": false,
   "spec_version": "stage23_nested_probability_v1",
-  "status": "NO_PREDICTIONS"
+  "status": "NO_GRADED_GAMES"
 }
