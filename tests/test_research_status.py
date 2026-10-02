@@ -1,3 +1,4 @@
+from nfl.model_card import build_model_card
 from nfl.research_status import build_research_status
 
 
@@ -93,3 +94,25 @@ def test_missing_research_inputs_fail_closed() -> None:
     assert report["active_forward_candidates"] == []
     assert report["promotion_ready_forward_candidates"] == []
     assert report["canonical_model_change_enabled"] is False
+
+
+def test_model_card_surfaces_research_status_without_enabling_change() -> None:
+    card = build_model_card(
+        {},
+        {"release_state": "PAPER", "production_eligible": False},
+        {},
+        research_status={
+            "status": "TRACKING",
+            "research_decision": "keep canonical paths unchanged",
+            "active_forward_candidates": ["qb_total"],
+            "promotion_ready_forward_candidates": [],
+            "canonical_model_change_enabled": False,
+            "canonical_market_change_enabled": False,
+        },
+    )
+
+    status = card["research_status"]
+    assert status["status"] == "TRACKING"
+    assert status["active_forward_candidates"] == ["qb_total"]
+    assert status["canonical_model_change_enabled"] is False
+    assert status["canonical_market_change_enabled"] is False
