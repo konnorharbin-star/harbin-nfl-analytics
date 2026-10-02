@@ -26,12 +26,12 @@ permissions:
 
 concurrency:
   group: >-
-    ${{ github.event_name == 'pull_request'
-      && format('nfl-market-edge-shrinkage-pr-{0}', github.event.pull_request.number)
-      || github.event_name == 'workflow_run'
-      && format('nfl-generated-state-{0}', github.event.workflow_run.head_branch)
-      || format('nfl-generated-state-{0}', github.ref_name) }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    nfl-market-edge-shrinkage-${{
+      github.event_name == 'workflow_run'
+      && github.event.workflow_run.head_branch
+      || github.ref_name
+    }}
+  cancel-in-progress: true
 
 jobs:
   research:
@@ -80,8 +80,7 @@ jobs:
           git add             reports/market_edge_shrinkage.json             docs/market_edge_shrinkage.json
           if ! git diff --cached --quiet; then
             git commit -m "research: refresh NFL market-edge shrinkage"
-            git pull --rebase origin main
-            git push
+            bash scripts/push_generated_state.sh
           else
             echo "No market-edge shrinkage changes to commit."
           fi
