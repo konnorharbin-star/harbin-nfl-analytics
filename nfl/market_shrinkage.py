@@ -368,12 +368,15 @@ def evaluate_market_edge_shrinkage(
         if market_incremental_value:
             incremental_markets += 1
 
+        if probability_validated and alpha == 0.0:
+            market_status = "MARKET_ONLY_PREFERRED"
+        elif probability_validated:
+            market_status = "VALIDATED_SHRINKAGE"
+        else:
+            market_status = "NO_VALIDATED_SHRINKAGE"
+
         markets[market_type] = {
-            "status": (
-                "VALIDATED_SHRINKAGE"
-                if probability_validated
-                else "NO_VALIDATED_SHRINKAGE"
-            ),
+            "status": market_status,
             "alpha": alpha,
             "development_rows": development.height,
             "validation_rows": validation.height,
@@ -404,9 +407,17 @@ def evaluate_market_edge_shrinkage(
             "canonical_change_enabled": False,
         }
 
+    if incremental_markets == 0:
+        research_conclusion = "NO_INCREMENTAL_MODEL_VALUE"
+    elif incremental_markets == len(MARKETS):
+        research_conclusion = "BROAD_INCREMENTAL_MODEL_VALUE"
+    else:
+        research_conclusion = "PARTIAL_INCREMENTAL_MODEL_VALUE"
+
     return {
         "version": 1,
         "status": "RESEARCH_ONLY",
+        "research_conclusion": research_conclusion,
         "validation_season": validation_season,
         "holdout_season": holdout_season,
         "alpha_grid": list(alpha_grid),
@@ -416,6 +427,7 @@ def evaluate_market_edge_shrinkage(
         "markets": markets,
         "canonical_market_probability_change_enabled": False,
         "betting_policy_change_enabled": False,
+        "forward_shrinkage_shadow_recommended": False,
         "archive_entry_prices_verified": False,
         "meaning": (
             "Downstream research only. Alpha is selected before validation/holdout. "
