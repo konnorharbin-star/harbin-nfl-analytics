@@ -269,6 +269,7 @@ def test_release_gate_requires_broad_forward_clv_coverage(tmp_path) -> None:
         {"status": "OK"},
         evidence_path=evidence_path,
         live_path=live_path,
+        policy_path=_write_policy(tmp_path),
     )
     checks = {check["name"]: check for check in gate["checks"]}
 
