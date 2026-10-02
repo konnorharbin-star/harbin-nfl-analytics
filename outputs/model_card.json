@@ -70,7 +70,7 @@
       "home_win_brier": 0.22995807657360534,
       "margin_50_coverage": 0.5110294117647058,
       "margin_80_coverage": 0.7830882352941176,
-      "margin_nll": 3.9948617498156636,
+      "margin_nll": 3.9948617498156644,
       "margin_scale": 1.0,
       "status": "READY",
       "total_50_coverage": 0.5147058823529411,

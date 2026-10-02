@@ -10,13 +10,12 @@
 - Margin / total 80% coverage: **78.31% / 80.51%**.
 
 ## Monitoring and execution
-- Live readiness: **87.7/100**.
-- Portfolio mode: **PAPER**; proposed **1.04u**; approved **0.00u**.
+- Live readiness: **95.7/100**.
+- Portfolio mode: **PAPER**; proposed **1.22u**; approved **0.00u**.
 - Historical evidence: **2584 bets**, ROI **-7.84%**, CLV **—**.
 - Independent forward evidence: **0 bets**, ROI **—**, CLV **—**.
 
 ## Current blockers
-- multi_book_consensus: >=75% current games covered by 2+ verified books
 - historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks
 - historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV
 - historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons
@@ -26,7 +25,7 @@
 - live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV, complete entry provenance, and >=90% CLV coverage
 
 ## Operational alerts
-- multi-book consensus is limited
+- None.
 
 ## Interpretation
 A green software run, high readiness score, or low model error does not establish a profitable betting edge. Historical and independently graded forward evidence remain separate release requirements.

@@ -8,14 +8,11 @@
     "status": "OK",
     "target_games": 15
   },
-  "live_readiness_score": 87.7,
+  "live_readiness_score": 95.7,
   "meaning": "operational health; not a profitability or staking signal",
-  "monitor_alerts": [
-    "multi-book consensus is limited"
-  ],
+  "monitor_alerts": [],
   "production_eligible": false,
   "release_blockers": [
-    "multi_book_consensus: >=75% current games covered by 2+ verified books",
     "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
     "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
     "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
@@ -27,7 +24,7 @@
   "release_state": "PAPER",
   "source_failures": [],
   "sources": {
-    "current_market": "espn",
+    "current_market": "action_network, espn",
     "depth_charts": "OK",
     "football": "nflverse",
     "historical_market": "nflverse public archive",

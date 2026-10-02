@@ -1,7 +1,5 @@
 {
-  "alerts": [
-    "multi-book consensus is limited"
-  ],
+  "alerts": [],
   "drift_details": {
     "margin": {
       "live_mean": 2.4027483340583804,
@@ -28,7 +26,7 @@
   },
   "drift_reference": "reports/free_market_predictions.csv",
   "engineering_readiness_score": 95.3,
-  "live_readiness_score": 87.7,
+  "live_readiness_score": 95.7,
   "meaning": "operational/model-monitoring score; not a profitability guarantee",
   "scores": {
     "calibration": 91.80250233233775,
@@ -36,8 +34,8 @@
     "distribution_stability": 87.3,
     "freshness": 100.0,
     "market_coverage": 100.0,
-    "multi_book": 0.0,
+    "multi_book": 100.0,
     "output_completeness": 96.69616519174042
   },
-  "status": "WARN"
+  "status": "OK"
 }
