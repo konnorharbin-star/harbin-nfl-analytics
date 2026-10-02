@@ -120,7 +120,7 @@ jobs:
             reports/free_market_backtest.json \
             reports/free_market_bets.csv \
             reports/backtest_audit.json \
-            reports/evidence_report.json \\
+            reports/evidence_report.json \
             reports/production_policy.json
           if ! git diff --cached --quiet; then
             git commit -m "evidence: refresh free NFL historical market proof"
