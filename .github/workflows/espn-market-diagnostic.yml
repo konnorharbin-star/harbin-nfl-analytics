@@ -4,6 +4,8 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - "nfl/espn_market.py"
+      - "tests/test_espn_market.py"
       - "run_espn_market_diagnostic.py"
       - ".github/workflows/espn-market-diagnostic.yml"
   workflow_dispatch:

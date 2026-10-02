@@ -12,11 +12,14 @@ from urllib.request import Request, urlopen
 
 import polars as pl
 
+from nfl.book_identity import canonical_book_identity
+from nfl.contracts import DataContractError
 from nfl.current import next_unplayed_regular_week, unplayed_regular_games
 from nfl.data import NFLDataClient
 from nfl.espn_market import (
     ESPN_CORE_ODDS_URL,
     ESPN_SCOREBOARD_URL,
+    ESPNMarketClient,
     _event_teams,
     parse_espn_odds,
 )
@@ -228,6 +231,49 @@ def _core_probe(
     return output
 
 
+def _normalized_market_breadth(
+    markets: list[object],
+) -> dict[str, object]:
+    books_by_game: dict[str, set[str]] = {}
+    rows_by_game_market: dict[tuple[str, str], int] = {}
+    books: set[str] = set()
+    for market in markets:
+        game_id = str(getattr(market, "game_id", ""))
+        market_type = str(getattr(market, "market_type", ""))
+        book = canonical_book_identity(
+            getattr(market, "book", "") or getattr(market, "provider", "")
+        )
+        if not game_id or not market_type or not book:
+            continue
+        books.add(book)
+        books_by_game.setdefault(game_id, set()).add(book)
+        key = (game_id, market_type)
+        rows_by_game_market[key] = rows_by_game_market.get(key, 0) + 1
+
+    game_count = len(books_by_game)
+    multi_book_games = sum(
+        len(game_books) >= 2 for game_books in books_by_game.values()
+    )
+    return {
+        "rows": len(markets),
+        "books": sorted(books),
+        "book_count": len(books),
+        "games": game_count,
+        "multi_book_games": multi_book_games,
+        "multi_book_coverage": (
+            multi_book_games / game_count if game_count else 0.0
+        ),
+        "max_books_per_game": max(
+            (len(game_books) for game_books in books_by_game.values()),
+            default=0,
+        ),
+        "max_rows_per_game_market": max(
+            rows_by_game_market.values(),
+            default=0,
+        ),
+    }
+
+
 def _schedule_market_summary(target_frame: pl.DataFrame) -> dict[str, object]:
     market_columns = sorted(
         column
@@ -328,9 +374,25 @@ def main() -> None:
             "core_probe": _core_probe(event_id, headers=headers) if event_id else None,
         }
 
+    try:
+        normalized_markets = ESPNMarketClient().current_markets(
+            target_frame,
+            week=week,
+        )
+        normalized_market_breadth: dict[str, object] = {
+            "status": "READY",
+            **_normalized_market_breadth(normalized_markets),
+        }
+    except DataContractError as exc:
+        normalized_market_breadth = {
+            "status": "ERROR",
+            "error": f"{type(exc).__name__}: {exc}",
+        }
+
     output = {
         "season": args.season,
         "week": week,
+        "normalized_market_breadth": normalized_market_breadth,
         "target_games": target_frame.height,
         "target_pairs": sorted(f"{away}@{home}" for home, away in targets),
         "nflverse_schedule": _schedule_market_summary(target_frame),
