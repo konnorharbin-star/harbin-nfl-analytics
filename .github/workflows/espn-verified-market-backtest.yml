@@ -8,13 +8,10 @@ on:
       - "run_espn_verified_market_backtest.py"
       - "tests/test_espn_historical.py"
       - ".github/workflows/espn-verified-market-backtest.yml"
-  push:
-    branches: [main]
-    paths:
-      - "nfl/espn_historical.py"
-      - "run_espn_verified_market_backtest.py"
-      - "tests/test_espn_historical.py"
-      - ".github/workflows/espn-verified-market-backtest.yml"
+  workflow_run:
+    workflows:
+      - "Free NFL Market Backtest"
+    types: [completed]
   workflow_dispatch:
     inputs:
       start_season:
@@ -61,7 +58,13 @@ jobs:
         run: python -m pytest -q tests/test_espn_historical.py
 
   backtest:
-    if: github.event_name != 'pull_request'
+    if: >-
+      github.event_name == 'workflow_dispatch'
+      || (
+        github.event_name == 'workflow_run'
+        && github.event.workflow_run.conclusion == 'success'
+        && github.event.workflow_run.event != 'schedule'
+      )
     needs: validate
     runs-on: ubuntu-latest
     timeout-minutes: 240
@@ -72,6 +75,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
