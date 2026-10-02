@@ -1,0 +1,63 @@
+name: ESPN NFL Historical Movement Diagnostic
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/espn_historical.py"
+      - "tests/test_espn_historical.py"
+      - "run_espn_historical_movement_diagnostic.py"
+      - "run_espn_archive_coverage_diagnostic.py"
+      - ".github/workflows/espn-historical-movement-diagnostic.yml"
+  workflow_dispatch:
+    inputs:
+      season:
+        description: "Completed NFL season"
+        required: true
+        default: "2025"
+        type: string
+      week:
+        description: "Completed regular-season week"
+        required: true
+        default: "1"
+        type: string
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TARGET_SEASON: ${{ inputs.season || '2025' }}
+      TARGET_WEEK: ${{ inputs.week || '1' }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -e ".[dev]"
+      - name: Probe ESPN historical odds movement
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports
+          python run_espn_historical_movement_diagnostic.py \
+            --season "$TARGET_SEASON" \
+            --week "$TARGET_WEEK" \
+            | tee reports/espn_historical_movement_diagnostic.json
+      - name: Measure multi-season archived open-close coverage
+        shell: bash
+        run: |
+          set -o pipefail
+          python run_espn_archive_coverage_diagnostic.py \
+            --seasons "2023,2024,2025" \
+            --week 1 \
+            | tee reports/espn_archive_coverage_diagnostic.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: espn-nfl-historical-movement-diagnostic
+          path: |
+            reports/espn_historical_movement_diagnostic.json
+            reports/espn_archive_coverage_diagnostic.json
