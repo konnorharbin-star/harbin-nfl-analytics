@@ -34,6 +34,19 @@ A nonzero side survives only when one fixed ridge improves both MAE and RMSE:
 
 If no ridge clears that gate, that side falls back to the canonical direct-score baseline.
 
+## Real-source result
+
+The real nflverse audit covered 624 evaluation games, 208 in each of 2023, 2024, and 2025. Full Ruff, pytest, Stage 1, and canonical audit checks passed.
+
+Neither side cleared the predeclared gate:
+
+- **Margin:** selected ridge `none`; baseline retained. Aggregate MAE/RMSE remain `10.1966 / 13.0138`.
+- **Total:** selected ridge `none`; baseline retained. Aggregate MAE/RMSE remain `10.4926 / 13.4427`.
+- Margin ridge `8` reproduced the canonical margin almost exactly, which is expected from the algebraic similarity of the two rating forms, but it did not strictly improve every fold.
+- Total ridge `32` was the closest challenger: it improved both MAE and RMSE in 2023 and 2024, but regressed in 2025. Aggregate MAE improved slightly (`10.4926 → 10.4755`) while aggregate RMSE worsened (`13.4427 → 13.4786`), so it correctly failed the gate.
+
+Stage 20 therefore creates no 2026 shadow candidate and makes no canonical-score change.
+
 ## Evidence boundary
 
 Stage 20 is development research only. The evaluator hard-codes:
@@ -41,4 +54,4 @@ Stage 20 is development research only. The evaluator hard-codes:
 - `canonical_score_change_enabled=false`
 - `promotion_eligible=false`
 
-A surviving historical margin or total candidate would only justify a separately frozen 2026 prospective shadow experiment. Historical selection alone cannot alter canonical projections, probabilities, market edges, or stake sizing.
+Historical selection alone cannot alter canonical projections, probabilities, market edges, or stake sizing.
