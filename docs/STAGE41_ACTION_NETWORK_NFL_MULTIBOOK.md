@@ -27,11 +27,14 @@ For each sportsbook and market:
 - moneyline requires both home and away American prices;
 - spread requires both side prices plus complementary spread lines;
 - total requires both over and under prices at the same total;
-- at least one provider/market timestamp must be present;
+- provider update timestamps are used when present;
+- when the public NFL response omits provider update time, the UTC collector observation
+  time at response receipt becomes the auditable quote timestamp;
 - malformed or ambiguous data is skipped rather than synthesized.
 
 Rows remain independent by sportsbook. Prices from two books are never combined into a
-synthetic two-way quote.
+synthetic two-way quote. Collector observation time is not represented as a provider
+last-update time; it records when this system actually observed that public price.
 
 ## Sportsbook identity
 
