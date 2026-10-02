@@ -1,0 +1,85 @@
+{
+  "active_forward_candidates": [
+    "probability_home_win",
+    "probability_total_distribution",
+    "qb_total",
+    "recent_form_total"
+  ],
+  "canonical_market_change_enabled": false,
+  "canonical_model_change_enabled": false,
+  "forward_evidence": {
+    "candidate_promotion_evidence_count": 0,
+    "candidate_status": {
+      "probability_home_win": {
+        "graded_games": 0,
+        "minimum_games": 128,
+        "promotion_eligible": false,
+        "status": "ACCUMULATING_FORWARD_EVIDENCE"
+      },
+      "probability_total_distribution": {
+        "graded_games": 0,
+        "minimum_games": 128,
+        "promotion_eligible": false,
+        "status": "ACCUMULATING_FORWARD_EVIDENCE"
+      },
+      "qb_total": {
+        "graded_games": 0,
+        "minimum_games": 128,
+        "promotion_eligible": false,
+        "status": "ACCUMULATING_FORWARD_EVIDENCE"
+      },
+      "recent_form_total": {
+        "graded_games": 0,
+        "minimum_games": 128,
+        "promotion_eligible": false,
+        "status": "ACCUMULATING_FORWARD_EVIDENCE"
+      }
+    },
+    "canonical_betting": {
+      "forward_betting_gate_passed": false,
+      "graded_bets": 0,
+      "minimum_bets": 300,
+      "status": "ACCUMULATING_FORWARD_EVIDENCE"
+    },
+    "canonical_model_change_enabled": false,
+    "phase_status": "ACCUMULATING_FORWARD_EVIDENCE",
+    "production_release_authority": false
+  },
+  "forward_model_change_ready": false,
+  "historical_fair_score_research": {
+    "canonical_score_adjustment_enabled": false,
+    "fixed_qb_margin_enabled": false,
+    "fixed_qb_total_shadow_enabled": true,
+    "interpretation": "Stage 14 architecture selection is development evidence only. Stage 15 is authoritative for fixed QB specifications.",
+    "margin_architecture": "quarterback_state",
+    "margin_architecture_state": "SHADOW_CANDIDATE",
+    "margin_robustness_score": 0.006160735998525098,
+    "status": "DEVELOPMENT_ONLY",
+    "total_architecture": "baseline",
+    "total_architecture_state": "DISABLED",
+    "total_robustness_score": 0.0
+  },
+  "historical_model_change_ready": false,
+  "market_edge_change_ready": false,
+  "market_edge_research": {
+    "betting_policy_change_enabled": false,
+    "canonical_market_probability_change_enabled": false,
+    "incremental_model_value": {
+      "moneyline": false,
+      "spread": false,
+      "total": false
+    },
+    "incremental_model_value_markets": 0,
+    "interpretation": "Archive probability shrinkage is downstream research only; market data never enters the independent fair-score model.",
+    "selected_alpha": {
+      "moneyline": 0.0,
+      "spread": 0.0,
+      "total": 0.0
+    },
+    "status": "RESEARCH_ONLY"
+  },
+  "promotion_ready_forward_candidates": [],
+  "research_decision": "Keep the canonical fair-score and market-probability paths unchanged. Stage 14's QB-margin architecture was superseded by the fixed-spec Stage 15 margin rejection; Stage 30 found no incremental probability value versus the no-vig market. Continue only the already-frozen prospective 2026 candidate ledgers until their gates mature.",
+  "status": "TRACKING",
+  "version": 1
+}
