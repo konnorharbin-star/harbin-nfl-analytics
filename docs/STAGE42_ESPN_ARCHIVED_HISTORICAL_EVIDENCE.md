@@ -80,9 +80,12 @@ evaluation splits. Stage 42 does not force a market or deployment mode to pass.
 ## Automation
 
 Free ESPN Historical Market Backtest validates fixtures on pull requests. After merge
-or manual dispatch it builds the 2023–2025 archive, commits the canonical verified
-evidence through the shared generated-state reconciler, and triggers the canonical NFL
-model workflow to recalculate release state.
+or manual dispatch it builds verified 2024–2025 opening/closing evidence while using
+2023 as prior probability-training history. The live coverage diagnostic showed that
+2023 Week 1 has archived closes but no archived opens, so 2023 is not promoted as
+entry evidence. The workflow commits the canonical verified evidence through the shared
+generated-state reconciler and triggers the canonical NFL model workflow to recalculate
+release state.
 
 The optional The Odds API historical workflow remains available as a timestamped
 historical source but is no longer required simply to obtain verified archived
