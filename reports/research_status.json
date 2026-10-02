@@ -12,8 +12,8 @@
     "candidate_status": {
       "probability_home_win": {
         "graded_games": 0,
-        "ledger_capture_coverage": null,
-        "ledger_health_status": null,
+        "ledger_capture_coverage": 1.0,
+        "ledger_health_status": "PASS",
         "minimum_games": 128,
         "promotion_eligible": false,
         "promotion_gate_blockers": [],
@@ -21,8 +21,8 @@
       },
       "probability_total_distribution": {
         "graded_games": 0,
-        "ledger_capture_coverage": null,
-        "ledger_health_status": null,
+        "ledger_capture_coverage": 1.0,
+        "ledger_health_status": "PASS",
         "minimum_games": 128,
         "promotion_eligible": false,
         "promotion_gate_blockers": [],
@@ -30,8 +30,8 @@
       },
       "qb_total": {
         "graded_games": 0,
-        "ledger_capture_coverage": null,
-        "ledger_health_status": null,
+        "ledger_capture_coverage": 1.0,
+        "ledger_health_status": "PASS",
         "minimum_games": 128,
         "promotion_eligible": false,
         "promotion_gate_blockers": [],
@@ -39,8 +39,8 @@
       },
       "recent_form_total": {
         "graded_games": 0,
-        "ledger_capture_coverage": null,
-        "ledger_health_status": null,
+        "ledger_capture_coverage": 1.0,
+        "ledger_health_status": "PASS",
         "minimum_games": 128,
         "promotion_eligible": false,
         "promotion_gate_blockers": [],
