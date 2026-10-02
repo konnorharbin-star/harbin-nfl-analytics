@@ -156,6 +156,13 @@ Generated-state workflows now keep workflow-scoped concurrency and all use
 fetch/rebase/retry reconciled, while true content conflicts fail closed instead of
 overwriting another writer. CI simulates both cases against a local bare Git remote.
 
+### Stage 37 — ESPN multi-book breadth recovery
+
+The free ESPN collector now always treats Core odds as optional provider enrichment and
+preserves one row per game × market × canonical sportsbook instead of collapsing all
+providers to one market row. Core outages fall back to complete scoreboard quotes, and
+the live diagnostic reports actual normalized sportsbook breadth.
+
 ### Stage 4 — current NFL context
 
 The context layer now mirrors the NCAA current-only philosophy:
