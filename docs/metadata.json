@@ -1,6 +1,6 @@
 {
   "current_context": {
-    "as_of": "2026-10-02T02:05:57.795646+00:00",
+    "as_of": "2026-10-02T02:12:01.717760+00:00",
     "components": {
       "injuries_personnel": 1.0,
       "quarterback": 1.0,
@@ -61,7 +61,7 @@
     "status": "OK",
     "target_games": 16
   },
-  "generated_at": "2026-10-02T02:05:57.795646+00:00",
+  "generated_at": "2026-10-02T02:12:01.717760+00:00",
   "market_coverage": {
     "games": 16,
     "moneyline": 16,
@@ -115,15 +115,15 @@
     "candidate_pass": false,
     "holdout_games": 272,
     "holdout_season": 2025,
-    "home_win_brier": 0.22995807657360515,
+    "home_win_brier": 0.22995807657360534,
     "margin_50_coverage": 0.5110294117647058,
     "margin_80_coverage": 0.7830882352941176,
-    "margin_nll": 3.9948617498156627,
+    "margin_nll": 3.9948617498156644,
     "margin_scale": 1.0,
     "status": "READY",
     "total_50_coverage": 0.5147058823529411,
     "total_80_coverage": 0.8051470588235294,
-    "total_nll": 4.019776337747562,
+    "total_nll": 4.019776337747561,
     "total_scale": 1.0,
     "training_games": 815,
     "validation_season": 2024
