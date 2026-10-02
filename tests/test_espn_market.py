@@ -97,3 +97,129 @@ def test_espn_current_market_maps_team_aliases_without_network() -> None:
     assert len(markets) == 3
     assert {market.game_id for market in markets} == {"2026_04_JAX_LA"}
     assert {market.source_event_id for market in markets} == {"401888888"}
+
+
+def test_espn_current_market_preserves_distinct_core_books() -> None:
+    targets = pl.DataFrame(
+        {
+            "game_id": ["2026_04_BUF_KC"],
+            "home_team": ["KC"],
+            "away_team": ["BUF"],
+        }
+    )
+
+    scoreboard_odds = _odds()
+    core_odds = {
+        **_odds(),
+        "provider": {"name": "ESPN BET"},
+        "homeTeamOdds": {
+            "favorite": True,
+            "moneyLine": -160,
+            "spreadOdds": -108,
+        },
+        "awayTeamOdds": {
+            "favorite": False,
+            "moneyLine": 140,
+            "spreadOdds": -112,
+        },
+    }
+
+    class FixtureClient(ESPNMarketClient):
+        def scoreboard(self, *, week: int) -> dict[str, object]:
+            assert week == 4
+            return {
+                "events": [
+                    {
+                        "id": "401999999",
+                        "competitions": [
+                            {
+                                "competitors": [
+                                    {
+                                        "homeAway": "home",
+                                        "team": {"abbreviation": "KC"},
+                                    },
+                                    {
+                                        "homeAway": "away",
+                                        "team": {"abbreviation": "BUF"},
+                                    },
+                                ],
+                                "odds": [scoreboard_odds],
+                            }
+                        ],
+                    }
+                ]
+            }
+
+        def _core_odds(self, event_id: str) -> list[dict[str, object]]:
+            assert event_id == "401999999"
+            return [core_odds]
+
+    markets = FixtureClient().current_markets(targets, week=4)
+
+    assert len(markets) == 6
+    assert {market.book for market in markets} == {"ESPN BET"}
+        | {"ESPN BET" if scoreboard_odds["provider"]["name"] == "ESPN BET" else "Draft Kings"}
+    assert len(
+        {
+            (market.market_type, market.book)
+            for market in markets
+        }
+    ) == 6
+
+
+def test_espn_current_market_deduplicates_same_canonical_book() -> None:
+    targets = pl.DataFrame(
+        {
+            "game_id": ["2026_04_BUF_KC"],
+            "home_team": ["KC"],
+            "away_team": ["BUF"],
+        }
+    )
+
+    scoreboard_odds = {
+        **_odds(),
+        "provider": {"name": "Draft Kings"},
+    }
+    core_odds = {
+        **_odds(),
+        "provider": {"name": "DraftKings"},
+    }
+
+    class FixtureClient(ESPNMarketClient):
+        def scoreboard(self, *, week: int) -> dict[str, object]:
+            assert week == 4
+            return {
+                "events": [
+                    {
+                        "id": "401999999",
+                        "competitions": [
+                            {
+                                "competitors": [
+                                    {
+                                        "homeAway": "home",
+                                        "team": {"abbreviation": "KC"},
+                                    },
+                                    {
+                                        "homeAway": "away",
+                                        "team": {"abbreviation": "BUF"},
+                                    },
+                                ],
+                                "odds": [scoreboard_odds],
+                            }
+                        ],
+                    }
+                ]
+            }
+
+        def _core_odds(self, event_id: str) -> list[dict[str, object]]:
+            assert event_id == "401999999"
+            return [core_odds]
+
+    markets = FixtureClient().current_markets(targets, week=4)
+
+    assert len(markets) == 3
+    assert {market.market_type for market in markets} == {
+        "moneyline",
+        "spread",
+        "total",
+    }
