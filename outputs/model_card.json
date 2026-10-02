@@ -81,6 +81,19 @@
   "production_eligible": false,
   "purpose": "Leakage-safe NFL fair-score, probability, market-research, portfolio-risk, grading, and monitoring platform.",
   "release_state": "PAPER",
+  "research_status": {
+    "active_forward_candidates": [
+      "probability_home_win",
+      "probability_total_distribution",
+      "qb_total",
+      "recent_form_total"
+    ],
+    "canonical_market_change_enabled": false,
+    "canonical_model_change_enabled": false,
+    "promotion_ready_forward_candidates": [],
+    "research_decision": "Keep the canonical fair-score and market-probability paths unchanged. Stage 14's QB-margin architecture was superseded by the fixed-spec Stage 15 margin rejection; Stage 30 found no incremental probability value versus the no-vig market. Continue only the already-frozen prospective 2026 candidate ledgers until their gates mature.",
+    "status": "TRACKING"
+  },
   "risk": {
     "drawdown_throttle": true,
     "portfolio_caps": true,
