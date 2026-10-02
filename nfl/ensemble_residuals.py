@@ -16,7 +16,6 @@ from math import sqrt
 
 import numpy as np
 import polars as pl
-from sklearn.compose import TransformedTargetRegressor
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import Ridge
