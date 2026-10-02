@@ -7,11 +7,13 @@ on:
       - "NFL Live Shadow Grading"
       - "NFL QB Total Forward Grade"
       - "NFL Probability Forward Grade"
+      - "NFL Forward Ledger Health"
     types: [completed]
   pull_request:
     branches: [main]
     paths:
       - "nfl/forward_shadow.py"
+      - "nfl/forward_ledger_health.py"
       - "run_forward_shadow.py"
       - "tests/test_forward_shadow.py"
       - "docs/STAGE26_FORWARD_SHADOW_BUILD.md"
@@ -23,6 +25,7 @@ on:
       - "reports/recent_form_forward.json"
       - "reports/qb_total_forward.json"
       - "reports/probability_forward.json"
+      - "reports/forward_ledger_health.json"
       - "nfl/forward_shadow.py"
       - "run_forward_shadow.py"
       - ".github/workflows/forward-shadow-summary.yml"

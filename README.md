@@ -126,6 +126,15 @@ which ideas are rejected, superseded, or still accumulating prospective evidence
 surfaces the current research decision in the model card. The registry cannot enable a
 canonical model or market change.
 
+### Stage 33 — forward-ledger health
+
+`nfl/forward_ledger_health.py` audits inception-aware capture completeness for every
+frozen 2026 candidate. A future candidate promotion now requires exactly one valid
+pre-kickoff snapshot for every eligible game in each opened week, with no late,
+duplicate, wrong-spec, or schedule-inconsistent rows. Games that kicked off before a
+candidate's first persisted snapshot remain outside that candidate's prospective sample
+and are never backfilled.
+
 ### Stage 4 — current NFL context
 
 The context layer now mirrors the NCAA current-only philosophy:
