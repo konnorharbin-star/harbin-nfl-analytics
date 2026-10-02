@@ -17,7 +17,7 @@
     "status": "OK",
     "target_games": 15
   },
-  "generated_at": "2026-10-02T04:33:04.186920+00:00",
+  "generated_at": "2026-10-02T04:41:38.244773+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
@@ -39,6 +39,7 @@
       "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
       "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
       "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
+      "production_policy: frozen nested chronological policy is production-validated with at least two enabled markets",
       "forward_entry_integrity: 100% graded forward bets have execution-ready, timestamp-valid entry quotes",
       "forward_clv_coverage: >=90% of graded forward bets have a valid later pre-kickoff closing snapshot",
       "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV, complete entry provenance, and >=90% CLV coverage"
@@ -71,7 +72,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-02T04:32:46.525479+00:00",
+    "model_generated_at": "2026-10-02T04:41:17.711048+00:00",
     "prediction_games": 15,
     "prediction_rows": 45,
     "season": 2026,
@@ -96,7 +97,7 @@
     ],
     "drift_details": {
       "margin": {
-        "live_mean": 2.4027483340583964,
+        "live_mean": 2.4027483340583804,
         "live_n": 45,
         "live_std": 3.0577126376670383,
         "mean_z": 0.1056,
@@ -107,9 +108,9 @@
         "std_ratio": 0.7394
       },
       "total": {
-        "live_mean": 46.07506525143321,
+        "live_mean": 46.07506525143322,
         "live_n": 45,
-        "live_std": 2.8853722701146007,
+        "live_std": 2.885372270114602,
         "mean_z": 0.4104,
         "reference_mean": 44.63397276559048,
         "reference_n": 1087,
@@ -121,7 +122,7 @@
     "live_readiness_score": 87.7,
     "recent_readiness_delta": 0.0,
     "scores": {
-      "calibration": 91.80250233233778,
+      "calibration": 91.80250233233775,
       "context": 98.33333333333334,
       "distribution_stability": 87.3,
       "freshness": 100.0,
@@ -181,15 +182,15 @@
     "candidate_pass": false,
     "holdout_games": 272,
     "holdout_season": 2025,
-    "home_win_brier": 0.22995807657360515,
+    "home_win_brier": 0.22995807657360534,
     "margin_50_coverage": 0.5110294117647058,
     "margin_80_coverage": 0.7830882352941176,
-    "margin_nll": 3.9948617498156627,
+    "margin_nll": 3.9948617498156636,
     "margin_scale": 1.0,
     "status": "READY",
     "total_50_coverage": 0.5147058823529411,
     "total_80_coverage": 0.8051470588235294,
-    "total_nll": 4.019776337747562,
+    "total_nll": 4.019776337747561,
     "total_scale": 1.0,
     "training_games": 815,
     "validation_season": 2024
@@ -266,6 +267,7 @@
       "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
       "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
       "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
+      "production_policy: frozen nested chronological policy is production-validated with at least two enabled markets",
       "forward_entry_integrity: 100% graded forward bets have execution-ready, timestamp-valid entry quotes",
       "forward_clv_coverage: >=90% of graded forward bets have a valid later pre-kickoff closing snapshot",
       "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV, complete entry provenance, and >=90% CLV coverage"
@@ -305,7 +307,7 @@
         "passed": true,
         "requirement": "chronological NFL probability holdout meets calibration guardrails",
         "value": {
-          "brier": 0.22995807657360515,
+          "brier": 0.22995807657360534,
           "margin_80_coverage": 0.7830882352941176,
           "total_80_coverage": 0.8051470588235294
         }
@@ -359,6 +361,22 @@
             null,
             null
           ]
+        }
+      },
+      {
+        "detail": "",
+        "name": "production_policy",
+        "passed": false,
+        "requirement": "frozen nested chronological policy is production-validated with at least two enabled markets",
+        "value": {
+          "deployment_mode": "paper",
+          "enabled_markets": [
+            "moneyline",
+            "spread",
+            "total"
+          ],
+          "source": "paper only; no verified archived opening-entry sample",
+          "split": "unavailable"
         }
       },
       {
@@ -423,18 +441,6 @@
   "schema_version": 1,
   "status": "WARN",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 65.0,
-      "generated_at": "2026-10-02T02:06:19.153371+00:00",
-      "live_readiness_score": 84.4,
-      "model_generated_at": "2026-10-02T02:05:57.795646+00:00",
-      "publication_status": "WARN",
-      "release_state": "RESEARCH",
-      "season": 2026,
-      "week": 4
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -566,6 +572,18 @@
       "release_state": "PAPER",
       "season": 2026,
       "week": 4
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 87.3,
+      "generated_at": "2026-10-02T04:33:04.186920+00:00",
+      "live_readiness_score": 87.7,
+      "model_generated_at": "2026-10-02T04:32:46.525479+00:00",
+      "publication_status": "WARN",
+      "release_state": "PAPER",
+      "season": 2026,
+      "week": 4
     }
   ],
   "warnings": [
@@ -574,6 +592,7 @@
     "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
     "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
     "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
+    "production_policy: frozen nested chronological policy is production-validated with at least two enabled markets",
     "forward_entry_integrity: 100% graded forward bets have execution-ready, timestamp-valid entry quotes",
     "forward_clv_coverage: >=90% of graded forward bets have a valid later pre-kickoff closing snapshot",
     "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV, complete entry provenance, and >=90% CLV coverage"
