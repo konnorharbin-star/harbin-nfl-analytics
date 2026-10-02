@@ -56,14 +56,40 @@ The summary also records:
 
 In HALTED mode no candidate or real-stake allocation is permitted.
 
+## Committed exposure across repeated runs
+
+Production concentration limits now include already-authorized future `BET` decisions
+from `history/portfolio_decisions_v1.csv`. This prevents a later model refresh from
+treating earlier open bets as if their risk had disappeared.
+
+For the current target season/week, prior future BET rows reserve:
+
+- slate/week units;
+- game units;
+- selected-team exposure;
+- market exposure;
+- sportsbook exposure;
+- kickoff-window exposure;
+- max-bet-count capacity.
+
+An already-committed game/market cannot receive a second production stake on a later
+run. Completed/past-kickoff rows do not reserve future capacity.
+
+Production also requires the committed-exposure ledger to be readable and internally
+valid. If that ledger is missing or contains an invalid open BET row for the target
+period, an otherwise open production release becomes `HALTED` rather than assuming
+zero prior exposure.
+
 ## Regression coverage
 
 The operational parity tests now prove that:
 
 1. a stale production quote receives zero candidate units and stays PASS;
 2. a production bankroll hard stop reports HALTED;
-3. a hard stop produces zero candidate and real stake;
-4. the explicit market-book execution minimum remains present in policy defaults.
+3. a missing required committed-exposure ledger reports HALTED;
+4. a prior future BET reserves next-run slate/correlation capacity;
+5. the same game/market cannot be re-approved while that BET remains open;
+6. the explicit market-book and committed-ledger requirements remain policy defaults.
 
 These are release-safety tests, not betting-edge evidence.
 
@@ -78,7 +104,7 @@ With Stage 27, the production shell contains the controls specified by the build
 - executable-book and timestamp requirements;
 - stale-quote protection;
 - explicit downstream production HALT;
-- decision ledger;
+- decision ledger with repeated-run committed exposure reservation;
 - independent grading and CLV;
 - monitoring/health/audit snapshots;
 - publication reconciliation;

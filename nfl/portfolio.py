@@ -179,12 +179,108 @@ def _team_keys(row: Mapping[str, object]) -> list[str]:
     return []
 
 
+def _parse_utc(value: object) -> datetime | None:
+    if value in {None, ""}:
+        return None
+    try:
+        stamp = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if stamp.tzinfo is None:
+        stamp = stamp.replace(tzinfo=UTC)
+    return stamp.astimezone(UTC)
+
+
+def load_committed_production_exposure(
+    path: str | Path,
+    candidate_rows: list[dict[str, object]],
+    *,
+    now: datetime | None = None,
+) -> tuple[list[dict[str, object]], dict[str, object]]:
+    """Load previously authorized, still-open BET decisions for target weeks."""
+
+    target_periods: set[tuple[int, int]] = set()
+    for row in candidate_rows:
+        try:
+            target_periods.add((int(row["season"]), int(row["week"])))
+        except (KeyError, TypeError, ValueError):
+            continue
+
+    source = Path(path)
+    base = {
+        "ledger_available": False,
+        "integrity_ok": False,
+        "open_bets": 0,
+        "open_units": 0.0,
+        "invalid_rows": 0,
+        "target_periods": [list(value) for value in sorted(target_periods)],
+        "reason": "committed-exposure ledger is unavailable",
+    }
+    if not source.exists():
+        return [], base
+
+    try:
+        with source.open(newline="") as handle:
+            rows = list(csv.DictReader(handle))
+    except OSError:
+        return [], {**base, "reason": "committed-exposure ledger is unreadable"}
+
+    reference = now or datetime.now(UTC)
+    if reference.tzinfo is None:
+        reference = reference.replace(tzinfo=UTC)
+    reference = reference.astimezone(UTC)
+
+    open_rows: list[dict[str, object]] = []
+    invalid_rows = 0
+    for row in rows:
+        if str(row.get("portfolio_action") or "").upper() != "BET":
+            continue
+        units = _number(row.get("portfolio_stake_units"))
+        if units <= 0:
+            continue
+        try:
+            period = (int(row["season"]), int(row["week"]))
+        except (KeyError, TypeError, ValueError):
+            invalid_rows += 1
+            continue
+        if target_periods and period not in target_periods:
+            continue
+        kickoff = _parse_utc(row.get("kickoff"))
+        if kickoff is None:
+            invalid_rows += 1
+            continue
+        if kickoff <= reference:
+            continue
+        item = dict(row)
+        item["_committed_units"] = units
+        open_rows.append(item)
+
+    integrity_ok = invalid_rows == 0
+    return open_rows, {
+        "ledger_available": True,
+        "integrity_ok": integrity_ok,
+        "open_bets": len(open_rows),
+        "open_units": round(
+            sum(float(row["_committed_units"]) for row in open_rows),
+            6,
+        ),
+        "invalid_rows": invalid_rows,
+        "target_periods": [list(value) for value in sorted(target_periods)],
+        "reason": (
+            "committed production exposure loaded"
+            if integrity_ok
+            else "committed-exposure ledger contains invalid open BET rows"
+        ),
+    }
+
+
 def apply_portfolio_controls(
     candidates: pl.DataFrame,
     *,
     policy: dict[str, object] | None = None,
     release_gate: dict[str, object] | None = None,
     live_bets_path: str | Path = "reports/live_graded_bets.csv",
+    decision_ledger_path: str | Path = "history/portfolio_decisions_v1.csv",
     now: datetime | None = None,
 ) -> tuple[pl.DataFrame, dict[str, object]]:
     """Allocate cap-constrained paper/shadow/production units to NFL opportunities."""
@@ -202,6 +298,19 @@ def apply_portfolio_controls(
     bankroll = build_bankroll_risk_state(live_bets_path, limits)
     require_history = bool(limits.get("require_live_history_for_production", True))
     history_ok = bool(bankroll["history_available"]) or not require_history
+    candidate_rows = candidates.to_dicts() if not candidates.is_empty() else []
+    committed_rows, committed_exposure = load_committed_production_exposure(
+        decision_ledger_path,
+        candidate_rows,
+        now=now,
+    )
+    require_exposure_ledger = bool(
+        limits.get("require_open_exposure_ledger_for_production", True)
+    )
+    exposure_ok = (
+        bool(committed_exposure["ledger_available"])
+        and bool(committed_exposure["integrity_ok"])
+    ) or not require_exposure_ledger
     production_gate_open = (
         bool(gate.get("production_eligible"))
         and policy_mode == "production"
@@ -209,12 +318,18 @@ def apply_portfolio_controls(
     production_allowed = (
         production_gate_open
         and history_ok
+        and exposure_ok
         and not bool(bankroll["hard_stop"])
     )
     if production_gate_open and not history_ok:
         production_block_reason = (
             "production release gate is open but the independent live betting "
             "ledger is unavailable"
+        )
+    elif production_gate_open and not exposure_ok:
+        production_block_reason = str(
+            committed_exposure.get("reason")
+            or "committed production exposure cannot be verified"
         )
     elif production_gate_open and bool(bankroll["hard_stop"]):
         production_block_reason = str(
@@ -243,9 +358,10 @@ def apply_portfolio_controls(
             "approved_bets": 0,
             "approved_units": 0.0,
             "bankroll_risk": bankroll,
+            "committed_exposure": committed_exposure,
         }
 
-    rows = candidates.to_dicts()
+    rows = candidate_rows
     rows.sort(
         key=lambda row: (
             _number(row.get("quant_ev")),
@@ -274,6 +390,28 @@ def apply_portfolio_controls(
     by_market: dict[str, float] = {}
     by_book: dict[str, float] = {}
     by_window: dict[str, float] = {}
+    committed_keys: set[tuple[str, str]] = set()
+    active_committed = committed_rows if production_gate_open else []
+    for committed in active_committed:
+        units = _number(committed.get("_committed_units"))
+        game = str(committed.get("game_id") or "unknown")
+        market = str(committed.get("quant_market") or "unknown").lower()
+        book = str(committed.get("quant_book") or "unattributed")
+        window = _kickoff_bucket(
+            committed.get("kickoff", committed.get("date")),
+            bucket_hours,
+        )
+        slate += units
+        by_game[game] = by_game.get(game, 0.0) + units
+        by_market[market] = by_market.get(market, 0.0) + units
+        by_book[book] = by_book.get(book, 0.0) + units
+        by_window[window] = by_window.get(window, 0.0) + units
+        for team in _team_keys(committed):
+            by_team[team] = by_team.get(team, 0.0) + units
+        committed_keys.add((game, market))
+
+    committed_bets = len(active_committed)
+    committed_units = slate
     allocated = 0
     blocked = 0
 
@@ -301,8 +439,13 @@ def apply_portfolio_controls(
             )
             continue
 
-        if signal == "PASS" or proposed <= 0 or allocated >= max_bets or multiplier <= 0:
-            if allocated >= max_bets and signal != "PASS":
+        if (
+            signal == "PASS"
+            or proposed <= 0
+            or committed_bets + allocated >= max_bets
+            or multiplier <= 0
+        ):
+            if committed_bets + allocated >= max_bets and signal != "PASS":
                 row["portfolio_limit_reason"] = "max bet count"
             continue
 
@@ -314,6 +457,12 @@ def apply_portfolio_controls(
             bucket_hours,
         )
         teams = _team_keys(row)
+
+        if production_allowed and (game, market) in committed_keys:
+            row["portfolio_limit_reason"] = (
+                "production stake already committed for game/market"
+            )
+            continue
 
         residuals = [
             caps["slate"] - slate,
@@ -358,6 +507,13 @@ def apply_portfolio_controls(
         "production_eligible": production_allowed,
         "production_block_reason": production_block_reason,
         "bankroll_risk": bankroll,
+        "committed_exposure": {
+            **committed_exposure,
+            "reserved_open_bets": committed_bets,
+            "reserved_open_units": round(committed_units, 6),
+            "total_open_bets_after_allocation": committed_bets + allocated,
+            "total_open_units_after_allocation": round(slate, 6),
+        },
         "proposed_units": round(
             sum(_number(row.get("paper_stake_units")) for row in rows),
             6,

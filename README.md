@@ -145,9 +145,9 @@ Key controls:
 
 - `nfl/policy.py` — NFL-specific PASS/LEAN/BET/STRONG research policy and capped fractional Kelly.
 - `nfl/execution_market.py` — fails closed on invalid odds/line, sportsbook provenance, market-book count, stale/future quote, or a quote that is not strictly pre-kickoff.
-- `nfl/portfolio.py` — slate/game/team/market/book/kickoff caps plus drawdown and trailing-performance throttles. Real stake stays zero unless the production gate opens.
+- `nfl/portfolio.py` — slate/game/team/market/book/kickoff caps, committed-open exposure reservation, drawdown throttles, and fail-closed production halts. Real stake stays zero unless every production safety check passes.
 - `nfl/line_history.py` — timestamped forward market snapshots with explicit UTC kickoff.
-- `nfl/decision_ledger.py` — append-only cap-constrained PAPER/SHADOW/BET decisions.
+- `nfl/decision_ledger.py` — append-only cap-constrained PAPER/SHADOW/BET decisions; open production BETs are reserved against later-run exposure caps.
 - `nfl/grading.py` — independent grading of the earliest eligible decision per game/market and later pre-kickoff CLV observations.
 - `nfl/proof.py` — separates broad archive research from stronger promotion-quality entry evidence.
 - `nfl/monitoring.py`, `nfl/health.py`, `nfl/model_card.py` — operational observability.
@@ -175,6 +175,18 @@ at the release gate. When production is open, a stale/non-executable quote remai
 If a downstream bankroll/history safety rule blocks an otherwise open production
 release, the portfolio reports `mode=halted`, zero allocation, and an explicit
 `production_block_reason`.
+
+Repeated production runs also reserve already-authorized future `BET` decisions from
+the append-only decision ledger before sizing new opportunities. Existing open stakes
+count against slate, game, team, market, book, kickoff-window, and max-bet limits, and
+the same game/market cannot be re-approved while that production bet remains open.
+Production fails closed if the committed-exposure ledger is missing or invalid.
+
+Repeated production runs also reserve every still-open future `BET` already persisted
+in the decision ledger. Those committed units count against week/slate, game, team,
+market, book, kickoff-window, and bet-count caps, and the same game/market cannot be
+approved twice while the earlier stake remains open. Production halts if this committed
+exposure cannot be read or verified rather than assuming prior exposure is zero.
 
 ### NCAA-style audit suite
 
