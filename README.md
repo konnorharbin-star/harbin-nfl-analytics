@@ -186,6 +186,13 @@ stop cleanly if newer source/workflow/test changes have landed since the run beg
 This prevents stale calculations from rebasing across a newer model revision and
 temporarily replacing outputs produced by newer code.
 
+### Stage 41 — NCAA-parity free NFL multi-book source
+
+The NCAA model's free Action Network scoreboard enrichment is now mirrored for NFL.
+ESPN remains a verified source, Action Network adds independent per-book quotes, and
+The Odds API remains optional. Canonical book identity prevents the same DraftKings
+quote family from being counted twice across providers.
+
 ### Stage 4 — current NFL context
 
 The context layer now mirrors the NCAA current-only philosophy:
