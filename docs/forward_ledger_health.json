@@ -1,0 +1,97 @@
+{
+  "candidates": {
+    "probability_home_win": {
+      "capture_coverage": 1.0,
+      "captured_eligible_games": 15,
+      "duplicate_rows": 0,
+      "eligible_games": 15,
+      "inception_at": "2026-10-02T00:52:55.270919+00:00",
+      "invalid_spec_rows": 0,
+      "invalid_timing_rows": 0,
+      "missing_game_ids": [],
+      "name": "probability_home_win",
+      "opened_weeks": [
+        {
+          "season": 2026,
+          "week": 4
+        }
+      ],
+      "promotion_sample_eligible": true,
+      "rows": 15,
+      "status": "PASS",
+      "unexpected_game_ids": [],
+      "valid_rows": 15
+    },
+    "probability_total_distribution": {
+      "capture_coverage": 1.0,
+      "captured_eligible_games": 15,
+      "duplicate_rows": 0,
+      "eligible_games": 15,
+      "inception_at": "2026-10-02T00:52:55.270919+00:00",
+      "invalid_spec_rows": 0,
+      "invalid_timing_rows": 0,
+      "missing_game_ids": [],
+      "name": "probability_total_distribution",
+      "opened_weeks": [
+        {
+          "season": 2026,
+          "week": 4
+        }
+      ],
+      "promotion_sample_eligible": true,
+      "rows": 15,
+      "status": "PASS",
+      "unexpected_game_ids": [],
+      "valid_rows": 15
+    },
+    "qb_total": {
+      "capture_coverage": 1.0,
+      "captured_eligible_games": 16,
+      "duplicate_rows": 0,
+      "eligible_games": 16,
+      "inception_at": "2026-10-01T22:33:17.320464+00:00",
+      "invalid_spec_rows": 0,
+      "invalid_timing_rows": 0,
+      "missing_game_ids": [],
+      "name": "qb_total",
+      "opened_weeks": [
+        {
+          "season": 2026,
+          "week": 4
+        }
+      ],
+      "promotion_sample_eligible": true,
+      "rows": 16,
+      "status": "PASS",
+      "unexpected_game_ids": [],
+      "valid_rows": 16
+    },
+    "recent_form_total": {
+      "capture_coverage": 1.0,
+      "captured_eligible_games": 16,
+      "duplicate_rows": 0,
+      "eligible_games": 16,
+      "inception_at": "2026-10-01T14:51:55.905008+00:00",
+      "invalid_spec_rows": 0,
+      "invalid_timing_rows": 0,
+      "missing_game_ids": [],
+      "name": "recent_form_total",
+      "opened_weeks": [
+        {
+          "season": 2026,
+          "week": 4
+        }
+      ],
+      "promotion_sample_eligible": true,
+      "rows": 16,
+      "status": "PASS",
+      "unexpected_game_ids": [],
+      "valid_rows": 16
+    }
+  },
+  "meaning": "Each frozen candidate must have exactly one valid pre-kickoff snapshot for every eligible game in every week it has opened. Games that kicked off before a candidate's first persisted snapshot are outside that candidate's prospective sample and are never backfilled.",
+  "promotion_requires_ledger_health": true,
+  "season": 2026,
+  "status": "PASS",
+  "version": 1
+}
