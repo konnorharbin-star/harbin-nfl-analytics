@@ -1,0 +1,118 @@
+name: Free ESPN Historical Market Backtest
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/espn_historical.py"
+      - "run_espn_verified_market_backtest.py"
+      - "tests/test_espn_historical.py"
+      - ".github/workflows/espn-verified-market-backtest.yml"
+  push:
+    branches: [main]
+    paths:
+      - "nfl/espn_historical.py"
+      - "run_espn_verified_market_backtest.py"
+      - "tests/test_espn_historical.py"
+      - ".github/workflows/espn-verified-market-backtest.yml"
+  workflow_dispatch:
+    inputs:
+      start_season:
+        description: "First NFL season"
+        required: true
+        default: "2023"
+        type: string
+      end_season:
+        description: "Last NFL season"
+        required: true
+        default: "2025"
+        type: string
+      refresh:
+        description: "Refresh nflverse schedule data"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: >-
+    nfl-espn-verified-market-backtest-${{
+      github.event_name == 'workflow_run'
+      && github.event.workflow_run.head_branch
+      || github.ref_name
+    }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -e ".[dev]"
+      - name: ESPN archive evidence tests
+        run: python -m pytest -q tests/test_espn_historical.py
+
+  backtest:
+    if: github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      START_SEASON: ${{ inputs.start_season || '2023' }}
+      END_SEASON: ${{ inputs.end_season || '2025' }}
+      REFRESH: ${{ inputs.refresh || false }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -e ".[dev]"
+
+      - name: Build free ESPN verified historical evidence
+        shell: bash
+        run: |
+          args=(
+            --start-season "$START_SEASON"
+            --end-season "$END_SEASON"
+          )
+          if [ "$REFRESH" = "true" ]; then
+            args+=(--refresh)
+          fi
+          python run_espn_verified_market_backtest.py "${args[@]}"
+
+      - name: Upload verified evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-espn-verified-historical-evidence
+          path: |
+            reports/verified_market_bets.csv
+            reports/verified_market_backtest.json
+            reports/evidence_report.json
+            reports/production_policy.json
+
+      - name: Commit verified historical evidence
+        shell: bash
+        run: |
+          git config user.name "harbin-nfl-evidence-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            reports/verified_market_bets.csv \
+            reports/verified_market_backtest.json \
+            reports/evidence_report.json \
+            reports/production_policy.json
+          if ! git diff --cached --quiet; then
+            git commit -m "evidence: refresh free ESPN NFL historical proof"
+            bash scripts/push_generated_state.sh
+          else
+            echo "No ESPN historical evidence changes to commit."
+          fi
