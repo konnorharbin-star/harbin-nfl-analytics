@@ -108,7 +108,7 @@
       "wins": 289
     }
   },
-  "note": "Free nflverse archive-final fallbacks and opening-line observations without opening juice remain valid research observations, but they are not promotion-quality entry-price evidence. ROBUST status requires observed entry prices plus positive uncertainty-adjusted ROI/CLV across multiple markets and seasons with broad closing-snapshot coverage.",
+  "note": "Free nflverse archive-final fallbacks and opening-line observations without opening juice remain valid research observations, but they are not promotion-quality entry-price evidence. ESPN provider-labeled archived opening/closing stages qualify without fabricating timestamps. ROBUST status requires verified entry prices plus positive uncertainty-adjusted ROI/CLV across multiple markets and seasons with broad closing-snapshot coverage.",
   "overall": {
     "average_clv_proxy": null,
     "average_expected_value_per_unit": 0.18727567027766845,
@@ -137,6 +137,7 @@
     "positive_seasons": 0,
     "raw_archive_bets": 3069,
     "verified_archive_bets": 0,
+    "verified_archived_open_close_bets": 0,
     "verified_bets": 0,
     "verified_clv_coverage": 0.0,
     "verified_clv_samples": 0,
@@ -145,12 +146,14 @@
       null,
       null
     ],
-    "verified_roi_per_unit_staked": null
+    "verified_roi_per_unit_staked": null,
+    "verified_timestamped_provider_bets": 0
   },
   "source": {
     "api_key_required": false,
     "clv_label": "opening-to-archive-final CLV proxy",
     "entry_price_rule": "Only the exact price observed at entry can qualify as verified entry-price evidence. Opening spread/total lines without opening juice remain research-only.",
+    "historical_entry_provenance": "explicit provider-labeled opening stage or timestamped provider entry",
     "historical_market": "nflverse schedules/nfldata public archive",
     "initial_lines_coverage": {
       "available": true,
