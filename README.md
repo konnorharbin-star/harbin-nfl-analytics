@@ -216,6 +216,14 @@ verified-provider CSV. Provider evidence must be explicitly supplied to
 verified ESPN/provider file. This prevents fixture/test results from depending on
 unrelated generated state.
 
+### Stage 45 — fixed non-QB personnel context validation
+
+A leak-free historical audit tested whether non-QB starter, offensive-line,
+skill-position, and defensive availability improve the independent fair-score margin
+or total. Source coverage was 100% across 2022–2025 (831/831 games), but no fixed
+specification improved both MAE and RMSE in every 2023–2025 fold. No personnel shadow
+candidate is created and the canonical fair score remains unchanged.
+
 
 ### Stage 4 — current NFL context
 
