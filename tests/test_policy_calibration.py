@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import polars as pl
 
-from nfl.policy_calibration import derive_policy_from_frame
+from nfl.policy_calibration import derive_policy_from_frame, derive_production_policy
 
 
 def _rows(*, evaluation_profit: float = 0.9, verified: bool = True) -> pl.DataFrame:
@@ -77,3 +77,26 @@ def test_unverified_profitable_rows_never_select_policy() -> None:
 
     assert policy["diagnostics"]["raw_archive_rows"] == 300
     assert policy["diagnostics"]["promotion_rows"] == 150
+
+
+def test_file_calibration_reads_optional_verified_provider_bets(tmp_path) -> None:
+    free_path = tmp_path / "free.csv"
+    _rows(verified=False).write_csv(free_path)
+    verified_path = tmp_path / "verified.csv"
+    _rows().write_csv(verified_path)
+    evidence_path = tmp_path / "evidence.json"
+    evidence_path.write_text(
+        '{"status":"ROBUST","promotion_sample":{"entry_quote_verified":true}}',
+        encoding="utf-8",
+    )
+
+    policy = derive_production_policy(
+        bets_path=free_path,
+        verified_bets_path=verified_path,
+        evidence_path=evidence_path,
+        output_path=tmp_path / "policy.json",
+    )
+
+    assert policy["diagnostics"]["promotion_rows"] == 150
+    assert policy["diagnostics"]["selection_uses_evaluation"] is False
+    assert policy["markets"]["moneyline"]["enabled"] is True
