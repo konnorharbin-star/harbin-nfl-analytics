@@ -1,0 +1,120 @@
+{
+  "archived_open_close_verified": true,
+  "bets": 1632,
+  "by_market": {
+    "moneyline": {
+      "average_clv_proxy": 0.002354807850648687,
+      "average_expected_value_per_unit": 0.2699312108424267,
+      "average_probability_edge": 0.09582428137918829,
+      "bets": 456,
+      "clv_samples": 455,
+      "losses": 293,
+      "max_drawdown": 75.46341015173812,
+      "net_units": -39.452605374225215,
+      "pushes": 1,
+      "roi_ci_95_high": 0.04124587457582396,
+      "roi_ci_95_low": -0.21096262056556309,
+      "roi_per_unit_staked": -0.08651887143470442,
+      "wins": 162
+    },
+    "spread": {
+      "average_clv_proxy": 0.1670616113744076,
+      "average_expected_value_per_unit": 0.13351610043164508,
+      "average_probability_edge": 0.09289877371219506,
+      "bets": 423,
+      "clv_samples": 422,
+      "losses": 216,
+      "max_drawdown": 35.52299603686436,
+      "net_units": -33.56719893541515,
+      "pushes": 9,
+      "roi_ci_95_high": 0.008964014152309392,
+      "roi_ci_95_low": -0.17033543667823067,
+      "roi_per_unit_staked": -0.07935508022556773,
+      "wins": 198
+    },
+    "total": {
+      "average_clv_proxy": 0.026004728132387706,
+      "average_expected_value_per_unit": 0.10992244302454572,
+      "average_probability_edge": 0.08085406273158006,
+      "bets": 424,
+      "clv_samples": 423,
+      "losses": 219,
+      "max_drawdown": 36.43879307869721,
+      "net_units": -31.455638552064478,
+      "pushes": 0,
+      "roi_ci_95_high": 0.019800619820517996,
+      "roi_ci_95_low": -0.16087248500316095,
+      "roi_per_unit_staked": -0.07418782677373698,
+      "wins": 205
+    }
+  },
+  "by_season": {
+    "2024": {
+      "average_clv_proxy": 0.058172380259974024,
+      "average_expected_value_per_unit": 0.16472244757601318,
+      "average_probability_edge": 0.08804397097258426,
+      "bets": 656,
+      "clv_samples": 653,
+      "losses": 360,
+      "max_drawdown": 77.2408416281239,
+      "net_units": -52.164374718783876,
+      "pushes": 8,
+      "roi_ci_95_high": 0.002045287491248432,
+      "roi_ci_95_low": -0.1640911215510893,
+      "roi_per_unit_staked": -0.07951886390058517,
+      "wins": 288
+    },
+    "2025": {
+      "average_clv_proxy": 0.06891015960167252,
+      "average_expected_value_per_unit": 0.1825581651611673,
+      "average_probability_edge": 0.09198969278105569,
+      "bets": 647,
+      "clv_samples": 647,
+      "losses": 368,
+      "max_drawdown": 60.339663688353035,
+      "net_units": -52.31106814292096,
+      "pushes": 2,
+      "roi_ci_95_high": 0.008182853794099195,
+      "roi_ci_95_low": -0.1691348006683973,
+      "roi_per_unit_staked": -0.08085172819616841,
+      "wins": 277
+    }
+  },
+  "closing_provenance": "provider_labeled_close",
+  "clv_coverage": 0.7965686274509803,
+  "clv_samples": 1300,
+  "coverage": {
+    "books": [
+      "DraftKings",
+      "ESPN BET"
+    ],
+    "closing_pairs": 1658,
+    "entry_pairs": 1661,
+    "games_with_close": 543,
+    "games_with_open": 544,
+    "matched_events": 544,
+    "requested_games": 544,
+    "source_errors": []
+  },
+  "entry_provenance": "provider_labeled_open",
+  "meaning": "Historical promotion sample uses ESPN's explicit archived provider open and close snapshots. These are verified archive stages, not fabricated point-in-time timestamps. Forward evidence retains strict timestamped capture requirements.",
+  "overall": {
+    "average_clv_proxy": 0.06351649044003473,
+    "average_expected_value_per_unit": 0.17357870949281645,
+    "average_probability_edge": 0.09000320505553207,
+    "bets": 1303,
+    "clv_samples": 1300,
+    "losses": 728,
+    "max_drawdown": 127.56632691954026,
+    "net_units": -104.47544286170485,
+    "pushes": 10,
+    "roi_ci_95_high": -0.020812064081100663,
+    "roi_ci_95_low": -0.14266332973581092,
+    "roi_per_unit_staked": -0.0801806929099807,
+    "wins": 565
+  },
+  "provider": "espn_archive",
+  "status": "READY",
+  "timestamped_entry_prices": false,
+  "version": 1
+}
