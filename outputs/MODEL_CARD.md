@@ -1,6 +1,6 @@
 # Harbin NFL Analytics — Model Card
 
-**Release state:** RESEARCH  
+**Release state:** PAPER  
 **Production eligible:** False  
 
 ## Core model

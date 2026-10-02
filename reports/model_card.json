@@ -8,8 +8,8 @@
   "evidence": {
     "historical": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.18727567027766845,
-      "average_probability_edge": 0.09330933494014212,
+      "average_expected_value_per_unit": 0.18727567027766828,
+      "average_probability_edge": 0.09330933494014204,
       "bets": 2584,
       "clv_samples": 0,
       "losses": 1438,
@@ -62,15 +62,15 @@
       "candidate_pass": false,
       "holdout_games": 272,
       "holdout_season": 2025,
-      "home_win_brier": 0.22995807657360534,
+      "home_win_brier": 0.22995807657360515,
       "margin_50_coverage": 0.5110294117647058,
       "margin_80_coverage": 0.7830882352941176,
-      "margin_nll": 3.9948617498156644,
+      "margin_nll": 3.9948617498156627,
       "margin_scale": 1.0,
       "status": "READY",
       "total_50_coverage": 0.5147058823529411,
       "total_80_coverage": 0.8051470588235294,
-      "total_nll": 4.019776337747561,
+      "total_nll": 4.019776337747562,
       "total_scale": 1.0,
       "training_games": 815,
       "validation_season": 2024
@@ -80,7 +80,7 @@
   },
   "production_eligible": false,
   "purpose": "Leakage-safe NFL fair-score, probability, market-research, portfolio-risk, grading, and monitoring platform.",
-  "release_state": "RESEARCH",
+  "release_state": "PAPER",
   "risk": {
     "drawdown_throttle": true,
     "portfolio_caps": true,

@@ -2,14 +2,38 @@
   "alerts": [
     "multi-book consensus is limited"
   ],
-  "drift_details": {},
-  "drift_reference": null,
-  "live_readiness_score": 84.4,
+  "drift_details": {
+    "margin": {
+      "live_mean": 2.248149751076802,
+      "live_n": 48,
+      "live_std": 3.019761893598121,
+      "mean_z": 0.0683,
+      "reference_mean": 1.965844996473403,
+      "reference_n": 1087,
+      "reference_std": 4.135525119268018,
+      "stability_score": 90.4,
+      "std_ratio": 0.7302
+    },
+    "total": {
+      "live_mean": 45.82313829787228,
+      "live_n": 48,
+      "live_std": 2.9607819366281642,
+      "mean_z": 0.3386,
+      "reference_mean": 44.63397276559055,
+      "reference_n": 1087,
+      "reference_std": 3.511677071871183,
+      "stability_score": 87.3,
+      "std_ratio": 0.8431
+    }
+  },
+  "drift_reference": "reports/free_market_predictions.csv",
+  "engineering_readiness_score": 95.6,
+  "live_readiness_score": 88.0,
   "meaning": "operational/model-monitoring score; not a profitability guarantee",
   "scores": {
-    "calibration": 91.80250233233775,
+    "calibration": 91.80250233233778,
     "context": 98.4375,
-    "distribution_stability": 65.0,
+    "distribution_stability": 88.8,
     "freshness": 100.0,
     "market_coverage": 100.0,
     "multi_book": 0.0,

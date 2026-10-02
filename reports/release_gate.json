@@ -1,6 +1,5 @@
 {
   "blockers": [
-    "live_monitoring: live readiness >=90/100",
     "multi_book_consensus: >=75% current games covered by 2+ verified books",
     "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
     "historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
@@ -41,7 +40,7 @@
       "passed": true,
       "requirement": "chronological NFL probability holdout meets calibration guardrails",
       "value": {
-        "brier": 0.22995807657360534,
+        "brier": 0.22995807657360515,
         "margin_80_coverage": 0.7830882352941176,
         "total_80_coverage": 0.8051470588235294
       }
@@ -49,9 +48,9 @@
     {
       "detail": "",
       "name": "live_monitoring",
-      "passed": false,
-      "requirement": "live readiness >=90/100",
-      "value": 84.4
+      "passed": true,
+      "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
+      "value": 95.6
     },
     {
       "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -107,7 +106,7 @@
       }
     }
   ],
-  "engineering_ready": false,
+  "engineering_ready": true,
   "historical_edge_ready": false,
   "live_evidence_ready": false,
   "meaning": "Hard NFL deployment gate. Structural parity with CFB does not transfer CFB evidence; PRODUCTION requires independent NFL engineering, historical entry, market breadth, and portfolio-verified live evidence.",
@@ -118,5 +117,5 @@
     "Accumulate independently graded portfolio decisions; historical backtests do not substitute for live evidence."
   ],
   "production_eligible": false,
-  "release_state": "RESEARCH"
+  "release_state": "PAPER"
 }

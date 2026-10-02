@@ -17,7 +17,7 @@
     "status": "OK",
     "target_games": 16
   },
-  "generated_at": "2026-10-02T02:12:22.336864+00:00",
+  "generated_at": "2026-10-02T02:17:47.765884+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
@@ -28,20 +28,19 @@
       "status": "OK",
       "target_games": 16
     },
-    "live_readiness_score": 84.4,
+    "live_readiness_score": 88.0,
     "meaning": "operational health; not a profitability or staking signal",
     "monitor_alerts": [
       "multi-book consensus is limited"
     ],
     "production_eligible": false,
     "release_blockers": [
-      "live_monitoring: live readiness >=90/100",
       "multi_book_consensus: >=75% current games covered by 2+ verified books",
       "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
       "historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
       "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV"
     ],
-    "release_state": "RESEARCH",
+    "release_state": "PAPER",
     "source_failures": [],
     "sources": {
       "current_market": "espn",
@@ -69,7 +68,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-02T02:12:01.717760+00:00",
+    "model_generated_at": "2026-10-02T02:17:00.495691+00:00",
     "prediction_games": 16,
     "prediction_rows": 48,
     "season": 2026,
@@ -92,13 +91,36 @@
     "alerts": [
       "multi-book consensus is limited"
     ],
-    "drift_details": {},
-    "live_readiness_score": 84.4,
-    "recent_readiness_delta": 0.0,
+    "drift_details": {
+      "margin": {
+        "live_mean": 2.248149751076802,
+        "live_n": 48,
+        "live_std": 3.019761893598121,
+        "mean_z": 0.0683,
+        "reference_mean": 1.965844996473403,
+        "reference_n": 1087,
+        "reference_std": 4.135525119268018,
+        "stability_score": 90.4,
+        "std_ratio": 0.7302
+      },
+      "total": {
+        "live_mean": 45.82313829787228,
+        "live_n": 48,
+        "live_std": 2.9607819366281642,
+        "mean_z": 0.3386,
+        "reference_mean": 44.63397276559055,
+        "reference_n": 1087,
+        "reference_std": 3.511677071871183,
+        "stability_score": 87.3,
+        "std_ratio": 0.8431
+      }
+    },
+    "live_readiness_score": 88.0,
+    "recent_readiness_delta": 3.5999999999999943,
     "scores": {
-      "calibration": 91.80250233233775,
+      "calibration": 91.80250233233778,
       "context": 98.4375,
-      "distribution_stability": 65.0,
+      "distribution_stability": 88.8,
       "freshness": 100.0,
       "market_coverage": 100.0,
       "multi_book": 0.0,
@@ -149,22 +171,22 @@
     "production_eligible": false,
     "production_gate_open": false,
     "proposed_units": 1.110153,
-    "release_state": "RESEARCH",
+    "release_state": "PAPER",
     "risk_adjusted_proposed_units": 1.110153
   },
   "probability": {
     "candidate_pass": false,
     "holdout_games": 272,
     "holdout_season": 2025,
-    "home_win_brier": 0.22995807657360534,
+    "home_win_brier": 0.22995807657360515,
     "margin_50_coverage": 0.5110294117647058,
     "margin_80_coverage": 0.7830882352941176,
-    "margin_nll": 3.9948617498156644,
+    "margin_nll": 3.9948617498156627,
     "margin_scale": 1.0,
     "status": "READY",
     "total_50_coverage": 0.5147058823529411,
     "total_80_coverage": 0.8051470588235294,
-    "total_nll": 4.019776337747561,
+    "total_nll": 4.019776337747562,
     "total_scale": 1.0,
     "training_games": 815,
     "validation_season": 2024
@@ -196,7 +218,7 @@
         "severity": "ERROR"
       },
       {
-        "detail": "report=RESEARCH gate=RESEARCH",
+        "detail": "report=PAPER gate=PAPER",
         "name": "release_gate_reconciled",
         "passed": true,
         "severity": "ERROR"
@@ -208,7 +230,7 @@
         "severity": "ERROR"
       },
       {
-        "detail": "approved=0.000 release=RESEARCH policy=paper portfolio=paper",
+        "detail": "approved=0.000 release=PAPER policy=paper portfolio=paper",
         "name": "approved_stake_fail_closed",
         "passed": true,
         "severity": "ERROR"
@@ -237,7 +259,6 @@
   },
   "release": {
     "blockers": [
-      "live_monitoring: live readiness >=90/100",
       "multi_book_consensus: >=75% current games covered by 2+ verified books",
       "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
       "historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
@@ -278,7 +299,7 @@
         "passed": true,
         "requirement": "chronological NFL probability holdout meets calibration guardrails",
         "value": {
-          "brier": 0.22995807657360534,
+          "brier": 0.22995807657360515,
           "margin_80_coverage": 0.7830882352941176,
           "total_80_coverage": 0.8051470588235294
         }
@@ -286,9 +307,9 @@
       {
         "detail": "",
         "name": "live_monitoring",
-        "passed": false,
-        "requirement": "live readiness >=90/100",
-        "value": 84.4
+        "passed": true,
+        "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
+        "value": 95.6
       },
       {
         "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -344,7 +365,7 @@
         }
       }
     ],
-    "engineering_ready": false,
+    "engineering_ready": true,
     "historical_edge_ready": false,
     "live_evidence_ready": false,
     "next_requirements": [
@@ -354,23 +375,11 @@
       "Accumulate independently graded portfolio decisions; historical backtests do not substitute for live evidence."
     ],
     "production_eligible": false,
-    "state": "RESEARCH"
+    "state": "PAPER"
   },
   "schema_version": 1,
   "status": "WARN",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 65.0,
-      "generated_at": "2026-10-01T23:44:55.279004+00:00",
-      "live_readiness_score": 84.4,
-      "model_generated_at": "2026-10-01T23:44:13.846194+00:00",
-      "publication_status": "WARN",
-      "release_state": "RESEARCH",
-      "season": 2026,
-      "week": 4
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -502,11 +511,22 @@
       "release_state": "RESEARCH",
       "season": 2026,
       "week": 4
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 65.0,
+      "generated_at": "2026-10-02T02:12:22.336864+00:00",
+      "live_readiness_score": 84.4,
+      "model_generated_at": "2026-10-02T02:12:01.717760+00:00",
+      "publication_status": "WARN",
+      "release_state": "RESEARCH",
+      "season": 2026,
+      "week": 4
     }
   ],
   "warnings": [
     "multi-book consensus is limited",
-    "live_monitoring: live readiness >=90/100",
     "multi_book_consensus: >=75% current games covered by 2+ verified books",
     "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
     "historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",

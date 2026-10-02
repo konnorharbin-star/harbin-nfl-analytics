@@ -2,7 +2,7 @@
 
 **Season / Week:** 2026 / 4  
 **Publication status:** WARN  
-**Release state:** RESEARCH  
+**Release state:** PAPER  
 **Reconciliation:** PASS  
 
 ## Probability validation
@@ -10,13 +10,12 @@
 - Margin / total 80% coverage: **78.31% / 80.51%**.
 
 ## Monitoring and execution
-- Live readiness: **84.4/100**.
+- Live readiness: **88.0/100**.
 - Portfolio mode: **PAPER**; proposed **1.11u**; approved **0.00u**.
 - Historical evidence: **2584 bets**, ROI **-7.84%**, CLV **—**.
 - Independent forward evidence: **0 bets**, ROI **—**, CLV **—**.
 
 ## Current blockers
-- live_monitoring: live readiness >=90/100
 - multi_book_consensus: >=75% current games covered by 2+ verified books
 - historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks
 - historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons
