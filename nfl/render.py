@@ -324,11 +324,13 @@ def render_html(
                 row.get("spread"),
                 market="spread",
                 projected_total=projected_total,
+                release_state=state,
             )
             total_html = _market_html(
                 row.get("total"),
                 market="total",
                 projected_total=projected_total,
+                release_state=state,
             )
             rows.append(
                 "<tr>"
@@ -564,6 +566,7 @@ def render_png(
             row=row.get("spread"),
             market="spread",
             projected_total=projected_total,
+            release_state=state,
             row_font=row_font,
             bold_font=bold_font,
             small_font=small_font,
@@ -576,6 +579,7 @@ def render_png(
             row=row.get("total"),
             market="total",
             projected_total=projected_total,
+            release_state=state,
             row_font=row_font,
             bold_font=bold_font,
             small_font=small_font,
