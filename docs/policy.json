@@ -85,6 +85,7 @@
     "min_trailing_bets_for_throttle": 30,
     "require_executable_book": true,
     "require_live_history_for_production": true,
+    "require_open_exposure_ledger_for_production": true,
     "require_quote_timestamp_for_execution": true,
     "trailing_clv_throttle": 0,
     "trailing_roi_throttle": -0.1,
