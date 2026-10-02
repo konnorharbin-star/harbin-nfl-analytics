@@ -409,4 +409,11 @@ class ESPNMarketClient:
 
         if not markets:
             raise DataContractError("ESPN returned no usable NFL markets for the target slate")
-        return sorted(markets, key=lambda item: (item.game_id, item.market_type))
+        return sorted(
+            markets,
+            key=lambda item: (
+                item.game_id,
+                item.market_type,
+                canonical_book_identity(item.book or item.provider),
+            ),
+        )
