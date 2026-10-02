@@ -46,14 +46,21 @@
     },
     "qb_total": {
       "canonical_change_enabled": false,
-      "graded_games": 0,
+      "graded_games": 1,
       "ledger_capture_coverage": 1.0,
       "ledger_captured_eligible_games": 16,
       "ledger_eligible_games": 16,
       "ledger_health_pass": true,
       "ledger_health_status": "PASS",
       "ledger_rows": 16,
-      "metrics": {},
+      "metrics": {
+        "baseline_total_mae": 8.955766005541676,
+        "baseline_total_rmse": 8.955766005541676,
+        "qb_total_shadow_mae": 10.165007376184384,
+        "qb_total_shadow_rmse": 10.165007376184384,
+        "total_mae_improvement": -1.209241370642708,
+        "total_rmse_improvement": -1.209241370642708
+      },
       "minimum_games": 128,
       "name": "qb_total",
       "promotion_eligible": false,
@@ -61,20 +68,27 @@
       "prospective_only": true,
       "retrospective_reconstruction_allowed": false,
       "source_report": "reports/qb_total_forward.json",
-      "source_status": "NO_GRADED_GAMES",
+      "source_status": "SHADOW_INSUFFICIENT_SAMPLE",
       "spec_version": "stage15_fixed_quality_v1",
       "status": "ACCUMULATING_FORWARD_EVIDENCE"
     },
     "recent_form_total": {
       "canonical_change_enabled": false,
-      "graded_games": 0,
+      "graded_games": 1,
       "ledger_capture_coverage": 1.0,
       "ledger_captured_eligible_games": 16,
       "ledger_eligible_games": 16,
       "ledger_health_pass": true,
       "ledger_health_status": "PASS",
       "ledger_rows": 16,
-      "metrics": {},
+      "metrics": {
+        "baseline_total_mae": 8.955766005541676,
+        "baseline_total_rmse": 8.955766005541676,
+        "shadow_total_mae": 9.768944479741506,
+        "shadow_total_rmse": 9.768944479741506,
+        "total_mae_improvement": -0.8131784741998302,
+        "total_rmse_improvement": -0.8131784741998302
+      },
       "minimum_games": 128,
       "name": "recent_form_total",
       "promotion_eligible": false,
@@ -82,7 +96,7 @@
       "prospective_only": true,
       "retrospective_reconstruction_allowed": false,
       "source_report": "reports/recent_form_forward.json",
-      "source_status": "NO_GRADED_GAMES",
+      "source_status": "SHADOW_INSUFFICIENT_SAMPLE",
       "status": "ACCUMULATING_FORWARD_EVIDENCE"
     }
   },
