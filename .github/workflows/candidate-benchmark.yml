@@ -44,6 +44,15 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: >-
+    ${{ github.event_name == 'pull_request'
+      && format('nfl-candidate-benchmark-pr-{0}', github.event.pull_request.number)
+      || github.event_name == 'workflow_run'
+      && format('nfl-generated-state-{0}', github.event.workflow_run.head_branch)
+      || format('nfl-generated-state-{0}', github.ref_name) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   benchmark:
     runs-on: ubuntu-latest
