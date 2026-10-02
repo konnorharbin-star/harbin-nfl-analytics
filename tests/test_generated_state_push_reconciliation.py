@@ -58,8 +58,11 @@ def _seed_remote(tmp_path: Path) -> tuple[Path, Path]:
     _run(["git", "init", "--bare", str(remote)], cwd=tmp_path)
     _run(["git", "init", "-b", "main", str(seed)], cwd=tmp_path)
     _configure_repo(seed)
-    (seed / "shared.txt").write_text("base\n", encoding="utf-8")
-    _git(seed, "add", "shared.txt")
+    (seed / "nfl").mkdir()
+    (seed / "reports").mkdir()
+    (seed / "nfl" / "source.py").write_text("VALUE = 'base'\n", encoding="utf-8")
+    (seed / "reports" / "shared.json").write_text('{"value":"base"}\n', encoding="utf-8")
+    _git(seed, "add", "nfl/source.py", "reports/shared.json")
     _git(seed, "commit", "-m", "seed")
     _git(seed, "remote", "add", "origin", str(remote))
     _git(seed, "push", "-u", "origin", "main")
@@ -96,12 +99,19 @@ def test_reconciler_rebases_non_conflicting_cross_writer_race(tmp_path: Path) ->
     first = _clone(remote, tmp_path / "first")
     second = _clone(remote, tmp_path / "second")
 
-    (first / "first.txt").write_text("first\n", encoding="utf-8")
-    _git(first, "add", "first.txt")
+    (first / "reports" / "first.json").write_text(
+        '{"value":"first"}\n',
+        encoding="utf-8",
+    )
+    _git(first, "add", "reports/first.json")
     _git(first, "commit", "-m", "first writer")
 
-    (second / "second.txt").write_text("second\n", encoding="utf-8")
-    _git(second, "add", "second.txt")
+    (second / "outputs").mkdir()
+    (second / "outputs" / "second.json").write_text(
+        '{"value":"second"}\n',
+        encoding="utf-8",
+    )
+    _git(second, "add", "outputs/second.json")
     _git(second, "commit", "-m", "second writer")
     _git(second, "push", "origin", "main")
 
@@ -116,15 +126,15 @@ def test_reconciler_rebases_non_conflicting_cross_writer_race(tmp_path: Path) ->
 
     assert result.returncode == 0, result.stderr + result.stdout
     first_value = _run(
-        ["git", "--git-dir", str(remote), "show", "main:first.txt"],
+        ["git", "--git-dir", str(remote), "show", "main:reports/first.json"],
         cwd=tmp_path,
     ).stdout
     second_value = _run(
-        ["git", "--git-dir", str(remote), "show", "main:second.txt"],
+        ["git", "--git-dir", str(remote), "show", "main:outputs/second.json"],
         cwd=tmp_path,
     ).stdout
-    assert first_value == "first\n"
-    assert second_value == "second\n"
+    assert first_value == '{"value":"first"}\n'
+    assert second_value == '{"value":"second"}\n'
 
 
 def test_reconciler_fails_closed_on_true_content_conflict(tmp_path: Path) -> None:
@@ -132,12 +142,18 @@ def test_reconciler_fails_closed_on_true_content_conflict(tmp_path: Path) -> Non
     first = _clone(remote, tmp_path / "first")
     second = _clone(remote, tmp_path / "second")
 
-    (first / "shared.txt").write_text("first\n", encoding="utf-8")
-    _git(first, "add", "shared.txt")
+    (first / "reports" / "shared.json").write_text(
+        '{"value":"first"}\n',
+        encoding="utf-8",
+    )
+    _git(first, "add", "reports/shared.json")
     _git(first, "commit", "-m", "first writer")
 
-    (second / "shared.txt").write_text("second\n", encoding="utf-8")
-    _git(second, "add", "shared.txt")
+    (second / "reports" / "shared.json").write_text(
+        '{"value":"second"}\n',
+        encoding="utf-8",
+    )
+    _git(second, "add", "reports/shared.json")
     _git(second, "commit", "-m", "second writer")
     _git(second, "push", "origin", "main")
 
@@ -152,7 +168,57 @@ def test_reconciler_fails_closed_on_true_content_conflict(tmp_path: Path) -> Non
 
     assert result.returncode != 0
     remote_value = _run(
-        ["git", "--git-dir", str(remote), "show", "main:shared.txt"],
+        ["git", "--git-dir", str(remote), "show", "main:reports/shared.json"],
         cwd=tmp_path,
     ).stdout
-    assert remote_value == "second\n"
+    assert remote_value == '{"value":"second"}\n'
+
+
+def test_reconciler_skips_stale_output_after_source_change(tmp_path: Path) -> None:
+    remote, _ = _seed_remote(tmp_path)
+    stale = _clone(remote, tmp_path / "stale")
+    source = _clone(remote, tmp_path / "source")
+
+    (stale / "reports" / "stale.json").write_text(
+        '{"value":"stale"}\n',
+        encoding="utf-8",
+    )
+    _git(stale, "add", "reports/stale.json")
+    _git(stale, "commit", "-m", "stale generated state")
+
+    (source / "nfl" / "source.py").write_text(
+        "VALUE = 'new-source'\n",
+        encoding="utf-8",
+    )
+    _git(source, "add", "nfl/source.py")
+    _git(source, "commit", "-m", "new source revision")
+    _git(source, "push", "origin", "main")
+
+    env = os.environ.copy()
+    env["GITHUB_REF_NAME"] = "main"
+    result = _run(
+        ["bash", str(PUSH_SCRIPT), "origin", "main", "3"],
+        cwd=stale,
+        check=False,
+        env=env,
+    )
+
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert "newer source changes supersede this run" in result.stdout
+    missing = _run(
+        [
+            "git",
+            "--git-dir",
+            str(remote),
+            "show",
+            "main:reports/stale.json",
+        ],
+        cwd=tmp_path,
+        check=False,
+    )
+    assert missing.returncode != 0
+    source_value = _run(
+        ["git", "--git-dir", str(remote), "show", "main:nfl/source.py"],
+        cwd=tmp_path,
+    ).stdout
+    assert source_value == "VALUE = 'new-source'\n"
