@@ -62,7 +62,14 @@ def test_independent_shadow_candidate_can_earn_promotion_evidence() -> None:
             "promotion_eligible": True,
             "canonical_score_adjustment_enabled": False,
             "spec_version": "stage15_fixed_quality_v1",
-        }
+        },
+        ledger_health_report={"candidates": {"qb_total": {
+            "status": "PASS",
+            "promotion_sample_eligible": True,
+            "capture_coverage": 1.0,
+            "eligible_games": 140,
+            "captured_eligible_games": 140,
+        }}},
     )
 
     candidate = summary["candidates"]["qb_total"]
@@ -94,7 +101,25 @@ def test_probability_targets_remain_independent() -> None:
                 "baseline_nll": 4.0,
                 "shadow_nll": 4.1,
             },
-        }
+        },
+        ledger_health_report={
+            "candidates": {
+                "probability_home_win": {
+            "status": "PASS",
+            "promotion_sample_eligible": True,
+            "capture_coverage": 1.0,
+            "eligible_games": 140,
+            "captured_eligible_games": 140,
+        },
+                "probability_total_distribution": {
+            "status": "PASS",
+            "promotion_sample_eligible": True,
+            "capture_coverage": 1.0,
+            "eligible_games": 140,
+            "captured_eligible_games": 140,
+        },
+            }
+        },
     )
 
     home = summary["candidates"]["probability_home_win"]
@@ -118,9 +143,48 @@ def test_positive_candidate_evidence_does_not_open_production() -> None:
             "graded_bets": 10,
             "overall": {"bets": 10, "roi": 0.5, "avg_clv": 0.5},
         },
+        ledger_health_report={
+            "candidates": {"recent_form_total": {
+            "status": "PASS",
+            "promotion_sample_eligible": True,
+            "capture_coverage": 1.0,
+            "eligible_games": 140,
+            "captured_eligible_games": 140,
+        }}
+        },
     )
 
     assert summary["candidate_promotion_evidence_count"] == 1
     assert summary["forward_betting_gate_passed"] is False
     assert summary["phase_status"] == "ACCUMULATING_FORWARD_EVIDENCE"
     assert summary["production_release_authority"] is False
+
+
+def test_candidate_promotion_requires_forward_ledger_health() -> None:
+    summary = build_forward_shadow_summary(
+        qb_total_report={
+            "status": "PROMOTION_EVIDENCE",
+            "ledger_rows": 140,
+            "graded_games": 128,
+            "minimum_games": 128,
+            "promotion_eligible": True,
+            "spec_version": "stage15_fixed_quality_v1",
+        },
+        ledger_health_report={
+            "candidates": {
+                "qb_total": {
+                    "status": "FAIL",
+                    "promotion_sample_eligible": False,
+                    "capture_coverage": 0.99,
+                    "eligible_games": 140,
+                    "captured_eligible_games": 139,
+                }
+            }
+        },
+    )
+
+    candidate = summary["candidates"]["qb_total"]
+    assert candidate["promotion_eligible"] is False
+    assert candidate["ledger_health_pass"] is False
+    assert "forward_ledger_health" in candidate["promotion_gate_blockers"]
+    assert summary["candidate_promotion_evidence"] == []
