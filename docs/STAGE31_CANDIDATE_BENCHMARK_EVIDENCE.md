@@ -46,3 +46,23 @@ The workflow now writes and retains:
 
 The report is regenerated when candidate benchmark code changes on main and may also
 be run manually.
+
+
+## First persisted result
+
+The first GitHub Actions execution produced:
+
+- margin architecture winner: `quarterback_state`;
+- margin robustness score: about 0.00616 (roughly 0.62% weighted relative error reduction);
+- QB margin improved MAE and RMSE in both Stage 14 development holdouts;
+- total selection: `baseline`; no Stage 14 total architecture cleared both folds;
+- recency, prior-season and opponent-adjusted PBP candidates did not clear both folds.
+
+This result must be read together with Stage 15. The Stage 14 QB-margin family used
+different feature/ridge specifications in the two development folds. Stage 15 then
+required one constant QB specification across all rolling development seasons and
+rejected every fixed QB-margin candidate. Therefore Stage 31 does **not** create a new
+QB-margin forward shadow.
+
+The existing Stage 15 fixed QB-total candidate remains the authoritative QB forward
+experiment and is already tracked prospectively by the QB-total forward ledger.
