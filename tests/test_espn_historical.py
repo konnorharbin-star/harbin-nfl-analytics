@@ -145,6 +145,22 @@ def test_parse_espn_archive_item_builds_complete_open_and_close_pairs() -> None:
     assert over["american_odds"] == -110
 
 
+def test_live_odds_provider_alias_uses_same_canonical_book() -> None:
+    rows = parse_espn_archive_item(
+        _provider_item(
+            provider_id="59",
+            provider_name="ESPN Bet - Live Odds",
+        ),
+        game_id="2025_05_DAL_PHI",
+        event_id="401772510",
+        stage="close",
+    )
+
+    assert len(rows) == 6
+    assert {row["book"] for row in rows} == {"ESPN BET"}
+    assert {row["canonical_book"] for row in rows} == {"espnbet"}
+
+
 def test_fetch_archive_quotes_prefers_non_live_same_book_provider() -> None:
     projection = pl.DataFrame([_target_projection()])
 
