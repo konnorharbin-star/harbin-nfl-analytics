@@ -1,0 +1,96 @@
+{
+  "candidate_promotion_evidence": [],
+  "candidate_promotion_evidence_count": 0,
+  "candidates": {
+    "probability_home_win": {
+      "canonical_change_enabled": false,
+      "graded_games": 0,
+      "ledger_rows": 15,
+      "metrics": {},
+      "minimum_games": 128,
+      "name": "probability_home_win",
+      "promotion_eligible": false,
+      "prospective_only": true,
+      "retrospective_reconstruction_allowed": false,
+      "source_report": "reports/probability_forward.json",
+      "source_status": "NO_GRADED_GAMES",
+      "spec_version": "stage23_nested_probability_v1",
+      "status": "ACCUMULATING_FORWARD_EVIDENCE"
+    },
+    "probability_total_distribution": {
+      "canonical_change_enabled": false,
+      "graded_games": 0,
+      "ledger_rows": 15,
+      "metrics": {},
+      "minimum_games": 128,
+      "name": "probability_total_distribution",
+      "promotion_eligible": false,
+      "prospective_only": true,
+      "retrospective_reconstruction_allowed": false,
+      "source_report": "reports/probability_forward.json",
+      "source_status": "NO_GRADED_GAMES",
+      "spec_version": "stage23_nested_probability_v1",
+      "status": "ACCUMULATING_FORWARD_EVIDENCE"
+    },
+    "qb_total": {
+      "canonical_change_enabled": false,
+      "graded_games": 0,
+      "ledger_rows": 16,
+      "metrics": {},
+      "minimum_games": 128,
+      "name": "qb_total",
+      "promotion_eligible": false,
+      "prospective_only": true,
+      "retrospective_reconstruction_allowed": false,
+      "source_report": "reports/qb_total_forward.json",
+      "source_status": "NO_GRADED_GAMES",
+      "spec_version": "stage15_fixed_quality_v1",
+      "status": "ACCUMULATING_FORWARD_EVIDENCE"
+    },
+    "recent_form_total": {
+      "canonical_change_enabled": false,
+      "graded_games": 0,
+      "ledger_rows": 16,
+      "metrics": {},
+      "minimum_games": 128,
+      "name": "recent_form_total",
+      "promotion_eligible": false,
+      "prospective_only": true,
+      "retrospective_reconstruction_allowed": false,
+      "source_report": "reports/recent_form_forward.json",
+      "source_status": "NO_GRADED_GAMES",
+      "status": "ACCUMULATING_FORWARD_EVIDENCE"
+    }
+  },
+  "canonical_betting": {
+    "avg_clv": null,
+    "evidence_source": "portfolio_decisions_v1",
+    "forward_betting_gate_passed": false,
+    "graded_bets": 0,
+    "max_drawdown": 0.0,
+    "minimum_bets": 300,
+    "portfolio_verified": true,
+    "prospective_only": true,
+    "retrospective_reconstruction_allowed": false,
+    "roi": null,
+    "roi_ci_95": [
+      null,
+      null
+    ],
+    "source_report": "reports/live_performance.json",
+    "status": "ACCUMULATING_FORWARD_EVIDENCE"
+  },
+  "canonical_model_change_enabled": false,
+  "evidence_policy": {
+    "candidate_retuning_on_forward_outcomes_allowed": false,
+    "first_persisted_pregame_snapshot_only": true,
+    "prospective_only": true,
+    "retrospective_reconstruction_allowed": false
+  },
+  "forward_betting_gate_passed": false,
+  "meaning": "Phase 5 consolidates independently persisted prospective evidence. Candidate promotion evidence requires its own frozen forward gate, while production remains controlled separately by the hard release gate.",
+  "phase": "Phase 5 \u2014 Forward Shadow Validation",
+  "phase_status": "ACCUMULATING_FORWARD_EVIDENCE",
+  "production_release_authority": false,
+  "version": 1
+}
