@@ -23,6 +23,12 @@ def _parse(value: object) -> datetime | None:
     return parsed.astimezone(UTC)
 
 
+def _boolean(value: object) -> bool:
+    if isinstance(value, bool):
+        return value
+    return str(value or "").strip().lower() in {"1", "true", "t", "yes", "y"}
+
+
 def audit_decisions(decisions: pl.DataFrame) -> dict[str, object]:
     """Audit cap-constrained decision rows before independent grading."""
 
@@ -45,12 +51,14 @@ def audit_decisions(decisions: pl.DataFrame) -> dict[str, object]:
             "portfolio_candidate_units",
             "portfolio_action",
             "execution_ready",
+            "quant_quote_at",
         },
         "portfolio_decisions",
     )
 
     issues: list[dict[str, object]] = []
     timing_excluded = 0
+    quote_timing_excluded = 0
     eligible = 0
     execution_excluded = 0
     for row in decisions.iter_rows(named=True):
@@ -59,11 +67,15 @@ def audit_decisions(decisions: pl.DataFrame) -> dict[str, object]:
         if units <= 0 or action not in {"PAPER", "SHADOW", "BET"}:
             continue
         decision = _parse(row.get("decision_at"))
+        quote = _parse(row.get("quant_quote_at"))
         kickoff = _parse(row.get("kickoff"))
         if decision is None or kickoff is None or decision >= kickoff:
             timing_excluded += 1
             continue
-        if not bool(row.get("execution_ready")):
+        if quote is None or quote > decision or quote >= kickoff:
+            quote_timing_excluded += 1
+            continue
+        if not _boolean(row.get("execution_ready")):
             execution_excluded += 1
             continue
         eligible += 1
@@ -76,10 +88,18 @@ def audit_decisions(decisions: pl.DataFrame) -> dict[str, object]:
                 "rows": timing_excluded,
             }
         )
+    if quote_timing_excluded:
+        issues.append(
+            {
+                "severity": "ERROR",
+                "code": "invalid_entry_quote_chronology",
+                "rows": quote_timing_excluded,
+            }
+        )
     if execution_excluded:
         issues.append(
             {
-                "severity": "WARNING",
+                "severity": "ERROR",
                 "code": "non_execution_ready_decisions",
                 "rows": execution_excluded,
             }
@@ -93,6 +113,7 @@ def audit_decisions(decisions: pl.DataFrame) -> dict[str, object]:
         "warnings": warnings,
         "eligible_decisions": eligible,
         "timing_excluded_rows": timing_excluded,
+        "quote_timing_excluded_rows": quote_timing_excluded,
         "execution_excluded_rows": execution_excluded,
         "portfolio_verified": True,
         "evidence_source": "portfolio_decisions_v1",
@@ -119,6 +140,9 @@ def audit_graded_bets(graded: pl.DataFrame) -> dict[str, object]:
             "decision_at",
             "kickoff",
             "portfolio_verified",
+            "entry_quote_verified",
+            "execution_ready",
+            "quant_quote_at",
             "result",
             "net_units",
         },
@@ -139,6 +163,12 @@ def audit_graded_bets(graded: pl.DataFrame) -> dict[str, object]:
         )
 
     not_verified = graded.filter(~pl.col("portfolio_verified").cast(pl.Boolean)).height
+    entry_not_verified = graded.filter(
+        ~pl.col("entry_quote_verified").cast(pl.Boolean)
+    ).height
+    execution_not_ready = graded.filter(
+        ~pl.col("execution_ready").cast(pl.Boolean)
+    ).height
     if not_verified:
         issues.append(
             {
@@ -147,14 +177,40 @@ def audit_graded_bets(graded: pl.DataFrame) -> dict[str, object]:
                 "rows": not_verified,
             }
         )
+    if entry_not_verified:
+        issues.append(
+            {
+                "severity": "ERROR",
+                "code": "unverified_entry_quote_evidence",
+                "rows": entry_not_verified,
+            }
+        )
+    if execution_not_ready:
+        issues.append(
+            {
+                "severity": "ERROR",
+                "code": "non_execution_ready_graded_evidence",
+                "rows": execution_not_ready,
+            }
+        )
 
     bad_entry_timing = 0
+    bad_quote_timing = 0
     bad_close_timing = 0
     for row in graded.iter_rows(named=True):
         decision = _parse(row.get("decision_at"))
+        quote = _parse(row.get("quant_quote_at"))
         kickoff = _parse(row.get("kickoff"))
         if decision is None or kickoff is None or decision >= kickoff:
             bad_entry_timing += 1
+        if (
+            quote is None
+            or decision is None
+            or kickoff is None
+            or quote > decision
+            or quote >= kickoff
+        ):
+            bad_quote_timing += 1
         close = _parse(row.get("closing_snapshot_at"))
         if close is not None and (
             decision is None
@@ -169,6 +225,14 @@ def audit_graded_bets(graded: pl.DataFrame) -> dict[str, object]:
                 "severity": "ERROR",
                 "code": "graded_entry_not_pre_kickoff",
                 "rows": bad_entry_timing,
+            }
+        )
+    if bad_quote_timing:
+        issues.append(
+            {
+                "severity": "ERROR",
+                "code": "graded_entry_quote_chronology_invalid",
+                "rows": bad_quote_timing,
             }
         )
     if bad_close_timing:
@@ -188,6 +252,8 @@ def audit_graded_bets(graded: pl.DataFrame) -> dict[str, object]:
         "warnings": warnings,
         "graded_bets": graded.height,
         "portfolio_verified": not not_verified,
+        "entry_quote_verified": not entry_not_verified,
+        "execution_ready_verified": not execution_not_ready,
         "issues": issues,
     }
 
