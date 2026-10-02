@@ -416,9 +416,22 @@ def apply_portfolio_controls(
     blocked = 0
 
     for row in rows:
-        proposed = max(0.0, _number(row.get("stake_units"))) * multiplier
-        signal = str(row.get("quant_signal") or "PASS").upper()
-        row["paper_stake_units"] = max(0.0, _number(row.get("stake_units")))
+        research_stake = max(
+            0.0,
+            _number(row.get("research_stake_units", row.get("stake_units"))),
+        )
+        production_stake = max(0.0, _number(row.get("stake_units")))
+        if production_gate_open:
+            signal = str(row.get("quant_signal") or "PASS").upper()
+            proposed_base = production_stake
+        else:
+            signal = str(
+                row.get("research_signal", row.get("quant_signal")) or "PASS"
+            ).upper()
+            proposed_base = research_stake
+        proposed = proposed_base * multiplier
+        row["portfolio_signal"] = signal
+        row["paper_stake_units"] = research_stake
         row["bankroll_adjusted_units"] = round(proposed, 6)
         row["portfolio_candidate_units"] = 0.0
         row["portfolio_stake_units"] = 0.0
