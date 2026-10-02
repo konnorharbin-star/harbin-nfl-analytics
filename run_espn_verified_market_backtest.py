@@ -4,6 +4,8 @@ import argparse
 import json
 from pathlib import Path
 
+import polars as pl
+
 from nfl.data import NFLDataClient
 from nfl.espn_historical import (
     ESPNArchiveClient,
@@ -23,7 +25,7 @@ def main() -> None:
             "provider opening and closing snapshots."
         )
     )
-    parser.add_argument("--start-season", type=int, default=2023)
+    parser.add_argument("--start-season", type=int, default=2024)
     parser.add_argument("--end-season", type=int, default=2025)
     parser.add_argument("--max-workers", type=int, default=12)
     parser.add_argument("--reports-dir", default="reports")
@@ -44,11 +46,14 @@ def main() -> None:
     )
     projections = build_archive_projection_dataset(
         schedules,
-        start_season=args.start_season,
+        start_season=args.start_season - 1,
         end_season=args.end_season,
     )
+    evidence_targets = projections.filter(
+        pl.col("season") >= args.start_season
+    )
     entries, closings, coverage = fetch_espn_archive_quotes(
-        projections,
+        evidence_targets,
         client=ESPNArchiveClient(max_workers=args.max_workers),
     )
     if entries.is_empty():
