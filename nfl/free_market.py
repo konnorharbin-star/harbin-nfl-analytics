@@ -5,9 +5,10 @@ football model remains independent of sportsbook prices. Archived market fields 
 used only after a fair score/probability already exists.
 
 nflverse schedules contain archived final spread, total, moneyline and price fields.
-The separate ``initial_lines.csv`` file can supply opening spread/total observations
-when available. Because the free initial-lines file does not carry timestamps or every
-season/market, any opening-to-final movement is explicitly labeled a CLV *proxy*.
+The separate ``initial_lines.csv`` file currently contains 2021 spread/total
+opening-line observations only. It does not provide opening juice or timestamps and
+does not cover the 2022-2025 promotion sample. Any opening-to-final movement from this
+source is therefore explicitly labeled a CLV *proxy*, never a verified entry price.
 """
 
 from __future__ import annotations
