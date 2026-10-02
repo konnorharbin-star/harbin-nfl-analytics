@@ -17,7 +17,7 @@
     "status": "OK",
     "target_games": 16
   },
-  "generated_at": "2026-10-02T01:32:47.562704+00:00",
+  "generated_at": "2026-10-02T01:38:24.534702+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
@@ -69,7 +69,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-02T01:32:27.557022+00:00",
+    "model_generated_at": "2026-10-02T01:37:41.305965+00:00",
     "prediction_games": 16,
     "prediction_rows": 48,
     "season": 2026,
@@ -127,7 +127,9 @@
     "mode": "paper",
     "paper_or_shadow_allocated_units": 0.32361,
     "policy_mode": "paper",
+    "production_block_reason": "",
     "production_eligible": false,
+    "production_gate_open": false,
     "proposed_units": 1.110153,
     "release_state": "RESEARCH",
     "risk_adjusted_proposed_units": 1.110153
@@ -343,18 +345,6 @@
       "approved_units": 0.0,
       "data_quality_status": "OK",
       "distribution_stability": 65.0,
-      "generated_at": "2026-10-01T23:12:57.036845+00:00",
-      "live_readiness_score": 84.4,
-      "model_generated_at": "2026-10-01T23:12:11.717583+00:00",
-      "publication_status": "WARN",
-      "release_state": "RESEARCH",
-      "season": 2026,
-      "week": 4
-    },
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 65.0,
       "generated_at": "2026-10-01T23:29:34.838442+00:00",
       "live_readiness_score": 84.4,
       "model_generated_at": "2026-10-01T23:29:15.950537+00:00",
@@ -480,6 +470,18 @@
       "model_generated_at": "2026-10-02T01:26:22.081782+00:00",
       "publication_status": "WARN",
       "release_state": "PAPER",
+      "season": 2026,
+      "week": 4
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 65.0,
+      "generated_at": "2026-10-02T01:32:47.562704+00:00",
+      "live_readiness_score": 84.4,
+      "model_generated_at": "2026-10-02T01:32:27.557022+00:00",
+      "publication_status": "WARN",
+      "release_state": "RESEARCH",
       "season": 2026,
       "week": 4
     }
