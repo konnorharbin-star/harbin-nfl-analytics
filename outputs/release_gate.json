@@ -2,7 +2,8 @@
   "blockers": [
     "multi_book_consensus: >=75% current games covered by 2+ verified books",
     "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
-    "historical_market_edge: ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
+    "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
+    "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
     "forward_entry_integrity: 100% graded forward bets have execution-ready, timestamp-valid entry quotes",
     "forward_clv_coverage: >=90% of graded forward bets have a valid later pre-kickoff closing snapshot",
     "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV, complete entry provenance, and >=90% CLV coverage"
@@ -42,7 +43,7 @@
       "passed": true,
       "requirement": "chronological NFL probability holdout meets calibration guardrails",
       "value": {
-        "brier": 0.22995807657360534,
+        "brier": 0.22995807657360515,
         "margin_80_coverage": 0.7830882352941176,
         "total_80_coverage": 0.8051470588235294
       }
@@ -73,17 +74,29 @@
     },
     {
       "detail": "",
+      "name": "historical_clv_coverage",
+      "passed": false,
+      "requirement": ">=90% of verified historical bets have same-book closing CLV",
+      "value": {
+        "verified_bets": 0,
+        "verified_clv_coverage": 0.0,
+        "verified_clv_samples": 0
+      }
+    },
+    {
+      "detail": "",
       "name": "historical_market_edge",
       "passed": false,
-      "requirement": "ROBUST NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
+      "requirement": "ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
       "value": {
         "positive_markets": 0,
         "positive_seasons": 0,
-        "roi_ci_95": [
-          -0.12119339179926414,
-          -0.03351727630015059
-        ],
-        "status": "ESTABLISHED SAMPLE"
+        "status": "ESTABLISHED SAMPLE",
+        "verified_clv_coverage": 0.0,
+        "verified_roi_ci_95": [
+          null,
+          null
+        ]
       }
     },
     {
