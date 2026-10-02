@@ -17,7 +17,7 @@
     "status": "OK",
     "target_games": 16
   },
-  "generated_at": "2026-10-02T02:34:59.400682+00:00",
+  "generated_at": "2026-10-02T02:39:46.857345+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
@@ -68,7 +68,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-02T02:34:15.858127+00:00",
+    "model_generated_at": "2026-10-02T02:39:27.716229+00:00",
     "prediction_games": 16,
     "prediction_rows": 48,
     "season": 2026,
@@ -93,9 +93,9 @@
     ],
     "drift_details": {
       "margin": {
-        "live_mean": 2.2481497510767863,
+        "live_mean": 2.248149751076802,
         "live_n": 48,
-        "live_std": 3.019761893598122,
+        "live_std": 3.019761893598121,
         "mean_z": 0.0683,
         "reference_mean": 1.965844996473403,
         "reference_n": 1087,
@@ -104,9 +104,9 @@
         "std_ratio": 0.7302
       },
       "total": {
-        "live_mean": 45.8231382978723,
+        "live_mean": 45.82313829787228,
         "live_n": 48,
-        "live_std": 2.960781936628166,
+        "live_std": 2.9607819366281642,
         "mean_z": 0.3386,
         "reference_mean": 44.63397276559055,
         "reference_n": 1087,
@@ -116,9 +116,9 @@
       }
     },
     "live_readiness_score": 88.0,
-    "recent_readiness_delta": 3.5999999999999943,
+    "recent_readiness_delta": 0.0,
     "scores": {
-      "calibration": 91.80250233233775,
+      "calibration": 91.80250233233778,
       "context": 98.4375,
       "distribution_stability": 88.8,
       "freshness": 100.0,
@@ -178,15 +178,15 @@
     "candidate_pass": false,
     "holdout_games": 272,
     "holdout_season": 2025,
-    "home_win_brier": 0.22995807657360534,
+    "home_win_brier": 0.22995807657360515,
     "margin_50_coverage": 0.5110294117647058,
     "margin_80_coverage": 0.7830882352941176,
-    "margin_nll": 3.9948617498156644,
+    "margin_nll": 3.9948617498156627,
     "margin_scale": 1.0,
     "status": "READY",
     "total_50_coverage": 0.5147058823529411,
     "total_80_coverage": 0.8051470588235294,
-    "total_nll": 4.019776337747561,
+    "total_nll": 4.019776337747562,
     "total_scale": 1.0,
     "training_games": 815,
     "validation_season": 2024
@@ -299,7 +299,7 @@
         "passed": true,
         "requirement": "chronological NFL probability holdout meets calibration guardrails",
         "value": {
-          "brier": 0.22995807657360534,
+          "brier": 0.22995807657360515,
           "margin_80_coverage": 0.7830882352941176,
           "total_80_coverage": 0.8051470588235294
         }
@@ -380,18 +380,6 @@
   "schema_version": 1,
   "status": "WARN",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 65.0,
-      "generated_at": "2026-10-02T00:11:38.784707+00:00",
-      "live_readiness_score": 84.4,
-      "model_generated_at": "2026-10-02T00:11:18.643805+00:00",
-      "publication_status": "WARN",
-      "release_state": "RESEARCH",
-      "season": 2026,
-      "week": 4
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -519,6 +507,18 @@
       "generated_at": "2026-10-02T02:20:06.951894+00:00",
       "live_readiness_score": 88.0,
       "model_generated_at": "2026-10-02T02:19:19.933639+00:00",
+      "publication_status": "WARN",
+      "release_state": "PAPER",
+      "season": 2026,
+      "week": 4
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 88.8,
+      "generated_at": "2026-10-02T02:34:59.400682+00:00",
+      "live_readiness_score": 88.0,
+      "model_generated_at": "2026-10-02T02:34:15.858127+00:00",
       "publication_status": "WARN",
       "release_state": "PAPER",
       "season": 2026,
