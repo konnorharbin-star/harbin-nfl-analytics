@@ -19,6 +19,7 @@ from urllib.request import Request, urlopen
 
 import polars as pl
 
+from .action_network import ActionNetworkNFLClient
 from .book_identity import canonical_book_identity
 from .contracts import DataContractError, require_columns
 from .espn_market import ESPNMarketClient, ESPNTwoWayMarket
@@ -238,11 +239,13 @@ def collect_current_markets(
     *,
     week: int,
     espn_client: ESPNMarketClient | None = None,
+    action_client: ActionNetworkNFLClient | None = None,
     pro_client: CurrentOddsAPIClient | None = None,
 ) -> tuple[list[ESPNTwoWayMarket], dict[str, object]]:
     """Return verified live quotes plus research-only schedule fallbacks when needed."""
 
     espn = espn_client or ESPNMarketClient()
+    action = action_client or ActionNetworkNFLClient()
     optional = pro_client or CurrentOddsAPIClient()
     source_errors: list[str] = []
     markets: list[ESPNTwoWayMarket] = []
@@ -250,6 +253,14 @@ def collect_current_markets(
         markets.extend(espn.current_markets(targets, week=week))
     except DataContractError as exc:
         source_errors.append(f"espn: {exc}")
+
+    action_rows: list[ESPNTwoWayMarket] = []
+    if action.enabled:
+        try:
+            action_rows = action.current_markets(targets, week=week)
+            markets.extend(action_rows)
+        except DataContractError as exc:
+            source_errors.append(f"action_network: {exc}")
 
     pro_rows: list[ESPNTwoWayMarket] = []
     if optional.configured:
@@ -314,8 +325,23 @@ def collect_current_markets(
     }
     return values, {
         "status": "READY" if verified else "RESEARCH_FALLBACK",
-        "primary_source": "ESPN public endpoints",
+        "primary_source": "ESPN + Action Network public endpoints",
         "research_fallback_source": "nflverse schedule market fields",
+        "action_network_enabled": action.enabled,
+        "action_network_rows": len(action_rows),
+        "action_network_games": len({row.game_id for row in action_rows}),
+        "action_network_books": len(
+            {
+                identity
+                for row in action_rows
+                if (identity := canonical_book_identity(row.book))
+            }
+        ),
+        "action_network_diagnostic": action.last_diagnostic,
+        "action_network_timestamp_policy": (
+            "provider update timestamp when supplied; otherwise UTC collector "
+            "observation time at response receipt"
+        ),
         "optional_source_configured": optional.configured,
         "optional_source_rows": len(pro_rows),
         "research_fallback_rows": len(fallback_rows),

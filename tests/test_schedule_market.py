@@ -97,6 +97,13 @@ def test_aggregator_uses_schedule_snapshot_when_verified_source_fails() -> None:
         def current_markets(self, targets: pl.DataFrame, *, week: int):
             raise DataContractError("HTTP Error 403: Forbidden")
 
+    class NoActionNetwork:
+        enabled = False
+        last_diagnostic = {"status": "disabled"}
+
+        def current_markets(self, targets: pl.DataFrame, *, week: int):
+            return []
+
     class NoOptionalSource:
         configured = False
 
@@ -107,6 +114,7 @@ def test_aggregator_uses_schedule_snapshot_when_verified_source_fails() -> None:
         _targets(),
         week=4,
         espn_client=BlockedESPN(),  # type: ignore[arg-type]
+        action_client=NoActionNetwork(),  # type: ignore[arg-type]
         pro_client=NoOptionalSource(),  # type: ignore[arg-type]
     )
 
