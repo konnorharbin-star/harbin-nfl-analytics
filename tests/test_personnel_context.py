@@ -3,6 +3,7 @@ from __future__ import annotations
 import polars as pl
 
 from nfl.personnel_context import (
+    _depth_source_for_week,
     _latest_weekly_depth_snapshot,
     _non_qb_starter_risk,
 )
@@ -139,3 +140,19 @@ def test_latest_weekly_depth_snapshot_drops_stale_prior_starters() -> None:
     assert latest.height == 1
     assert latest.row(0, named=True)["player_key"] == "new-wr"
     assert latest.row(0, named=True)["depth_week"] == 5
+
+
+def test_depth_source_uses_latest_admissible_week_before_normalize() -> None:
+    depth = pl.DataFrame(
+        [
+            {"season": 2024, "team": "AAA", "week": 4, "player": "old"},
+            {"season": 2024, "team": "AAA", "week": 5, "player": "new"},
+            {"season": 2024, "team": "AAA", "week": 6, "player": "future"},
+        ]
+    )
+
+    selected = _depth_source_for_week(depth, season=2024, week=5)
+
+    assert selected.height == 1
+    assert selected.row(0, named=True)["player"] == "new"
+    assert selected.row(0, named=True)["week"] == 5
