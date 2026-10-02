@@ -24,6 +24,9 @@ DECISION_REQUIRED = {
     "quant_market",
     "quant_side",
     "quant_odds",
+    "quant_quote_at",
+    "kickoff",
+    "execution_ready",
     "portfolio_candidate_units",
     "portfolio_action",
 }
@@ -37,6 +40,26 @@ def _parse_dt(value: object) -> datetime | None:
     except ValueError:
         return None
     return parsed.replace(tzinfo=UTC) if parsed.tzinfo is None else parsed.astimezone(UTC)
+
+
+def _boolean(value: object) -> bool:
+    if isinstance(value, bool):
+        return value
+    return str(value or "").strip().lower() in {"1", "true", "t", "yes", "y"}
+
+
+def _valid_entry_provenance(row: dict[str, object]) -> bool:
+    decision = _parse_dt(row.get("decision_at"))
+    quote = _parse_dt(row.get("quant_quote_at"))
+    kickoff = _parse_dt(row.get("kickoff"))
+    return (
+        _boolean(row.get("execution_ready"))
+        and quote is not None
+        and decision is not None
+        and kickoff is not None
+        and quote <= decision < kickoff
+        and quote < kickoff
+    )
 
 
 def _edge_bucket(value: object) -> str:
@@ -106,6 +129,8 @@ def _earliest_decisions(decisions: pl.DataFrame) -> pl.DataFrame:
         units = float(row.get("portfolio_candidate_units") or 0.0)
         action = str(row.get("portfolio_action") or "PASS").upper()
         if units <= 0 or action not in {"PAPER", "SHADOW", "BET"}:
+            continue
+        if not _valid_entry_provenance(row):
             continue
         key = (str(row["game_id"]), str(row["quant_market"]))
         selected.setdefault(key, row)
@@ -188,7 +213,7 @@ def grade_portfolio_decisions(
                 "closing_snapshot_at": close_at,
                 "execution_clv": clv,
                 "portfolio_verified": True,
-                "entry_quote_verified": _parse_dt(entry.get("quant_quote_at")) is not None,
+                "entry_quote_verified": _valid_entry_provenance(entry),
             }
         )
         graded.append(row)
@@ -227,6 +252,12 @@ def _summary(frame: pl.DataFrame) -> dict[str, object]:
             "roi": None,
             "max_drawdown": 0.0,
             "avg_clv": None,
+            "clv_samples": 0,
+            "clv_coverage": 0.0,
+            "entry_quote_verified_bets": 0,
+            "entry_quote_coverage": 0.0,
+            "execution_ready_bets": 0,
+            "execution_ready_coverage": 0.0,
             "roi_ci_95": [None, None],
         }
     profits = [float(value) for value in frame.get_column("net_units").to_list()]
@@ -235,6 +266,16 @@ def _summary(frame: pl.DataFrame) -> dict[str, object]:
     pushes = frame.filter(pl.col("result") == "push").height
     decided = wins + losses
     clv = frame.get_column("execution_clv").drop_nulls().to_list()
+    entry_verified = (
+        frame.filter(pl.col("entry_quote_verified").cast(pl.Boolean)).height
+        if "entry_quote_verified" in frame.columns
+        else 0
+    )
+    execution_ready = (
+        frame.filter(pl.col("execution_ready").cast(pl.Boolean)).height
+        if "execution_ready" in frame.columns
+        else 0
+    )
     return {
         "bets": frame.height,
         "wins": wins,
@@ -246,6 +287,11 @@ def _summary(frame: pl.DataFrame) -> dict[str, object]:
         "max_drawdown": _max_drawdown(profits),
         "avg_clv": None if not clv else float(sum(clv) / len(clv)),
         "clv_samples": len(clv),
+        "clv_coverage": len(clv) / frame.height,
+        "entry_quote_verified_bets": entry_verified,
+        "entry_quote_coverage": entry_verified / frame.height,
+        "execution_ready_bets": execution_ready,
+        "execution_ready_coverage": execution_ready / frame.height,
         "roi_ci_95": _roi_ci(profits),
     }
 
@@ -256,6 +302,12 @@ def summarize_live_grading(graded: pl.DataFrame) -> dict[str, object]:
             "evidence_source": "portfolio_decisions_v1",
             "portfolio_verified": True,
             "graded_bets": 0,
+            "clv_samples": 0,
+            "clv_coverage": 0.0,
+            "entry_quote_verified_bets": 0,
+            "entry_quote_coverage": 0.0,
+            "execution_ready_bets": 0,
+            "execution_ready_coverage": 0.0,
             "overall": _summary(graded),
             "by_market": {},
             "by_signal": {},
@@ -277,6 +329,12 @@ def summarize_live_grading(graded: pl.DataFrame) -> dict[str, object]:
         "bets": graded.height,
         "roi": overall["roi"],
         "avg_clv": overall["avg_clv"],
+        "clv_samples": overall["clv_samples"],
+        "clv_coverage": overall["clv_coverage"],
+        "entry_quote_verified_bets": overall["entry_quote_verified_bets"],
+        "entry_quote_coverage": overall["entry_quote_coverage"],
+        "execution_ready_bets": overall["execution_ready_bets"],
+        "execution_ready_coverage": overall["execution_ready_coverage"],
         "overall": overall,
         "by_market": grouped("quant_market"),
         "by_signal": grouped("quant_signal"),
