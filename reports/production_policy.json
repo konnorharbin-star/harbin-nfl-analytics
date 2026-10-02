@@ -88,7 +88,8 @@
     "trailing_clv_throttle": 0,
     "trailing_roi_throttle": -0.1,
     "trailing_window_bets": 50,
-    "min_market_book_count_for_execution": 1
+    "min_market_book_count_for_execution": 1,
+    "require_open_exposure_ledger_for_production": true
   },
   "source": "paper only; no verified archived opening-entry sample",
   "split": "unavailable",
