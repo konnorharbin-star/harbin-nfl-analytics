@@ -9,7 +9,7 @@ import polars as pl
 
 from nfl.current import run_current_projection, unplayed_regular_games
 from nfl.data import NFLDataClient
-from nfl.espn_market import ESPNMarketClient
+from nfl.pro_market import collect_current_markets
 from nfl.free_market_backtest import build_archive_projection_dataset
 from nfl.market import MarketQuote, compare_two_way_market
 from nfl.probability import GaussianScoreDistribution
@@ -41,7 +41,10 @@ def main() -> None:
         refresh=args.refresh,
     )
     targets = unplayed_regular_games(schedules, args.season, target_week)
-    markets = ESPNMarketClient().current_markets(targets, week=target_week)
+    markets, source_meta = collect_current_markets(
+        targets,
+        week=target_week,
+    )
 
     historical = build_archive_projection_dataset(
         schedules,
@@ -118,12 +121,13 @@ def main() -> None:
         "status": "READY",
         "season": args.season,
         "week": target_week,
-        "market_source": "ESPN public endpoints",
+        "market_source": "canonical current NFL market aggregation",
+        "source_breadth": source_meta,
         "api_key_required": False,
         "football_projection": "canonical baseline",
         "market_release_state": "RESEARCH",
         "note": (
-            "Best research side is the highest-EV side at the observed ESPN price. "
+            "Best research side is the highest-EV side at an observed verified price. "
             "It is not a production betting recommendation or approved stake."
         ),
         "projection_audit": audit.to_dict(),
