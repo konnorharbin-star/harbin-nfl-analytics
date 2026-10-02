@@ -13,6 +13,7 @@ def _bet(
     verified: bool,
     quote_verified: bool,
     clv: float | None,
+    stage: str | None = None,
 ) -> dict[str, object]:
     return {
         "season": 2025,
@@ -28,6 +29,7 @@ def _bet(
         "entry_line_observed": verified,
         "entry_price_verified": verified,
         "entry_quote_verified": quote_verified,
+        "entry_price_stage": stage,
     }
 
 
@@ -72,18 +74,21 @@ def test_proof_uses_verified_provider_rows_without_promoting_archive_fallbacks(
                 verified=True,
                 quote_verified=True,
                 clv=0.5,
+                stage="espn_archived_open",
             ),
             _bet(
                 "provider-b",
                 verified=True,
                 quote_verified=True,
                 clv=0.25,
+                stage="timestamped_provider_entry",
             ),
             _bet(
                 "provider-unverified",
                 verified=True,
                 quote_verified=False,
                 clv=1.0,
+                stage="espn_archived_open",
             ),
         ]
     ).write_csv(provider_bets)
@@ -98,6 +103,8 @@ def test_proof_uses_verified_provider_rows_without_promoting_archive_fallbacks(
     assert promotion["verified_archive_bets"] == 0
     assert promotion["verified_provider_bets"] == 2
     assert promotion["verified_bets"] == 2
+    assert promotion["verified_archived_open_close_bets"] == 1
+    assert promotion["verified_timestamped_provider_bets"] == 1
     assert promotion["verified_clv_samples"] == 2
     assert promotion["verified_clv_coverage"] == 1.0
     assert promotion["entry_quote_verified"] is True
