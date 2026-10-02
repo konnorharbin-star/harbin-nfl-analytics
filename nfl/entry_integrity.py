@@ -1,9 +1,9 @@
 """Historical NFL entry-provenance classification.
 
-nflverse's free ``initial_lines.csv`` can provide an actual opening moneyline price,
-but spread/total rows provide the opening *line* without opening juice. The research
-backtest may still evaluate those line observations using the archive-final price, but
-that combination is not promotion-quality entry-price evidence.
+nflverse's current free ``initial_lines.csv`` contains 2021 spread/total opening
+lines only. It has no opening juice, timestamps, or 2022-2025 promotion-sample coverage.
+The integrity layer remains future-compatible with a genuinely observed moneyline
+opener, but the present nflverse source does not supply one.
 """
 
 from __future__ import annotations
