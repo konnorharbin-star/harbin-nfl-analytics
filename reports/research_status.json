@@ -48,16 +48,16 @@
       }
     },
     "canonical_betting": {
-      "clv_coverage": null,
+      "clv_coverage": 0.0,
       "clv_integrity_passed": false,
-      "clv_samples": null,
+      "clv_samples": 0,
       "entry_integrity_passed": false,
-      "entry_quote_coverage": null,
-      "execution_ready_coverage": null,
+      "entry_quote_coverage": 0.0,
+      "execution_ready_coverage": 0.0,
       "forward_betting_gate_passed": false,
       "graded_bets": 0,
       "minimum_bets": 300,
-      "minimum_clv_coverage": null,
+      "minimum_clv_coverage": 0.9,
       "status": "ACCUMULATING_FORWARD_EVIDENCE"
     },
     "canonical_model_change_enabled": false,
