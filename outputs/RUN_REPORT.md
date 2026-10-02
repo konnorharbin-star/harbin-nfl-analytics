@@ -10,8 +10,8 @@
 - Margin / total 80% coverage: **78.31% / 80.51%**.
 
 ## Monitoring and execution
-- Live readiness: **88.0/100**.
-- Portfolio mode: **PAPER**; proposed **1.11u**; approved **0.00u**.
+- Live readiness: **87.7/100**.
+- Portfolio mode: **PAPER**; proposed **1.04u**; approved **0.00u**.
 - Historical evidence: **2584 bets**, ROI **-7.84%**, CLV **—**.
 - Independent forward evidence: **0 bets**, ROI **—**, CLV **—**.
 

@@ -33,14 +33,14 @@
     "total_open_bets_after_allocation": 5,
     "total_open_units_after_allocation": 0.32361
   },
-  "execution_blocked_bets": 3,
+  "execution_blocked_bets": 0,
   "mode": "paper",
   "paper_or_shadow_allocated_units": 0.32361,
   "policy_mode": "paper",
   "production_block_reason": "",
   "production_eligible": false,
   "production_gate_open": false,
-  "proposed_units": 1.110153,
+  "proposed_units": 1.040061,
   "release_state": "PAPER",
-  "risk_adjusted_proposed_units": 1.110153
+  "risk_adjusted_proposed_units": 1.040061
 }
