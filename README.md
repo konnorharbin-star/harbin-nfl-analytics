@@ -154,6 +154,19 @@ Key controls:
 - `nfl/release_gate.py` — hard state machine; a weighted score cannot override failed evidence gates.
 - `nfl/render.py` — NCAA-style one-row-per-game weekly HTML/PNG board with release-state labeling.
 
+### Phase 5 — consolidated forward-shadow validation
+
+The prospective evidence streams now have one read-only acceptance layer in
+`nfl/forward_shadow.py`. It consolidates the portfolio-verified betting ledger,
+recent-form total shadow, QB-total shadow, and the two probability-shadow targets
+without rebuilding historical predictions or retuning candidates on 2026 outcomes.
+
+The generated `reports/forward_shadow_summary.json` keeps candidate promotion evidence
+separate from canonical betting evidence. The canonical forward gate requires at least
+300 graded portfolio decisions with non-negative ROI and positive CLV; each frozen
+score/probability candidate retains its own 128-game statistical gate. The consolidated
+report has no authority to change the canonical model or open PRODUCTION.
+
 ### NCAA-style audit suite
 
 The NFL repository also has explicit machine-readable audits:
@@ -213,6 +226,7 @@ python harbin_nfl_model.py 2026 --refresh
 # forward evidence utilities
 python capture_lines.py --season 2026 --refresh
 python grade_live.py
+python run_forward_shadow.py
 python run_audit_snapshot.py
 ```
 
@@ -250,6 +264,7 @@ If `THE_ODDS_API_KEY` is absent, the canonical current path still runs on free E
 
 - `nfl/policy.py`, `nfl/execution_market.py`, `nfl/portfolio.py` — policy, execution and risk controls.
 - `nfl/line_history.py`, `nfl/decision_ledger.py`, `nfl/grading.py` — forward evidence ledgers and grading.
+- `nfl/forward_shadow.py` — consolidated Phase 5 prospective evidence and acceptance state.
 - `nfl/proof.py`, `nfl/monitoring.py`, `nfl/release_gate.py`, `nfl/health.py`, `nfl/model_card.py` — proof and release controls.
 - `nfl/reporting.py`, `nfl/render.py`, `nfl/pipeline.py` — canonical machine + human publication path.
 - `harbin_nfl_model.py` — primary operational entrypoint.
