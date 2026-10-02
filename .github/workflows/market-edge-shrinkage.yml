@@ -1,0 +1,82 @@
+name: NFL Market Edge Shrinkage
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Free NFL Market Backtest"]
+    types: [completed]
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/market_shrinkage.py"
+      - "run_market_edge_shrinkage.py"
+      - "tests/test_market_shrinkage.py"
+      - "docs/STAGE30_MARKET_EDGE_SHRINKAGE.md"
+      - ".github/workflows/market-edge-shrinkage.yml"
+  push:
+    branches: [main]
+    paths:
+      - "nfl/market_shrinkage.py"
+      - "run_market_edge_shrinkage.py"
+      - "tests/test_market_shrinkage.py"
+      - ".github/workflows/market-edge-shrinkage.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nfl-market-edge-shrinkage
+  cancel-in-progress: true
+
+jobs:
+  research:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+
+      - name: Research integrity tests
+        run: python -m pytest -q tests/test_market_shrinkage.py
+
+      - name: Evaluate chronological shrinkage
+        run: python run_market_edge_shrinkage.py
+
+      - name: Upload research report
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-market-edge-shrinkage
+          path: |
+            reports/market_edge_shrinkage.json
+            docs/market_edge_shrinkage.json
+
+      - name: Commit research report
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          git config user.name "harbin-nfl-model-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add             reports/market_edge_shrinkage.json             docs/market_edge_shrinkage.json
+          if ! git diff --cached --quiet; then
+            git commit -m "research: refresh NFL market-edge shrinkage"
+            git pull --rebase origin main
+            git push
+          else
+            echo "No market-edge shrinkage changes to commit."
+          fi

@@ -100,6 +100,15 @@ The canonical current-market path:
 
 A duplicated sportsbook exposed through two providers does not count as two books.
 
+### Stage 30 — market-edge reliability research
+
+The broad free archive currently shows negative betting ROI despite large raw model
+edges. `nfl/market_shrinkage.py` therefore tests a downstream log-odds shrinkage of
+model probabilities toward the no-vig market. Alpha is selected before the 2024
+validation and frozen into the untouched 2025 holdout. Betting ROI does not select
+alpha, sportsbook probabilities never enter the fair-score model, and the experiment
+cannot change the canonical policy while archive entry prices remain unverified.
+
 ### Stage 4 — current NFL context
 
 The context layer now mirrors the NCAA current-only philosophy:
@@ -182,12 +191,6 @@ count against slate, game, team, market, book, kickoff-window, and max-bet limit
 the same game/market cannot be re-approved while that production bet remains open.
 Production fails closed if the committed-exposure ledger is missing or invalid.
 
-Repeated production runs also reserve every still-open future `BET` already persisted
-in the decision ledger. Those committed units count against week/slate, game, team,
-market, book, kickoff-window, and bet-count caps, and the same game/market cannot be
-approved twice while the earlier stake remains open. Production halts if this committed
-exposure cannot be read or verified rather than assuming prior exposure is zero.
-
 ### Monitoring gate separation
 
 Operational monitoring now reports both an all-in live-readiness score and an
@@ -248,6 +251,7 @@ python run_free_market_backtest.py --start-season 2022 --end-season 2025 \
 
 # regenerate the frozen verified-entry market policy from existing evidence
 python run_policy_calibration.py
+python run_market_edge_shrinkage.py
 
 # canonical NCAA-style NFL operational run + weekly board
 python harbin_nfl_model.py 2026 --refresh
