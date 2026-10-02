@@ -87,6 +87,59 @@ def _odds_shape(value: object) -> dict[str, object]:
     return output
 
 
+def _snapshot_values(value: object) -> dict[str, object]:
+    """Return compact open/current/close price snapshots without opaque refs."""
+
+    if not isinstance(value, dict):
+        return {}
+    allowed = {
+        "moneyLine",
+        "moneyline",
+        "spreadOdds",
+        "spread_odds",
+        "pointSpread",
+        "spread",
+        "overUnder",
+        "overunder",
+        "overOdds",
+        "underOdds",
+        "price",
+        "line",
+        "value",
+    }
+
+    def compact(snapshot: object) -> dict[str, object]:
+        if not isinstance(snapshot, dict):
+            return {}
+        return {
+            key: raw
+            for key, raw in snapshot.items()
+            if key in allowed and isinstance(raw, (str, int, float, bool))
+        }
+
+    output: dict[str, object] = {}
+    for label in ("open", "current", "close"):
+        snapshot = value.get(label)
+        if isinstance(snapshot, dict):
+            output[label] = compact(snapshot)
+
+    for side_name in ("homeTeamOdds", "awayTeamOdds"):
+        side = value.get(side_name)
+        if not isinstance(side, dict):
+            continue
+        side_output: dict[str, object] = {}
+        direct = compact(side)
+        if direct:
+            side_output["direct"] = direct
+        for label in ("open", "current", "close"):
+            snapshot = side.get(label)
+            if isinstance(snapshot, dict):
+                side_output[label] = compact(snapshot)
+        if side_output:
+            output[side_name] = side_output
+    return output
+
+
 def _scoreboard_summary(
     payload: dict[str, object],
     *,
@@ -225,6 +278,13 @@ def _core_probe(
         _odds_shape(item)
         for item in resolved_items[:5]
     ]
+    output["resolved_snapshot_values"] = [
+        {
+            "provider": _provider_identity(item),
+            "snapshots": _snapshot_values(item),
+        }
+        for item in resolved_items[:5]
+    ]
     return output
 
 
@@ -275,12 +335,26 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("season", type=int, nargs="?", default=2026)
     parser.add_argument("--week", type=int)
+    parser.add_argument(
+        "--historical",
+        action="store_true",
+        help="Probe completed regular-season games instead of only unplayed targets.",
+    )
     args = parser.parse_args()
 
     source = NFLDataClient()
     schedules = source.load_schedules([args.season], refresh=True)
     week = args.week or next_unplayed_regular_week(schedules, args.season)
-    target_frame = unplayed_regular_games(schedules, args.season, week)
+    if args.historical:
+        target_frame = schedules.filter(
+            (pl.col("season") == args.season)
+            & (pl.col("week") == week)
+            & (pl.col("game_type") == "REG")
+            & pl.col("home_score").is_not_null()
+            & pl.col("away_score").is_not_null()
+        ).sort("game_id")
+    else:
+        target_frame = unplayed_regular_games(schedules, args.season, week)
     targets = {
         (str(row["home_team"]), str(row["away_team"])): row
         for row in target_frame.iter_rows(named=True)
@@ -331,6 +405,7 @@ def main() -> None:
     output = {
         "season": args.season,
         "week": week,
+        "historical_mode": bool(args.historical),
         "target_games": target_frame.height,
         "target_pairs": sorted(f"{away}@{home}" for home, away in targets),
         "nflverse_schedule": _schedule_market_summary(target_frame),
