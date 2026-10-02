@@ -143,6 +143,54 @@ def _provider_name(value: dict[str, object]) -> str:
     return str(provider or "")
 
 
+def _compact_odds_item(value: dict[str, object]) -> dict[str, object]:
+    def compact_side(side: object) -> object:
+        if not isinstance(side, dict):
+            return side
+        return {
+            key: side.get(key)
+            for key in (
+                "favorite",
+                "underdog",
+                "moneyLine",
+                "spreadOdds",
+                "open",
+                "close",
+                "current",
+            )
+            if key in side
+        }
+
+    links = value.get("links")
+    compact_links = []
+    if isinstance(links, list):
+        for link in links:
+            if not isinstance(link, dict):
+                continue
+            compact_links.append(
+                {
+                    "rel": link.get("rel"),
+                    "text": link.get("text"),
+                    "shortText": link.get("shortText"),
+                    "href": link.get("href"),
+                }
+            )
+    return {
+        "provider": value.get("provider"),
+        "details": value.get("details"),
+        "spread": value.get("spread"),
+        "overUnder": value.get("overUnder"),
+        "overOdds": value.get("overOdds"),
+        "underOdds": value.get("underOdds"),
+        "open": value.get("open"),
+        "close": value.get("close"),
+        "current": value.get("current"),
+        "homeTeamOdds": compact_side(value.get("homeTeamOdds")),
+        "awayTeamOdds": compact_side(value.get("awayTeamOdds")),
+        "links": compact_links,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--season", type=int, default=2025)
@@ -195,6 +243,7 @@ def main() -> None:
             "id": _provider_id(item),
             "name": _provider_name(item),
             "shape": _shape(item),
+            "snapshot": _compact_odds_item(item),
         }
         for item in resolved[:10]
     ]
