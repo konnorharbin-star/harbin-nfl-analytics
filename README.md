@@ -179,6 +179,13 @@ mode with at least two validated markets. This matches the allocator's existing 
 rule, so the model card, release report, and executable staking state can no longer
 disagree about PRODUCTION eligibility.
 
+### Stage 40 — generated-state source revision guard
+
+Generated-state writers may still reconcile with other generated writers, but they now
+stop cleanly if newer source/workflow/test changes have landed since the run began.
+This prevents stale calculations from rebasing across a newer model revision and
+temporarily replacing outputs produced by newer code.
+
 ### Stage 4 — current NFL context
 
 The context layer now mirrors the NCAA current-only philosophy:
