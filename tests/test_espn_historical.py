@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import polars as pl
 
-from run_espn_verified_market_backtest import schedule_seasons_for_evidence
-
 from nfl.espn_historical import (
     build_espn_archive_bets,
     fetch_espn_archive_quotes,
     parse_espn_archive_item,
 )
+from run_espn_verified_market_backtest import schedule_seasons_for_evidence
 
 
 def _price(value: str) -> dict[str, object]:
