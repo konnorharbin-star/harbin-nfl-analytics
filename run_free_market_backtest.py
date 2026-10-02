@@ -16,6 +16,7 @@ from nfl.free_market_backtest import (
     evaluate_archive_holdout,
     summarize_archive_bets,
 )
+from nfl.policy_calibration import derive_production_policy
 from nfl.proof import write_evidence_report
 
 
@@ -173,10 +174,16 @@ def main() -> None:
     }
     output = reports / "free_market_backtest.json"
     output.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+    evidence_path = reports / "evidence_report.json"
     evidence = write_evidence_report(
-        output=reports / "evidence_report.json",
+        output=evidence_path,
         backtest_path=output,
         bets_path=reports / "free_market_bets.csv",
+    )
+    policy = derive_production_policy(
+        bets_path=reports / "free_market_bets.csv",
+        evidence_path=evidence_path,
+        output_path=reports / "production_policy.json",
     )
     print(json.dumps(payload, indent=2, sort_keys=True))
     print(
@@ -184,6 +191,8 @@ def main() -> None:
             {
                 "evidence_status": evidence["status"],
                 "promotion_sample": evidence["promotion_sample"],
+                "policy_mode": policy["deployment_mode"],
+                "policy_source": policy["source"],
             },
             indent=2,
             sort_keys=True,
