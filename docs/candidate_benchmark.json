@@ -1,0 +1,287 @@
+{
+  "candidates": {
+    "opponent_adjusted_pbp": {
+      "margin_eligible": false,
+      "margin_folds": [
+        {
+          "adjusted_mae": 9.973505888617048,
+          "adjusted_rmse": 12.875207483599088,
+          "baseline_mae": 9.984249092656002,
+          "baseline_rmse": 12.965714220646992,
+          "detail": "feature_set=all; ridge_alpha=100.0; pbp_ridge=12.0",
+          "games": 208,
+          "holdout_season": 2024,
+          "mae_improvement": 0.010743204038954346,
+          "passed": true,
+          "rmse_improvement": 0.0905067370479049,
+          "validation_season": 2023
+        },
+        {
+          "adjusted_mae": 10.640077340009599,
+          "adjusted_rmse": 13.26608747018132,
+          "baseline_mae": 10.606921708634271,
+          "baseline_rmse": 13.199583958007043,
+          "detail": "feature_set=epa_success; ridge_alpha=100.0; pbp_ridge=12.0",
+          "games": 208,
+          "holdout_season": 2025,
+          "mae_improvement": -0.03315563137532784,
+          "passed": false,
+          "rmse_improvement": -0.06650351217427719,
+          "validation_season": 2024
+        }
+      ],
+      "margin_robustness_score": -2.6917570542802605e-05,
+      "name": "opponent_adjusted_pbp",
+      "total_eligible": false,
+      "total_folds": [
+        {
+          "adjusted_mae": 10.252537137944312,
+          "adjusted_rmse": 13.48809513812171,
+          "baseline_mae": 10.127727105516398,
+          "baseline_rmse": 13.274731254712218,
+          "detail": "feature_set=core; ridge_alpha=0.1; pbp_ridge=12.0",
+          "games": 208,
+          "holdout_season": 2024,
+          "mae_improvement": -0.12481003242791466,
+          "passed": false,
+          "rmse_improvement": -0.21336388340949064,
+          "validation_season": 2023
+        },
+        {
+          "adjusted_mae": 10.506616313287292,
+          "adjusted_rmse": 13.313018320495546,
+          "baseline_mae": 10.483860728009018,
+          "baseline_rmse": 13.303444576404768,
+          "detail": "feature_set=epa_success; ridge_alpha=100.0; pbp_ridge=12.0",
+          "games": 208,
+          "holdout_season": 2025,
+          "mae_improvement": -0.022755585278273927,
+          "passed": false,
+          "rmse_improvement": -0.009573744090777936,
+          "validation_season": 2024
+        }
+      ],
+      "total_robustness_score": -0.007821677669489435
+    },
+    "prior_season": {
+      "margin_eligible": false,
+      "margin_folds": [
+        {
+          "adjusted_mae": 10.063305405224238,
+          "adjusted_rmse": 13.07427998467252,
+          "baseline_mae": 9.984249092656002,
+          "baseline_rmse": 12.965714220646992,
+          "detail": "prior_weight=0.35",
+          "games": 208,
+          "holdout_season": 2024,
+          "mae_improvement": -0.07905631256823575,
+          "passed": false,
+          "rmse_improvement": -0.10856576402552776,
+          "validation_season": 2023
+        },
+        {
+          "adjusted_mae": 10.591350936384979,
+          "adjusted_rmse": 13.182085435712635,
+          "baseline_mae": 10.606921708634271,
+          "baseline_rmse": 13.199583958007043,
+          "detail": "prior_weight=0.05",
+          "games": 208,
+          "holdout_season": 2025,
+          "mae_improvement": 0.015570772249292375,
+          "passed": false,
+          "rmse_improvement": 0.017498522294408403,
+          "validation_season": 2024
+        }
+      ],
+      "margin_robustness_score": -0.0033744323636559167,
+      "name": "prior_season",
+      "total_eligible": false,
+      "total_folds": [
+        {
+          "adjusted_mae": 10.13021618028315,
+          "adjusted_rmse": 13.343843687006288,
+          "baseline_mae": 10.127727105516398,
+          "baseline_rmse": 13.274731254712218,
+          "detail": "prior_weight=0.35",
+          "games": 208,
+          "holdout_season": 2024,
+          "mae_improvement": -0.002489074766751642,
+          "passed": false,
+          "rmse_improvement": -0.06911243229406949,
+          "validation_season": 2023
+        },
+        {
+          "adjusted_mae": 10.505020782942829,
+          "adjusted_rmse": 13.316209503287629,
+          "baseline_mae": 10.483860728009018,
+          "baseline_rmse": 13.303444576404768,
+          "detail": "prior_weight=0.05",
+          "games": 208,
+          "holdout_season": 2025,
+          "mae_improvement": -0.021160054933810457,
+          "passed": false,
+          "rmse_improvement": -0.012764926882860905,
+          "validation_season": 2024
+        }
+      ],
+      "total_robustness_score": -0.0021074873602945484
+    },
+    "quarterback_state": {
+      "margin_eligible": true,
+      "margin_folds": [
+        {
+          "adjusted_mae": 9.914054217168102,
+          "adjusted_rmse": 12.77010938795863,
+          "baseline_mae": 9.984249092656002,
+          "baseline_rmse": 12.965714220646992,
+          "detail": "feature_set=delta; ridge_alpha=100.0; qb_prior_dropbacks=75.0",
+          "games": 208,
+          "holdout_season": 2024,
+          "mae_improvement": 0.07019487548789982,
+          "passed": true,
+          "rmse_improvement": 0.19560483268836215,
+          "validation_season": 2023
+        },
+        {
+          "adjusted_mae": 10.597769262975248,
+          "adjusted_rmse": 13.1776304877627,
+          "baseline_mae": 10.606921708634271,
+          "baseline_rmse": 13.199583958007043,
+          "detail": "feature_set=epa; ridge_alpha=0.1; qb_prior_dropbacks=75.0",
+          "games": 208,
+          "holdout_season": 2025,
+          "mae_improvement": 0.009152445659022845,
+          "passed": true,
+          "rmse_improvement": 0.02195347024434291,
+          "validation_season": 2024
+        }
+      ],
+      "margin_robustness_score": 0.006160735998525098,
+      "name": "quarterback_state",
+      "total_eligible": false,
+      "total_folds": [
+        {
+          "adjusted_mae": 10.08530287323321,
+          "adjusted_rmse": 13.301983295822609,
+          "baseline_mae": 10.127727105516398,
+          "baseline_rmse": 13.274731254712218,
+          "detail": "feature_set=epa; ridge_alpha=10.0; qb_prior_dropbacks=75.0",
+          "games": 208,
+          "holdout_season": 2024,
+          "mae_improvement": 0.042424232283186925,
+          "passed": false,
+          "rmse_improvement": -0.02725204111039048,
+          "validation_season": 2023
+        },
+        {
+          "adjusted_mae": 10.391953831649412,
+          "adjusted_rmse": 13.178148265842694,
+          "baseline_mae": 10.483860728009018,
+          "baseline_rmse": 13.303444576404768,
+          "detail": "feature_set=quality; ridge_alpha=0.1; qb_prior_dropbacks=75.0",
+          "games": 208,
+          "holdout_season": 2025,
+          "mae_improvement": 0.0919068963596068,
+          "passed": true,
+          "rmse_improvement": 0.12529631056207435,
+          "validation_season": 2024
+        }
+      ],
+      "total_robustness_score": 0.005080210463010987
+    },
+    "score_recency": {
+      "margin_eligible": false,
+      "margin_folds": [
+        {
+          "adjusted_mae": null,
+          "adjusted_rmse": null,
+          "baseline_mae": 9.984249092656002,
+          "baseline_rmse": 12.965714220646992,
+          "detail": "validation selected baseline / zero recency",
+          "games": 208,
+          "holdout_season": 2024,
+          "mae_improvement": 0.0,
+          "passed": false,
+          "rmse_improvement": 0.0,
+          "validation_season": 2023
+        },
+        {
+          "adjusted_mae": null,
+          "adjusted_rmse": null,
+          "baseline_mae": 10.606921708634271,
+          "baseline_rmse": 13.199583958007043,
+          "detail": "validation selected baseline / zero recency",
+          "games": 208,
+          "holdout_season": 2025,
+          "mae_improvement": 0.0,
+          "passed": false,
+          "rmse_improvement": 0.0,
+          "validation_season": 2024
+        }
+      ],
+      "margin_robustness_score": 0.0,
+      "name": "score_recency",
+      "total_eligible": false,
+      "total_folds": [
+        {
+          "adjusted_mae": null,
+          "adjusted_rmse": null,
+          "baseline_mae": 10.127727105516398,
+          "baseline_rmse": 13.274731254712218,
+          "detail": "validation selected baseline / zero recency",
+          "games": 208,
+          "holdout_season": 2024,
+          "mae_improvement": 0.0,
+          "passed": false,
+          "rmse_improvement": 0.0,
+          "validation_season": 2023
+        },
+        {
+          "adjusted_mae": null,
+          "adjusted_rmse": null,
+          "baseline_mae": 10.483860728009018,
+          "baseline_rmse": 13.303444576404768,
+          "detail": "validation selected baseline / zero recency",
+          "games": 208,
+          "holdout_season": 2025,
+          "mae_improvement": 0.0,
+          "passed": false,
+          "rmse_improvement": 0.0,
+          "validation_season": 2024
+        }
+      ],
+      "total_robustness_score": 0.0
+    }
+  },
+  "canonical_score_adjustment_enabled": false,
+  "end_week": 18,
+  "folds": [
+    {
+      "holdout_season": 2024,
+      "validation_season": 2023
+    },
+    {
+      "holdout_season": 2025,
+      "validation_season": 2024
+    }
+  ],
+  "margin_selection": {
+    "reason": "development-fold winner only; canonical score remains unchanged until independent 2026 forward evidence clears a separate gate",
+    "release_state": "SHADOW_CANDIDATE",
+    "robustness_score": 0.006160735998525098,
+    "score_adjustment_enabled": false,
+    "selected": "quarterback_state"
+  },
+  "meaning": "2023-2025 are rolling development evidence, not a pristine promotion holdout. Baseline remains canonical. Any selected nonzero layer is only a candidate for separately persisted 2026 forward SHADOW evaluation.",
+  "promotion_eligible": false,
+  "reserved_forward_season": 2026,
+  "start_week": 5,
+  "status": "DEVELOPMENT_ONLY",
+  "total_selection": {
+    "reason": "no candidate cleared every chronological development fold",
+    "release_state": "DISABLED",
+    "robustness_score": 0.0,
+    "score_adjustment_enabled": false,
+    "selected": "baseline"
+  }
+}
