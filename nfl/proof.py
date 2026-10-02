@@ -100,9 +100,11 @@ def build_evidence_report(
         if (
             not provider_bets.is_empty()
             and "entry_price_verified" in provider_bets.columns
+            and "entry_quote_verified" in provider_bets.columns
         ):
             provider_verified = provider_bets.filter(
                 _bool_column(provider_bets, "entry_price_verified")
+                & _bool_column(provider_bets, "entry_quote_verified")
             )
 
     verified_frames = [
