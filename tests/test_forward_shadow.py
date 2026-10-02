@@ -19,6 +19,10 @@ def test_live_forward_gate_requires_sample_roi_and_clv() -> None:
             "evidence_source": "portfolio_decisions_v1",
             "portfolio_verified": True,
             "graded_bets": 300,
+            "entry_quote_coverage": 1.0,
+            "execution_ready_coverage": 1.0,
+            "clv_samples": 270,
+            "clv_coverage": 0.90,
             "overall": {
                 "bets": 300,
                 "roi": 0.01,
@@ -33,6 +37,33 @@ def test_live_forward_gate_requires_sample_roi_and_clv() -> None:
     assert summary["forward_betting_gate_passed"] is True
     assert summary["phase_status"] == "READY_FOR_RELEASE_REVIEW"
     assert summary["production_release_authority"] is False
+
+
+def test_live_forward_gate_rejects_sparse_clv_coverage() -> None:
+    summary = build_forward_shadow_summary(
+        live_report={
+            "evidence_source": "portfolio_decisions_v1",
+            "portfolio_verified": True,
+            "graded_bets": 300,
+            "entry_quote_coverage": 1.0,
+            "execution_ready_coverage": 1.0,
+            "clv_samples": 267,
+            "clv_coverage": 0.89,
+            "overall": {
+                "bets": 300,
+                "roi": 0.01,
+                "avg_clv": 0.02,
+                "max_drawdown": 8.0,
+                "roi_ci_95": [-0.03, 0.05],
+            },
+        }
+    )
+
+    canonical = summary["canonical_betting"]
+    assert canonical["status"] == "INSUFFICIENT_FORWARD_CLV_COVERAGE"
+    assert canonical["clv_integrity_passed"] is False
+    assert summary["forward_betting_gate_passed"] is False
+    assert summary["phase_status"] == "ACCUMULATING_FORWARD_EVIDENCE"
 
 
 def test_reported_candidate_promotion_is_rejected_before_minimum_sample() -> None:
