@@ -47,6 +47,9 @@ def _candidate(**overrides: object) -> dict[str, object]:
 def test_policy_and_kelly_are_conservative() -> None:
     assert signal_from_policy(0.0, 0.10, 0.70, "moneyline") == "PASS"
     assert signal_from_policy(0.08, 0.05, 0.58, "spread") == "STRONG"
+    portfolio = DEFAULT_POLICY["portfolio"]
+    assert isinstance(portfolio, dict)
+    assert portfolio["min_market_book_count_for_execution"] == 1
     units = fractional_kelly_units(0.58, -110, kelly_fraction=0.20, max_units=1.0)
     assert 0.0 < units <= 1.0
 
@@ -58,6 +61,69 @@ def test_execution_market_rejects_stale_quote() -> None:
     ready, reason = validate_execution_row(row, limits=limits, now=now)
     assert not ready
     assert "stale" in reason
+
+
+def test_production_invalid_quote_does_not_consume_portfolio_capacity(tmp_path) -> None:
+    now = datetime.now(UTC)
+    row = _candidate(quant_quote_at=(now - timedelta(hours=2)).isoformat())
+    policy = dict(DEFAULT_POLICY)
+    portfolio = DEFAULT_POLICY["portfolio"]
+    assert isinstance(portfolio, dict)
+    policy["portfolio"] = {
+        **portfolio,
+        "require_live_history_for_production": False,
+    }
+    policy["deployment_mode"] = "production"
+
+    frame, summary = apply_portfolio_controls(
+        pl.DataFrame([row]),
+        policy=policy,
+        release_gate={"release_state": "PRODUCTION", "production_eligible": True},
+        live_bets_path=tmp_path / "none.csv",
+        now=now,
+    )
+
+    assert summary["mode"] == "production"
+    assert summary["production_gate_open"] is True
+    assert summary["production_eligible"] is True
+    assert summary["execution_blocked_bets"] == 1
+    assert frame.get_column("portfolio_candidate_units").sum() == 0.0
+    assert frame.get_column("portfolio_stake_units").sum() == 0.0
+    assert frame.get_column("portfolio_action")[0] == "PASS"
+    assert "stale" in frame.get_column("portfolio_limit_reason")[0]
+
+
+def test_production_bankroll_hard_stop_is_explicitly_halted(tmp_path) -> None:
+    now = datetime.now(UTC)
+    history = tmp_path / "live.csv"
+    history.write_text(
+        "net_units,execution_clv\n"
+        "20.0,0.02\n"
+        "-20.0,-0.02\n",
+        encoding="utf-8",
+    )
+    policy = dict(DEFAULT_POLICY)
+    portfolio = DEFAULT_POLICY["portfolio"]
+    assert isinstance(portfolio, dict)
+    policy["portfolio"] = dict(portfolio)
+    policy["deployment_mode"] = "production"
+
+    frame, summary = apply_portfolio_controls(
+        pl.DataFrame([_candidate()]),
+        policy=policy,
+        release_gate={"release_state": "PRODUCTION", "production_eligible": True},
+        live_bets_path=history,
+        now=now,
+    )
+
+    assert summary["production_gate_open"] is True
+    assert summary["production_eligible"] is False
+    assert summary["mode"] == "halted"
+    assert summary["bankroll_risk"]["hard_stop"] is True
+    assert "hard stop" in summary["production_block_reason"]
+    assert frame.get_column("portfolio_candidate_units").sum() == 0.0
+    assert frame.get_column("portfolio_stake_units").sum() == 0.0
+    assert frame.get_column("portfolio_action")[0] == "PASS"
 
 
 def test_paper_portfolio_applies_game_cap_without_real_stake(tmp_path) -> None:
