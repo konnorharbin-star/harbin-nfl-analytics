@@ -1,4 +1,4 @@
-"""Compare current NFL fair scores with free ESPN markets."""
+"""Compare current NFL fair scores with free verified market sources."""
 
 from __future__ import annotations
 
@@ -9,9 +9,9 @@ import polars as pl
 
 from nfl.current import run_current_projection, unplayed_regular_games
 from nfl.data import NFLDataClient
-from nfl.pro_market import collect_current_markets
 from nfl.free_market_backtest import build_archive_projection_dataset
 from nfl.market import MarketQuote, compare_two_way_market
+from nfl.pro_market import collect_current_markets
 from nfl.probability import GaussianScoreDistribution
 
 
