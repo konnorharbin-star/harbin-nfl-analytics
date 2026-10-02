@@ -1,5 +1,10 @@
 # Stage 35 — Generated-state writer serialization
 
+> Superseded by Stage 36. GitHub Actions concurrency retains at most one running and
+> one pending run per group, so a single shared writer group can cancel legitimate
+> pending writers. Stage 36 restores workflow-scoped concurrency and reconciles
+> cross-workflow push races with bounded fetch/rebase/push retries instead.
+
 Stage 35 removes a repository-level race between independent GitHub Actions that write
 generated NFL state back to `main`.
 
