@@ -2,6 +2,7 @@ from datetime import UTC, datetime
 
 import polars as pl
 
+from nfl.contracts import DataContractError
 from nfl.espn_market import ESPNMarketClient, parse_espn_odds
 
 
@@ -216,6 +217,54 @@ def test_espn_current_market_deduplicates_same_canonical_book() -> None:
         def _core_odds(self, event_id: str) -> list[dict[str, object]]:
             assert event_id == "401999999"
             return [core_odds]
+
+    markets = FixtureClient().current_markets(targets, week=4)
+
+    assert len(markets) == 3
+    assert {market.market_type for market in markets} == {
+        "moneyline",
+        "spread",
+        "total",
+    }
+
+
+def test_espn_current_market_keeps_scoreboard_when_core_fails() -> None:
+    targets = pl.DataFrame(
+        {
+            "game_id": ["2026_04_BUF_KC"],
+            "home_team": ["KC"],
+            "away_team": ["BUF"],
+        }
+    )
+
+    class FixtureClient(ESPNMarketClient):
+        def scoreboard(self, *, week: int) -> dict[str, object]:
+            assert week == 4
+            return {
+                "events": [
+                    {
+                        "id": "401999999",
+                        "competitions": [
+                            {
+                                "competitors": [
+                                    {
+                                        "homeAway": "home",
+                                        "team": {"abbreviation": "KC"},
+                                    },
+                                    {
+                                        "homeAway": "away",
+                                        "team": {"abbreviation": "BUF"},
+                                    },
+                                ],
+                                "odds": [_odds()],
+                            }
+                        ],
+                    }
+                ]
+            }
+
+        def _core_odds(self, event_id: str) -> list[dict[str, object]]:
+            raise DataContractError("fixture Core outage")
 
     markets = FixtureClient().current_markets(targets, week=4)
 
