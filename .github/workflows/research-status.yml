@@ -1,0 +1,86 @@
+name: NFL Research Status
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "NFL Candidate Benchmark"
+      - "NFL Market Edge Shrinkage"
+      - "NFL Forward Shadow Summary"
+    types: [completed]
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/research_status.py"
+      - "nfl/model_card.py"
+      - "run_research_status.py"
+      - "tests/test_research_status.py"
+      - ".github/workflows/research-status.yml"
+  push:
+    branches: [main]
+    paths:
+      - "nfl/research_status.py"
+      - "nfl/model_card.py"
+      - "run_research_status.py"
+      - "tests/test_research_status.py"
+      - ".github/workflows/research-status.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nfl-research-status
+  cancel-in-progress: true
+
+jobs:
+  summarize:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+
+      - name: Research contract tests
+        run: python -m pytest -q tests/test_research_status.py
+
+      - name: Build research status
+        run: python run_research_status.py
+
+      - name: Upload research status
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-research-status
+          path: |
+            reports/research_status.json
+            docs/research_status.json
+
+      - name: Commit research status
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          git config user.name "harbin-nfl-model-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/research_status.json docs/research_status.json
+          if ! git diff --cached --quiet; then
+            git commit -m "research: refresh NFL research status"
+            git pull --rebase origin main
+            git push
+          else
+            echo "No research status changes to commit."
+          fi

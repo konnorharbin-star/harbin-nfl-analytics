@@ -115,8 +115,16 @@ The rolling fair-score candidate benchmark is now a persisted research artifact 
 than a dormant manual workflow. It compares recency, prior-season shrinkage,
 opponent-adjusted PBP residuals, and quarterback-state residuals on the common
 2023->2024 and 2024->2025 development folds. Baseline remains selectable, and any
-nonzero winner is only a future SHADOW candidate; the benchmark has no canonical
-score or release authority.
+nonzero winner is only development architecture evidence; the later fixed-spec and
+forward gates remain authoritative.
+
+### Stage 32 — research-status contract
+
+`nfl/research_status.py` consolidates the candidate benchmark, market-edge shrinkage
+result, and Phase 5 forward ledgers into one fail-closed research registry. It records
+which ideas are rejected, superseded, or still accumulating prospective evidence and
+surfaces the current research decision in the model card. The registry cannot enable a
+canonical model or market change.
 
 ### Stage 4 — current NFL context
 

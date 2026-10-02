@@ -4,14 +4,44 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
+
+from .research_status import build_research_status
+
+
+def _read_optional_json(path: str | Path) -> dict[str, Any]:
+    source = Path(path)
+    if not source.exists() or not source.stat().st_size:
+        return {}
+    try:
+        payload = json.loads(source.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
 
 
 def build_model_card(
     meta: dict[str, object],
     gate: dict[str, object],
     evidence: dict[str, object] | None = None,
+    research_status: dict[str, object] | None = None,
 ) -> dict[str, object]:
     evidence = evidence or {}
+    research = research_status
+    if research is None:
+        research = _read_optional_json("reports/research_status.json")
+    if not research:
+        research = build_research_status(
+            candidate_benchmark=_read_optional_json(
+                "reports/candidate_benchmark.json"
+            ),
+            market_shrinkage=_read_optional_json(
+                "reports/market_edge_shrinkage.json"
+            ),
+            forward_shadow=_read_optional_json(
+                "reports/forward_shadow_summary.json"
+            ),
+        )
     return {
         "name": "Harbin NFL Analytics",
         "league": "NFL",
@@ -48,6 +78,24 @@ def build_model_card(
             "historical_status": evidence.get("status", "UNKNOWN"),
             "historical": evidence.get("overall", {}),
             "promotion_sample": evidence.get("promotion_sample", {}),
+        },
+        "research_status": {
+            "status": research.get("status", "MISSING"),
+            "research_decision": research.get("research_decision"),
+            "active_forward_candidates": research.get(
+                "active_forward_candidates",
+                [],
+            ),
+            "promotion_ready_forward_candidates": research.get(
+                "promotion_ready_forward_candidates",
+                [],
+            ),
+            "canonical_model_change_enabled": bool(
+                research.get("canonical_model_change_enabled", False)
+            ),
+            "canonical_market_change_enabled": bool(
+                research.get("canonical_market_change_enabled", False)
+            ),
         },
         "non_negotiables": [
             "No target-week/future leakage.",
