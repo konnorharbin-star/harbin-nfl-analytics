@@ -205,7 +205,10 @@ def build_forward_shadow_summary(
 
     home = probability.get("home_win")
     home_report = home if isinstance(home, dict) else {}
-    home_games = _integer(probability.get("non_tied_games"), _integer(probability.get("graded_games")))
+    home_games = _integer(
+        probability.get("non_tied_games"),
+        _integer(probability.get("graded_games")),
+    )
     probability_home_input = dict(probability)
     probability_home_input["non_tied_games"] = home_games
     home_candidate = _shadow_candidate(
