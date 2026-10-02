@@ -2,6 +2,17 @@ name: NFL Live Shadow Grading
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/grading.py"
+      - "nfl/grading_audit.py"
+      - "nfl/release_gate.py"
+      - "grade_live.py"
+      - "tests/test_operational_parity.py"
+      - "tests/test_audit_parity.py"
+      - "tests/test_monitoring_release.py"
+      - ".github/workflows/live-grade.yml"
   push:
     branches: [main]
     paths:
@@ -50,6 +61,7 @@ jobs:
         run: python grade_recent_form_forward.py
 
       - name: Commit live evidence
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           git config user.name "harbin-nfl-grade-bot"
