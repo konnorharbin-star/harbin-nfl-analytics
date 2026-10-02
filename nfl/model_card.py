@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .research_status import build_research_status
+
 
 def _read_optional_json(path: str | Path) -> dict[str, Any]:
     source = Path(path)
@@ -28,6 +30,18 @@ def build_model_card(
     research = research_status
     if research is None:
         research = _read_optional_json("reports/research_status.json")
+    if not research:
+        research = build_research_status(
+            candidate_benchmark=_read_optional_json(
+                "reports/candidate_benchmark.json"
+            ),
+            market_shrinkage=_read_optional_json(
+                "reports/market_edge_shrinkage.json"
+            ),
+            forward_shadow=_read_optional_json(
+                "reports/forward_shadow_summary.json"
+            ),
+        )
     return {
         "name": "Harbin NFL Analytics",
         "league": "NFL",
