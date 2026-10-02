@@ -35,6 +35,8 @@ LEDGER_FIELDS = (
     "model_total",
     "calibrated_home_probability",
     "quant_signal",
+    "research_signal",
+    "portfolio_signal",
     "quant_market",
     "quant_side",
     "quant_book",
