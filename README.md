@@ -142,6 +142,13 @@ Phase 5 and the hard release gate also require 100% entry/execution coverage and
 least 90% valid later pre-kickoff closing-snapshot coverage before positive CLV can
 support release. The independent grading audit is persisted with live evidence.
 
+### Stage 35 — generated-state writer serialization
+
+All workflows that push generated state now share one serialized writer lane on
+`main`, preventing cross-workflow ref-lock/non-fast-forward races. Pull-request
+validation remains workflow-scoped and cancellable, and CI automatically fails if a
+new `git push` workflow is added without the shared writer contract.
+
 ### Stage 4 — current NFL context
 
 The context layer now mirrors the NCAA current-only philosophy:
