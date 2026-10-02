@@ -1,7 +1,7 @@
 {
-  "appended_rows": 356,
-  "captured_markets": 356,
-  "eligible_verified_markets": 356,
+  "appended_rows": 355,
+  "captured_markets": 355,
+  "eligible_verified_markets": 355,
   "path": "history/market_snapshots.csv",
   "season": 2026,
   "skipped_research_only": 0,
@@ -11,10 +11,10 @@
     "action_network_diagnostic": {
       "attempts": [
         {
-          "collector_observed_at": "2026-10-02T15:49:42.285198+00:00",
+          "collector_observed_at": "2026-10-02T20:45:18.628340+00:00",
           "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
           "games_with_markets": 16,
-          "parsed_rows": 311,
+          "parsed_rows": 310,
           "payload_games": 16,
           "provider_timestamp_available": false,
           "sample": {
@@ -161,10 +161,10 @@
           "team_matches": 15
         }
       ],
-      "collector_observed_at": "2026-10-02T15:49:42.285198+00:00",
+      "collector_observed_at": "2026-10-02T20:45:18.628340+00:00",
       "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
       "games_with_markets": 16,
-      "parsed_rows": 311,
+      "parsed_rows": 310,
       "payload_games": 16,
       "provider_timestamp_available": false,
       "sample": {
@@ -312,7 +312,7 @@
     },
     "action_network_enabled": true,
     "action_network_games": 15,
-    "action_network_rows": 311,
+    "action_network_rows": 310,
     "action_network_timestamp_policy": "provider update timestamp when supplied; otherwise UTC collector observation time at response receipt",
     "books": 7,
     "execution_note": "nflverse schedule fallback has no sportsbook identity or quote-update timestamp and is research-only",
@@ -332,13 +332,13 @@
     ],
     "status": "READY",
     "verified_games_with_any_market": 15,
-    "verified_rows": 356,
+    "verified_rows": 355,
     "verified_sources": [
       "action_network",
       "espn"
     ]
   },
   "status": "READY",
-  "total_rows": 5513,
+  "total_rows": 7648,
   "week": 4
 }
