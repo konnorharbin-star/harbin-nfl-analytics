@@ -11,7 +11,7 @@
 
 ## Monitoring and execution
 - Live readiness: **95.7/100**.
-- Portfolio mode: **PAPER**; proposed **0.00u**; approved **0.00u**.
+- Portfolio mode: **PAPER**; proposed **1.23u**; approved **0.00u**.
 - Historical evidence: **2584 bets**, ROI **-7.84%**, CLV **—**.
 - Independent forward evidence: **0 bets**, ROI **—**, CLV **—**.
 
