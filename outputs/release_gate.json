@@ -1,6 +1,5 @@
 {
   "blockers": [
-    "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
     "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
     "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
     "production_policy: frozen nested chronological policy is production-validated with at least two enabled markets",
@@ -43,7 +42,7 @@
       "passed": true,
       "requirement": "chronological NFL probability holdout meets calibration guardrails",
       "value": {
-        "brier": 0.22995807657360515,
+        "brier": 0.22995807657360534,
         "margin_80_coverage": 0.7830882352941176,
         "total_80_coverage": 0.8051470588235294
       }
@@ -65,11 +64,11 @@
     {
       "detail": "",
       "name": "historical_entry_integrity",
-      "passed": false,
+      "passed": true,
       "requirement": "promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
       "value": {
         "excluded_unverified_bets": 3069,
-        "verified_bets": 0
+        "verified_bets": 1632
       }
     },
     {
@@ -78,9 +77,9 @@
       "passed": false,
       "requirement": ">=90% of verified historical bets have same-book closing CLV",
       "value": {
-        "verified_bets": 0,
-        "verified_clv_coverage": 0.0,
-        "verified_clv_samples": 0
+        "verified_bets": 1632,
+        "verified_clv_coverage": 0.7965686274509803,
+        "verified_clv_samples": 1300
       }
     },
     {
@@ -92,10 +91,10 @@
         "positive_markets": 0,
         "positive_seasons": 0,
         "status": "ESTABLISHED SAMPLE",
-        "verified_clv_coverage": 0.0,
+        "verified_clv_coverage": 0.7965686274509803,
         "verified_roi_ci_95": [
-          null,
-          null
+          -0.13958741171600675,
+          -0.020784169644569264
         ]
       }
     },
@@ -106,13 +105,9 @@
       "requirement": "frozen nested chronological policy is production-validated with at least two enabled markets",
       "value": {
         "deployment_mode": "paper",
-        "enabled_markets": [
-          "moneyline",
-          "spread",
-          "total"
-        ],
-        "source": "paper only; no verified archived opening-entry sample",
-        "split": "unavailable"
+        "enabled_markets": [],
+        "source": "nested chronological NFL policy calibration on verified archived opening entries; untouched evaluation is release-only",
+        "split": "whole-week 50/25/25 nested chronology"
       }
     },
     {
@@ -167,7 +162,6 @@
   "live_evidence_ready": false,
   "meaning": "Hard NFL deployment gate. Structural parity with CFB does not transfer CFB evidence; PRODUCTION requires independent NFL engineering, historical entry, a validated frozen policy, market breadth, and portfolio-verified live evidence.",
   "next_requirements": [
-    "Accumulate explicit forward/opening entry snapshots; archive-final fallbacks cannot promote the model.",
     "Keep NFL policy in paper research until verified-entry chronological ROI/CLV evidence clears the hard gates.",
     "Accumulate independently graded portfolio decisions; historical backtests do not substitute for live evidence."
   ],

@@ -11,12 +11,11 @@
 
 ## Monitoring and execution
 - Live readiness: **95.7/100**.
-- Portfolio mode: **PAPER**; proposed **1.23u**; approved **0.00u**.
+- Portfolio mode: **PAPER**; proposed **0.00u**; approved **0.00u**.
 - Historical evidence: **2584 bets**, ROI **-7.84%**, CLV **—**.
 - Independent forward evidence: **0 bets**, ROI **—**, CLV **—**.
 
 ## Current blockers
-- historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks
 - historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV
 - historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons
 - production_policy: frozen nested chronological policy is production-validated with at least two enabled markets
