@@ -163,6 +163,15 @@ preserves one row per game × market × canonical sportsbook instead of collapsi
 providers to one market row. Core outages fall back to complete scoreboard quotes, and
 the live diagnostic reports actual normalized sportsbook breadth.
 
+### Stage 38 — verified historical market evidence
+
+The optional timestamped historical provider is now connected to the canonical proof,
+nested policy calibration, and release gate. A manual API-key workflow can build
+fixed-time pre-kickoff entry/closing evidence without changing the fair-score model.
+Free nflverse operation remains the default PAPER path; historical promotion still
+requires the full verified-sample ROI, CLV, breadth-across-markets/seasons, and sample
+gates.
+
 ### Stage 4 — current NFL context
 
 The context layer now mirrors the NCAA current-only philosophy:
@@ -302,6 +311,9 @@ python run_current_projection.py 2026 --refresh
 # free historical market research + NCAA-style runtime diagnostics
 python run_free_market_backtest.py --start-season 2022 --end-season 2025 \
   --validation-season 2024 --holdout-season 2025 --refresh
+
+# optional timestamped historical evidence (requires THE_ODDS_API_KEY)
+python run_verified_market_backtest.py --start-season 2022 --end-season 2025
 
 # regenerate the frozen verified-entry market policy from existing evidence
 python run_policy_calibration.py
