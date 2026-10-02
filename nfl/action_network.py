@@ -491,11 +491,64 @@ class ActionNetworkNFLClient:
                             sample["first_market_keys"] = sorted(
                                 str(key) for key in first_market
                             )[:30]
+                            sample["market_timestamp_fields"] = {
+                                key: first_market.get(key)
+                                for key in (
+                                    "last_update",
+                                    "updated_at",
+                                    "timestamp",
+                                )
+                                if first_market.get(key) not in {None, ""}
+                            }
                             event = first_market.get("event")
                             if isinstance(event, dict):
                                 sample["event_keys"] = sorted(
                                     str(key) for key in event
                                 )[:30]
+                                sample["event_timestamp_fields"] = {
+                                    key: event.get(key)
+                                    for key in (
+                                        "last_update",
+                                        "updated_at",
+                                        "timestamp",
+                                    )
+                                    if event.get(key) not in {None, ""}
+                                }
+                                row_samples: dict[str, object] = {}
+                                for kind in ("moneyline", "spread", "total"):
+                                    values = event.get(kind)
+                                    first_row = (
+                                        next(
+                                            (
+                                                row
+                                                for row in values
+                                                if isinstance(row, dict)
+                                            ),
+                                            None,
+                                        )
+                                        if isinstance(values, list)
+                                        else None
+                                    )
+                                    if isinstance(first_row, dict):
+                                        row_samples[kind] = {
+                                            "keys": sorted(
+                                                str(key) for key in first_row
+                                            )[:30],
+                                            "book_id": first_row.get("book_id"),
+                                            "side": first_row.get("side"),
+                                            "value": first_row.get("value"),
+                                            "odds": first_row.get("odds"),
+                                            "last_update": first_row.get(
+                                                "last_update"
+                                            ),
+                                            "updated_at": first_row.get(
+                                                "updated_at"
+                                            ),
+                                            "timestamp": first_row.get(
+                                                "timestamp"
+                                            ),
+                                        }
+                                sample["row_samples"] = row_samples
                     elif isinstance(markets, list):
                         sample["market_list_length"] = len(markets)
                         first_market = next(
