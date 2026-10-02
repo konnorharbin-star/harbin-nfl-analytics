@@ -223,3 +223,21 @@ def test_reconciler_skips_stale_output_after_source_change(tmp_path: Path) -> No
         cwd=tmp_path,
     ).stdout
     assert source_value == "VALUE = 'new-source'\n"
+
+
+def test_espn_historical_writer_is_serialized_after_free_evidence() -> None:
+    free = (WORKFLOW_DIR / "free-market-backtest.yml").read_text(
+        encoding="utf-8"
+    )
+    espn = (WORKFLOW_DIR / "espn-verified-market-backtest.yml").read_text(
+        encoding="utf-8"
+    )
+    model = (WORKFLOW_DIR / "nfl-model.yml").read_text(encoding="utf-8")
+
+    assert 'workflows:\n      - "Free NFL Market Backtest"' in espn
+    assert "github.event.workflow_run.conclusion == 'success'" in espn
+    assert "github.event.workflow_run.event != 'schedule'" in espn
+    assert "ref: main" in espn
+    assert '"nfl/espn_historical.py"' in free
+    assert '"run_espn_verified_market_backtest.py"' in free
+    assert '"Free ESPN Historical Market Backtest"' in model
