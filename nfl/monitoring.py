@@ -163,6 +163,21 @@ def build_live_monitoring(
         "output_completeness": 0.10,
     }
     score = sum(weights[name] * scores.get(name, 0.0) for name in weights)
+    engineering_weights = {
+        name: weight
+        for name, weight in weights.items()
+        if name != "multi_book"
+    }
+    engineering_weight_total = sum(engineering_weights.values())
+    engineering_score = (
+        sum(
+            engineering_weights[name] * scores.get(name, 0.0)
+            for name in engineering_weights
+        )
+        / engineering_weight_total
+        if engineering_weight_total
+        else 0.0
+    )
     severe_drift = any(
         float(value["stability_score"]) < 40 for value in drift_details.values()
     )
@@ -170,6 +185,7 @@ def build_live_monitoring(
     return {
         "status": status,
         "live_readiness_score": round(score, 1),
+        "engineering_readiness_score": round(engineering_score, 1),
         "scores": scores,
         "drift_details": drift_details,
         "drift_reference": str(reference_path) if reference_path.exists() else None,
