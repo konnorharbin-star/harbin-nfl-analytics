@@ -322,6 +322,11 @@ def summarize_live_grading(graded: pl.DataFrame) -> dict[str, object]:
         return output
 
     overall = _summary(graded)
+    signal_column = (
+        "portfolio_signal"
+        if "portfolio_signal" in graded.columns
+        else "quant_signal"
+    )
     return {
         "evidence_source": "portfolio_decisions_v1",
         "portfolio_verified": True,
@@ -337,7 +342,7 @@ def summarize_live_grading(graded: pl.DataFrame) -> dict[str, object]:
         "execution_ready_coverage": overall["execution_ready_coverage"],
         "overall": overall,
         "by_market": grouped("quant_market"),
-        "by_signal": grouped("quant_signal"),
+        "by_signal": grouped(signal_column),
         "by_edge_bucket": grouped("edge_bucket"),
         "by_season": grouped("season"),
     }

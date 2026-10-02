@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from datetime import UTC, datetime
 
 import polars as pl
@@ -7,6 +8,8 @@ import polars as pl
 from nfl.backtest_runtime import build_backtest_runtime_report, normalize_clv_proxy
 from nfl.espn_market import ESPNTwoWayMarket
 from nfl.market_intel import build_market_intelligence
+from nfl.policy import DEFAULT_POLICY
+from nfl.portfolio import apply_portfolio_controls
 from nfl.pro_market import CurrentOddsAPIClient, collect_current_markets
 from nfl.render import write_weekly_publication
 
@@ -92,6 +95,63 @@ def test_market_intelligence_line_shops_and_deduplicates_book_identity() -> None
     assert row["quant_book"] == "Book B"
     assert row["market_book_count"] == 2
     assert meta["multi_book_coverage"] == 1.0
+
+
+def test_paper_mode_keeps_research_picks_when_production_markets_are_disabled() -> None:
+    projection = pl.DataFrame(
+        [
+            {
+                "season": 2026,
+                "week": 4,
+                "game_id": "g1",
+                "gameday": "2026-10-04",
+                "away_team": "NYJ",
+                "home_team": "PIT",
+                "baseline_home_margin": 7.0,
+                "baseline_total": 44.0,
+            }
+        ]
+    )
+    targets = pl.DataFrame(
+        [
+            {
+                "game_id": "g1",
+                "gameday": "2026-10-04",
+                "gametime": "13:00",
+                "away_team": "NYJ",
+                "home_team": "PIT",
+            }
+        ]
+    )
+    policy = deepcopy(DEFAULT_POLICY)
+    policy["deployment_mode"] = "paper"
+    for config in policy["markets"].values():
+        config["enabled"] = False
+        config["disabled_reason"] = "production evidence gate not passed"
+
+    frame, _ = build_market_intelligence(
+        projection,
+        targets,
+        [_market(book="Book B", provider="espn", home_odds=-120, away_odds=105)],
+        _historical_games(),
+        policy=policy,
+    )
+    row = frame.row(0, named=True)
+    assert row["quant_signal"] == "PASS"
+    assert row["research_signal"] in {"LEAN", "BET", "STRONG"}
+    assert row["research_stake_units"] > 0
+
+    allocated, summary = apply_portfolio_controls(
+        frame,
+        policy=policy,
+        release_gate={"release_state": "PAPER", "production_eligible": False},
+        now=datetime(2026, 10, 1, 15, 5, tzinfo=UTC),
+    )
+    decision = allocated.row(0, named=True)
+    assert decision["portfolio_signal"] == row["research_signal"]
+    assert decision["portfolio_action"] == "PAPER"
+    assert decision["portfolio_candidate_units"] > 0
+    assert summary["bets"] == 1
 
 
 def test_current_odds_api_uses_bookmaker_last_update() -> None:

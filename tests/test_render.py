@@ -27,7 +27,8 @@ def _current() -> pl.DataFrame:
                 "quant_side": "home",
                 "quant_price": None,
                 "quant_odds": -150,
-                "quant_signal": "STRONG",
+                "quant_signal": "PASS",
+                "research_signal": "STRONG",
             },
             {
                 **base,
@@ -35,7 +36,8 @@ def _current() -> pl.DataFrame:
                 "quant_side": "away",
                 "quant_price": 3.5,
                 "quant_odds": -110,
-                "quant_signal": "BET",
+                "quant_signal": "PASS",
+                "research_signal": "BET",
             },
             {
                 **base,
@@ -43,7 +45,8 @@ def _current() -> pl.DataFrame:
                 "quant_side": "over",
                 "quant_price": 42.5,
                 "quant_odds": -110,
-                "quant_signal": "LEAN",
+                "quant_signal": "PASS",
+                "research_signal": "LEAN",
             },
         ]
     )
@@ -58,9 +61,10 @@ def test_weekly_board_preserves_score_probability_and_markets() -> None:
     assert row["winner"] == "PIT"
     assert row["win_pct"] == 64
     assert row["proj_total"] == 44.0
-    assert row["moneyline"]["quant_signal"] == "STRONG"
-    assert row["spread"]["quant_signal"] == "BET"
-    assert row["total"]["quant_signal"] == "LEAN"
+    assert row["moneyline"]["quant_signal"] == "PASS"
+    assert row["moneyline"]["research_signal"] == "STRONG"
+    assert row["spread"]["research_signal"] == "BET"
+    assert row["total"]["research_signal"] == "LEAN"
 
 
 def test_weekly_publication_matches_cfb_picks_layout(tmp_path) -> None:
@@ -81,6 +85,9 @@ def test_weekly_publication_matches_cfb_picks_layout(tmp_path) -> None:
     assert "NYJ +3.5" in document
     assert "O 42.5" in document
     assert "proj 44" in document
+    assert '<span class="badge strong">STRONG</span>' in document
+    assert '<span class="badge bet">BET</span>' in document
+    assert '<span class="badge lean">LEAN</span>' in document
     assert "STRONG/PAPER" not in document
     assert "PAPER evidence mode" in document
     assert "not production staking" in document
