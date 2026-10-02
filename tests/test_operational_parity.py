@@ -39,6 +39,7 @@ def _candidate(**overrides: object) -> dict[str, object]:
         "quant_edge": 0.05,
         "market_book_count": 1,
         "stake_units": 0.8,
+        "execution_ready": True,
     }
     row.update(overrides)
     return row
@@ -317,7 +318,11 @@ def test_line_history_deduplicates_exact_snapshots(tmp_path) -> None:
 
 def test_grading_uses_persisted_entry_not_final_market() -> None:
     decision = {
-        **_candidate(quant_price=3.5, quant_side="away"),
+        **_candidate(
+            quant_price=3.5,
+            quant_side="away",
+            quant_quote_at="2026-10-01T11:55:00+00:00",
+        ),
         "decision_at": "2026-10-01T12:00:00+00:00",
         "portfolio_candidate_units": 0.5,
         "portfolio_action": "PAPER",
@@ -341,6 +346,64 @@ def test_grading_uses_persisted_entry_not_final_market() -> None:
     report = summarize_live_grading(graded)
     assert report["portfolio_verified"] is True
     assert report["graded_bets"] == 1
+
+
+def test_grading_excludes_invalid_execution_provenance() -> None:
+    decision = {
+        **_candidate(
+            quant_quote_at="2026-10-01T12:05:00+00:00",
+            execution_ready=True,
+        ),
+        "decision_at": "2026-10-01T12:00:00+00:00",
+        "portfolio_candidate_units": 0.5,
+        "portfolio_action": "PAPER",
+    }
+    schedules = pl.DataFrame(
+        [
+            {
+                "game_id": "2026_04_AAA_BBB",
+                "gameday": "2026-10-04",
+                "home_team": "BBB",
+                "away_team": "AAA",
+                "home_score": 24.0,
+                "away_score": 22.0,
+            }
+        ]
+    )
+
+    graded = grade_portfolio_decisions(pl.DataFrame([decision]), schedules)
+
+    assert graded.is_empty()
+
+
+def test_live_summary_reports_entry_and_clv_coverage() -> None:
+    decision = {
+        **_candidate(quant_quote_at="2026-10-01T11:55:00+00:00"),
+        "decision_at": "2026-10-01T12:00:00+00:00",
+        "portfolio_candidate_units": 0.5,
+        "portfolio_action": "PAPER",
+    }
+    schedules = pl.DataFrame(
+        [
+            {
+                "game_id": "2026_04_AAA_BBB",
+                "gameday": "2026-10-04",
+                "home_team": "BBB",
+                "away_team": "AAA",
+                "home_score": 24.0,
+                "away_score": 22.0,
+            }
+        ]
+    )
+
+    graded = grade_portfolio_decisions(pl.DataFrame([decision]), schedules)
+    report = summarize_live_grading(graded)
+
+    assert report["graded_bets"] == 1
+    assert report["entry_quote_coverage"] == 1.0
+    assert report["execution_ready_coverage"] == 1.0
+    assert report["clv_samples"] == 0
+    assert report["clv_coverage"] == 0.0
 
 
 def test_release_gate_cannot_promote_without_independent_evidence(tmp_path) -> None:

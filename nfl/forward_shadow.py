@@ -16,6 +16,8 @@ from pathlib import Path
 from typing import Any
 
 FORWARD_BET_MINIMUM = 300
+FORWARD_ENTRY_COVERAGE_MINIMUM = 1.0
+FORWARD_CLV_COVERAGE_MINIMUM = 0.90
 SHADOW_MINIMUM = 128
 
 DEFAULT_REPORT_PATHS = {
@@ -148,12 +150,39 @@ def _canonical_betting(report: dict[str, Any]) -> dict[str, object]:
     if avg_clv is None:
         avg_clv = _number(overall.get("avg_clv"))
     verified = bool(report.get("portfolio_verified", False))
+    entry_quote_coverage = _number(report.get("entry_quote_coverage"))
+    if entry_quote_coverage is None:
+        entry_quote_coverage = _number(overall.get("entry_quote_coverage"))
+    execution_ready_coverage = _number(report.get("execution_ready_coverage"))
+    if execution_ready_coverage is None:
+        execution_ready_coverage = _number(overall.get("execution_ready_coverage"))
+    clv_coverage = _number(report.get("clv_coverage"))
+    if clv_coverage is None:
+        clv_coverage = _number(overall.get("clv_coverage"))
+
+    entry_integrity = (
+        verified
+        and entry_quote_coverage is not None
+        and entry_quote_coverage >= FORWARD_ENTRY_COVERAGE_MINIMUM
+        and execution_ready_coverage is not None
+        and execution_ready_coverage >= FORWARD_ENTRY_COVERAGE_MINIMUM
+    )
+    clv_integrity = (
+        clv_coverage is not None
+        and clv_coverage >= FORWARD_CLV_COVERAGE_MINIMUM
+    )
 
     if not verified:
         status = "INVALID_FORWARD_LEDGER"
         passed = False
+    elif graded_bets > 0 and not entry_integrity:
+        status = "INVALID_FORWARD_ENTRY_PROVENANCE"
+        passed = False
     elif graded_bets < FORWARD_BET_MINIMUM:
         status = "ACCUMULATING_FORWARD_EVIDENCE"
+        passed = False
+    elif not clv_integrity:
+        status = "INSUFFICIENT_FORWARD_CLV_COVERAGE"
         passed = False
     elif roi is None or avg_clv is None:
         status = "FORWARD_EVIDENCE_INCONCLUSIVE"
@@ -173,6 +202,13 @@ def _canonical_betting(report: dict[str, Any]) -> dict[str, object]:
         "minimum_bets": FORWARD_BET_MINIMUM,
         "roi": roi,
         "avg_clv": avg_clv,
+        "entry_quote_coverage": entry_quote_coverage,
+        "execution_ready_coverage": execution_ready_coverage,
+        "clv_coverage": clv_coverage,
+        "clv_samples": _integer(report.get("clv_samples"), _integer(overall.get("clv_samples"))),
+        "minimum_clv_coverage": FORWARD_CLV_COVERAGE_MINIMUM,
+        "entry_integrity_passed": entry_integrity,
+        "clv_integrity_passed": clv_integrity,
         "max_drawdown": _number(overall.get("max_drawdown")),
         "roi_ci_95": overall.get("roi_ci_95"),
         "status": status,
@@ -326,6 +362,8 @@ def build_forward_shadow_summary(
             "retrospective_reconstruction_allowed": False,
             "candidate_retuning_on_forward_outcomes_allowed": False,
             "ledger_health_required_for_promotion": True,
+            "forward_entry_provenance_required": True,
+            "minimum_forward_clv_coverage": FORWARD_CLV_COVERAGE_MINIMUM,
         },
         "canonical_betting": canonical,
         "forward_ledger_health_status": ledger_health.get("status", "MISSING"),

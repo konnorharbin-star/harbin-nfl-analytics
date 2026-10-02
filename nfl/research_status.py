@@ -117,6 +117,17 @@ def _forward_summary(report: dict[str, Any]) -> dict[str, object]:
             "status": canonical.get("status"),
             "graded_bets": canonical.get("graded_bets"),
             "minimum_bets": canonical.get("minimum_bets"),
+            "entry_quote_coverage": canonical.get("entry_quote_coverage"),
+            "execution_ready_coverage": canonical.get("execution_ready_coverage"),
+            "clv_samples": canonical.get("clv_samples"),
+            "clv_coverage": canonical.get("clv_coverage"),
+            "minimum_clv_coverage": canonical.get("minimum_clv_coverage"),
+            "entry_integrity_passed": bool(
+                canonical.get("entry_integrity_passed", False)
+            ),
+            "clv_integrity_passed": bool(
+                canonical.get("clv_integrity_passed", False)
+            ),
             "forward_betting_gate_passed": bool(
                 canonical.get("forward_betting_gate_passed", False)
             ),

@@ -126,12 +126,65 @@ def test_grading_audit_excludes_post_kickoff_decision() -> None:
                 "portfolio_candidate_units": 0.5,
                 "portfolio_action": "PAPER",
                 "execution_ready": True,
+                "quant_quote_at": (kickoff - timedelta(hours=2)).isoformat(),
             }
         ]
     )
     report = audit_decisions(decisions)
     assert report["status"] == "FAIL"
     assert report["timing_excluded_rows"] == 1
+
+
+def test_grading_audit_rejects_quote_after_decision() -> None:
+    kickoff = datetime(2026, 10, 4, 17, tzinfo=UTC)
+    decision = kickoff - timedelta(hours=2)
+    decisions = pl.DataFrame(
+        [
+            {
+                "decision_at": decision.isoformat(),
+                "kickoff": kickoff.isoformat(),
+                "game_id": "g",
+                "quant_market": "spread",
+                "portfolio_candidate_units": 0.5,
+                "portfolio_action": "PAPER",
+                "execution_ready": True,
+                "quant_quote_at": (decision + timedelta(minutes=1)).isoformat(),
+            }
+        ]
+    )
+
+    report = audit_decisions(decisions)
+
+    assert report["status"] == "FAIL"
+    assert report["quote_timing_excluded_rows"] == 1
+    assert any(
+        issue["code"] == "invalid_entry_quote_chronology"
+        for issue in report["issues"]
+    )
+
+
+def test_grading_audit_parses_false_execution_flag_fail_closed() -> None:
+    kickoff = datetime(2026, 10, 4, 17, tzinfo=UTC)
+    decision = kickoff - timedelta(hours=2)
+    decisions = pl.DataFrame(
+        [
+            {
+                "decision_at": decision.isoformat(),
+                "kickoff": kickoff.isoformat(),
+                "game_id": "g",
+                "quant_market": "spread",
+                "portfolio_candidate_units": 0.5,
+                "portfolio_action": "PAPER",
+                "execution_ready": "false",
+                "quant_quote_at": (decision - timedelta(minutes=1)).isoformat(),
+            }
+        ]
+    )
+
+    report = audit_decisions(decisions)
+
+    assert report["status"] == "FAIL"
+    assert report["execution_excluded_rows"] == 1
 
 
 def test_graded_audit_rejects_invalid_close_chronology() -> None:
@@ -145,6 +198,9 @@ def test_graded_audit_rejects_invalid_close_chronology() -> None:
                 "decision_at": decision.isoformat(),
                 "kickoff": kickoff.isoformat(),
                 "portfolio_verified": True,
+                "entry_quote_verified": True,
+                "execution_ready": True,
+                "quant_quote_at": (decision - timedelta(minutes=5)).isoformat(),
                 "result": "win",
                 "net_units": 1.0,
                 "closing_snapshot_at": (kickoff + timedelta(minutes=1)).isoformat(),
