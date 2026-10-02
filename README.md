@@ -80,6 +80,9 @@ Rules match the NCAA evidence philosophy:
 
 `nfl/backtest_runtime.py` adds NCAA-style runtime diagnostics without changing selection: week-block bootstrap ROI intervals, probability-equivalent CLV, and market/season/week/role/location segment reports.
 
+
+`nfl/policy_calibration.py` now mirrors the NCAA nested policy-calibration contract. Only independently verified entry-price rows may select thresholds. Verified evidence is split chronologically into development, tuning, and untouched evaluation blocks; the evaluation block can reject a frozen policy but can never choose one. When verified entry data is absent, `reports/production_policy.json` remains explicitly PAPER and the hard release gate continues to block real staking.
+
 ### Current markets and line shopping
 
 `nfl/espn_market.py` remains the free primary source. `nfl/pro_market.py` adds an optional professional/multi-book layer using The Odds API when `THE_ODDS_API_KEY` is configured.
@@ -200,6 +203,9 @@ python run_current_projection.py 2026 --refresh
 # free historical market research + NCAA-style runtime diagnostics
 python run_free_market_backtest.py --start-season 2022 --end-season 2025 \
   --validation-season 2024 --holdout-season 2025 --refresh
+
+# regenerate the frozen verified-entry market policy from existing evidence
+python run_policy_calibration.py
 
 # canonical NCAA-style NFL operational run + weekly board
 python harbin_nfl_model.py 2026 --refresh
