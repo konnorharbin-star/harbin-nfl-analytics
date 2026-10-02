@@ -21,6 +21,7 @@ on:
   workflow_run:
     workflows:
       - "NFL Verified Historical Market Backtest"
+      - "Free ESPN Historical Market Backtest"
     types: [completed]
   pull_request:
     branches: [main]
