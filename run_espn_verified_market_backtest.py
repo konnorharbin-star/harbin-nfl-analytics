@@ -41,7 +41,7 @@ def main() -> None:
     reports.mkdir(parents=True, exist_ok=True)
 
     schedules = NFLDataClient().load_schedules(
-        list(range(args.start_season - 1, args.end_season + 1)),
+        list(range(args.start_season - 2, args.end_season + 1)),
         refresh=args.refresh,
     )
     projections = build_archive_projection_dataset(
