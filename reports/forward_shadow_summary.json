@@ -88,11 +88,18 @@
   },
   "canonical_betting": {
     "avg_clv": null,
+    "clv_coverage": null,
+    "clv_integrity_passed": false,
+    "clv_samples": 0,
+    "entry_integrity_passed": false,
+    "entry_quote_coverage": null,
     "evidence_source": "portfolio_decisions_v1",
+    "execution_ready_coverage": null,
     "forward_betting_gate_passed": false,
     "graded_bets": 0,
     "max_drawdown": 0.0,
     "minimum_bets": 300,
+    "minimum_clv_coverage": 0.9,
     "portfolio_verified": true,
     "prospective_only": true,
     "retrospective_reconstruction_allowed": false,
@@ -108,7 +115,9 @@
   "evidence_policy": {
     "candidate_retuning_on_forward_outcomes_allowed": false,
     "first_persisted_pregame_snapshot_only": true,
+    "forward_entry_provenance_required": true,
     "ledger_health_required_for_promotion": true,
+    "minimum_forward_clv_coverage": 0.9,
     "prospective_only": true,
     "retrospective_reconstruction_allowed": false
   },
