@@ -51,7 +51,7 @@ jobs:
         run: |
           set -o pipefail
           python run_espn_archive_coverage_diagnostic.py \
-            --seasons "2023,2025" \
+            --seasons "2023,2024,2025" \
             --week 1 \
             | tee reports/espn_archive_coverage_diagnostic.json
 
