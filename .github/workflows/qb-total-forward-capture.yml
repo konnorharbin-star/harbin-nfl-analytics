@@ -27,12 +27,12 @@ permissions:
 
 concurrency:
   group: >-
-    ${{ github.event_name == 'pull_request'
-      && format('nfl-qb-total-forward-capture-pr-{0}', github.event.pull_request.number)
-      || github.event_name == 'workflow_run'
-      && format('nfl-generated-state-{0}', github.event.workflow_run.head_branch)
-      || format('nfl-generated-state-{0}', github.ref_name) }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    nfl-qb-total-forward-capture-${{
+      github.event_name == 'workflow_run'
+      && github.event.workflow_run.head_branch
+      || github.ref_name
+    }}
+  cancel-in-progress: true
 
 jobs:
   capture:
@@ -73,8 +73,7 @@ jobs:
           [ -f history/qb_total_shadow_predictions_v1.csv ] && git add history/qb_total_shadow_predictions_v1.csv || true
           if ! git diff --cached --quiet; then
             git commit -m "shadow: capture frozen NFL QB-total predictions"
-            git pull --rebase origin main
-            git push
+            bash scripts/push_generated_state.sh
           else
             echo "No new QB-total shadow rows to commit."
           fi
