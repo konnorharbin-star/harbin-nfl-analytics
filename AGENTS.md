@@ -26,3 +26,9 @@
 - Do not commit secrets, virtualenvs, caches, or binary model artifacts.
 - Data-source failures must appear in metadata/health output instead of being hidden.
 - Keep the NFL operational shell structurally aligned with Harbin Sports Analytics CFB where league-specific differences do not require divergence.
+
+## v1.0 build freeze
+- NFL Model v1.0 is complete. Default work after 2026-10-02 is maintenance and evidence accumulation, not continued model expansion.
+- Do not create a new numbered modeling/research stage unless the user explicitly asks to reopen model development.
+- Evidence refreshes, forward grading, release-state transitions, bug fixes, and broken-source repairs do not count as new model stages.
+- Do not weaken historical, policy, CLV, entry-integrity, or forward-sample release gates to force PAPER -> SHADOW -> PRODUCTION.
