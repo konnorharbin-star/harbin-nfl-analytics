@@ -1,0 +1,61 @@
+name: NFL Decoupled Score Audit
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/decoupled_score.py"
+      - "nfl/decoupled_audit.py"
+      - "run_decoupled_score_audit.py"
+      - "tests/test_decoupled_score.py"
+      - ".github/workflows/decoupled-score-audit.yml"
+  push:
+    branches: [main]
+    paths:
+      - "nfl/decoupled_score.py"
+      - "nfl/decoupled_audit.py"
+      - "run_decoupled_score_audit.py"
+      - ".github/workflows/decoupled-score-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONUNBUFFERED: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+
+      - name: Unit tests
+        run: python -m pytest -q tests/test_decoupled_score.py
+
+      - name: Ruff
+        run: ruff check nfl/decoupled_score.py nfl/decoupled_audit.py run_decoupled_score_audit.py tests/test_decoupled_score.py
+
+      - name: Run 2023-2025 decoupled architecture audit
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports
+          python run_decoupled_score_audit.py --refresh | tee reports/decoupled_score_audit.log
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-decoupled-score-audit
+          path: |
+            reports/decoupled_score_audit.json
+            reports/decoupled_score_audit.log
+          if-no-files-found: error
