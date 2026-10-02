@@ -200,6 +200,14 @@ prices for moneyline, spread, and total markets. The NFL model now uses those ar
 stages for free historical entry/CLV evidence without fabricating timestamps, while
 forward execution evidence keeps the stricter timestamped-capture contract.
 
+### Stage 43 — serialized historical evidence rebuild
+
+The ESPN historical backfill now loads the extra prior season required to construct
+2023 probability history for 2024 evidence. Historical writers are also serialized:
+the free nflverse backtest refreshes first, then the ESPN archived-price build reads
+latest main and updates verified proof/policy, preventing concurrent evidence-writer
+conflicts.
+
 ### Stage 4 — current NFL context
 
 The context layer now mirrors the NCAA current-only philosophy:
