@@ -50,3 +50,14 @@ Sportsbook data is absent from the combined feature matrix and learner. The eval
 - `promotion_eligible=false`
 
 2022–2025 are development evidence only. The canonical fair score, probability model, market edges, and stake sizing remain unchanged regardless of this historical audit.
+
+## Real-source result
+
+The real nflverse audit built **831** walk-forward rows across 2022–2025 and admitted **66** numeric pregame football features after the leakage contract. Full Ruff/pytest, Stage 1, and canonical audit checks passed.
+
+Neither side survived the nested later-season tests:
+
+- **Margin:** 2023 tuning selected residual weight `0`, so the 2024 test remained the canonical baseline. On the next fold, 2024 tuning selected `ridge_alpha=30`, `ridge_fraction=0.50`, `boost_depth=3`, residual weight `0.25`; that tune improvement failed in 2025, where MAE/RMSE worsened from `10.6069 / 13.1996` to `10.6889 / 13.2820`. Aggregate 2024–2025 MAE/RMSE worsened from `10.2956 / 13.0832` to `10.3366 / 13.1248`. Positive test folds: `0/2`.
+- **Total:** 2023 tuning selected `ridge_alpha=10`, `ridge_fraction=0.70`, `boost_depth=2`, residual weight `0.25`; the 2024 test worsened from `10.1277 / 13.2747` to `10.1414 / 13.3847`. The 2024 tune block then selected residual weight `0`, leaving the 2025 test at baseline. Aggregate 2024–2025 MAE/RMSE worsened from `10.3058 / 13.2891` to `10.3126 / 13.3441`. Positive test folds: `0/2`.
+
+Stage 22 therefore creates no new 2026 shadow candidate and makes no canonical-score change. The result is useful evidence that NCAA's nonlinear residual architecture does not automatically transfer to the NFL feature/data regime.
