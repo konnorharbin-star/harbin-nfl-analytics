@@ -18,6 +18,15 @@ from nfl.policy_calibration import derive_production_policy
 from nfl.proof import write_evidence_report
 
 
+def schedule_seasons_for_evidence(
+    start_season: int,
+    end_season: int,
+) -> list[int]:
+    """Include one pre-projection season before probability-history projections."""
+
+    return list(range(start_season - 2, end_season + 1))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
@@ -41,7 +50,10 @@ def main() -> None:
     reports.mkdir(parents=True, exist_ok=True)
 
     schedules = NFLDataClient().load_schedules(
-        list(range(args.start_season - 1, args.end_season + 1)),
+        schedule_seasons_for_evidence(
+            args.start_season,
+            args.end_season,
+        ),
         refresh=args.refresh,
     )
     projections = build_archive_projection_dataset(
