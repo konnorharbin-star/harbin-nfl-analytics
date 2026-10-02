@@ -1,0 +1,72 @@
+name: NFL Probability Forward Capture
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/probability_forward.py"
+      - "capture_probability_forward.py"
+      - "tests/test_probability_forward.py"
+      - ".github/workflows/probability-forward-capture.yml"
+      - "docs/STAGE24_PROBABILITY_FORWARD.md"
+  push:
+    branches: [main]
+    paths:
+      - "nfl/probability_forward.py"
+      - "capture_probability_forward.py"
+      - ".github/workflows/probability-forward-capture.yml"
+  schedule:
+    - cron: "57 11,17,23 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nfl-probability-forward-capture
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONUNBUFFERED: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package
+        run: python -m pip install -e ".[dev]"
+
+      - name: Integrity tests
+        run: python -m pytest -q tests/test_probability_forward.py tests/test_current_projection.py
+
+      - name: Capture frozen probability shadow
+        run: python capture_probability_forward.py 2026 --refresh
+
+      - name: Upload prospective ledger
+        uses: actions/upload-artifact@v4
+        with:
+          name: probability-forward-ledger
+          path: history/probability_shadow_predictions_v1.csv
+          if-no-files-found: warn
+
+      - name: Commit first-snapshot ledger
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          git config user.name "harbin-nfl-shadow-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          [ -f history/probability_shadow_predictions_v1.csv ] && git add history/probability_shadow_predictions_v1.csv || true
+          if ! git diff --cached --quiet; then
+            git commit -m "shadow: capture frozen NFL probability predictions"
+            git pull --rebase origin main
+            git push
+          else
+            echo "No new probability shadow rows to commit."
+          fi
