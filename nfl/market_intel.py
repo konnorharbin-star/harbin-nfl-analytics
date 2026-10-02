@@ -12,7 +12,7 @@ from .book_identity import canonical_book_identity
 from .contracts import DataContractError, require_columns
 from .espn_market import ESPNTwoWayMarket
 from .market import MarketComparison, MarketQuote, compare_two_way_market
-from .policy import fractional_kelly_units, load_policy, signal_from_policy
+from .policy import DEFAULT_POLICY, fractional_kelly_units, load_policy, signal_from_policy
 from .probability import GaussianScoreDistribution
 from .schedule_market import is_research_only_market
 
@@ -164,18 +164,27 @@ def build_market_intelligence(
             chosen.model_probability,
             chosen.market_type,
             week=int(game["week"]),
+            policy=DEFAULT_POLICY,
+        )
+        production_signal = signal_from_policy(
+            chosen.expected_value_per_unit,
+            chosen.probability_edge,
+            chosen.model_probability,
+            chosen.market_type,
+            week=int(game["week"]),
             policy=active,
         )
         execution_verified = not is_research_only_market(source_market)
-        signal = research_signal if execution_verified else "PASS"
-        stake = 0.0
-        if signal != "PASS":
-            stake = fractional_kelly_units(
+        signal = production_signal if execution_verified else "PASS"
+        research_stake = 0.0
+        if research_signal != "PASS":
+            research_stake = fractional_kelly_units(
                 chosen.model_probability,
                 chosen.american_odds,
                 kelly_fraction=kelly_fraction,
                 max_units=max_units,
             )
+        stake = research_stake if signal != "PASS" else 0.0
         home_probability = distribution.home_win_probability(
             float(game["baseline_home_margin"])
         )
@@ -193,6 +202,7 @@ def build_market_intelligence(
             "calibrated_home_probability": home_probability,
             "quant_signal": signal,
             "research_signal": research_signal,
+            "production_signal": production_signal,
             "quant_market": chosen.market_type,
             "quant_side": chosen.side,
             "quant_book": chosen.book,
@@ -211,6 +221,7 @@ def build_market_intelligence(
             "market_source_role": "verified_live" if execution_verified else "research_fallback",
             "source_event_id": source_market.source_event_id,
             "stake_units": stake,
+            "research_stake_units": research_stake,
         }
         for key, value in game.items():
             if key.startswith(("home_qb_", "away_qb_", "qb_", "recent_form_")):
