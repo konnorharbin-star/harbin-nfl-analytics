@@ -22,7 +22,7 @@ for attempt in $(seq 1 "$max_attempts"); do
 
   git fetch "$remote" "$target_branch"
 
-  if ! git rebase "$remote/$target_branch"; then
+  if ! git rebase FETCH_HEAD; then
     git rebase --abort || true
     echo "::error::Generated-state rebase conflict against ${remote}/${target_branch}; refusing to overwrite another writer."
     exit 1
