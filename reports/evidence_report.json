@@ -108,7 +108,7 @@
       "wins": 289
     }
   },
-  "note": "Free nflverse archive-final fallbacks and opening-line observations without opening juice remain valid research observations, but they are not promotion-quality entry-price evidence. ROBUST status requires observed entry prices plus positive uncertainty-adjusted ROI/CLV across multiple markets and seasons.",
+  "note": "Free nflverse archive-final fallbacks and opening-line observations without opening juice remain valid research observations, but they are not promotion-quality entry-price evidence. ROBUST status requires observed entry prices plus positive uncertainty-adjusted ROI/CLV across multiple markets and seasons with broad closing-snapshot coverage.",
   "overall": {
     "average_clv_proxy": null,
     "average_expected_value_per_unit": 0.18727567027766845,
@@ -131,11 +131,16 @@
     "entry_price_verified": false,
     "entry_quote_verified": false,
     "excluded_unverified_bets": 3069,
+    "minimum_verified_clv_coverage": 0.9,
     "opening_line_observed_bets": 0,
     "positive_markets": 0,
     "positive_seasons": 0,
     "raw_archive_bets": 3069,
+    "verified_archive_bets": 0,
     "verified_bets": 0,
+    "verified_clv_coverage": 0.0,
+    "verified_clv_samples": 0,
+    "verified_provider_bets": 0,
     "verified_roi_ci_95": [
       null,
       null
@@ -164,7 +169,9 @@
     },
     "initial_lines_error": null,
     "notes": "Archive-final values are not claimed to be timestamped official closes. When a distinct opening is unavailable, the final archive value is an explicit execution fallback and no CLV proxy is recorded.",
-    "opening_market": "nflverse nfldata initial_lines.csv when available"
+    "opening_market": "nflverse nfldata initial_lines.csv when available",
+    "verified_provider_bets_path": "reports/verified_market_bets.csv",
+    "verified_provider_rows": 0
   },
   "status": "ESTABLISHED SAMPLE"
 }
