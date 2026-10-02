@@ -124,6 +124,16 @@ def build_evidence_report(
     else:
         verified = pl.DataFrame()
     verified_bets = verified.height
+    verified_archived_open_close = 0
+    verified_timestamped_provider = 0
+    if verified_bets and "entry_price_stage" in verified.columns:
+        stages = verified.get_column("entry_price_stage").cast(pl.String)
+        verified_archived_open_close = int(
+            (stages == "espn_archived_open").sum()
+        )
+        verified_timestamped_provider = int(
+            (stages == "timestamped_provider_entry").sum()
+        )
 
     verified_summary = (
         summarize_archive_bets(verified).to_dict() if verified_bets else {}
@@ -178,6 +188,8 @@ def build_evidence_report(
             "verified_bets": verified_bets,
             "verified_archive_bets": archive_verified.height,
             "verified_provider_bets": provider_verified.height,
+            "verified_archived_open_close_bets": verified_archived_open_close,
+            "verified_timestamped_provider_bets": verified_timestamped_provider,
             "raw_archive_bets": raw_rows,
             "opening_line_observed_bets": opening_line_observed_bets,
             "excluded_unverified_bets": excluded_unverified,
@@ -202,11 +214,16 @@ def build_evidence_report(
             ),
             "verified_provider_bets_path": str(verified_bets_path),
             "verified_provider_rows": provider_verified.height,
+            "historical_entry_provenance": (
+                "explicit provider-labeled opening stage or timestamped provider entry"
+            ),
         },
         "note": (
             "Free nflverse archive-final fallbacks and opening-line observations without "
             "opening juice remain valid research observations, but they are not promotion-quality "
-            "entry-price evidence. ROBUST status requires observed entry prices plus positive "
+            "entry-price evidence. ESPN provider-labeled archived opening/closing stages "
+            "qualify without fabricating timestamps. ROBUST status requires verified entry "
+            "prices plus positive "
             "uncertainty-adjusted ROI/CLV across multiple markets and seasons with "
             "broad closing-snapshot coverage."
         ),
