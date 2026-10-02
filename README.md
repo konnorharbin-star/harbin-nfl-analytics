@@ -109,6 +109,15 @@ validation and frozen into the untouched 2025 holdout. Betting ROI does not sele
 alpha, sportsbook probabilities never enter the fair-score model, and the experiment
 cannot change the canonical policy while archive entry prices remain unverified.
 
+### Stage 31 — persisted candidate benchmark
+
+The rolling fair-score candidate benchmark is now a persisted research artifact rather
+than a dormant manual workflow. It compares recency, prior-season shrinkage,
+opponent-adjusted PBP residuals, and quarterback-state residuals on the common
+2023->2024 and 2024->2025 development folds. Baseline remains selectable, and any
+nonzero winner is only a future SHADOW candidate; the benchmark has no canonical
+score or release authority.
+
 ### Stage 4 — current NFL context
 
 The context layer now mirrors the NCAA current-only philosophy:
