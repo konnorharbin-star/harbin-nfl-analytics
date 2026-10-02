@@ -62,6 +62,8 @@ def test_research_report_never_changes_canonical_policy() -> None:
     report = evaluate_market_edge_shrinkage(_synthetic_bets())
 
     assert report["status"] == "RESEARCH_ONLY"
+    assert report["research_conclusion"] == "NO_INCREMENTAL_MODEL_VALUE"
+    assert report["forward_shrinkage_shadow_recommended"] is False
     assert report["canonical_market_probability_change_enabled"] is False
     assert report["betting_policy_change_enabled"] is False
     for market in ("moneyline", "spread", "total"):
@@ -78,3 +80,4 @@ def test_shrinkage_improves_overconfident_holdout_probabilities() -> None:
         assert shrunk["brier"] < raw["brier"]
         assert shrunk["log_loss"] < raw["log_loss"]
         assert candidate["probability_validated"] is True
+        assert candidate["status"] == "MARKET_ONLY_PREFERRED"
