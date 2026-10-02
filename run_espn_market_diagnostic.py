@@ -80,7 +80,7 @@ def _odds_shape(value: object) -> dict[str, object]:
     if not isinstance(value, dict):
         return {"type": type(value).__name__}
     output: dict[str, object] = {"keys": sorted(value.keys())}
-    for key in ("provider", "homeTeamOdds", "awayTeamOdds"):
+    for key in ("provider", "homeTeamOdds", "awayTeamOdds", "bettingOdds"):
         nested = value.get(key)
         if isinstance(nested, dict):
             output[f"{key}_keys"] = sorted(nested.keys())
@@ -108,35 +108,42 @@ def _snapshot_values(value: object) -> dict[str, object]:
         "value",
     }
 
-    def compact(snapshot: object) -> dict[str, object]:
+    def compact(snapshot: object) -> object:
+        if isinstance(snapshot, (str, int, float, bool)) or snapshot is None:
+            return snapshot
         if not isinstance(snapshot, dict):
-            return {}
-        return {
+            return {"type": type(snapshot).__name__}
+        selected = {
             key: raw
             for key, raw in snapshot.items()
             if key in allowed and isinstance(raw, (str, int, float, bool))
         }
+        if selected:
+            return selected
+        return {"keys": sorted(snapshot.keys())}
 
     output: dict[str, object] = {}
+    direct = compact(value)
+    if isinstance(direct, dict) and direct and "keys" not in direct:
+        output["direct"] = direct
     for label in ("open", "current", "close"):
-        snapshot = value.get(label)
-        if isinstance(snapshot, dict):
-            output[label] = compact(snapshot)
+        if label in value:
+            output[label] = compact(value.get(label))
 
-    for side_name in ("homeTeamOdds", "awayTeamOdds"):
+    for side_name in ("homeTeamOdds", "awayTeamOdds", "bettingOdds"):
         side = value.get(side_name)
         if not isinstance(side, dict):
             continue
         side_output: dict[str, object] = {}
-        direct = compact(side)
-        if direct:
-            side_output["direct"] = direct
+        side_direct = compact(side)
+        if isinstance(side_direct, dict) and side_direct and "keys" not in side_direct:
+            side_output["direct"] = side_direct
         for label in ("open", "current", "close"):
-            snapshot = side.get(label)
-            if isinstance(snapshot, dict):
-                side_output[label] = compact(snapshot)
-        if side_output:
-            output[side_name] = side_output
+            if label in side:
+                side_output[label] = compact(side.get(label))
+        if not side_output:
+            side_output["keys"] = sorted(side.keys())
+        output[side_name] = side_output
     return output
 
 
