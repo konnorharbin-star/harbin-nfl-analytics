@@ -88,62 +88,41 @@ def _odds_shape(value: object) -> dict[str, object]:
 
 
 def _snapshot_values(value: object) -> dict[str, object]:
-    """Return compact open/current/close price snapshots without opaque refs."""
+    """Return compact historical odds snapshots with nested numeric values."""
 
-    if not isinstance(value, dict):
-        return {}
-    allowed = {
-        "moneyLine",
-        "moneyline",
-        "spreadOdds",
-        "spread_odds",
-        "pointSpread",
-        "spread",
-        "overUnder",
-        "overunder",
-        "overOdds",
-        "underOdds",
-        "price",
-        "line",
-        "value",
-    }
-
-    def compact(snapshot: object) -> object:
+    def compact(snapshot: object, *, depth: int = 0) -> object:
         if isinstance(snapshot, (str, int, float, bool)) or snapshot is None:
             return snapshot
+        if isinstance(snapshot, list):
+            if depth >= 3:
+                return {"type": "list", "items": len(snapshot)}
+            return [compact(item, depth=depth + 1) for item in snapshot[:8]]
         if not isinstance(snapshot, dict):
             return {"type": type(snapshot).__name__}
-        selected = {
-            key: raw
-            for key, raw in snapshot.items()
-            if key in allowed and isinstance(raw, (str, int, float, bool))
-        }
-        if selected:
-            return selected
-        return {"keys": sorted(snapshot.keys())}
+        if depth >= 4:
+            return {"keys": sorted(snapshot.keys())}
+
+        output: dict[str, object] = {}
+        for key, raw in snapshot.items():
+            if key in {"$ref", "links", "team", "provider"}:
+                continue
+            if isinstance(raw, (str, int, float, bool)) or raw is None:
+                output[key] = raw
+                continue
+            nested = compact(raw, depth=depth + 1)
+            if nested not in ({}, [], None):
+                output[key] = nested
+        return output or {"keys": sorted(snapshot.keys())}
 
     output: dict[str, object] = {}
-    direct = compact(value)
-    if isinstance(direct, dict) and direct and "keys" not in direct:
-        output["direct"] = direct
     for label in ("open", "current", "close"):
         if label in value:
             output[label] = compact(value.get(label))
 
     for side_name in ("homeTeamOdds", "awayTeamOdds", "bettingOdds"):
         side = value.get(side_name)
-        if not isinstance(side, dict):
-            continue
-        side_output: dict[str, object] = {}
-        side_direct = compact(side)
-        if isinstance(side_direct, dict) and side_direct and "keys" not in side_direct:
-            side_output["direct"] = side_direct
-        for label in ("open", "current", "close"):
-            if label in side:
-                side_output[label] = compact(side.get(label))
-        if not side_output:
-            side_output["keys"] = sorted(side.keys())
-        output[side_name] = side_output
+        if isinstance(side, dict):
+            output[side_name] = compact(side)
     return output
 
 
