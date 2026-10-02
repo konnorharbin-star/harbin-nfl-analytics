@@ -193,6 +193,13 @@ ESPN remains a verified source, Action Network adds independent per-book quotes,
 The Odds API remains optional. Canonical book identity prevents the same DraftKings
 quote family from being counted twice across providers.
 
+### Stage 42 — free ESPN archived historical evidence
+
+Completed-game ESPN Core odds expose explicit provider-labeled opening and closing
+prices for moneyline, spread, and total markets. The NFL model now uses those archived
+stages for free historical entry/CLV evidence without fabricating timestamps, while
+forward execution evidence keeps the stricter timestamped-capture contract.
+
 ### Stage 4 — current NFL context
 
 The context layer now mirrors the NCAA current-only philosophy:
