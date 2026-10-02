@@ -242,7 +242,7 @@ def render_html(
         else "Projection-only · no verified live lines"
     )
     if state != "PRODUCTION":
-        status = f"{status} · {state} validation"
+        status = f"{status} · {state} evidence mode · not production staking"
 
     css = "\n".join(
         [
