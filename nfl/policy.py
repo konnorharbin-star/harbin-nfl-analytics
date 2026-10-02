@@ -60,6 +60,7 @@ DEFAULT_POLICY: dict[str, object] = {
         "trailing_clv_throttle": 0.0,
         "adverse_run_multiplier": 0.50,
         "require_executable_book": True,
+        "min_market_book_count_for_execution": 1,
         "require_quote_timestamp_for_execution": True,
         "max_quote_age_minutes": 60,
         "require_live_history_for_production": True,

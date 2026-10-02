@@ -1,0 +1,88 @@
+# Stage 27 — Production safety hardening
+
+Stage 27 closes the remaining Phase 6 execution-state gap found during the production
+audit. The release gate, policy, bankroll throttle, execution validator, concentration
+caps, decision ledger, grading and publication systems were already present. This
+stage makes their interaction fail closed when a nominal production release later
+encounters an execution or bankroll safety failure.
+
+## Explicit execution minimum
+
+The NFL policy now carries
+`min_market_book_count_for_execution=1` explicitly rather than relying on the
+execution validator's fallback default. A future evidence-backed policy can raise this
+minimum without changing execution code.
+
+This per-market execution minimum is separate from the release gate's broader
+multi-book coverage requirement.
+
+## Production quote failure
+
+Before Stage 27, an invalid production quote could be denied real stake but still
+receive paper allocation and consume game/team/market/book/slate capacity.
+
+That is no longer allowed.
+
+When the production gate and production policy are both open:
+
+- non-executable or stale quotes remain `PASS`;
+- candidate allocation remains zero;
+- real stake remains zero;
+- the quote cannot consume concentration capacity;
+- the execution failure is preserved in `portfolio_limit_reason`.
+
+Paper and shadow research retain their ability to exercise portfolio planning without
+real stake.
+
+## Explicit HALTED mode
+
+A production release can be invalidated downstream by bankroll safety state. Examples
+include a missing required live ledger or the drawdown hard stop.
+
+The portfolio summary now distinguishes this state:
+
+```text
+production gate open
++ production policy active
++ bankroll/history safety failure
+= mode: halted
+```
+
+The summary also records:
+
+- `production_gate_open`;
+- `production_eligible` after downstream safety checks;
+- `production_block_reason`.
+
+In HALTED mode no candidate or real-stake allocation is permitted.
+
+## Regression coverage
+
+The operational parity tests now prove that:
+
+1. a stale production quote receives zero candidate units and stays PASS;
+2. a production bankroll hard stop reports HALTED;
+3. a hard stop produces zero candidate and real stake;
+4. the explicit market-book execution minimum remains present in policy defaults.
+
+These are release-safety tests, not betting-edge evidence.
+
+## Phase 6 status
+
+With Stage 27, the production shell contains the controls specified by the build plan:
+
+- frozen policy loading;
+- fractional Kelly;
+- game/team/market/book/kickoff/slate concentration caps;
+- drawdown and adverse-run throttles;
+- executable-book and timestamp requirements;
+- stale-quote protection;
+- explicit downstream production HALT;
+- decision ledger;
+- independent grading and CLV;
+- monitoring/health/audit snapshots;
+- publication reconciliation;
+- hard RESEARCH -> PAPER -> SHADOW -> PRODUCTION release gates.
+
+Architecture completion does not mean production release. The model remains locked
+until its independent NFL evidence gates pass.
