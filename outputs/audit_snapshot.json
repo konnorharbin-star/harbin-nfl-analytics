@@ -17,7 +17,7 @@
     "status": "OK",
     "target_games": 15
   },
-  "generated_at": "2026-10-02T11:48:48.742120+00:00",
+  "generated_at": "2026-10-02T12:50:21.695738+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
@@ -69,7 +69,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-02T11:48:24.179935+00:00",
+    "model_generated_at": "2026-10-02T12:49:59.526666+00:00",
     "prediction_games": 15,
     "prediction_rows": 45,
     "season": 2026,
@@ -438,18 +438,6 @@
       "approved_units": 0.0,
       "data_quality_status": "OK",
       "distribution_stability": 88.8,
-      "generated_at": "2026-10-02T02:46:16.318188+00:00",
-      "live_readiness_score": 88.0,
-      "model_generated_at": "2026-10-02T02:45:56.832514+00:00",
-      "publication_status": "WARN",
-      "release_state": "PAPER",
-      "season": 2026,
-      "week": 4
-    },
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 88.8,
       "generated_at": "2026-10-02T03:17:21.999232+00:00",
       "live_readiness_score": 88.0,
       "model_generated_at": "2026-10-02T03:17:03.484804+00:00",
@@ -573,6 +561,18 @@
       "generated_at": "2026-10-02T11:42:24.180699+00:00",
       "live_readiness_score": 95.7,
       "model_generated_at": "2026-10-02T11:41:59.683488+00:00",
+      "publication_status": "WARN",
+      "release_state": "PAPER",
+      "season": 2026,
+      "week": 4
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 87.3,
+      "generated_at": "2026-10-02T11:48:48.742120+00:00",
+      "live_readiness_score": 95.7,
+      "model_generated_at": "2026-10-02T11:48:24.179935+00:00",
       "publication_status": "WARN",
       "release_state": "PAPER",
       "season": 2026,
