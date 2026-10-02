@@ -154,6 +154,10 @@ def _nested_split(
             return development, tune, evaluation, "whole-week 50/25/25 nested chronology"
 
     n = ordered.height
+    if n < 3:
+        empty = ordered.head(0)
+        return ordered, empty, empty, "insufficient chronological sample"
+
     first = max(1, int(0.50 * n))
     second = min(n - 1, max(first + 1, int(0.75 * n)))
     return (
