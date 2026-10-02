@@ -1,10 +1,12 @@
-"""Human-readable NFL weekly publication modeled after the NCAA board."""
+"""CFB-style human-readable NFL weekly picks board."""
 
 from __future__ import annotations
 
 import html
 import math
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import polars as pl
 from PIL import Image, ImageDraw, ImageFont
@@ -64,6 +66,20 @@ def _fmt_line(value: object) -> str:
     return "—" if number is None else f"{number:+g}"
 
 
+def _display_updated_at(value: str) -> str:
+    """Render canonical UTC timestamps like the CFB board's Central-time header."""
+
+    try:
+        stamp = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return value
+    if stamp.tzinfo is None:
+        return value
+    local = stamp.astimezone(ZoneInfo("America/Chicago"))
+    clock = local.strftime("%I:%M %p").lstrip("0")
+    return f"{local.strftime('%b')} {local.day}, {local.year} · {clock} CT"
+
+
 def _team_side(row: dict[str, object]) -> str:
     side = str(row.get("quant_side") or "")
     if side == "home":
@@ -77,24 +93,36 @@ def _team_side(row: dict[str, object]) -> str:
     return side.upper()
 
 
-def _market_cell(row: dict[str, object] | None, *, release_state: str) -> str:
+def _signal(row: dict[str, object] | None) -> str:
     if not row:
-        return "NO LINE"
-    side = _team_side(row)
-    market = str(row.get("quant_market") or "")
-    line = "" if market == "moneyline" else f" {_fmt_line(row.get('quant_price'))}"
-    odds = _fmt_odds(row.get("quant_odds"))
-    signal = str(row.get("quant_signal") or "PASS").upper()
-    book = str(row.get("quant_book") or "")
-    action = str(row.get("portfolio_action") or "PASS").upper()
-    label = signal if signal != "PASS" else ""
-    if action in {"PAPER", "SHADOW"} and label:
-        label = f"{label}/{action}"
-    if action == "BET" and release_state == "PRODUCTION" and label:
-        label = f"{label}/BET"
-    suffix = f" · {label}" if label else ""
-    book_text = f" · {book}" if book else ""
-    return f"{side}{line} {odds}{book_text}{suffix}".strip()
+        return ""
+    value = str(row.get("quant_signal") or "PASS").upper()
+    return "" if value == "PASS" else value
+
+
+def _moneyline_text(row: dict[str, object] | None) -> str | None:
+    if not row or _number(row.get("quant_odds")) is None:
+        return None
+    return f"{_team_side(row)} {_fmt_odds(row.get('quant_odds'))}"
+
+
+def _spread_text(row: dict[str, object] | None) -> str | None:
+    if not row or _number(row.get("quant_price")) is None:
+        return None
+    return f"{_team_side(row)} {_fmt_line(row.get('quant_price'))}"
+
+
+def _total_text(
+    row: dict[str, object] | None,
+    *,
+    projected_total: float,
+) -> tuple[str | None, str]:
+    projection = f"proj {int(round(projected_total))}"
+    if not row or _number(row.get("quant_price")) is None:
+        return None, projection
+    line = _number(row.get("quant_price"))
+    assert line is not None
+    return f"{_team_side(row)} {line:g}", projection
 
 
 def build_weekly_board(current: pl.DataFrame) -> pl.DataFrame:
@@ -131,7 +159,6 @@ def build_weekly_board(current: pl.DataFrame) -> pl.DataFrame:
         winner = str(base["home_team"] if margin >= 0 else base["away_team"])
         winner_probability = home_probability if margin >= 0 else 1.0 - home_probability
         markets = {str(value.get("quant_market")): value for value in values}
-        context_quality = _number(base.get("context_quality"))
         rows.append(
             {
                 "game_id": str(game_id),
@@ -144,37 +171,60 @@ def build_weekly_board(current: pl.DataFrame) -> pl.DataFrame:
                 "home_score": int(round(home_points)),
                 "winner": winner,
                 "win_pct": int(round(100.0 * winner_probability)),
+                "proj_total": total,
                 "moneyline": markets.get("moneyline"),
                 "spread": markets.get("spread"),
                 "total": markets.get("total"),
-                "context_quality": context_quality,
             }
         )
-    return pl.DataFrame(rows).sort(["date", "game_id"])
+    return pl.DataFrame(rows).sort(["date", "kickoff", "game_id"])
 
 
 def _badge_html(label: str) -> str:
-    if not label or label == "PASS":
+    if not label:
         return ""
-    css = label.split("/", 1)[0].lower()
-    return f'<span class="badge {css}">{html.escape(label)}</span>'
+    return f'<span class="badge {label.lower()}">{html.escape(label)}</span>'
 
 
-def _market_html(row: dict[str, object] | None, *, release_state: str) -> str:
-    if not row:
-        return '<span class="quiet">NO LINE</span>'
-    text = _market_cell(row, release_state=release_state)
-    signal = str(row.get("quant_signal") or "PASS").upper()
-    action = str(row.get("portfolio_action") or "PASS").upper()
-    label = signal
-    if signal != "PASS" and action in {"PAPER", "SHADOW"}:
-        label = f"{signal}/{action}"
-    elif signal != "PASS" and action == "BET" and release_state == "PRODUCTION":
-        label = f"{signal}/BET"
-    if label and label != "PASS":
-        raw = text.rsplit(f" · {label}", 1)[0]
-        return f'{html.escape(raw)} {_badge_html(label)}'
-    return html.escape(text)
+def _market_html(
+    row: dict[str, object] | None,
+    *,
+    market: str,
+    projected_total: float,
+) -> str:
+    if market == "moneyline":
+        text = _moneyline_text(row)
+        projection = ""
+    elif market == "spread":
+        text = _spread_text(row)
+        projection = ""
+    elif market == "total":
+        text, projection = _total_text(row, projected_total=projected_total)
+    else:
+        raise ValueError(f"unknown publication market: {market}")
+
+    signal = _signal(row)
+    if text is None:
+        quiet = '<span class="quiet">NO LINE</span>'
+        if projection:
+            quiet += f' <span class="projtot">{html.escape(projection)}</span>'
+        return quiet
+
+    parts = [html.escape(text)]
+    if projection:
+        parts.append(f'<span class="projtot">{html.escape(projection)}</span>')
+    if signal:
+        parts.append(_badge_html(signal))
+    return " ".join(parts)
+
+
+def _has_live_market(board: pl.DataFrame) -> bool:
+    if board.is_empty():
+        return False
+    for row in board.to_dicts():
+        if any(row.get(name) for name in ("moneyline", "spread", "total")):
+            return True
+    return False
 
 
 def render_html(
@@ -186,50 +236,57 @@ def render_html(
     release_state: str,
 ) -> None:
     state = release_state.upper()
-    state_note = (
-        "Production eligible · execution still requires current verified quote provenance"
-        if state == "PRODUCTION"
-        else f"{state} evidence mode · displayed opportunities are not production staking"
+    status = (
+        "Live market data"
+        if _has_live_market(board)
+        else "Projection-only · no verified live lines"
     )
+    if state != "PRODUCTION":
+        status = f"{status} · {state} evidence mode · not production staking"
+
     css = "\n".join(
         [
             "*{box-sizing:border-box}",
-            "body{margin:0;background:#0f1113;color:#f0f1f2;font-family:Inter,Arial,sans-serif}",
-            ".shell{max-width:1360px;margin:auto;padding:14px}",
-            ".page{display:none}",
+            "body{margin:0;background:#0f1113;color:#f0f1f2;",
+            "font-family:Inter,Arial,sans-serif}",
+            ".shell{max-width:1320px;margin:auto;padding:14px}.page{display:none}",
             ".head{display:flex;justify-content:space-between;align-items:flex-start}",
             ".title{font-size:24px;font-weight:800}",
             ".sub,.counter{font-size:12px;color:#8b8e92}",
-            ".status{font-size:10px;color:#d6a44b;margin-top:4px}",
-            ".counter{text-align:right;line-height:1.45}",
+            ".status{font-size:10px;color:#aeb1b5;margin-top:3px}",
+            ".status.warn{color:#d6a44b}.counter{text-align:right;line-height:1.45}",
             "table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:8px}",
-            "th{font-size:9px;letter-spacing:.08em;color:#777c81;text-align:left}",
-            "th{padding:7px 8px;border-bottom:1px solid #272a2e}",
-            "td{font-size:12px;padding:8px;border-bottom:1px solid #272a2e;height:38px}",
-            "td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
+            "th{font-size:9px;letter-spacing:.08em;color:#777c81;text-align:left;",
+            "padding:7px 8px;border-bottom:1px solid #272a2e}",
+            "td{font-size:12px;padding:8px;border-bottom:1px solid #272a2e;",
+            "height:36px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
             "tbody tr:nth-child(even){background:#16181b}",
             ".winner{font-weight:800}.at{color:#777c81}.proj{font-weight:800}",
-            ".bar{display:inline-block;height:6px;background:#4c84e0;border-radius:5px}",
-            ".bar{margin-right:6px;vertical-align:middle}",
-            ".quiet{color:#64686d}",
-            ".badge{font-size:8px;font-weight:800;border-radius:4px;padding:3px 5px}",
-            ".badge{margin-left:4px}.strong{background:#5fc468;color:#0c2c12}",
-            ".bet{background:#1f462a;color:#63c76d}.lean{background:#483b1e;color:#e3b549}",
-            ".nav{text-align:center;padding:14px}",
-            ".nav button{background:#202328;border:1px solid #373b40;color:#eee}",
-            ".nav button{border-radius:5px;padding:6px 10px;margin:2px}",
-            ".c1{width:18%}.c2{width:7%}.c3{width:8%}.c4{width:22%}",
-            ".c5{width:22%}.c6{width:18%}.c7{width:5%}",
-            "@media(max-width:900px){.shell{overflow-x:auto}.page{min-width:1180px}}",
+            ".bar{display:inline-block;height:6px;background:#4c84e0;border-radius:5px;",
+            "margin-right:6px;vertical-align:middle}.quiet{color:#64686d}",
+            ".active{color:#f0f1f2;font-weight:700}.projtot{font-size:10px;color:#96999d}",
+            ".badge{font-size:8px;font-weight:800;border-radius:4px;padding:3px 5px;",
+            "margin-left:4px}.strong{background:#5fc468;color:#0c2c12}",
+            ".bet{background:#1f462a;color:#63c76d}",
+            ".lean{background:#483b1e;color:#e3b549}.nav{text-align:center;padding:14px}",
+            ".nav button{background:#202328;border:1px solid #373b40;color:#eee;",
+            "border-radius:5px;padding:6px 10px;margin:2px}",
+            ".c1{width:23%}.c2{width:7%}.c3{width:9%}.c4{width:23%}",
+            ".c5{width:23%}.c6{width:15%}",
+            "@media(max-width:900px){.shell{overflow-x:auto}.page{min-width:1100px}}",
         ]
     )
+
     values = board.to_dicts()
     pages: list[str] = []
     page_count = max(1, math.ceil(len(values) / 14))
+    warn_class = "warn" if not _has_live_market(board) else ""
+    formatted_updated_at = _display_updated_at(updated_at)
+
     for page in range(1, page_count + 1):
         start = (page - 1) * 14
         chunk = values[start : start + 14]
-        table_rows: list[str] = []
+        rows: list[str] = []
         for row in chunk:
             away = html.escape(str(row["away_team"]))
             home = html.escape(str(row["home_team"]))
@@ -247,17 +304,30 @@ def render_html(
             )
             pct = int(row["win_pct"])
             bar = max(4, min(52, int((pct - 50) * 1.15)))
-            context = row.get("context_quality")
-            context_text = "—" if context is None else f"{100 * float(context):.0f}%"
-            table_rows.append(
+            projected_total = float(row["proj_total"])
+            moneyline_html = _market_html(
+                row.get("moneyline"),
+                market="moneyline",
+                projected_total=projected_total,
+            )
+            spread_html = _market_html(
+                row.get("spread"),
+                market="spread",
+                projected_total=projected_total,
+            )
+            total_html = _market_html(
+                row.get("total"),
+                market="total",
+                projected_total=projected_total,
+            )
+            rows.append(
                 "<tr>"
                 f"<td>{matchup}</td>"
                 f"<td class=\"proj\">{row['away_score']}–{row['home_score']}</td>"
                 f"<td><span class=\"bar\" style=\"width:{bar}px\"></span>{pct}%</td>"
-                f"<td>{_market_html(row.get('moneyline'), release_state=state)}</td>"
-                f"<td>{_market_html(row.get('spread'), release_state=state)}</td>"
-                f"<td>{_market_html(row.get('total'), release_state=state)}</td>"
-                f"<td>{context_text}</td>"
+                f"<td>{moneyline_html}</td>"
+                f"<td>{spread_html}</td>"
+                f"<td>{total_html}</td>"
                 "</tr>"
             )
         game_range = (
@@ -265,23 +335,20 @@ def render_html(
             if values
             else "0 games"
         )
-        subtitle = (
-            "Projected scores &amp; line-shopped markets · Updated "
-            f"{html.escape(updated_at)}"
-        )
         pages.append(
-            f'<section class="page" id="p{page}">'
-            '<div class="head"><div>'
-            f'<div class="title">NFL MODEL · WEEK {week} BOARD</div>'
-            f'<div class="sub">{subtitle}</div>'
-            f'<div class="status">{html.escape(state_note)}</div></div>'
+            f'<section class="page" id="p{page}"><div class="head"><div>'
+            f'<div class="title">NFL MODEL · WEEK {week} PICKS</div>'
+            '<div class="sub">Projected scores &amp; best bets · Updated '
+            f'{html.escape(formatted_updated_at)}</div>'
+            f'<div class="status {warn_class}">{html.escape(status)}</div></div>'
             f'<div class="counter">{game_range}<br>{page} / {page_count}</div></div>'
             '<table><colgroup><col class="c1"><col class="c2"><col class="c3">'
-            '<col class="c4"><col class="c5"><col class="c6"><col class="c7"></colgroup>'
-            '<thead><tr><th>MATCHUP</th><th>PROJ</th><th>WIN %</th><th>MONEYLINE</th>'
-            '<th>SPREAD</th><th>TOTAL</th><th>CTX</th></tr></thead>'
-            f'<tbody>{"".join(table_rows)}</tbody></table></section>'
+            '<col class="c4"><col class="c5"><col class="c6"></colgroup>'
+            '<thead><tr><th>MATCHUP (WINNER BOLD)</th><th>PROJ</th><th>WIN %</th>'
+            '<th>MONEYLINE</th><th>SPREAD</th><th>TOTAL</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table></section>'
         )
+
     nav = "".join(
         f'<button onclick="show({page})">{page}</button>'
         for page in range(1, page_count + 1)
@@ -299,6 +366,14 @@ def render_html(
     target.write_text(document, encoding="utf-8")
 
 
+def _text_width(
+    draw: ImageDraw.ImageDraw,
+    value: str,
+    font: ImageFont.ImageFont,
+) -> int:
+    return draw.textbbox((0, 0), value, font=font)[2]
+
+
 def _draw_badge(
     draw: ImageDraw.ImageDraw,
     x: int,
@@ -306,16 +381,57 @@ def _draw_badge(
     label: str,
     font: ImageFont.ImageFont,
 ) -> int:
-    if not label or label == "PASS":
+    if not label:
         return 0
-    base = label.split("/", 1)[0]
-    bbox = draw.textbbox((0, 0), label, font=font)
-    width = bbox[2] - bbox[0] + 12
-    fill = GREEN if base == "STRONG" else DARK_GREEN if base == "BET" else AMBER
-    text = (12, 45, 17) if base == "STRONG" else GREEN if base == "BET" else AMBER_TEXT
+    width = _text_width(draw, label, font) + 12
+    fill = GREEN if label == "STRONG" else DARK_GREEN if label == "BET" else AMBER
+    text = (12, 45, 17) if label == "STRONG" else GREEN if label == "BET" else AMBER_TEXT
     draw.rounded_rectangle((x, y - 2, x + width, y + 13), radius=4, fill=fill)
     draw.text((x + 6, y + 1), label, font=font, fill=text)
     return width + 5
+
+
+def _draw_market(
+    draw: ImageDraw.ImageDraw,
+    *,
+    x: int,
+    y: int,
+    row: dict[str, object] | None,
+    market: str,
+    projected_total: float,
+    row_font: ImageFont.ImageFont,
+    bold_font: ImageFont.ImageFont,
+    small_font: ImageFont.ImageFont,
+    badge_font: ImageFont.ImageFont,
+) -> None:
+    if market == "moneyline":
+        text = _moneyline_text(row)
+        projection = ""
+    elif market == "spread":
+        text = _spread_text(row)
+        projection = ""
+    elif market == "total":
+        text, projection = _total_text(row, projected_total=projected_total)
+    else:
+        raise ValueError(f"unknown publication market: {market}")
+
+    signal = _signal(row)
+    if text is None:
+        draw.text((x, y), "NO LINE", font=small_font, fill=(96, 100, 105))
+        if projection:
+            offset = _text_width(draw, "NO LINE", small_font) + 8
+            draw.text((x + offset, y), projection, font=small_font, fill=(143, 147, 151))
+        return
+
+    active = bool(signal)
+    font = bold_font if active else row_font
+    draw.text((x, y), text, font=font, fill=TEXT if active else (96, 100, 105))
+    next_x = x + _text_width(draw, text, font) + 6
+    if projection:
+        draw.text((next_x, y + 2), projection, font=small_font, fill=(143, 147, 151))
+        next_x += _text_width(draw, projection, small_font) + 5
+    if active:
+        _draw_badge(draw, next_x, y, signal, badge_font)
 
 
 def render_png(
@@ -327,108 +443,132 @@ def render_png(
     updated_at: str,
     release_state: str,
 ) -> None:
-    width, height = 1400, 700
+    width, height = 1320, 690
     image = Image.new("RGB", (width, height), BG)
     draw = ImageDraw.Draw(image)
     title_font = _font(22, bold=True)
     sub_font = _font(11)
     status_font = _font(9, bold=True)
     head_font = _font(9, bold=True)
-    row_font = _font(11)
-    bold_font = _font(11, bold=True)
-    small_font = _font(8)
-    badge_font = _font(7, bold=True)
-    state = release_state.upper()
-
-    draw.text((17, 13), f"NFL MODEL · WEEK {week} BOARD", font=title_font, fill=TEXT)
-    draw.text(
-        (17, 43),
-        f"Projected scores & line-shopped markets · Updated {updated_at}",
-        font=sub_font,
-        fill=MUTED,
-    )
-    state_note = (
-        "PRODUCTION eligible"
-        if state == "PRODUCTION"
-        else f"{state} evidence mode · not production staking"
-    )
-    draw.text((17, 59), state_note, font=status_font, fill=WARN)
+    row_font = _font(12)
+    bold_font = _font(12, bold=True)
+    small_font = _font(9)
+    badge_font = _font(8, bold=True)
 
     values = board.to_dicts()
     page_count = max(1, math.ceil(len(values) / 14))
     page = max(1, min(page, page_count))
     start = (page - 1) * 14
     end = min(start + 14, len(values))
+    state = release_state.upper()
+    live_market = _has_live_market(board)
+    status = "Live market data" if live_market else "Projection-only · no verified live lines"
+    if state != "PRODUCTION":
+        status = f"{status} · {state} validation"
+
+    draw.text((17, 13), f"NFL MODEL · WEEK {week} PICKS", font=title_font, fill=TEXT)
     draw.text(
-        (1210, 17),
+        (17, 43),
+        f"Projected scores & best bets · Updated {_display_updated_at(updated_at)}",
+        font=sub_font,
+        fill=MUTED,
+    )
+    draw.text(
+        (17, 59),
+        status,
+        font=status_font,
+        fill=MUTED if live_market else WARN,
+    )
+    draw.text(
+        (1138, 17),
         f"Games {start + 1 if values else 0}–{end} of {len(values)}",
         font=sub_font,
         fill=MUTED,
     )
-    draw.text((1330, 39), f"{page} / {page_count}", font=sub_font, fill=MUTED)
+    draw.text((1260, 39), f"{page} / {page_count}", font=sub_font, fill=MUTED)
 
-    columns = [17, 255, 335, 430, 720, 1010, 1320]
-    headings = ["MATCHUP", "PROJ", "WIN %", "MONEYLINE", "SPREAD", "TOTAL", "CTX"]
+    columns = [17, 305, 385, 500, 790, 1075]
+    headings = ["MATCHUP (WINNER BOLD)", "PROJ", "WIN %", "MONEYLINE", "SPREAD", "TOTAL"]
     for x, heading in zip(columns, headings, strict=True):
         draw.text((x, 78), heading, font=head_font, fill=(119, 124, 129))
-    draw.line((16, 96, 1384, 96), fill=GRID)
+    draw.line((16, 96, 1304, 96), fill=GRID)
 
     for index, row in enumerate(values[start:end]):
         y = 97 + index * 41
         if index % 2:
-            draw.rectangle((16, y, 1384, y + 40), fill=ALT)
-        draw.line((16, y, 1384, y), fill=GRID)
+            draw.rectangle((16, y, 1304, y + 40), fill=ALT)
+        draw.line((16, y, 1304, y), fill=GRID)
         text_y = y + 13
         away = str(row["away_team"])
         home = str(row["home_team"])
         winner = str(row["winner"])
         away_font = bold_font if away == winner else row_font
         home_font = bold_font if home == winner else row_font
+
         draw.text((17, text_y), away, font=away_font, fill=TEXT)
-        away_width = draw.textbbox((0, 0), away, font=away_font)[2]
-        draw.text((17 + away_width, text_y), " @ ", font=row_font, fill=MUTED)
-        at_width = draw.textbbox((0, 0), " @ ", font=row_font)[2]
-        draw.text((17 + away_width + at_width, text_y), home, font=home_font, fill=TEXT)
+        next_x = 17 + _text_width(draw, away, away_font)
+        draw.text((next_x, text_y), " @ ", font=row_font, fill=MUTED)
+        next_x += _text_width(draw, " @ ", row_font)
+        draw.text((next_x, text_y), home, font=home_font, fill=TEXT)
+
         draw.text(
-            (255, text_y),
+            (305, text_y),
             f"{row['away_score']}–{row['home_score']}",
             font=bold_font,
             fill=TEXT,
         )
+
         pct = int(row["win_pct"])
         bar_width = max(4, min(46, int((pct - 50) * 1.05)))
         draw.rounded_rectangle(
-            (335, text_y + 6, 335 + bar_width, text_y + 11),
+            (385, text_y + 6, 385 + bar_width, text_y + 11),
             radius=3,
             fill=BLUE,
         )
-        draw.text((335 + bar_width + 7, text_y - 1), f"{pct}%", font=row_font, fill=TEXT)
+        draw.text(
+            (385 + bar_width + 7, text_y - 1),
+            f"{pct}%",
+            font=row_font,
+            fill=TEXT,
+        )
 
-        for x, key in ((430, "moneyline"), (720, "spread"), (1010, "total")):
-            market = row.get(key)
-            if not market:
-                draw.text((x, text_y), "NO LINE", font=small_font, fill=(96, 100, 105))
-                continue
-            market_text = _market_cell(market, release_state=state)
-            label = str(market.get("quant_signal") or "PASS").upper()
-            action = str(market.get("portfolio_action") or "PASS").upper()
-            if label != "PASS" and action in {"PAPER", "SHADOW"}:
-                label = f"{label}/{action}"
-            elif label != "PASS" and action == "BET" and state == "PRODUCTION":
-                label = f"{label}/BET"
-            if label != "PASS":
-                market_text = market_text.rsplit(f" · {label}", 1)[0]
-            display = market_text[:34]
-            active = label != "PASS"
-            font = bold_font if active else row_font
-            draw.text((x, text_y), display, font=font, fill=TEXT if active else MUTED)
-            if active:
-                text_width = draw.textbbox((0, 0), display, font=font)[2]
-                _draw_badge(draw, x + text_width + 5, text_y, label, badge_font)
-
-        context = row.get("context_quality")
-        context_text = "—" if context is None else f"{100 * float(context):.0f}%"
-        draw.text((1320, text_y), context_text, font=row_font, fill=MUTED)
+        projected_total = float(row["proj_total"])
+        _draw_market(
+            draw,
+            x=500,
+            y=text_y,
+            row=row.get("moneyline"),
+            market="moneyline",
+            projected_total=projected_total,
+            row_font=row_font,
+            bold_font=bold_font,
+            small_font=small_font,
+            badge_font=badge_font,
+        )
+        _draw_market(
+            draw,
+            x=790,
+            y=text_y,
+            row=row.get("spread"),
+            market="spread",
+            projected_total=projected_total,
+            row_font=row_font,
+            bold_font=bold_font,
+            small_font=small_font,
+            badge_font=badge_font,
+        )
+        _draw_market(
+            draw,
+            x=1075,
+            y=text_y,
+            row=row.get("total"),
+            market="total",
+            projected_total=projected_total,
+            row_font=row_font,
+            bold_font=bold_font,
+            small_font=small_font,
+            badge_font=badge_font,
+        )
 
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -454,22 +594,25 @@ def write_weekly_publication(
         updated_at=updated_at,
         release_state=release_state,
     )
+
     pages = max(1, math.ceil(board.height / 14))
     png_paths: list[str] = []
     for page in range(1, pages + 1):
-        path = directory / f"nfl_week_{week}_page{page}.png"
+        image_path = directory / f"nfl_week_{week}_page{page}.png"
         render_png(
             board,
-            path,
+            image_path,
             page=page,
             week=week,
             updated_at=updated_at,
             release_state=release_state,
         )
-        png_paths.append(str(path))
+        png_paths.append(str(image_path))
+
     return {
         "board_games": board.height,
         "html": str(html_path),
         "png_pages": png_paths,
         "release_state": release_state.upper(),
+        "presentation": "cfb_style_weekly_picks_v1",
     }
