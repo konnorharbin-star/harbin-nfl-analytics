@@ -81,6 +81,63 @@ def test_release_gate_uses_engineering_readiness_not_multibook_score(tmp_path) -
     assert gate["production_eligible"] is False
 
 
+def test_release_gate_requires_broad_historical_clv_coverage(tmp_path) -> None:
+    meta = _meta(datetime.now(UTC))
+    meta["market_intelligence"] = {"multi_book_coverage": 1.0}
+
+    evidence_path = tmp_path / "evidence.json"
+    evidence_path.write_text(
+        json.dumps(
+            {
+                "status": "ROBUST",
+                "overall": {"roi_ci_95": [-0.10, -0.02]},
+                "promotion_sample": {
+                    "entry_quote_verified": True,
+                    "verified_bets": 1200,
+                    "verified_roi_ci_95": [0.01, 0.05],
+                    "avg_verified_clv_proxy": 0.02,
+                    "verified_clv_samples": 1068,
+                    "verified_clv_coverage": 0.89,
+                    "positive_markets": 2,
+                    "positive_seasons": 2,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    live_path = tmp_path / "live.json"
+    live_path.write_text(
+        json.dumps(
+            {
+                "evidence_source": "portfolio_decisions_v1",
+                "portfolio_verified": True,
+                "graded_bets": 300,
+                "roi": 0.01,
+                "avg_clv": 0.02,
+                "entry_quote_coverage": 1.0,
+                "execution_ready_coverage": 1.0,
+                "clv_samples": 270,
+                "clv_coverage": 0.90,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    gate = build_release_gate(
+        meta,
+        {"engineering_readiness_score": 95},
+        {"status": "OK"},
+        evidence_path=evidence_path,
+        live_path=live_path,
+    )
+    checks = {check["name"]: check for check in gate["checks"]}
+
+    assert checks["historical_clv_coverage"]["passed"] is False
+    assert gate["historical_edge_ready"] is False
+    assert gate["release_state"] == "PAPER"
+    assert gate["production_eligible"] is False
+
+
 def test_release_gate_requires_broad_forward_clv_coverage(tmp_path) -> None:
     now = datetime.now(UTC)
     meta = _meta(now)
@@ -91,12 +148,15 @@ def test_release_gate_requires_broad_forward_clv_coverage(tmp_path) -> None:
         json.dumps(
             {
                 "status": "ROBUST",
-                "overall": {"roi_ci_95": [0.01, 0.05]},
+                "overall": {"roi_ci_95": [-0.10, -0.02]},
                 "promotion_sample": {
                     "entry_quote_verified": True,
                     "verified_bets": 1200,
                     "excluded_unverified_bets": 0,
+                    "verified_roi_ci_95": [0.01, 0.05],
                     "avg_verified_clv_proxy": 0.02,
+                    "verified_clv_samples": 1080,
+                    "verified_clv_coverage": 0.90,
                     "positive_markets": 2,
                     "positive_seasons": 2,
                 },
