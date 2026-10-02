@@ -47,3 +47,34 @@ The audit also records the best rejected candidate, ranked first by number of fu
 Stage 21 hard-codes canonical_score_adjustment_enabled=false and promotion_eligible=false.
 
 The 2023–2025 results are development evidence only. A survivor may justify a separately frozen 2026 prospective shadow ledger. Historical selection alone cannot change current score projections, probabilities, market edges, or stakes.
+
+
+## Real-source result
+
+The 2021–2025 audit completed successfully with 831 modeling rows for each online-state profile and 624 evaluation games across 2023–2025.
+
+No exact state-profile + nonlinear-model + residual-blend specification cleared all three folds, so both margin and total remain unselected and the canonical score remains unchanged.
+
+The best rejected margin candidate was:
+
+- state profile: balanced;
+- nonlinear model: boost_d2;
+- residual blend: 0.25;
+- positive folds: 2/3;
+- aggregate MAE: 10.1966 baseline -> 10.1757 adjusted;
+- aggregate RMSE: 13.0138 -> 12.9961.
+
+Its 2023 MAE improved by 0.0316, but RMSE worsened by 0.0039. It passed both MAE and RMSE in 2024 and 2025. Because the fixed gate requires both metrics to improve in every fold, it is rejected.
+
+The best rejected total candidate was:
+
+- state profile: slow;
+- nonlinear model: hybrid_d2;
+- residual blend: 0.25;
+- positive folds: 2/3;
+- aggregate MAE: 10.4926 baseline -> 10.4743 adjusted;
+- aggregate RMSE: 13.4427 -> 13.4216.
+
+Its 2023 RMSE improved by 0.0076, but MAE worsened by 0.0508. It passed both metrics in 2024 and 2025, but still fails the all-fold gate.
+
+The selected candidate is therefore null for both targets, shadow_candidate=false for both targets, canonical_score_adjustment_enabled=false, and promotion_eligible=false. The near-miss is retained as development evidence; the gate is not relaxed after observing it.
