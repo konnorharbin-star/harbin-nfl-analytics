@@ -142,6 +142,16 @@ jobs:
           git reset -- "${HISTORICAL_PROOF[@]}"
           git restore -- "${HISTORICAL_PROOF[@]}"
 
+          # Live market capture has its own canonical writer: line-capture.yml.
+          # Excluding these files prevents the model job from racing line capture
+          # and failing during the generated-state rebase/push step.
+          LIVE_LINE_STATE=(
+            history/market_snapshots.csv
+            outputs/line_capture_status.json
+          )
+          git reset -- "${LIVE_LINE_STATE[@]}"
+          git restore -- "${LIVE_LINE_STATE[@]}"
+
           if ! git diff --cached --quiet; then
             git commit -m "model: automated NFL operational refresh"
             bash scripts/push_generated_state.sh
