@@ -14,7 +14,7 @@
     "trailing_roi": null,
     "trailing_window_bets": 0
   },
-  "bets": 8,
+  "bets": 9,
   "committed_exposure": {
     "integrity_ok": true,
     "invalid_rows": 0,
@@ -30,17 +30,17 @@
         4
       ]
     ],
-    "total_open_bets_after_allocation": 8,
-    "total_open_units_after_allocation": 0.488164
+    "total_open_bets_after_allocation": 9,
+    "total_open_units_after_allocation": 0.538239
   },
   "execution_blocked_bets": 0,
   "mode": "paper",
-  "paper_or_shadow_allocated_units": 0.488164,
+  "paper_or_shadow_allocated_units": 0.538239,
   "policy_mode": "paper",
   "production_block_reason": "",
   "production_eligible": false,
   "production_gate_open": false,
-  "proposed_units": 1.246382,
+  "proposed_units": 1.263415,
   "release_state": "PAPER",
-  "risk_adjusted_proposed_units": 1.246382
+  "risk_adjusted_proposed_units": 1.263415
 }
