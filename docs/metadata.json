@@ -1,6 +1,6 @@
 {
   "current_context": {
-    "as_of": "2026-10-03T15:09:54.674110+00:00",
+    "as_of": "2026-10-03T20:06:16.551501+00:00",
     "components": {
       "injuries_personnel": 1.0,
       "quarterback": 1.0,
@@ -61,7 +61,7 @@
     "status": "OK",
     "target_games": 15
   },
-  "generated_at": "2026-10-03T15:09:54.674110+00:00",
+  "generated_at": "2026-10-03T20:06:16.551501+00:00",
   "market_coverage": {
     "games": 15,
     "moneyline": 15,
@@ -89,7 +89,7 @@
       "action_network_diagnostic": {
         "attempts": [
           {
-            "collector_observed_at": "2026-10-03T15:10:02.419055+00:00",
+            "collector_observed_at": "2026-10-03T20:06:24.221565+00:00",
             "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
             "games_with_markets": 16,
             "parsed_rows": 312,
@@ -239,7 +239,7 @@
             "team_matches": 15
           }
         ],
-        "collector_observed_at": "2026-10-03T15:10:02.419055+00:00",
+        "collector_observed_at": "2026-10-03T20:06:24.221565+00:00",
         "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
         "games_with_markets": 16,
         "parsed_rows": 312,
