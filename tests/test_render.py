@@ -124,8 +124,16 @@ def test_weekly_publication_matches_cfb_picks_layout(tmp_path) -> None:
     assert "STRONG/PAPER" not in document
     assert "PAPER evidence mode" in document
     assert "not production staking" in document
-    assert result["presentation"] == "cfb_style_weekly_picks_v2"
+    assert result["presentation"] == "cfb_style_weekly_picks_v3_cache_safe"
+    assert result["run_tag"] == "20261002_114128_CT"
+    assert result["cache_safe_png_pages"] == [
+        str(tmp_path / "nfl_week_4_run_20261002_114128_CT_page1.png")
+    ]
     assert (tmp_path / "nfl_week_4_page1.png").exists()
+    assert (tmp_path / "nfl_week_4_run_20261002_114128_CT_page1.png").exists()
+    assert (tmp_path / "nfl_week_4_run_20261002_114128_CT_page1.png").read_bytes() == (
+        tmp_path / "nfl_week_4_page1.png"
+    ).read_bytes()
     assert (tmp_path / "latest.png").exists()
     assert (tmp_path / "latest.png").read_bytes() == (
         tmp_path / "nfl_week_4_page1.png"

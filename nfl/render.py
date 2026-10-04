@@ -81,6 +81,19 @@ def _display_updated_at(value: str) -> str:
     return f"{local.strftime('%b')} {local.day}, {local.year} · {clock} CT"
 
 
+def _run_tag(value: str) -> str:
+    """Build the same cache-safe Central-time run tag used by the CFB model."""
+
+    try:
+        stamp = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        stamp = datetime.now(ZoneInfo("America/Chicago"))
+    if stamp.tzinfo is None:
+        stamp = stamp.replace(tzinfo=ZoneInfo("America/Chicago"))
+    local = stamp.astimezone(ZoneInfo("America/Chicago"))
+    return local.strftime("%Y%m%d_%H%M%S_CT")
+
+
 def _team_side(row: dict[str, object]) -> str:
     side = str(row.get("quant_side") or "")
     if side == "home":
@@ -634,9 +647,21 @@ def write_weekly_publication(
     )
 
     pages = max(1, math.ceil(board.height / 14))
+    run_tag = _run_tag(updated_at)
+
+    # Match the CFB publication behavior: keep stable names for automation, but
+    # publish a uniquely named PNG set on every run so GitHub/mobile cannot
+    # reuse an older image preview.
+    for old in directory.glob(f"nfl_week_{week}_run_*_page*.png"):
+        old.unlink()
+
     png_paths: list[str] = []
+    cache_safe_png_paths: list[str] = []
     for page in range(1, pages + 1):
         image_path = directory / f"nfl_week_{week}_page{page}.png"
+        cache_safe_path = (
+            directory / f"nfl_week_{week}_run_{run_tag}_page{page}.png"
+        )
         render_png(
             board,
             image_path,
@@ -645,7 +670,9 @@ def write_weekly_publication(
             updated_at=updated_at,
             release_state=release_state,
         )
+        shutil.copyfile(image_path, cache_safe_path)
         png_paths.append(str(image_path))
+        cache_safe_png_paths.append(str(cache_safe_path))
 
     expected_pages = {Path(value).name for value in png_paths}
     for stale_path in directory.glob(f"nfl_week_{week}_page*.png"):
@@ -659,7 +686,9 @@ def write_weekly_publication(
         "board_games": board.height,
         "html": str(html_path),
         "png_pages": png_paths,
+        "cache_safe_png_pages": cache_safe_png_paths,
         "latest_png": str(latest_path),
+        "run_tag": run_tag,
         "release_state": release_state.upper(),
-        "presentation": "cfb_style_weekly_picks_v2",
+        "presentation": "cfb_style_weekly_picks_v3_cache_safe",
     }

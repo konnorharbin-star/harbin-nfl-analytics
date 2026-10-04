@@ -129,6 +129,7 @@ def _report(html_path: str, png_path: str) -> dict[str, object]:
         "publication": {
             "html": html_path,
             "png_pages": [png_path],
+            "cache_safe_png_pages": [png_path],
             "release_state": "RESEARCH",
         },
         "games": _current().to_dicts(),
@@ -185,6 +186,9 @@ def test_publication_bundle_matches_canonical_outputs(tmp_path) -> None:
     assert (outputs / "latest.png").exists()
     assert (docs / "latest.png").exists()
     assert (outputs / "latest.png").read_bytes() == (docs / "latest.png").read_bytes()
+    readme = (outputs / "README.md").read_text()
+    assert "Fresh PNGs for mobile" in readme
+    assert "cache-safe" in readme
     assert (outputs / "RUN_REPORT.md").exists()
     assert (outputs / "MODEL_CARD.md").exists()
     assert (outputs / "portfolio_card.csv").exists()
