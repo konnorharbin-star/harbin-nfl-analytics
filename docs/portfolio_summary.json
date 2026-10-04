@@ -36,7 +36,7 @@
   "execution_blocked_bets": 24,
   "mode": "paper",
   "paper_or_shadow_allocated_units": 0.156652,
-  "performance_adjusted_proposed_units": 1.563773,
+  "performance_adjusted_proposed_units": 1.672585,
   "performance_feedback": {
     "enabled": true,
     "graded_bets": 2,
@@ -129,7 +129,7 @@
   "production_block_reason": "",
   "production_eligible": false,
   "production_gate_open": false,
-  "proposed_units": 1.563773,
+  "proposed_units": 1.672585,
   "release_state": "PAPER",
-  "risk_adjusted_proposed_units": 1.563773
+  "risk_adjusted_proposed_units": 1.672585
 }
