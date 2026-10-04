@@ -1,4 +1,5 @@
 {
+  "by_book": {},
   "by_edge_bucket": {},
   "by_market": {},
   "by_season": {},
@@ -22,6 +23,7 @@
     "execution_ready_coverage": 0.0,
     "losses": 0,
     "max_drawdown": 0.0,
+    "positive_clv_rate": null,
     "pushes": 0,
     "roi": null,
     "roi_ci_95": [

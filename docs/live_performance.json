@@ -1,4 +1,5 @@
 {
+  "by_book": {},
   "by_edge_bucket": {},
   "by_market": {},
   "by_season": {},
@@ -13,7 +14,7 @@
   "graded_bets": 0,
   "grading_audit": {
     "decisions": {
-      "eligible_decisions": 273,
+      "eligible_decisions": 282,
       "errors": 0,
       "evidence_source": "portfolio_decisions_v1",
       "execution_excluded_rows": 0,
@@ -49,6 +50,7 @@
     "execution_ready_coverage": 0.0,
     "losses": 0,
     "max_drawdown": 0.0,
+    "positive_clv_rate": null,
     "pushes": 0,
     "roi": null,
     "roi_ci_95": [
