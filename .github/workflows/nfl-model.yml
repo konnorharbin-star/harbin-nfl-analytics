@@ -80,13 +80,6 @@ jobs:
       - name: Install package
         run: python -m pip install -e ".[dev]"
 
-      - name: Show Ruff import-sort fix
-        shell: bash
-        run: |
-          ruff check --select I --fix tests/test_performance_feedback.py
-          git diff -- tests/test_performance_feedback.py
-          git checkout -- tests/test_performance_feedback.py
-
       - name: Test
         run: python -m pytest -q
 
