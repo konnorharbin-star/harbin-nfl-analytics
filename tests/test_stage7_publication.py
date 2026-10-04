@@ -188,8 +188,51 @@ def test_publication_bundle_matches_canonical_outputs(tmp_path) -> None:
     assert (outputs / "RUN_REPORT.md").exists()
     assert (outputs / "MODEL_CARD.md").exists()
     assert (outputs / "portfolio_card.csv").exists()
+    assert (outputs / "quant_recommendations.csv").exists()
+    assert "PAPER" in (outputs / "quant_recommendations.csv").read_text()
     assert (history / "audit_snapshots_v1.jsonl").exists()
     assert validate_publication_files(output_dir=outputs, docs_dir=docs)["status"] == "PASS"
+
+
+def test_publication_bundle_overwrites_stale_recommendation_csv(tmp_path) -> None:
+    outputs = tmp_path / "outputs"
+    docs = tmp_path / "docs"
+    reports = tmp_path / "reports"
+    history = tmp_path / "history"
+    for directory in (outputs, docs, reports, history):
+        directory.mkdir()
+
+    html_path = outputs / "nfl_week_4.html"
+    png_path = outputs / "nfl_week_4_page1.png"
+    html_path.write_text("<html><body>NFL board</body></html>")
+    png_path.write_bytes(b"png")
+    (outputs / "quant_recommendations.csv").write_text("stale-row\n")
+
+    current = _current().with_columns(
+        pl.lit("PASS").alias("portfolio_action"),
+        pl.lit(0.0).alias("portfolio_candidate_units"),
+        pl.lit(False).alias("execution_ready"),
+    )
+    report = _report(str(html_path), str(png_path))
+    report["games"] = current.to_dicts()
+    (outputs / "current_model.json").write_text(json.dumps(report, default=str))
+    current.write_csv(outputs / "current_predictions.csv")
+
+    write_publication_bundle(
+        current,
+        report,
+        output_dir=outputs,
+        docs_dir=docs,
+        reports_dir=reports,
+        history_dir=history,
+    )
+
+    recommendation_csv = (outputs / "quant_recommendations.csv").read_text()
+    assert "stale-row" not in recommendation_csv
+    assert recommendation_csv.startswith("season,week,game_id")
+    assert "No current executable portfolio recommendations." in (
+        outputs / "quant_card.html"
+    ).read_text()
 
 
 def test_publication_validation_detects_stale_public_copy(tmp_path) -> None:
