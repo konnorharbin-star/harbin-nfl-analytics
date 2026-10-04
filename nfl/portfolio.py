@@ -452,8 +452,11 @@ def apply_portfolio_controls(
         if not executable:
             blocked += 1
             row["portfolio_limit_reason"] = reason
-            if production_gate_open:
-                continue
+            # A non-executable quote must not consume portfolio capacity in any
+            # mode. PAPER/SHADOW retain the research signal for diagnostics, but
+            # portfolio allocation is reserved for timestamp-valid pre-kickoff
+            # opportunities so the decision ledger remains gradeable.
+            continue
 
         if production_gate_open and not production_allowed:
             row["portfolio_limit_reason"] = (

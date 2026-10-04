@@ -38,8 +38,8 @@ for attempt in $(seq 1 "$max_attempts"); do
   git fetch "$remote" "$target_branch"
 
   if ! git merge-base --is-ancestor "$source_base" FETCH_HEAD; then
-    echo "::notice::Generated-state push skipped because the target branch history no longer descends from the writer's source revision."
-    exit 0
+    echo "::error::Generated-state publication is stale because the target branch no longer descends from the writer's source revision."
+    exit 3
   fi
 
   unsafe_changes=""
@@ -51,8 +51,8 @@ for attempt in $(seq 1 "$max_attempts"); do
   done < <(git diff --name-only "$source_base" FETCH_HEAD)
 
   if [ -n "$unsafe_changes" ]; then
-    echo "::notice::Generated-state push skipped because newer source changes supersede this run: $unsafe_changes"
-    exit 0
+    echo "::error::Generated-state publication is stale because newer source changes supersede this run: $unsafe_changes"
+    exit 3
   fi
 
   if ! git rebase FETCH_HEAD; then

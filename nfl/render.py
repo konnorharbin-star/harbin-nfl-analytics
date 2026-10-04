@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import html
 import math
+import shutil
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -161,6 +162,16 @@ def build_weekly_board(current: pl.DataFrame) -> pl.DataFrame:
         total = float(base["model_total"])
         home_points = (total + margin) / 2.0
         away_points = (total - margin) / 2.0
+        away_score = int(round(away_points))
+        home_score = int(round(home_points))
+        if away_score == home_score and abs(margin) > 1e-9:
+            # Presentation must never imply a tie when the unrounded fair margin
+            # selects a winner. Keep the model values untouched and break only
+            # the displayed integer-score tie toward the projected winner.
+            if margin > 0:
+                home_score = away_score + 1
+            else:
+                away_score = home_score + 1
         home_probability = _number(base.get("calibrated_home_probability"))
         if home_probability is None:
             home_probability = 0.5
@@ -175,8 +186,8 @@ def build_weekly_board(current: pl.DataFrame) -> pl.DataFrame:
                 "kickoff": base.get("kickoff"),
                 "away_team": str(base["away_team"]),
                 "home_team": str(base["home_team"]),
-                "away_score": int(round(away_points)),
-                "home_score": int(round(home_points)),
+                "away_score": away_score,
+                "home_score": home_score,
                 "winner": winner,
                 "win_pct": int(round(100.0 * winner_probability)),
                 "proj_total": total,
@@ -625,10 +636,19 @@ def write_weekly_publication(
         )
         png_paths.append(str(image_path))
 
+    expected_pages = {Path(value).name for value in png_paths}
+    for stale_path in directory.glob(f"nfl_week_{week}_page*.png"):
+        if stale_path.name not in expected_pages:
+            stale_path.unlink()
+
+    latest_path = directory / "latest.png"
+    shutil.copyfile(png_paths[0], latest_path)
+
     return {
         "board_games": board.height,
         "html": str(html_path),
         "png_pages": png_paths,
+        "latest_png": str(latest_path),
         "release_state": release_state.upper(),
-        "presentation": "cfb_style_weekly_picks_v1",
+        "presentation": "cfb_style_weekly_picks_v2",
     }

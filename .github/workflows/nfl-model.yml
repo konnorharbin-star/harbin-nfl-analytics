@@ -36,6 +36,13 @@ on:
       - "nfl/line_history.py"
       - "nfl/release_gate.py"
       - "nfl/model_card.py"
+      - "nfl/render.py"
+      - "nfl/publication.py"
+      - "nfl/reporting.py"
+      - "scripts/push_generated_state.sh"
+      - "tests/test_render.py"
+      - "tests/test_stage7_publication.py"
+      - "tests/test_generated_state_push_reconciliation.py"
       - "tests/test_monitoring_release.py"
       - "tests/test_depth_source.py"
       - "tests/test_weather_resilience.py"
@@ -161,3 +168,50 @@ jobs:
           else
             echo "No generated changes to commit."
           fi
+
+      - name: Verify published model and PNG reached target branch
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          TARGET_BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-main}}"
+          git fetch origin "$TARGET_BRANCH"
+          export TARGET_BRANCH
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          report = json.loads(Path("outputs/current_model.json").read_text())
+          publication = report.get("publication", {})
+          latest = publication.get("latest_png") or "outputs/latest.png"
+          pages = publication.get("png_pages") or []
+          paths = ["outputs/current_model.json", latest, *pages]
+
+          branch = os.environ["TARGET_BRANCH"]
+          checked = []
+          for raw_path in paths:
+              path = str(raw_path)
+              local_path = Path(path)
+              if not local_path.exists() or local_path.stat().st_size <= 0:
+                  raise SystemExit(f"missing local publication artifact: {path}")
+              local = local_path.read_bytes()
+              try:
+                  remote = subprocess.check_output(
+                      ["git", "show", f"origin/{branch}:{path}"]
+                  )
+              except subprocess.CalledProcessError as exc:
+                  raise SystemExit(
+                      f"published artifact missing from origin/{branch}: {path}"
+                  ) from exc
+              local_sha = hashlib.sha256(local).hexdigest()
+              remote_sha = hashlib.sha256(remote).hexdigest()
+              if local_sha != remote_sha:
+                  raise SystemExit(
+                      f"published artifact is stale on origin/{branch}: {path}"
+                  )
+              checked.append(path)
+
+          print("Verified published artifacts: " + ", ".join(checked))
+          PY

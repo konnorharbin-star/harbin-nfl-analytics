@@ -182,6 +182,9 @@ def test_publication_bundle_matches_canonical_outputs(tmp_path) -> None:
     assert (docs / "index.html").exists()
     assert (docs / "audit.html").exists()
     assert (docs / "quant.html").exists()
+    assert (outputs / "latest.png").exists()
+    assert (docs / "latest.png").exists()
+    assert (outputs / "latest.png").read_bytes() == (docs / "latest.png").read_bytes()
     assert (outputs / "RUN_REPORT.md").exists()
     assert (outputs / "MODEL_CARD.md").exists()
     assert (outputs / "portfolio_card.csv").exists()
@@ -218,3 +221,32 @@ def test_publication_validation_detects_stale_public_copy(tmp_path) -> None:
     validation = validate_publication_files(output_dir=outputs, docs_dir=docs)
     assert validation["status"] == "FAIL"
     assert any(item["name"] == "latest_model_copy_exact" for item in validation["errors"])
+
+def test_publication_validation_detects_stale_png_copy(tmp_path) -> None:
+    outputs = tmp_path / "outputs"
+    docs = tmp_path / "docs"
+    reports = tmp_path / "reports"
+    history = tmp_path / "history"
+    for directory in (outputs, docs, reports, history):
+        directory.mkdir()
+    html_path = outputs / "nfl_week_4.html"
+    png_path = outputs / "nfl_week_4_page1.png"
+    html_path.write_text("<html><body>NFL board</body></html>")
+    png_path.write_bytes(b"fresh-png")
+    report = _report(str(html_path), str(png_path))
+    (outputs / "current_model.json").write_text(json.dumps(report, default=str))
+    _current().write_csv(outputs / "current_predictions.csv")
+    write_publication_bundle(
+        _current(),
+        report,
+        output_dir=outputs,
+        docs_dir=docs,
+        reports_dir=reports,
+        history_dir=history,
+    )
+
+    (docs / "latest.png").write_bytes(b"stale-png")
+    validation = validate_publication_files(output_dir=outputs, docs_dir=docs)
+    assert validation["status"] == "FAIL"
+    assert any(item["name"] == "latest_png_copy_exact" for item in validation["errors"])
+
