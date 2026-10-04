@@ -197,7 +197,8 @@ def performance_feedback_for_row(
         if not isinstance(segment, dict):
             continue
         state = str(segment.get("state") or "insufficient")
-        seg_multiplier = _number(segment.get("multiplier")) or 1.0
+        raw_multiplier = _number(segment.get("multiplier"))
+        seg_multiplier = 1.0 if raw_multiplier is None else raw_multiplier
         if state in {"weak", "severe"} and seg_multiplier < 1.0:
             multiplier = min(multiplier, seg_multiplier)
             matched.append(
