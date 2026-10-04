@@ -1,6 +1,6 @@
 {
   "decisions": {
-    "eligible_decisions": 304,
+    "eligible_decisions": 306,
     "errors": 0,
     "evidence_source": "portfolio_decisions_v1",
     "execution_excluded_rows": 0,
@@ -15,7 +15,7 @@
     "entry_quote_verified": true,
     "errors": 0,
     "execution_ready_verified": true,
-    "graded_bets": 2,
+    "graded_bets": 5,
     "issues": [],
     "portfolio_verified": true,
     "status": "PASS",

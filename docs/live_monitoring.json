@@ -2,40 +2,40 @@
   "alerts": [],
   "drift_details": {
     "margin": {
-      "live_mean": 2.5621783329079273,
-      "live_n": 42,
-      "live_std": 3.1053431404763785,
-      "mean_z": 0.1442,
+      "live_mean": 2.3280295606686474,
+      "live_n": 36,
+      "live_std": 3.19893969449143,
+      "mean_z": 0.0876,
       "reference_mean": 1.9658449964734717,
       "reference_n": 1087,
       "reference_std": 4.135525119268019,
-      "stability_score": 89.2,
-      "std_ratio": 0.7509
+      "stability_score": 91.4,
+      "std_ratio": 0.7735
     },
     "total": {
-      "live_mean": 45.70229529971739,
-      "live_n": 42,
-      "live_std": 2.607555779100974,
-      "mean_z": 0.3042,
+      "live_mean": 45.54565035263505,
+      "live_n": 36,
+      "live_std": 2.7740914878542875,
+      "mean_z": 0.2596,
       "reference_mean": 44.63397276559048,
       "reference_n": 1087,
       "reference_std": 3.5116770718711816,
-      "stability_score": 85.0,
-      "std_ratio": 0.7425
+      "stability_score": 87.6,
+      "std_ratio": 0.79
     }
   },
   "drift_reference": "reports/free_market_predictions.csv",
-  "engineering_readiness_score": 95.3,
-  "live_readiness_score": 95.7,
+  "engineering_readiness_score": 95.6,
+  "live_readiness_score": 96.0,
   "meaning": "operational/model-monitoring score; not a profitability guarantee",
   "scores": {
     "calibration": 91.80250233233778,
-    "context": 98.21428571428572,
-    "distribution_stability": 87.1,
+    "context": 97.91666666666666,
+    "distribution_stability": 89.5,
     "freshness": 100.0,
     "market_coverage": 100.0,
     "multi_book": 100.0,
-    "output_completeness": 96.81159420289856
+    "output_completeness": 96.66666666666667
   },
   "status": "OK"
 }
