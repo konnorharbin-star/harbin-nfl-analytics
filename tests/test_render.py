@@ -67,6 +67,17 @@ def test_weekly_board_preserves_score_probability_and_markets() -> None:
     assert row["total"]["research_signal"] == "LEAN"
 
 
+def test_weekly_board_breaks_display_tie_toward_projected_winner() -> None:
+    current = _current().with_columns(
+        pl.lit(0.2).alias("model_margin_home"),
+        pl.lit(51.3).alias("model_total"),
+        pl.lit(0.51).alias("calibrated_home_probability"),
+    )
+    row = build_weekly_board(current).to_dicts()[0]
+    assert row["winner"] == "PIT"
+    assert row["home_score"] == row["away_score"] + 1
+
+
 def test_weekly_publication_matches_cfb_picks_layout(tmp_path) -> None:
     result = write_weekly_publication(
         _current(),
@@ -91,5 +102,9 @@ def test_weekly_publication_matches_cfb_picks_layout(tmp_path) -> None:
     assert "STRONG/PAPER" not in document
     assert "PAPER evidence mode" in document
     assert "not production staking" in document
-    assert result["presentation"] == "cfb_style_weekly_picks_v1"
+    assert result["presentation"] == "cfb_style_weekly_picks_v2"
     assert (tmp_path / "nfl_week_4_page1.png").exists()
+    assert (tmp_path / "latest.png").exists()
+    assert (tmp_path / "latest.png").read_bytes() == (
+        tmp_path / "nfl_week_4_page1.png"
+    ).read_bytes()
