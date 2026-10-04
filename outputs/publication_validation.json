@@ -67,6 +67,36 @@
       "severity": "ERROR"
     },
     {
+      "detail": "outputs/latest.png exists and is non-empty",
+      "name": "latest_png_present",
+      "passed": true,
+      "severity": "ERROR"
+    },
+    {
+      "detail": "docs/latest.png exists and is non-empty",
+      "name": "public_latest_png_present",
+      "passed": true,
+      "severity": "ERROR"
+    },
+    {
+      "detail": "outputs/latest.png and docs/latest.png are identical",
+      "name": "latest_png_copy_exact",
+      "passed": true,
+      "severity": "ERROR"
+    },
+    {
+      "detail": "outputs/nfl_week_4_page1.png exists and is non-empty",
+      "name": "weekly_page1_present",
+      "passed": true,
+      "severity": "ERROR"
+    },
+    {
+      "detail": "outputs/latest.png matches the current week's page 1 PNG",
+      "name": "latest_png_matches_week_page1",
+      "passed": true,
+      "severity": "ERROR"
+    },
+    {
       "detail": "docs/index.html exists",
       "name": "public_index_present",
       "passed": true,

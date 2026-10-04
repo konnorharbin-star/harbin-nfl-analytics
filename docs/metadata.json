@@ -1,6 +1,6 @@
 {
   "current_context": {
-    "as_of": "2026-10-04T05:02:56.156391+00:00",
+    "as_of": "2026-10-04T17:05:22.839643+00:00",
     "components": {
       "injuries_personnel": 1.0,
       "quarterback": 1.0,
@@ -30,9 +30,9 @@
       "appended_rows": 0,
       "candidate_rows": 15,
       "path": "history/recent_form_shadow_predictions_v1.csv",
-      "skipped_duplicate": 15,
+      "skipped_duplicate": 6,
       "skipped_incomplete": 0,
-      "skipped_post_kickoff": 0,
+      "skipped_post_kickoff": 9,
       "status": "READY",
       "total_rows": 16
     },
@@ -61,7 +61,7 @@
     "status": "OK",
     "target_games": 15
   },
-  "generated_at": "2026-10-04T05:02:56.156391+00:00",
+  "generated_at": "2026-10-04T17:05:22.839643+00:00",
   "market_coverage": {
     "games": 15,
     "moneyline": 15,
@@ -89,10 +89,10 @@
       "action_network_diagnostic": {
         "attempts": [
           {
-            "collector_observed_at": "2026-10-04T05:03:08.617099+00:00",
+            "collector_observed_at": "2026-10-04T17:05:34.824995+00:00",
             "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
             "games_with_markets": 16,
-            "parsed_rows": 312,
+            "parsed_rows": 307,
             "payload_games": 16,
             "provider_timestamp_available": false,
             "sample": {
@@ -239,10 +239,10 @@
             "team_matches": 15
           }
         ],
-        "collector_observed_at": "2026-10-04T05:03:08.617099+00:00",
+        "collector_observed_at": "2026-10-04T17:05:34.824995+00:00",
         "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
         "games_with_markets": 16,
-        "parsed_rows": 312,
+        "parsed_rows": 307,
         "payload_games": 16,
         "provider_timestamp_available": false,
         "sample": {
@@ -390,7 +390,7 @@
       },
       "action_network_enabled": true,
       "action_network_games": 15,
-      "action_network_rows": 312,
+      "action_network_rows": 307,
       "action_network_timestamp_policy": "provider update timestamp when supplied; otherwise UTC collector observation time at response receipt",
       "books": 7,
       "execution_note": "nflverse schedule fallback has no sportsbook identity or quote-update timestamp and is research-only",
@@ -410,7 +410,7 @@
       ],
       "status": "READY",
       "verified_games_with_any_market": 15,
-      "verified_rows": 357,
+      "verified_rows": 352,
       "verified_sources": [
         "action_network",
         "espn"
@@ -424,15 +424,15 @@
     "candidate_pass": false,
     "holdout_games": 272,
     "holdout_season": 2025,
-    "home_win_brier": 0.22995807657360515,
+    "home_win_brier": 0.22995807657360534,
     "margin_50_coverage": 0.5110294117647058,
     "margin_80_coverage": 0.7830882352941176,
-    "margin_nll": 3.9948617498156627,
+    "margin_nll": 3.9948617498156636,
     "margin_scale": 1.0,
     "status": "READY",
     "total_50_coverage": 0.5147058823529411,
     "total_80_coverage": 0.8051470588235294,
-    "total_nll": 4.019776337747562,
+    "total_nll": 4.019776337747561,
     "total_scale": 1.0,
     "training_games": 815,
     "validation_season": 2024
