@@ -252,6 +252,7 @@ def _summary(frame: pl.DataFrame) -> dict[str, object]:
             "roi": None,
             "max_drawdown": 0.0,
             "avg_clv": None,
+            "positive_clv_rate": None,
             "clv_samples": 0,
             "clv_coverage": 0.0,
             "entry_quote_verified_bets": 0,
@@ -286,6 +287,7 @@ def _summary(frame: pl.DataFrame) -> dict[str, object]:
         "roi": sum(profits) / frame.height,
         "max_drawdown": _max_drawdown(profits),
         "avg_clv": None if not clv else float(sum(clv) / len(clv)),
+        "positive_clv_rate": None if not clv else sum(float(value) > 0 for value in clv) / len(clv),
         "clv_samples": len(clv),
         "clv_coverage": len(clv) / frame.height,
         "entry_quote_verified_bets": entry_verified,
@@ -312,6 +314,7 @@ def summarize_live_grading(graded: pl.DataFrame) -> dict[str, object]:
             "by_market": {},
             "by_signal": {},
             "by_edge_bucket": {},
+            "by_book": {},
             "by_season": {},
         }
 
@@ -344,6 +347,7 @@ def summarize_live_grading(graded: pl.DataFrame) -> dict[str, object]:
         "by_market": grouped("quant_market"),
         "by_signal": grouped(signal_column),
         "by_edge_bucket": grouped("edge_bucket"),
+        "by_book": grouped("quant_book") if "quant_book" in graded.columns else {},
         "by_season": grouped("season"),
     }
 
