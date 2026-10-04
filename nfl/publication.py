@@ -9,6 +9,7 @@ import shutil
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import polars as pl
 
@@ -830,6 +831,34 @@ def validate_publication_files(
             )
         )
 
+    publication = (
+        current_model.get("publication")
+        if isinstance(current_model.get("publication"), dict)
+        else {}
+    )
+    cache_safe_pages = publication.get("cache_safe_png_pages", [])
+    cache_safe_page = (
+        Path(str(cache_safe_pages[0]))
+        if isinstance(cache_safe_pages, list) and cache_safe_pages
+        else outputs / "__missing_cache_safe_page1.png"
+    )
+    cache_safe_hash = _file_sha256(cache_safe_page)
+    checks.append(
+        _check(
+            "cache_safe_page1_present",
+            cache_safe_hash is not None,
+            f"{cache_safe_page} exists and is non-empty",
+        )
+    )
+    if cache_safe_hash is not None and weekly_hash is not None:
+        checks.append(
+            _check(
+                "cache_safe_page1_matches_week_page1",
+                cache_safe_hash == weekly_hash,
+                "cache-safe page 1 matches the current stable page 1 PNG",
+            )
+        )
+
     checks.append(
         _check(
             "public_index_present",
@@ -899,11 +928,7 @@ def write_publication_bundle(
     if not isinstance(model_card, dict):
         model_card = {}
     (outputs / "MODEL_CARD.md").write_text(render_model_card_markdown(model_card))
-    (outputs / "README.md").write_text(
-        "# Harbin NFL generated outputs\n\n"
-        "Canonical generated artifacts. Read `RUN_REPORT.md`, `MODEL_CARD.md`, and "
-        "`audit_snapshot.json` together; no single metric establishes a betting edge.\n"
-    )
+    # README is written after the cache-safe weekly PNG paths are reconciled.
 
     meta = report.get("meta") if isinstance(report.get("meta"), dict) else {}
     gate = report.get("release_gate") if isinstance(report.get("release_gate"), dict) else {}
@@ -943,6 +968,57 @@ def write_publication_bundle(
     if first_png.resolve() != latest_png.resolve():
         shutil.copyfile(first_png, latest_png)
     shutil.copyfile(latest_png, docs / "latest.png")
+
+    cache_safe_pages = publication.get("cache_safe_png_pages", [])
+    if not isinstance(cache_safe_pages, list) or not cache_safe_pages:
+        raise RuntimeError("cache-safe weekly NFL PNG publication is missing")
+    for raw_path in cache_safe_pages:
+        cache_safe_path = Path(str(raw_path))
+        if not cache_safe_path.exists() or cache_safe_path.stat().st_size <= 0:
+            raise RuntimeError(
+                f"cache-safe weekly NFL PNG is missing or empty: {cache_safe_path}"
+            )
+
+    fresh_links = "\n".join(
+        f"- [Fresh page {index} — cache-safe]({Path(str(path)).name})"
+        for index, path in enumerate(cache_safe_pages, start=1)
+    )
+    stable_links = "\n".join(
+        f"- [Stable page {index}]({Path(str(path)).name})"
+        for index, path in enumerate(png_pages, start=1)
+    )
+    generated_at = str(meta.get("generated_at") or report.get("generated_at") or "unknown")
+    updated_display = generated_at
+    try:
+        stamp = datetime.fromisoformat(generated_at.replace("Z", "+00:00"))
+        if stamp.tzinfo is not None:
+            local = stamp.astimezone(ZoneInfo("America/Chicago"))
+            clock = local.strftime("%I:%M %p").lstrip("0")
+            updated_display = (
+                f"{local.strftime('%b')} {local.day}, {local.year} · {clock} CT"
+            )
+    except ValueError:
+        pass
+    (outputs / "README.md").write_text(
+        "# Latest NFL model output\n\n"
+        f"**Season / Week:** {meta.get('season')} / {meta.get('week')}  \n"
+        f"**Updated:** {updated_display}  \n"
+        f"**Release state:** {report.get('release_state', 'UNKNOWN')}  \n\n"
+        "## Fresh PNGs for mobile\n"
+        f"{fresh_links}\n\n"
+        "These filenames change on every run so GitHub/mobile cannot reuse an old "
+        "image preview. Use these links when checking the latest model.\n\n"
+        "## Stable PNG names\n"
+        f"{stable_links}\n\n"
+        "## Other outputs\n"
+        f"- [Interactive weekly board]({weekly_html.name})\n"
+        "- [Quant recommendations](quant_recommendations.csv)\n"
+        "- [Run report](RUN_REPORT.md)\n"
+        "- [Model card](MODEL_CARD.md)\n"
+        "- [Publication validation](publication_validation.json)\n\n"
+        "The fresh and stable PNGs contain the same run; only the fresh filename "
+        "is intended to defeat cached image previews.\n"
+    )
 
     current_model_path = outputs / "current_model.json"
     if not current_model_path.exists():
