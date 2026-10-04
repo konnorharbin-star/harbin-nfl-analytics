@@ -548,6 +548,8 @@ def _card_columns(current: pl.DataFrame) -> list[str]:
         "model_margin_home",
         "model_total",
         "quant_signal",
+        "research_signal",
+        "portfolio_signal",
         "quant_market",
         "quant_side",
         "quant_book",
@@ -557,9 +559,11 @@ def _card_columns(current: pl.DataFrame) -> list[str]:
         "quant_edge",
         "quant_ev",
         "market_book_count",
+        "paper_stake_units",
         "portfolio_candidate_units",
         "portfolio_stake_units",
         "portfolio_action",
+        "portfolio_limit_reason",
         "execution_ready",
     ]
     return [column for column in preferred if column in current.columns]
@@ -568,23 +572,40 @@ def _card_columns(current: pl.DataFrame) -> list[str]:
 def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> None:
     columns = _card_columns(current)
     card = current.select(columns) if columns and not current.is_empty() else pl.DataFrame()
-    if not card.is_empty():
-        card.write_csv(output_dir / "portfolio_card.csv")
-    recommendations = (
-        card.filter(pl.col("quant_signal") != "PASS")
-        if not card.is_empty() and "quant_signal" in card.columns
-        else pl.DataFrame()
-    )
-    if not recommendations.is_empty():
-        recommendations.write_csv(output_dir / "quant_recommendations.csv")
+    portfolio_path = output_dir / "portfolio_card.csv"
+    recommendation_path = output_dir / "quant_recommendations.csv"
+
+    if columns:
+        card.write_csv(portfolio_path)
+    else:
+        portfolio_path.write_text("")
+
+    required = {"portfolio_action", "portfolio_candidate_units", "execution_ready"}
+    recommendations = card.head(0)
+    if not card.is_empty() and required.issubset(card.columns):
+        recommendations = card.filter(
+            pl.col("portfolio_action").is_in(["PAPER", "SHADOW", "BET"])
+            & (pl.col("portfolio_candidate_units") > 0)
+            & pl.col("execution_ready").fill_null(False)
+        )
+    if columns:
+        recommendations.write_csv(recommendation_path)
+    else:
+        recommendation_path.write_text("")
 
     rows: list[str] = []
     for row in recommendations.to_dicts():
+        signal = (
+            row.get("portfolio_signal")
+            or row.get("research_signal")
+            or row.get("quant_signal")
+            or "PASS"
+        )
         rows.append(
             "<tr>"
             f"<td>{html.escape(str(row.get('away_team', '')))} @ "
             f"{html.escape(str(row.get('home_team', '')))}</td>"
-            f"<td>{html.escape(str(row.get('quant_signal', '')))}</td>"
+            f"<td>{html.escape(str(signal))}</td>"
             f"<td>{html.escape(str(row.get('quant_market', '')))}</td>"
             f"<td>{html.escape(str(row.get('quant_side', '')))}</td>"
             f"<td>{html.escape(str(row.get('quant_price', '')))}</td>"
@@ -593,7 +614,10 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
             f"<td>{html.escape(str(row.get('portfolio_action', '')))}</td>"
             "</tr>"
         )
-    body = "".join(rows) or '<tr><td colspan="8">No non-PASS opportunities.</td></tr>'
+    body = (
+        "".join(rows)
+        or '<tr><td colspan="8">No current executable portfolio recommendations.</td></tr>'
+    )
     document = (
         "<!doctype html><html><head><meta charset=\"utf-8\">"
         "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
@@ -602,7 +626,8 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
         "table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid #333}"
         "th{text-align:left;color:#969ba1}a{color:#74a7ff}</style></head><body>"
         "<h1>Harbin NFL · Quant Card</h1>"
-        "<p>Research/publication view. Portfolio action and release gate control execution.</p>"
+        "<p>Current executable, cap-allocated PAPER/SHADOW/BET opportunities only. "
+        "Release state controls real execution.</p>"
         "<p><a href=\"./\">← Weekly board</a> · <a href=\"audit.html\">System audit</a></p>"
         "<table><thead><tr><th>Matchup</th><th>Signal</th><th>Market</th><th>Side</th>"
         "<th>Line</th><th>Odds</th><th>Book</th><th>Action</th></tr></thead>"
