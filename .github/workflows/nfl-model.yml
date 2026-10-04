@@ -83,6 +83,9 @@ jobs:
       - name: Test
         run: python -m pytest -q
 
+      - name: Refresh completed-game grading
+        run: python grade_live.py
+
       - name: Run model + monitoring + release + portfolio + reporting
         shell: bash
         run: |
