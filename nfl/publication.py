@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
 import html
 import json
+import shutil
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -59,6 +61,12 @@ def _json_equal(first: object, second: object) -> bool:
         sort_keys=True,
         default=str,
     )
+
+
+def _file_sha256(path: Path) -> str | None:
+    if not path.exists() or not path.is_file() or path.stat().st_size <= 0:
+        return None
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _load_trend(path: str | Path, *, limit: int = 12) -> list[dict[str, object]]:
@@ -659,6 +667,8 @@ def validate_publication_files(
     portfolio = _read_json(docs / "portfolio_summary.json")
     monitor = _read_json(docs / "live_monitoring.json")
     quality = _read_json(docs / "data_quality.json")
+    latest_png = outputs / "latest.png"
+    public_latest_png = docs / "latest.png"
 
     checks: list[dict[str, object]] = []
     checks.append(
@@ -747,6 +757,54 @@ def validate_publication_files(
     checks.append(
         _check("data_quality_present", bool(quality), "docs/data_quality.json parses")
     )
+
+    output_png_hash = _file_sha256(latest_png)
+    public_png_hash = _file_sha256(public_latest_png)
+    checks.append(
+        _check(
+            "latest_png_present",
+            output_png_hash is not None,
+            "outputs/latest.png exists and is non-empty",
+        )
+    )
+    checks.append(
+        _check(
+            "public_latest_png_present",
+            public_png_hash is not None,
+            "docs/latest.png exists and is non-empty",
+        )
+    )
+    if output_png_hash is not None and public_png_hash is not None:
+        checks.append(
+            _check(
+                "latest_png_copy_exact",
+                output_png_hash == public_png_hash,
+                "outputs/latest.png and docs/latest.png are identical",
+            )
+        )
+
+    week_value = identity.get("week")
+    try:
+        weekly_page = outputs / f"nfl_week_{int(week_value)}_page1.png"
+    except (TypeError, ValueError):
+        weekly_page = outputs / "__invalid_week_page1.png"
+    weekly_hash = _file_sha256(weekly_page)
+    checks.append(
+        _check(
+            "weekly_page1_present",
+            weekly_hash is not None,
+            f"{weekly_page} exists and is non-empty",
+        )
+    )
+    if weekly_hash is not None and output_png_hash is not None:
+        checks.append(
+            _check(
+                "latest_png_matches_week_page1",
+                weekly_hash == output_png_hash,
+                "outputs/latest.png matches the current week's page 1 PNG",
+            )
+        )
+
     checks.append(
         _check(
             "public_index_present",
@@ -850,6 +908,17 @@ def write_publication_bundle(
         raise RuntimeError("weekly NFL HTML publication is missing")
     (docs / "index.html").write_text(weekly_html.read_text())
 
+    png_pages = publication.get("png_pages")
+    if not isinstance(png_pages, list) or not png_pages:
+        raise RuntimeError("weekly NFL PNG publication is missing")
+    first_png = Path(str(png_pages[0]))
+    if not first_png.exists() or first_png.stat().st_size <= 0:
+        raise RuntimeError("weekly NFL page 1 PNG publication is missing or empty")
+    latest_png = outputs / "latest.png"
+    if first_png.resolve() != latest_png.resolve():
+        shutil.copyfile(first_png, latest_png)
+    shutil.copyfile(latest_png, docs / "latest.png")
+
     current_model_path = outputs / "current_model.json"
     if not current_model_path.exists():
         raise RuntimeError("canonical outputs/current_model.json is missing before publication")
@@ -878,6 +947,7 @@ def write_publication_bundle(
         "portfolio_card": str(outputs / "portfolio_card.csv"),
         "quant_card": str(outputs / "quant_card.html"),
         "public_index": str(docs / "index.html"),
+        "public_latest_png": str(docs / "latest.png"),
         "public_audit": str(docs / "audit.html"),
         "public_quant": str(docs / "quant.html"),
         "validation": str(outputs / "publication_validation.json"),
