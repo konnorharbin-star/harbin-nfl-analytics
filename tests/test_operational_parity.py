@@ -96,6 +96,32 @@ def test_production_invalid_quote_does_not_consume_portfolio_capacity(tmp_path) 
     assert "stale" in frame.get_column("portfolio_limit_reason")[0]
 
 
+def test_paper_invalid_quote_does_not_consume_portfolio_capacity(tmp_path) -> None:
+    now = datetime.now(UTC)
+    row = _candidate(
+        kickoff=(now - timedelta(minutes=1)).isoformat(),
+        quant_quote_at=now.isoformat(),
+    )
+    policy = dict(DEFAULT_POLICY)
+    policy["deployment_mode"] = "paper"
+
+    frame, summary = apply_portfolio_controls(
+        pl.DataFrame([row]),
+        policy=policy,
+        release_gate={"release_state": "PAPER", "production_eligible": False},
+        live_bets_path=tmp_path / "none.csv",
+        now=now,
+    )
+
+    assert summary["mode"] == "paper"
+    assert summary["execution_blocked_bets"] == 1
+    assert summary["paper_or_shadow_allocated_units"] == 0.0
+    assert frame.get_column("portfolio_candidate_units").sum() == 0.0
+    assert frame.get_column("portfolio_stake_units").sum() == 0.0
+    assert frame.get_column("portfolio_action")[0] == "PASS"
+    assert "pre-kickoff" in frame.get_column("portfolio_limit_reason")[0]
+
+
 def test_production_bankroll_hard_stop_is_explicitly_halted(tmp_path) -> None:
     now = datetime.now(UTC)
     history = tmp_path / "live.csv"
