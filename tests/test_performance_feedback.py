@@ -6,7 +6,7 @@ from datetime import UTC, datetime
 
 import polars as pl
 
-from nfl.performance_feedback import build_performance_feedback, performance_feedback_for_row
+from nfl import performance_feedback
 from nfl.policy import DEFAULT_POLICY
 from nfl.portfolio import apply_portfolio_controls
 
@@ -75,15 +75,15 @@ def _feedback_row():
 
 def test_small_sample_does_not_change_risk(tmp_path):
     path = _history(tmp_path / "graded.csv", n=10)
-    report = build_performance_feedback(path, _config())
-    feedback = performance_feedback_for_row(_feedback_row(), report)
+    report = performance_feedback.build_performance_feedback(path, _config())
+    feedback = performance_feedback.performance_feedback_for_row(_feedback_row(), report)
     assert feedback["multiplier"] == 1.0
 
 
 def test_good_clv_prevents_loss_chasing_penalty(tmp_path):
     path = _history(tmp_path / "graded.csv", n=40, profit=-1.0, clv=0.5)
-    report = build_performance_feedback(path, _config())
-    feedback = performance_feedback_for_row(_feedback_row(), report)
+    report = performance_feedback.build_performance_feedback(path, _config())
+    feedback = performance_feedback.performance_feedback_for_row(_feedback_row(), report)
     assert feedback["multiplier"] == 1.0
 
 
