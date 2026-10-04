@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import csv
-from copy import deepcopy
+import json
 from datetime import UTC, datetime
 
 import polars as pl
@@ -89,7 +89,7 @@ def test_good_clv_prevents_loss_chasing_penalty(tmp_path):
 
 def test_adverse_clv_and_roi_reduce_next_portfolio_stake(tmp_path):
     live = _history(tmp_path / "graded.csv", n=40, profit=-1.0, clv=-0.5)
-    policy = deepcopy(DEFAULT_POLICY)
+    policy = json.loads(json.dumps(DEFAULT_POLICY))
     policy["deployment_mode"] = "paper"
     policy["portfolio"].update(
         {
