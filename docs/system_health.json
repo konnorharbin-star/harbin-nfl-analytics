@@ -1,14 +1,14 @@
 {
   "data_quality": {
     "context_source_errors": [],
-    "market_rows": 36,
+    "market_rows": 6,
     "market_source_errors": [],
-    "projection_games": 12,
+    "projection_games": 2,
     "recent_form_source_errors": [],
     "status": "OK",
-    "target_games": 12
+    "target_games": 2
   },
-  "live_readiness_score": 96.0,
+  "live_readiness_score": 92.3,
   "meaning": "operational health; not a profitability or staking signal",
   "monitor_alerts": [],
   "production_eligible": false,

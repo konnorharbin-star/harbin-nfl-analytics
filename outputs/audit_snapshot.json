@@ -1,34 +1,34 @@
 {
   "coverage": {
-    "context": 0.9791666666666666,
-    "games": 12,
-    "moneyline": 12,
+    "context": 1.0,
+    "games": 2,
+    "moneyline": 2,
     "multi_book": 1.0,
     "quarterback": 1.0,
-    "spread": 12,
-    "total": 12
+    "spread": 2,
+    "total": 2
   },
   "data_quality": {
     "context_source_errors": [],
-    "market_rows": 36,
+    "market_rows": 6,
     "market_source_errors": [],
-    "projection_games": 12,
+    "projection_games": 2,
     "recent_form_source_errors": [],
     "status": "OK",
-    "target_games": 12
+    "target_games": 2
   },
-  "generated_at": "2026-10-04T20:14:24.744467+00:00",
+  "generated_at": "2026-10-04T23:52:12.381702+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
-      "market_rows": 36,
+      "market_rows": 6,
       "market_source_errors": [],
-      "projection_games": 12,
+      "projection_games": 2,
       "recent_form_source_errors": [],
       "status": "OK",
-      "target_games": 12
+      "target_games": 2
     },
-    "live_readiness_score": 96.0,
+    "live_readiness_score": 92.3,
     "meaning": "operational health; not a profitability or staking signal",
     "monitor_alerts": [],
     "production_eligible": false,
@@ -66,61 +66,61 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-04T20:14:02.791043+00:00",
-    "prediction_games": 12,
-    "prediction_rows": 36,
+    "model_generated_at": "2026-10-04T23:52:02.253782+00:00",
+    "prediction_games": 2,
+    "prediction_rows": 6,
     "season": 2026,
     "week": 4
   },
   "live_evidence": {
-    "avg_clv": 0.10333333333333332,
-    "graded_bets": 5,
+    "avg_clv": 0.06458333333333333,
+    "graded_bets": 8,
     "portfolio_verified": true,
-    "roi": -0.6181818181818182,
+    "roi": -0.28409090909090906,
     "roi_ci_95": [
       null,
       null
     ],
     "status": "UNKNOWN",
-    "units": -3.090909090909091
+    "units": -2.2727272727272725
   },
   "meaning": "NFL publication/audit snapshot. Readiness, model error, historical evidence, and forward evidence remain separate; none guarantees future profitability.",
   "monitoring": {
     "alerts": [],
     "drift_details": {
       "margin": {
-        "live_mean": 2.3280295606686474,
-        "live_n": 36,
-        "live_std": 3.19893969449143,
-        "mean_z": 0.0876,
+        "live_mean": 1.5938505813533954,
+        "live_n": 6,
+        "live_std": 0.9403557543621495,
+        "mean_z": 0.09,
         "reference_mean": 1.9658449964734717,
         "reference_n": 1087,
         "reference_std": 4.135525119268019,
-        "stability_score": 91.4,
-        "std_ratio": 0.7735
+        "stability_score": 60.7,
+        "std_ratio": 0.2274
       },
       "total": {
-        "live_mean": 45.54565035263505,
-        "live_n": 36,
-        "live_std": 2.7740914878542875,
-        "mean_z": 0.2596,
+        "live_mean": 48.75271222458367,
+        "live_n": 6,
+        "live_std": 4.266313931459087,
+        "mean_z": 1.1729,
         "reference_mean": 44.63397276559048,
         "reference_n": 1087,
         "reference_std": 3.5116770718711816,
-        "stability_score": 87.6,
-        "std_ratio": 0.79
+        "stability_score": 65.8,
+        "std_ratio": 1.2149
       }
     },
-    "live_readiness_score": 96.0,
-    "recent_readiness_delta": 0.29999999999999716,
+    "live_readiness_score": 92.3,
+    "recent_readiness_delta": -3.4000000000000057,
     "scores": {
-      "calibration": 91.80250233233778,
-      "context": 97.91666666666666,
-      "distribution_stability": 89.5,
+      "calibration": 91.80250233233775,
+      "context": 100.0,
+      "distribution_stability": 63.2,
       "freshness": 100.0,
       "market_coverage": 100.0,
       "multi_book": 100.0,
-      "output_completeness": 96.66666666666667
+      "output_completeness": 95.94202898550725
     },
     "status": "OK"
   },
@@ -128,19 +128,19 @@
     "approved_bets": 0,
     "approved_units": 0.0,
     "bankroll_risk": {
-      "cumulative_units": -3.090909,
-      "current_drawdown_units": 3.090909,
-      "graded_bets": 5,
+      "cumulative_units": -2.272727,
+      "current_drawdown_units": 3.0,
+      "graded_bets": 8,
       "hard_stop": false,
       "history_available": true,
-      "max_drawdown_units": 3.090909,
+      "max_drawdown_units": 3.0,
       "reason": "no bankroll throttle active",
       "risk_multiplier": 1.0,
-      "trailing_avg_clv": 0.103333,
-      "trailing_roi": -0.618182,
-      "trailing_window_bets": 5
+      "trailing_avg_clv": 0.064583,
+      "trailing_roi": -0.284091,
+      "trailing_window_bets": 8
     },
-    "bets": 2,
+    "bets": 3,
     "committed_exposure": {
       "integrity_ok": true,
       "invalid_rows": 0,
@@ -156,24 +156,24 @@
           4
         ]
       ],
-      "total_open_bets_after_allocation": 2,
-      "total_open_units_after_allocation": 0.106282
+      "total_open_bets_after_allocation": 3,
+      "total_open_units_after_allocation": 0.163552
     },
-    "execution_blocked_bets": 21,
+    "execution_blocked_bets": 0,
     "mode": "paper",
-    "paper_or_shadow_allocated_units": 0.106282,
-    "performance_adjusted_proposed_units": 1.028663,
+    "paper_or_shadow_allocated_units": 0.163552,
+    "performance_adjusted_proposed_units": 0.198486,
     "performance_feedback": {
       "enabled": true,
-      "graded_bets": 5,
+      "graded_bets": 8,
       "history_available": true,
       "overall": {
-        "avg_clv": 0.10333333333333332,
-        "bets": 5,
+        "avg_clv": 0.06458333333333333,
+        "bets": 8,
         "clv_coverage": 1.0,
-        "clv_samples": 5,
-        "positive_clv_rate": 0.4,
-        "roi": -0.6181818181818182
+        "clv_samples": 8,
+        "positive_clv_rate": 0.25,
+        "roi": -0.28409090909090906
       },
       "reason": "CLV-first segment de-risking; multipliers never exceed 1.0",
       "segments": {
@@ -190,14 +190,14 @@
           "value": "BetMGM"
         },
         "book:Draft Kings": {
-          "avg_clv": 0.1722222222222222,
-          "bets": 3,
+          "avg_clv": 0.10333333333333332,
+          "bets": 5,
           "clv_coverage": 1.0,
-          "clv_samples": 3,
+          "clv_samples": 5,
           "dimension": "book",
           "multiplier": 1.0,
-          "positive_clv_rate": 0.6666666666666666,
-          "roi": -0.3636363636363636,
+          "positive_clv_rate": 0.4,
+          "roi": 0.1454545454545455,
           "state": "insufficient",
           "value": "Draft Kings"
         },
@@ -213,15 +213,27 @@
           "state": "insufficient",
           "value": "DraftKings"
         },
-        "edge_bucket:>=6%": {
-          "avg_clv": 0.10333333333333332,
-          "bets": 5,
+        "book:FanDuel": {
+          "avg_clv": 0.0,
+          "bets": 1,
           "clv_coverage": 1.0,
-          "clv_samples": 5,
+          "clv_samples": 1,
+          "dimension": "book",
+          "multiplier": 1.0,
+          "positive_clv_rate": 0.0,
+          "roi": -1.0,
+          "state": "insufficient",
+          "value": "FanDuel"
+        },
+        "edge_bucket:>=6%": {
+          "avg_clv": 0.06458333333333333,
+          "bets": 8,
+          "clv_coverage": 1.0,
+          "clv_samples": 8,
           "dimension": "edge_bucket",
           "multiplier": 1.0,
-          "positive_clv_rate": 0.4,
-          "roi": -0.6181818181818182,
+          "positive_clv_rate": 0.25,
+          "roi": -0.28409090909090906,
           "state": "insufficient",
           "value": ">=6%"
         },
@@ -238,14 +250,14 @@
           "value": "moneyline"
         },
         "market:spread": {
-          "avg_clv": 0.25,
-          "bets": 2,
+          "avg_clv": 0.1,
+          "bets": 5,
           "clv_coverage": 1.0,
-          "clv_samples": 2,
+          "clv_samples": 5,
           "dimension": "market",
           "multiplier": 1.0,
-          "positive_clv_rate": 0.5,
-          "roi": -0.045454545454545414,
+          "positive_clv_rate": 0.2,
+          "roi": 0.1454545454545455,
           "state": "insufficient",
           "value": "spread"
         },
@@ -262,14 +274,14 @@
           "value": "total"
         },
         "signal:STRONG": {
-          "avg_clv": 0.10333333333333332,
-          "bets": 5,
+          "avg_clv": 0.06458333333333333,
+          "bets": 8,
           "clv_coverage": 1.0,
-          "clv_samples": 5,
+          "clv_samples": 8,
           "dimension": "signal",
           "multiplier": 1.0,
-          "positive_clv_rate": 0.4,
-          "roi": -0.6181818181818182,
+          "positive_clv_rate": 0.25,
+          "roi": -0.28409090909090906,
           "state": "insufficient",
           "value": "STRONG"
         }
@@ -279,23 +291,23 @@
     "production_block_reason": "",
     "production_eligible": false,
     "production_gate_open": false,
-    "proposed_units": 1.028663,
+    "proposed_units": 0.198486,
     "release_state": "PAPER",
-    "risk_adjusted_proposed_units": 1.028663
+    "risk_adjusted_proposed_units": 0.198486
   },
   "probability": {
     "candidate_pass": false,
     "holdout_games": 272,
     "holdout_season": 2025,
-    "home_win_brier": 0.22995807657360515,
+    "home_win_brier": 0.22995807657360534,
     "margin_50_coverage": 0.5110294117647058,
     "margin_80_coverage": 0.7830882352941176,
-    "margin_nll": 3.9948617498156627,
+    "margin_nll": 3.9948617498156644,
     "margin_scale": 1.0,
     "status": "READY",
     "total_50_coverage": 0.5147058823529411,
     "total_80_coverage": 0.8051470588235294,
-    "total_nll": 4.019776337747562,
+    "total_nll": 4.019776337747561,
     "total_scale": 1.0,
     "training_games": 815,
     "validation_season": 2024
@@ -303,13 +315,13 @@
   "reconciliation": {
     "checks": [
       {
-        "detail": "predictions=36 metadata=36",
+        "detail": "predictions=6 metadata=6",
         "name": "market_row_count",
         "passed": true,
         "severity": "ERROR"
       },
       {
-        "detail": "prediction_games=12 metadata=12",
+        "detail": "prediction_games=2 metadata=2",
         "name": "game_count",
         "passed": true,
         "severity": "ERROR"
@@ -345,7 +357,7 @@
         "severity": "ERROR"
       },
       {
-        "detail": "approved=0.000 allocated=0.106",
+        "detail": "approved=0.000 allocated=0.164",
         "name": "approved_not_above_allocation",
         "passed": true,
         "severity": "ERROR"
@@ -400,7 +412,7 @@
         "name": "context_coverage",
         "passed": true,
         "requirement": ">=90% current injury/rest/weather/travel context coverage",
-        "value": 0.9792
+        "value": 1.0
       },
       {
         "detail": "",
@@ -408,7 +420,7 @@
         "passed": true,
         "requirement": "chronological NFL probability holdout meets calibration guardrails",
         "value": {
-          "brier": 0.22995807657360515,
+          "brier": 0.22995807657360534,
           "margin_80_coverage": 0.7830882352941176,
           "total_80_coverage": 0.8051470588235294
         }
@@ -418,7 +430,7 @@
         "name": "live_monitoring",
         "passed": true,
         "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
-        "value": 95.6
+        "value": 91.6
       },
       {
         "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -459,8 +471,8 @@
           "status": "ESTABLISHED SAMPLE",
           "verified_clv_coverage": 0.7965686274509803,
           "verified_roi_ci_95": [
-            -0.13921364578450923,
-            -0.017738326482666517
+            -0.1400863378421649,
+            -0.01866485433794966
           ]
         }
       },
@@ -482,7 +494,7 @@
         "passed": true,
         "requirement": "forward evidence comes from cap-constrained persisted portfolio decisions",
         "value": {
-          "graded_bets": 5,
+          "graded_bets": 8,
           "source": "portfolio_decisions_v1"
         }
       },
@@ -503,8 +515,8 @@
         "requirement": ">=90% of graded forward bets have a valid later pre-kickoff closing snapshot",
         "value": {
           "clv_coverage": 1.0,
-          "clv_samples": 5,
-          "graded_bets": 5
+          "clv_samples": 8,
+          "graded_bets": 8
         }
       },
       {
@@ -513,13 +525,13 @@
         "passed": false,
         "requirement": ">=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV, complete entry provenance, and >=90% CLV coverage",
         "value": {
-          "avg_clv": 0.10333333333333332,
+          "avg_clv": 0.06458333333333333,
           "clv_coverage": 1.0,
           "entry_quote_coverage": 1.0,
           "execution_ready_coverage": 1.0,
-          "graded_bets": 5,
+          "graded_bets": 8,
           "minimum_bets": 300,
-          "roi": -0.6181818181818182
+          "roi": -0.28409090909090906
         }
       }
     ],
@@ -536,18 +548,6 @@
   "schema_version": 1,
   "status": "WARN",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 87.3,
-      "generated_at": "2026-10-02T17:04:42.340086+00:00",
-      "live_readiness_score": 95.7,
-      "model_generated_at": "2026-10-02T17:04:17.828204+00:00",
-      "publication_status": "WARN",
-      "release_state": "PAPER",
-      "season": 2026,
-      "week": 4
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -675,6 +675,18 @@
       "generated_at": "2026-10-04T19:50:32.082015+00:00",
       "live_readiness_score": 95.7,
       "model_generated_at": "2026-10-04T19:50:16.414963+00:00",
+      "publication_status": "WARN",
+      "release_state": "PAPER",
+      "season": 2026,
+      "week": 4
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 89.5,
+      "generated_at": "2026-10-04T20:14:24.744467+00:00",
+      "live_readiness_score": 96.0,
+      "model_generated_at": "2026-10-04T20:14:02.791043+00:00",
       "publication_status": "WARN",
       "release_state": "PAPER",
       "season": 2026,
