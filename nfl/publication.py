@@ -575,11 +575,31 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
     card = current.select(columns) if columns and not current.is_empty() else pl.DataFrame()
     portfolio_path = output_dir / "portfolio_card.csv"
     recommendation_path = output_dir / "quant_recommendations.csv"
+    suggestions_path = output_dir / "suggested_bets.csv"
 
     if columns:
         card.write_csv(portfolio_path)
     else:
         portfolio_path.write_text("")
+
+    suggestions = card.head(0)
+    signal_column = next(
+        (
+            name
+            for name in ("research_signal", "portfolio_signal", "quant_signal")
+            if name in card.columns
+        ),
+        None,
+    )
+    if (
+        not card.is_empty()
+        and signal_column is not None
+        and "execution_ready" in card.columns
+    ):
+        suggestions = card.filter(
+            pl.col("execution_ready").fill_null(False)
+            & (pl.col(signal_column).fill_null("PASS") != "PASS")
+        )
 
     required = {"portfolio_action", "portfolio_candidate_units", "execution_ready"}
     recommendations = card.head(0)
@@ -589,19 +609,27 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
             & (pl.col("portfolio_candidate_units") > 0)
             & pl.col("execution_ready").fill_null(False)
         )
+
     if columns:
+        suggestions.write_csv(suggestions_path)
         recommendations.write_csv(recommendation_path)
     else:
+        suggestions_path.write_text("")
         recommendation_path.write_text("")
 
     rows: list[str] = []
-    for row in recommendations.to_dicts():
+    for row in suggestions.to_dicts():
         signal = (
-            row.get("portfolio_signal")
-            or row.get("research_signal")
+            row.get("research_signal")
+            or row.get("portfolio_signal")
             or row.get("quant_signal")
             or "PASS"
         )
+        limit_reason = str(row.get("portfolio_limit_reason") or "")
+        portfolio_action = str(row.get("portfolio_action") or "PASS")
+        portfolio_display = portfolio_action
+        if portfolio_action == "PASS" and limit_reason:
+            portfolio_display = f"PASS · {limit_reason}"
         rows.append(
             "<tr>"
             f"<td>{html.escape(str(row.get('away_team', '')))} @ "
@@ -612,12 +640,12 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
             f"<td>{html.escape(str(row.get('quant_price', '')))}</td>"
             f"<td>{html.escape(str(row.get('quant_odds', '')))}</td>"
             f"<td>{html.escape(str(row.get('quant_book', '')))}</td>"
-            f"<td>{html.escape(str(row.get('portfolio_action', '')))}</td>"
+            f"<td>{html.escape(portfolio_display)}</td>"
             "</tr>"
         )
     body = (
         "".join(rows)
-        or '<tr><td colspan="8">No current executable portfolio recommendations.</td></tr>'
+        or '<tr><td colspan="8">No current executable model suggestions.</td></tr>'
     )
     document = (
         "<!doctype html><html><head><meta charset=\"utf-8\">"
@@ -626,12 +654,12 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
         "body{background:#0f1113;color:#f0f1f2;font-family:Arial,sans-serif;margin:24px}"
         "table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid #333}"
         "th{text-align:left;color:#969ba1}a{color:#74a7ff}</style></head><body>"
-        "<h1>Harbin NFL · Quant Card</h1>"
-        "<p>Current executable, cap-allocated PAPER/SHADOW/BET opportunities only. "
-        "Release state controls real execution.</p>"
+        "<h1>Harbin NFL · Model Suggestions</h1>"
+        "<p>Current executable research/PAPER signals. Portfolio action is shown "
+        "separately and remains authoritative for allocation or real execution.</p>"
         "<p><a href=\"./\">← Weekly board</a> · <a href=\"audit.html\">System audit</a></p>"
         "<table><thead><tr><th>Matchup</th><th>Signal</th><th>Market</th><th>Side</th>"
-        "<th>Line</th><th>Odds</th><th>Book</th><th>Action</th></tr></thead>"
+        "<th>Line</th><th>Odds</th><th>Book</th><th>Portfolio</th></tr></thead>"
         f"<tbody>{body}</tbody></table></body></html>"
     )
     (output_dir / "quant_card.html").write_text(document)
@@ -1012,7 +1040,8 @@ def write_publication_bundle(
         f"{stable_links}\n\n"
         "## Other outputs\n"
         f"- [Interactive weekly board]({weekly_html.name})\n"
-        "- [Quant recommendations](quant_recommendations.csv)\n"
+        "- [Current model suggestions](suggested_bets.csv)\n"
+        "- [Portfolio-allocated recommendations](quant_recommendations.csv)\n"
         "- [Run report](RUN_REPORT.md)\n"
         "- [Model card](MODEL_CARD.md)\n"
         "- [Publication validation](publication_validation.json)\n\n"
@@ -1046,6 +1075,7 @@ def write_publication_bundle(
         "run_report": str(outputs / "RUN_REPORT.md"),
         "model_card_markdown": str(outputs / "MODEL_CARD.md"),
         "portfolio_card": str(outputs / "portfolio_card.csv"),
+        "suggested_bets": str(outputs / "suggested_bets.csv"),
         "quant_card": str(outputs / "quant_card.html"),
         "public_index": str(docs / "index.html"),
         "public_latest_png": str(docs / "latest.png"),
