@@ -115,19 +115,20 @@ def _signal(
     if not row or row.get("execution_ready") is not True:
         return ""
 
-    action = str(row.get("portfolio_action") or "PASS").upper()
-    candidate_units = _number(row.get("portfolio_candidate_units")) or 0.0
-    stake_units = _number(row.get("portfolio_stake_units")) or 0.0
+    # Keep the publication layer aligned with the CFB board: in PAPER/SHADOW
+    # mode, show every current executable model suggestion even when portfolio
+    # concentration/minimum-allocation rules decide not to allocate units to it.
+    # The portfolio action remains authoritative for staking.
     if release_state.upper() == "PRODUCTION":
+        action = str(row.get("portfolio_action") or "PASS").upper()
+        stake_units = _number(row.get("portfolio_stake_units")) or 0.0
         if action != "BET" or stake_units <= 0:
             return ""
-        raw = row.get("portfolio_signal", row.get("quant_signal"))
+        raw = row.get("production_signal", row.get("quant_signal"))
     else:
-        if action not in {"PAPER", "SHADOW"} or candidate_units <= 0:
-            return ""
         raw = row.get(
-            "portfolio_signal",
-            row.get("research_signal", row.get("quant_signal")),
+            "research_signal",
+            row.get("portfolio_signal", row.get("quant_signal")),
         )
     value = str(raw or "PASS").upper()
     return "" if value == "PASS" else value
