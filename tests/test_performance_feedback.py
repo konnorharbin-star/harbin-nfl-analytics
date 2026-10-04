@@ -10,7 +10,6 @@ from nfl import performance_feedback
 from nfl.policy import DEFAULT_POLICY
 from nfl.portfolio import apply_portfolio_controls
 
-
 FIELDS = [
     "game_id",
     "quant_market",
