@@ -1,6 +1,23 @@
 name: NFL Model + Operations
 
 on:
+  workflow_call:
+    inputs:
+      season:
+        description: "NFL season year"
+        required: false
+        default: "2026"
+        type: string
+      week:
+        description: "Week number (blank = auto-detect)"
+        required: false
+        default: ""
+        type: string
+      history_seasons:
+        description: "Number of prior seasons for probability history"
+        required: false
+        default: "4"
+        type: string
   workflow_dispatch:
     inputs:
       season:

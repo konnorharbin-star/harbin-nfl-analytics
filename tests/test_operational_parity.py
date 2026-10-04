@@ -20,8 +20,8 @@ def _candidate(**overrides: object) -> dict[str, object]:
         "season": 2026,
         "week": 4,
         "game_id": "2026_04_AAA_BBB",
-        "date": "2026-10-04",
-        "kickoff": "2026-10-04T18:00:00+00:00",
+        "date": now.date().isoformat(),
+        "kickoff": (now + timedelta(hours=6)).isoformat(),
         "away_team": "AAA",
         "home_team": "BBB",
         "model_margin_home": 3.0,
@@ -189,11 +189,12 @@ def test_production_requires_committed_exposure_ledger(tmp_path) -> None:
 def test_committed_production_exposure_reserves_future_caps(tmp_path) -> None:
     now = datetime.now(UTC)
     decisions = tmp_path / "decisions.csv"
+    committed_kickoff = (now + timedelta(hours=6)).isoformat()
     decisions.write_text(
         "decision_at,game_id,season,week,kickoff,away_team,home_team,"
         "quant_market,quant_side,quant_book,portfolio_stake_units,portfolio_action\n"
-        "2026-10-01T12:00:00+00:00,2026_04_AAA_BBB,2026,4,"
-        "2026-10-04T18:00:00+00:00,AAA,BBB,spread,home,ESPN BET,0.6,BET\n",
+        f"{(now - timedelta(days=1)).isoformat()},2026_04_AAA_BBB,2026,4,"
+        f"{committed_kickoff},AAA,BBB,spread,home,ESPN BET,0.6,BET\n",
         encoding="utf-8",
     )
 

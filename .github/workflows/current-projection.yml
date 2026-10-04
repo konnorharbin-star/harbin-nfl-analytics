@@ -21,6 +21,9 @@ on:
         default: ""
         type: string
 
+permissions:
+  contents: write
+
 jobs:
   project:
     runs-on: ubuntu-latest
@@ -60,3 +63,14 @@ jobs:
         with:
           name: current-nfl-football-projection
           path: reports/current_projection.json
+
+  publish-current-model:
+    if: github.event_name == 'workflow_dispatch'
+    needs: project
+    uses: ./.github/workflows/nfl-model.yml
+    with:
+      season: ${{ inputs.season || '2026' }}
+      week: ${{ inputs.week || '' }}
+      history_seasons: "4"
+    secrets: inherit
+
