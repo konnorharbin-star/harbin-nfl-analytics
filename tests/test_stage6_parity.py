@@ -280,7 +280,10 @@ def test_weekly_publication_labels_shadow_as_non_production(tmp_path) -> None:
         "quant_signal": "BET",
         "quant_book": "Book A",
         "quant_odds": -110,
+        "portfolio_candidate_units": 0.2,
+        "portfolio_stake_units": 0.0,
         "portfolio_action": "SHADOW",
+        "execution_ready": True,
         "context_quality": 1.0,
     }
     current = pl.DataFrame(

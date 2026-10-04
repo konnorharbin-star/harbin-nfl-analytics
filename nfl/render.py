@@ -99,12 +99,23 @@ def _signal(
     *,
     release_state: str,
 ) -> str:
-    if not row:
+    if not row or row.get("execution_ready") is not True:
         return ""
+
+    action = str(row.get("portfolio_action") or "PASS").upper()
+    candidate_units = _number(row.get("portfolio_candidate_units")) or 0.0
+    stake_units = _number(row.get("portfolio_stake_units")) or 0.0
     if release_state.upper() == "PRODUCTION":
-        raw = row.get("quant_signal")
+        if action != "BET" or stake_units <= 0:
+            return ""
+        raw = row.get("portfolio_signal", row.get("quant_signal"))
     else:
-        raw = row.get("research_signal", row.get("quant_signal"))
+        if action not in {"PAPER", "SHADOW"} or candidate_units <= 0:
+            return ""
+        raw = row.get(
+            "portfolio_signal",
+            row.get("research_signal", row.get("quant_signal")),
+        )
     value = str(raw or "PASS").upper()
     return "" if value == "PASS" else value
 
