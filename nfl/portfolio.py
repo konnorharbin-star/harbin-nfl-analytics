@@ -12,6 +12,7 @@ from pathlib import Path
 import polars as pl
 
 from .execution_market import validate_execution_row
+from .performance_feedback import build_performance_feedback, performance_feedback_for_row
 from .policy import load_policy
 
 
@@ -296,6 +297,7 @@ def apply_portfolio_controls(
     gate_state = str(gate.get("release_state", "PAPER")).upper()
     policy_mode = str(active.get("deployment_mode", "paper")).lower()
     bankroll = build_bankroll_risk_state(live_bets_path, limits)
+    feedback = build_performance_feedback(live_bets_path, limits)
     require_history = bool(limits.get("require_live_history_for_production", True))
     history_ok = bool(bankroll["history_available"]) or not require_history
     candidate_rows = candidates.to_dicts() if not candidates.is_empty() else []
@@ -362,9 +364,13 @@ def apply_portfolio_controls(
         }
 
     rows = candidate_rows
+    for row in rows:
+        row_feedback = performance_feedback_for_row(row, feedback)
+        row["performance_multiplier"] = float(row_feedback["multiplier"])
+        row["performance_feedback_reason"] = str(row_feedback["reason"])
     rows.sort(
         key=lambda row: (
-            _number(row.get("quant_ev")),
+            _number(row.get("quant_ev")) * _number(row.get("performance_multiplier"), 1.0),
             _number(row.get("quant_edge")),
             _number(row.get("quant_probability")),
         ),
@@ -429,10 +435,13 @@ def apply_portfolio_controls(
                 row.get("research_signal", row.get("quant_signal")) or "PASS"
             ).upper()
             proposed_base = research_stake
-        proposed = proposed_base * multiplier
+        bankroll_adjusted = proposed_base * multiplier
+        performance_multiplier = max(0.0, min(1.0, _number(row.get("performance_multiplier"), 1.0)))
+        proposed = bankroll_adjusted * performance_multiplier
         row["portfolio_signal"] = signal
         row["paper_stake_units"] = research_stake
-        row["bankroll_adjusted_units"] = round(proposed, 6)
+        row["bankroll_adjusted_units"] = round(bankroll_adjusted, 6)
+        row["performance_adjusted_units"] = round(proposed, 6)
         row["portfolio_candidate_units"] = 0.0
         row["portfolio_stake_units"] = 0.0
         row["portfolio_action"] = "PASS"
@@ -520,6 +529,7 @@ def apply_portfolio_controls(
         "production_eligible": production_allowed,
         "production_block_reason": production_block_reason,
         "bankroll_risk": bankroll,
+        "performance_feedback": feedback,
         "committed_exposure": {
             **committed_exposure,
             "reserved_open_bets": committed_bets,
@@ -533,6 +543,9 @@ def apply_portfolio_controls(
         ),
         "risk_adjusted_proposed_units": round(
             sum(_number(row.get("bankroll_adjusted_units")) for row in rows), 6
+        ),
+        "performance_adjusted_proposed_units": round(
+            sum(_number(row.get("performance_adjusted_units")) for row in rows), 6
         ),
         "approved_units": round(
             sum(_number(row.get("portfolio_stake_units")) for row in rows), 6
