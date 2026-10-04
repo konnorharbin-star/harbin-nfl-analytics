@@ -1,9 +1,56 @@
 {
   "canonical_probability_change_enabled": false,
-  "graded_games": 0,
+  "graded_games": 1,
+  "home_win": {
+    "baseline_brier": 0.267756015983388,
+    "baseline_ece": 0.5174514624420227,
+    "baseline_log_loss": 0.7286737672874497,
+    "brier_improvement": {
+      "lower": 0.026851761996130402,
+      "point_improvement": 0.026851761996130402,
+      "probability_improvement": 1.0,
+      "upper": 0.026851761996130402
+    },
+    "log_loss_improvement": {
+      "lower": 0.05372011375737151,
+      "point_improvement": 0.05372011375737151,
+      "probability_improvement": 1.0,
+      "upper": 0.05372011375737151
+    },
+    "promotion_eligible": false,
+    "shadow_brier": 0.2409042539872576,
+    "shadow_ece": 0.49081998124287646,
+    "shadow_log_loss": 0.6749536535300782,
+    "status": "SHADOW_INSUFFICIENT_SAMPLE"
+  },
   "ledger_rows": 15,
-  "meaning": "Prospective 2026 probability evidence only. Historical predictions are not reconstructed into this ledger.",
+  "logistic_alpha": 0.0,
+  "margin_scale": 1.0,
+  "meaning": "First-snapshot pre-kickoff 2026 evidence only. Stage 23 forms are frozen and are not retuned on 2026 outcomes. Canonical probabilities stay unchanged.",
+  "minimum_games": 128,
+  "non_tied_games": 1,
   "promotion_eligible": false,
   "spec_version": "stage23_nested_probability_v1",
-  "status": "NO_GRADED_GAMES"
+  "status": "READY",
+  "total_distribution": {
+    "baseline_nll": 3.7037883307786035,
+    "nll_improvement": {
+      "lower": 0.06288981198865562,
+      "point_improvement": 0.06288981198865562,
+      "probability_improvement": 1.0,
+      "upper": 0.06288981198865562
+    },
+    "promotion_eligible": false,
+    "shadow_nll": 3.640898518789948,
+    "status": "SHADOW_INSUFFICIENT_SAMPLE"
+  },
+  "total_scale": 0.9,
+  "training_seasons": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "valid_pregame_rows": 15
 }
