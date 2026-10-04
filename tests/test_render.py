@@ -81,7 +81,28 @@ def test_weekly_board_breaks_display_tie_toward_projected_winner() -> None:
     assert row["home_score"] == row["away_score"] + 1
 
 
-def test_weekly_publication_hides_unallocated_or_closed_signals(tmp_path) -> None:
+def test_weekly_publication_shows_executable_research_signal_without_allocation(
+    tmp_path,
+) -> None:
+    current = _current().with_columns(
+        pl.lit(0.0).alias("portfolio_candidate_units"),
+        pl.lit("PASS").alias("portfolio_action"),
+        pl.lit(True).alias("execution_ready"),
+    )
+    write_weekly_publication(
+        current,
+        week=4,
+        updated_at="2026-10-02T16:41:28+00:00",
+        release_state="PAPER",
+        output_dir=tmp_path,
+    )
+    document = (tmp_path / "nfl_week_4.html").read_text()
+    assert '<span class="badge strong">STRONG</span>' in document
+    assert '<span class="badge bet">BET</span>' in document
+    assert '<span class="badge lean">LEAN</span>' in document
+
+
+def test_weekly_publication_hides_closed_signals(tmp_path) -> None:
     current = _current().with_columns(
         pl.lit(0.0).alias("portfolio_candidate_units"),
         pl.lit("PASS").alias("portfolio_action"),
