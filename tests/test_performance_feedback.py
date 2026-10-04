@@ -6,10 +6,7 @@ from datetime import UTC, datetime
 
 import polars as pl
 
-from nfl.performance_feedback import (
-    build_performance_feedback,
-    performance_feedback_for_row,
-)
+from nfl.performance_feedback import build_performance_feedback, performance_feedback_for_row
 from nfl.policy import DEFAULT_POLICY
 from nfl.portfolio import apply_portfolio_controls
 
