@@ -31,16 +31,16 @@
       ]
     ],
     "total_open_bets_after_allocation": 9,
-    "total_open_units_after_allocation": 0.545663
+    "total_open_units_after_allocation": 0.542861
   },
   "execution_blocked_bets": 0,
   "mode": "paper",
-  "paper_or_shadow_allocated_units": 0.545663,
+  "paper_or_shadow_allocated_units": 0.542861,
   "policy_mode": "paper",
   "production_block_reason": "",
   "production_eligible": false,
   "production_gate_open": false,
-  "proposed_units": 1.263204,
+  "proposed_units": 1.297122,
   "release_state": "PAPER",
-  "risk_adjusted_proposed_units": 1.263204
+  "risk_adjusted_proposed_units": 1.297122
 }
