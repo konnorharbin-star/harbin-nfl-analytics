@@ -46,29 +46,63 @@ def _segment_stats(rows: list[dict[str, object]]) -> dict[str, object]:
     clv = [_number(row.get("_clv")) for row in rows]
     clv = [value for value in clv if value is not None]
     n = len(profits)
+    positive_rate = None
+    if clv:
+        positive_rate = sum(value > 0 for value in clv) / len(clv)
     return {
         "bets": n,
         "roi": None if not profits else sum(profits) / len(profits),
         "avg_clv": None if not clv else sum(clv) / len(clv),
-        "positive_clv_rate": None if not clv else sum(value > 0 for value in clv) / len(clv),
+        "positive_clv_rate": positive_rate,
         "clv_samples": len(clv),
         "clv_coverage": 0.0 if n == 0 else len(clv) / n,
     }
 
 
-def _classify(stats: dict[str, object], config: dict[str, object]) -> tuple[str, float]:
+def _classify(
+    stats: dict[str, object],
+    config: dict[str, object],
+) -> tuple[str, float]:
     n = int(stats.get("bets") or 0)
     roi = _number(stats.get("roi"))
     avg_clv = _number(stats.get("avg_clv"))
     positive_clv = _number(stats.get("positive_clv_rate"))
     coverage = _number(stats.get("clv_coverage")) or 0.0
-    minimum = max(1, int(float(config.get("feedback_min_segment_bets", 20))))
-    min_coverage = max(0.0, min(1.0, float(config.get("feedback_min_clv_coverage", 0.60))))
-    weak_multiplier = max(0.0, min(1.0, float(config.get("feedback_weak_multiplier", 0.75))))
-    severe_multiplier = max(0.0, min(weak_multiplier, float(config.get("feedback_severe_multiplier", 0.50))))
-    severe_min = max(minimum, int(float(config.get("feedback_severe_min_bets", max(40, 2 * minimum)))))
+
+    minimum = max(
+        1,
+        int(float(config.get("feedback_min_segment_bets", 20))),
+    )
+    min_coverage = max(
+        0.0,
+        min(1.0, float(config.get("feedback_min_clv_coverage", 0.60))),
+    )
+    weak_multiplier = max(
+        0.0,
+        min(1.0, float(config.get("feedback_weak_multiplier", 0.75))),
+    )
+    severe_multiplier = max(
+        0.0,
+        min(
+            weak_multiplier,
+            float(config.get("feedback_severe_multiplier", 0.50)),
+        ),
+    )
+    severe_min = max(
+        minimum,
+        int(
+            float(
+                config.get(
+                    "feedback_severe_min_bets",
+                    max(40, 2 * minimum),
+                )
+            )
+        ),
+    )
     severe_roi = float(config.get("feedback_severe_roi", -0.05))
-    severe_positive_clv = float(config.get("feedback_severe_positive_clv_rate", 0.45))
+    severe_positive_clv = float(
+        config.get("feedback_severe_positive_clv_rate", 0.45)
+    )
 
     if n < minimum or coverage < min_coverage or roi is None or avg_clv is None:
         return "insufficient", 1.0
@@ -90,9 +124,8 @@ def build_performance_feedback(
 ) -> dict[str, object]:
     """Summarize segment health from timestamp-safe graded bets.
 
-    The resulting multipliers are one-sided: 1.0 is the maximum. Positive historical
-    performance never increases risk; only sufficiently sampled adverse CLV + ROI can
-    reduce it.
+    Multipliers are one-sided: 1.0 is the maximum. Positive historical performance
+    never increases risk; only sufficiently sampled adverse CLV plus ROI can reduce it.
     """
 
     cfg = config or {}
@@ -105,7 +138,10 @@ def build_performance_feedback(
         "reason": "no independent graded betting history",
     }
     if not empty["enabled"]:
-        return {**empty, "reason": "performance feedback disabled by policy"}
+        return {
+            **empty,
+            "reason": "performance feedback disabled by policy",
+        }
     if not path.exists() or not path.stat().st_size:
         return empty
 
@@ -113,7 +149,13 @@ def build_performance_feedback(
         with path.open(newline="") as handle:
             raw = list(csv.DictReader(handle))
     except OSError as exc:
-        return {**empty, "reason": f"graded betting history unreadable: {type(exc).__name__}"}
+        return {
+            **empty,
+            "reason": (
+                "graded betting history unreadable: "
+                f"{type(exc).__name__}"
+            ),
+        }
 
     normalized: list[dict[str, object]] = []
     for row in raw:
@@ -122,24 +164,33 @@ def build_performance_feedback(
             profit = _number(row.get("profit"))
         if profit is None:
             continue
+
         clv = _number(row.get("execution_clv"))
         if clv is None:
             clv = _number(row.get("clv_proxy"))
+
         item = dict(row)
         item["_profit"] = profit
         item["_clv"] = clv
-        item["_edge_bucket"] = str(row.get("edge_bucket") or _edge_bucket(row.get("quant_edge")))
+        item["_edge_bucket"] = str(
+            row.get("edge_bucket") or _edge_bucket(row.get("quant_edge"))
+        )
         normalized.append(item)
 
     if not normalized:
-        return {**empty, "history_available": True, "reason": "graded history has no usable profit rows"}
+        return {
+            **empty,
+            "history_available": True,
+            "reason": "graded history has no usable profit rows",
+        }
 
     groups: dict[tuple[str, str], list[dict[str, object]]] = defaultdict(list)
     for row in normalized:
+        signal = row.get("portfolio_signal") or row.get("quant_signal") or ""
         dimensions = {
             "market": str(row.get("quant_market") or "").strip().lower(),
             "book": str(row.get("quant_book") or "").strip(),
-            "signal": str(row.get("portfolio_signal") or row.get("quant_signal") or "").strip().upper(),
+            "signal": str(signal).strip().upper(),
             "edge_bucket": str(row.get("_edge_bucket") or "missing"),
         }
         for kind, value in dimensions.items():
@@ -176,17 +227,33 @@ def performance_feedback_for_row(
     """Return the most conservative eligible segment multiplier for one candidate."""
 
     if not report.get("enabled") or not report.get("history_available"):
-        return {"multiplier": 1.0, "reason": "neutral: insufficient feedback history", "matched_segments": []}
+        return {
+            "multiplier": 1.0,
+            "reason": "neutral: insufficient feedback history",
+            "matched_segments": [],
+        }
 
+    signal = (
+        row.get("portfolio_signal")
+        or row.get("research_signal")
+        or row.get("quant_signal")
+        or ""
+    )
     dimensions = {
         "market": str(row.get("quant_market") or "").strip().lower(),
         "book": str(row.get("quant_book") or "").strip(),
-        "signal": str(row.get("portfolio_signal") or row.get("research_signal") or row.get("quant_signal") or "").strip().upper(),
-        "edge_bucket": str(row.get("edge_bucket") or _edge_bucket(row.get("quant_edge"))),
+        "signal": str(signal).strip().upper(),
+        "edge_bucket": str(
+            row.get("edge_bucket") or _edge_bucket(row.get("quant_edge"))
+        ),
     }
     segments = report.get("segments")
     if not isinstance(segments, dict):
-        return {"multiplier": 1.0, "reason": "neutral: no segment diagnostics", "matched_segments": []}
+        return {
+            "multiplier": 1.0,
+            "reason": "neutral: no segment diagnostics",
+            "matched_segments": [],
+        }
 
     matched: list[dict[str, object]] = []
     multiplier = 1.0
@@ -196,6 +263,7 @@ def performance_feedback_for_row(
         segment = segments.get(f"{kind}:{value}")
         if not isinstance(segment, dict):
             continue
+
         state = str(segment.get("state") or "insufficient")
         raw_multiplier = _number(segment.get("multiplier"))
         seg_multiplier = 1.0 if raw_multiplier is None else raw_multiplier
@@ -214,9 +282,15 @@ def performance_feedback_for_row(
             )
 
     if not matched:
-        return {"multiplier": 1.0, "reason": "neutral: no sufficiently sampled adverse segment", "matched_segments": []}
+        return {
+            "multiplier": 1.0,
+            "reason": "neutral: no sufficiently sampled adverse segment",
+            "matched_segments": [],
+        }
 
-    labels = ", ".join(f"{item['segment']}={item['state']}" for item in matched)
+    labels = ", ".join(
+        f"{item['segment']}={item['state']}" for item in matched
+    )
     return {
         "multiplier": max(0.0, min(1.0, multiplier)),
         "reason": f"de-risked by graded CLV/ROI feedback: {labels}",
