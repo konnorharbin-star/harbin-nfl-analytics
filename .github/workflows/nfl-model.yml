@@ -187,7 +187,13 @@ jobs:
           publication = report.get("publication", {})
           latest = publication.get("latest_png") or "outputs/latest.png"
           pages = publication.get("png_pages") or []
-          paths = ["outputs/current_model.json", latest, *pages]
+          cache_safe_pages = publication.get("cache_safe_png_pages") or []
+          paths = [
+              "outputs/current_model.json",
+              latest,
+              *pages,
+              *cache_safe_pages,
+          ]
 
           branch = os.environ["TARGET_BRANCH"]
           checked = []
