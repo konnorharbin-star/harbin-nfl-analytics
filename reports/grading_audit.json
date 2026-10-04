@@ -1,6 +1,6 @@
 {
   "decisions": {
-    "eligible_decisions": 295,
+    "eligible_decisions": 298,
     "errors": 0,
     "evidence_source": "portfolio_decisions_v1",
     "execution_excluded_rows": 0,
@@ -12,16 +12,14 @@
     "warnings": 0
   },
   "graded": {
+    "entry_quote_verified": true,
     "errors": 0,
-    "graded_bets": 0,
-    "issues": [
-      {
-        "code": "no_graded_forward_bets",
-        "severity": "WARNING"
-      }
-    ],
-    "status": "WARN",
-    "warnings": 1
+    "execution_ready_verified": true,
+    "graded_bets": 2,
+    "issues": [],
+    "portfolio_verified": true,
+    "status": "PASS",
+    "warnings": 0
   },
-  "status": "WARN"
+  "status": "PASS"
 }

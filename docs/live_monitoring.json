@@ -2,26 +2,26 @@
   "alerts": [],
   "drift_details": {
     "margin": {
-      "live_mean": 2.4027483340583964,
-      "live_n": 45,
-      "live_std": 3.0577126376670383,
-      "mean_z": 0.1056,
+      "live_mean": 2.5621783329079113,
+      "live_n": 42,
+      "live_std": 3.1053431404763794,
+      "mean_z": 0.1442,
       "reference_mean": 1.9658449964734717,
       "reference_n": 1087,
       "reference_std": 4.135525119268019,
-      "stability_score": 89.8,
-      "std_ratio": 0.7394
+      "stability_score": 89.2,
+      "std_ratio": 0.7509
     },
     "total": {
-      "live_mean": 46.07506525143321,
-      "live_n": 45,
-      "live_std": 2.8853722701146007,
-      "mean_z": 0.4104,
+      "live_mean": 45.7022952997174,
+      "live_n": 42,
+      "live_std": 2.607555779100976,
+      "mean_z": 0.3042,
       "reference_mean": 44.63397276559048,
       "reference_n": 1087,
       "reference_std": 3.5116770718711816,
-      "stability_score": 84.8,
-      "std_ratio": 0.8217
+      "stability_score": 85.0,
+      "std_ratio": 0.7425
     }
   },
   "drift_reference": "reports/free_market_predictions.csv",
@@ -29,13 +29,13 @@
   "live_readiness_score": 95.7,
   "meaning": "operational/model-monitoring score; not a profitability guarantee",
   "scores": {
-    "calibration": 91.80250233233778,
-    "context": 98.33333333333334,
-    "distribution_stability": 87.3,
+    "calibration": 91.80250233233775,
+    "context": 98.21428571428572,
+    "distribution_stability": 87.1,
     "freshness": 100.0,
     "market_coverage": 100.0,
     "multi_book": 100.0,
-    "output_completeness": 96.7536231884058
+    "output_completeness": 96.81159420289856
   },
   "status": "OK"
 }

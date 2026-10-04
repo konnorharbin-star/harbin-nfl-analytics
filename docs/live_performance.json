@@ -1,20 +1,181 @@
 {
-  "by_book": {},
-  "by_edge_bucket": {},
-  "by_market": {},
-  "by_season": {},
-  "by_signal": {},
-  "clv_coverage": 0.0,
-  "clv_samples": 0,
-  "entry_quote_coverage": 0.0,
-  "entry_quote_verified_bets": 0,
+  "avg_clv": 0.0,
+  "bets": 2,
+  "by_book": {
+    "BetMGM": {
+      "avg_clv": 0.0,
+      "bets": 1,
+      "clv_coverage": 1.0,
+      "clv_samples": 1,
+      "entry_quote_coverage": 1.0,
+      "entry_quote_verified_bets": 1,
+      "execution_ready_bets": 1,
+      "execution_ready_coverage": 1.0,
+      "losses": 1,
+      "max_drawdown": 1.0,
+      "positive_clv_rate": 0.0,
+      "pushes": 0,
+      "roi": -1.0,
+      "roi_ci_95": [
+        null,
+        null
+      ],
+      "units": -1.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    "DraftKings": {
+      "avg_clv": 0.0,
+      "bets": 1,
+      "clv_coverage": 1.0,
+      "clv_samples": 1,
+      "entry_quote_coverage": 1.0,
+      "entry_quote_verified_bets": 1,
+      "execution_ready_bets": 1,
+      "execution_ready_coverage": 1.0,
+      "losses": 1,
+      "max_drawdown": 1.0,
+      "positive_clv_rate": 0.0,
+      "pushes": 0,
+      "roi": -1.0,
+      "roi_ci_95": [
+        null,
+        null
+      ],
+      "units": -1.0,
+      "win_rate": 0.0,
+      "wins": 0
+    }
+  },
+  "by_edge_bucket": {
+    ">=6%": {
+      "avg_clv": 0.0,
+      "bets": 2,
+      "clv_coverage": 1.0,
+      "clv_samples": 2,
+      "entry_quote_coverage": 1.0,
+      "entry_quote_verified_bets": 2,
+      "execution_ready_bets": 2,
+      "execution_ready_coverage": 1.0,
+      "losses": 2,
+      "max_drawdown": 2.0,
+      "positive_clv_rate": 0.0,
+      "pushes": 0,
+      "roi": -1.0,
+      "roi_ci_95": [
+        null,
+        null
+      ],
+      "units": -2.0,
+      "win_rate": 0.0,
+      "wins": 0
+    }
+  },
+  "by_market": {
+    "spread": {
+      "avg_clv": 0.0,
+      "bets": 1,
+      "clv_coverage": 1.0,
+      "clv_samples": 1,
+      "entry_quote_coverage": 1.0,
+      "entry_quote_verified_bets": 1,
+      "execution_ready_bets": 1,
+      "execution_ready_coverage": 1.0,
+      "losses": 1,
+      "max_drawdown": 1.0,
+      "positive_clv_rate": 0.0,
+      "pushes": 0,
+      "roi": -1.0,
+      "roi_ci_95": [
+        null,
+        null
+      ],
+      "units": -1.0,
+      "win_rate": 0.0,
+      "wins": 0
+    },
+    "total": {
+      "avg_clv": 0.0,
+      "bets": 1,
+      "clv_coverage": 1.0,
+      "clv_samples": 1,
+      "entry_quote_coverage": 1.0,
+      "entry_quote_verified_bets": 1,
+      "execution_ready_bets": 1,
+      "execution_ready_coverage": 1.0,
+      "losses": 1,
+      "max_drawdown": 1.0,
+      "positive_clv_rate": 0.0,
+      "pushes": 0,
+      "roi": -1.0,
+      "roi_ci_95": [
+        null,
+        null
+      ],
+      "units": -1.0,
+      "win_rate": 0.0,
+      "wins": 0
+    }
+  },
+  "by_season": {
+    "2026": {
+      "avg_clv": 0.0,
+      "bets": 2,
+      "clv_coverage": 1.0,
+      "clv_samples": 2,
+      "entry_quote_coverage": 1.0,
+      "entry_quote_verified_bets": 2,
+      "execution_ready_bets": 2,
+      "execution_ready_coverage": 1.0,
+      "losses": 2,
+      "max_drawdown": 2.0,
+      "positive_clv_rate": 0.0,
+      "pushes": 0,
+      "roi": -1.0,
+      "roi_ci_95": [
+        null,
+        null
+      ],
+      "units": -2.0,
+      "win_rate": 0.0,
+      "wins": 0
+    }
+  },
+  "by_signal": {
+    "STRONG": {
+      "avg_clv": 0.0,
+      "bets": 2,
+      "clv_coverage": 1.0,
+      "clv_samples": 2,
+      "entry_quote_coverage": 1.0,
+      "entry_quote_verified_bets": 2,
+      "execution_ready_bets": 2,
+      "execution_ready_coverage": 1.0,
+      "losses": 2,
+      "max_drawdown": 2.0,
+      "positive_clv_rate": 0.0,
+      "pushes": 0,
+      "roi": -1.0,
+      "roi_ci_95": [
+        null,
+        null
+      ],
+      "units": -2.0,
+      "win_rate": 0.0,
+      "wins": 0
+    }
+  },
+  "clv_coverage": 1.0,
+  "clv_samples": 2,
+  "entry_quote_coverage": 1.0,
+  "entry_quote_verified_bets": 2,
   "evidence_source": "portfolio_decisions_v1",
-  "execution_ready_bets": 0,
-  "execution_ready_coverage": 0.0,
-  "graded_bets": 0,
+  "execution_ready_bets": 2,
+  "execution_ready_coverage": 1.0,
+  "graded_bets": 2,
   "grading_audit": {
     "decisions": {
-      "eligible_decisions": 295,
+      "eligible_decisions": 298,
       "errors": 0,
       "evidence_source": "portfolio_decisions_v1",
       "execution_excluded_rows": 0,
@@ -26,41 +187,40 @@
       "warnings": 0
     },
     "graded": {
+      "entry_quote_verified": true,
       "errors": 0,
-      "graded_bets": 0,
-      "issues": [
-        {
-          "code": "no_graded_forward_bets",
-          "severity": "WARNING"
-        }
-      ],
-      "status": "WARN",
-      "warnings": 1
+      "execution_ready_verified": true,
+      "graded_bets": 2,
+      "issues": [],
+      "portfolio_verified": true,
+      "status": "PASS",
+      "warnings": 0
     },
-    "status": "WARN"
+    "status": "PASS"
   },
   "overall": {
-    "avg_clv": null,
-    "bets": 0,
-    "clv_coverage": 0.0,
-    "clv_samples": 0,
-    "entry_quote_coverage": 0.0,
-    "entry_quote_verified_bets": 0,
-    "execution_ready_bets": 0,
-    "execution_ready_coverage": 0.0,
-    "losses": 0,
-    "max_drawdown": 0.0,
-    "positive_clv_rate": null,
+    "avg_clv": 0.0,
+    "bets": 2,
+    "clv_coverage": 1.0,
+    "clv_samples": 2,
+    "entry_quote_coverage": 1.0,
+    "entry_quote_verified_bets": 2,
+    "execution_ready_bets": 2,
+    "execution_ready_coverage": 1.0,
+    "losses": 2,
+    "max_drawdown": 2.0,
+    "positive_clv_rate": 0.0,
     "pushes": 0,
-    "roi": null,
+    "roi": -1.0,
     "roi_ci_95": [
       null,
       null
     ],
-    "units": 0.0,
-    "win_rate": null,
+    "units": -2.0,
+    "win_rate": 0.0,
     "wins": 0
   },
   "portfolio_verified": true,
+  "roi": -1.0,
   "status": "READY"
 }

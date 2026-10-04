@@ -97,6 +97,18 @@
       "severity": "ERROR"
     },
     {
+      "detail": "outputs/nfl_week_4_run_20261004_123636_CT_page1.png exists and is non-empty",
+      "name": "cache_safe_page1_present",
+      "passed": true,
+      "severity": "ERROR"
+    },
+    {
+      "detail": "cache-safe page 1 matches the current stable page 1 PNG",
+      "name": "cache_safe_page1_matches_week_page1",
+      "passed": true,
+      "severity": "ERROR"
+    },
+    {
       "detail": "docs/index.html exists",
       "name": "public_index_present",
       "passed": true,
