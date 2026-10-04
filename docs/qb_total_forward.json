@@ -1,39 +1,39 @@
 {
-  "baseline_total_mae": 8.955766005541676,
-  "baseline_total_rmse": 8.955766005541676,
+  "baseline_total_mae": 9.637946011142253,
+  "baseline_total_rmse": 10.915311813920402,
   "canonical_score_adjustment_enabled": false,
   "evidence": {
     "confidence": 0.95,
-    "games": 1,
+    "games": 10,
     "mae": {
-      "lower": -1.209241370642708,
-      "point_improvement": -1.209241370642708,
-      "probability_improvement": 0.0,
-      "upper": -1.209241370642708
+      "lower": -0.7273753590770256,
+      "point_improvement": -0.12333808592376805,
+      "probability_improvement": 0.343,
+      "upper": 0.4889488599562366
     },
     "minimum_games": 128,
     "rmse": {
-      "lower": -1.209241370642708,
-      "point_improvement": -1.209241370642708,
-      "probability_improvement": 0.0,
-      "upper": -1.209241370642708
+      "lower": -0.6877653623350528,
+      "point_improvement": 0.010524026512289453,
+      "probability_improvement": 0.4924,
+      "upper": 0.6651309410747577
     },
     "status": "SHADOW_INSUFFICIENT_SAMPLE"
   },
   "feature_set": "quality",
-  "graded_games": 1,
+  "graded_games": 10,
   "ledger_rows": 16,
   "meaning": "Prospective first-snapshot pre-kickoff evidence only. The frozen Stage 15 QB-total specification is not retuned on 2026 outcomes and does not alter canonical totals.",
   "minimum_games": 128,
   "promotion_eligible": false,
   "qb_prior_dropbacks": 75.0,
-  "qb_total_shadow_mae": 10.165007376184384,
-  "qb_total_shadow_rmse": 10.165007376184384,
+  "qb_total_shadow_mae": 9.76128409706602,
+  "qb_total_shadow_rmse": 10.904787787408113,
   "ridge_alpha": 0.1,
   "spec_version": "stage15_fixed_quality_v1",
   "status": "SHADOW_INSUFFICIENT_SAMPLE",
-  "total_mae_improvement": -1.209241370642708,
-  "total_rmse_improvement": -1.209241370642708,
+  "total_mae_improvement": -0.12333808592376805,
+  "total_rmse_improvement": 0.010524026512289453,
   "training_seasons": [
     2022,
     2023,
