@@ -204,7 +204,7 @@ def test_reconciler_skips_stale_output_after_source_change(tmp_path: Path) -> No
         env=env,
     )
 
-    assert result.returncode == 0, result.stderr + result.stdout
+    assert result.returncode != 0
     assert "newer source changes supersede this run" in result.stdout
     missing = _run(
         [
