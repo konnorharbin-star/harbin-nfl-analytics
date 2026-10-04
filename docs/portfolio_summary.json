@@ -14,7 +14,7 @@
     "trailing_roi": -1.0,
     "trailing_window_bets": 2
   },
-  "bets": 3,
+  "bets": 2,
   "committed_exposure": {
     "integrity_ok": true,
     "invalid_rows": 0,
@@ -30,13 +30,13 @@
         4
       ]
     ],
-    "total_open_bets_after_allocation": 3,
-    "total_open_units_after_allocation": 0.156652
+    "total_open_bets_after_allocation": 2,
+    "total_open_units_after_allocation": 0.106282
   },
   "execution_blocked_bets": 24,
   "mode": "paper",
-  "paper_or_shadow_allocated_units": 0.156652,
-  "performance_adjusted_proposed_units": 1.672585,
+  "paper_or_shadow_allocated_units": 0.106282,
+  "performance_adjusted_proposed_units": 1.876317,
   "performance_feedback": {
     "enabled": true,
     "graded_bets": 2,
@@ -129,7 +129,7 @@
   "production_block_reason": "",
   "production_eligible": false,
   "production_gate_open": false,
-  "proposed_units": 1.672585,
+  "proposed_units": 1.876317,
   "release_state": "PAPER",
-  "risk_adjusted_proposed_units": 1.672585
+  "risk_adjusted_proposed_units": 1.876317
 }

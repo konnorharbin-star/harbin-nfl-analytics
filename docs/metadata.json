@@ -1,6 +1,6 @@
 {
   "current_context": {
-    "as_of": "2026-10-04T17:47:07.581758+00:00",
+    "as_of": "2026-10-04T19:50:16.414963+00:00",
     "components": {
       "injuries_personnel": 1.0,
       "quarterback": 1.0,
@@ -61,7 +61,7 @@
     "status": "OK",
     "target_games": 14
   },
-  "generated_at": "2026-10-04T17:47:07.581758+00:00",
+  "generated_at": "2026-10-04T19:50:16.414963+00:00",
   "market_coverage": {
     "games": 14,
     "moneyline": 14,
@@ -89,10 +89,10 @@
       "action_network_diagnostic": {
         "attempts": [
           {
-            "collector_observed_at": "2026-10-04T17:47:14.788497+00:00",
+            "collector_observed_at": "2026-10-04T19:50:24.722379+00:00",
             "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
             "games_with_markets": 16,
-            "parsed_rows": 248,
+            "parsed_rows": 246,
             "payload_games": 16,
             "provider_timestamp_available": false,
             "sample": {
@@ -239,10 +239,10 @@
             "team_matches": 14
           }
         ],
-        "collector_observed_at": "2026-10-04T17:47:14.788497+00:00",
+        "collector_observed_at": "2026-10-04T19:50:24.722379+00:00",
         "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
         "games_with_markets": 16,
-        "parsed_rows": 248,
+        "parsed_rows": 246,
         "payload_games": 16,
         "provider_timestamp_available": false,
         "sample": {
@@ -390,7 +390,7 @@
       },
       "action_network_enabled": true,
       "action_network_games": 14,
-      "action_network_rows": 248,
+      "action_network_rows": 246,
       "action_network_timestamp_policy": "provider update timestamp when supplied; otherwise UTC collector observation time at response receipt",
       "books": 7,
       "execution_note": "nflverse schedule fallback has no sportsbook identity or quote-update timestamp and is research-only",
@@ -410,7 +410,7 @@
       ],
       "status": "READY",
       "verified_games_with_any_market": 14,
-      "verified_rows": 290,
+      "verified_rows": 288,
       "verified_sources": [
         "action_network",
         "espn"
