@@ -74,7 +74,7 @@
     },
     "qb_total": {
       "canonical_change_enabled": false,
-      "graded_games": 10,
+      "graded_games": 14,
       "ledger_capture_coverage": 1.0,
       "ledger_captured_eligible_games": 16,
       "ledger_eligible_games": 16,
@@ -82,12 +82,12 @@
       "ledger_health_status": "PASS",
       "ledger_rows": 16,
       "metrics": {
-        "baseline_total_mae": 9.637946011142253,
-        "baseline_total_rmse": 10.915311813920402,
-        "qb_total_shadow_mae": 9.76128409706602,
-        "qb_total_shadow_rmse": 10.904787787408113,
-        "total_mae_improvement": -0.12333808592376805,
-        "total_rmse_improvement": 0.010524026512289453
+        "baseline_total_mae": 10.236994430877887,
+        "baseline_total_rmse": 11.274322610432057,
+        "qb_total_shadow_mae": 10.405535937717971,
+        "qb_total_shadow_rmse": 11.266789642712011,
+        "total_mae_improvement": -0.16854150684008395,
+        "total_rmse_improvement": 0.007532967720045747
       },
       "minimum_games": 128,
       "name": "qb_total",
