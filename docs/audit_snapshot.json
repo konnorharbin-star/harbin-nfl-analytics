@@ -17,7 +17,7 @@
     "status": "OK",
     "target_games": 1
   },
-  "generated_at": "2026-10-05T12:53:55.250303+00:00",
+  "generated_at": "2026-10-05T17:53:04.914791+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
@@ -66,7 +66,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-05T12:53:41.629143+00:00",
+    "model_generated_at": "2026-10-05T17:52:50.940476+00:00",
     "prediction_games": 1,
     "prediction_rows": 3,
     "season": 2026,
@@ -89,7 +89,7 @@
     "alerts": [],
     "drift_details": {},
     "live_readiness_score": 92.4,
-    "recent_readiness_delta": -3.299999999999997,
+    "recent_readiness_delta": 0.0,
     "scores": {
       "calibration": 91.80250233233778,
       "context": 100.0,
@@ -139,7 +139,7 @@
     "execution_blocked_bets": 0,
     "mode": "paper",
     "paper_or_shadow_allocated_units": 0.0,
-    "performance_adjusted_proposed_units": 0.045937,
+    "performance_adjusted_proposed_units": 0.053965,
     "performance_feedback": {
       "enabled": true,
       "graded_bets": 11,
@@ -304,9 +304,9 @@
     "production_block_reason": "",
     "production_eligible": false,
     "production_gate_open": false,
-    "proposed_units": 0.045937,
+    "proposed_units": 0.053965,
     "release_state": "PAPER",
-    "risk_adjusted_proposed_units": 0.045937
+    "risk_adjusted_proposed_units": 0.053965
   },
   "probability": {
     "candidate_pass": false,
@@ -484,8 +484,8 @@
           "status": "ESTABLISHED SAMPLE",
           "verified_clv_coverage": 0.7965686274509803,
           "verified_roi_ci_95": [
-            -0.13892311530368814,
-            -0.020424831906351536
+            -0.14094910585426884,
+            -0.020136512101737634
           ]
         }
       },
@@ -561,18 +561,6 @@
   "schema_version": 1,
   "status": "WARN",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 87.3,
-      "generated_at": "2026-10-03T15:10:09.906031+00:00",
-      "live_readiness_score": 95.7,
-      "model_generated_at": "2026-10-03T15:09:54.674110+00:00",
-      "publication_status": "WARN",
-      "release_state": "PAPER",
-      "season": 2026,
-      "week": 4
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -700,6 +688,18 @@
       "generated_at": "2026-10-05T02:04:28.034010+00:00",
       "live_readiness_score": 92.3,
       "model_generated_at": "2026-10-05T02:04:14.013643+00:00",
+      "publication_status": "WARN",
+      "release_state": "PAPER",
+      "season": 2026,
+      "week": 4
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 65.0,
+      "generated_at": "2026-10-05T12:53:55.250303+00:00",
+      "live_readiness_score": 92.4,
+      "model_generated_at": "2026-10-05T12:53:41.629143+00:00",
       "publication_status": "WARN",
       "release_state": "PAPER",
       "season": 2026,
