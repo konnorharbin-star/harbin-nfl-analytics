@@ -10,10 +10,10 @@
 - Margin / total 80% coverage: **78.31% / 80.51%**.
 
 ## Monitoring and execution
-- Live readiness: **92.3/100**.
-- Portfolio mode: **PAPER**; proposed **0.21u**; approved **0.00u**.
+- Live readiness: **92.4/100**.
+- Portfolio mode: **PAPER**; proposed **0.05u**; approved **0.00u**.
 - Historical evidence: **2584 bets**, ROI **-7.84%**, CLV **—**.
-- Independent forward evidence: **8 bets**, ROI **-28.41%**, CLV **6.46%**.
+- Independent forward evidence: **11 bets**, ROI **12.33%**, CLV **4.70%**.
 
 ## Current blockers
 - historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV

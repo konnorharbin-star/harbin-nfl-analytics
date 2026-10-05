@@ -50,7 +50,7 @@
       "name": "live_monitoring",
       "passed": true,
       "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
-      "value": 91.6
+      "value": 91.7
     },
     {
       "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -91,8 +91,8 @@
         "status": "ESTABLISHED SAMPLE",
         "verified_clv_coverage": 0.7965686274509803,
         "verified_roi_ci_95": [
-          -0.1398453906887125,
-          -0.019071497196156337
+          -0.13892311530368814,
+          -0.020424831906351536
         ]
       }
     },
@@ -114,7 +114,7 @@
       "passed": true,
       "requirement": "forward evidence comes from cap-constrained persisted portfolio decisions",
       "value": {
-        "graded_bets": 8,
+        "graded_bets": 11,
         "source": "portfolio_decisions_v1"
       }
     },
@@ -135,8 +135,8 @@
       "requirement": ">=90% of graded forward bets have a valid later pre-kickoff closing snapshot",
       "value": {
         "clv_coverage": 1.0,
-        "clv_samples": 8,
-        "graded_bets": 8
+        "clv_samples": 11,
+        "graded_bets": 11
       }
     },
     {
@@ -145,13 +145,13 @@
       "passed": false,
       "requirement": ">=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV, complete entry provenance, and >=90% CLV coverage",
       "value": {
-        "avg_clv": 0.06458333333333333,
+        "avg_clv": 0.04696969696969697,
         "clv_coverage": 1.0,
         "entry_quote_coverage": 1.0,
         "execution_ready_coverage": 1.0,
-        "graded_bets": 8,
+        "graded_bets": 11,
         "minimum_bets": 300,
-        "roi": -0.28409090909090906
+        "roi": 0.12330578512396695
       }
     }
   ],

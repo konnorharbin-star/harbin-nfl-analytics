@@ -1,6 +1,6 @@
 {
   "current_context": {
-    "as_of": "2026-10-05T02:04:14.013643+00:00",
+    "as_of": "2026-10-05T12:53:41.629143+00:00",
     "components": {
       "injuries_personnel": 1.0,
       "quarterback": 1.0,
@@ -9,7 +9,7 @@
     },
     "coverage": 1.0,
     "depth_feed_available": true,
-    "games": 2,
+    "games": 1,
     "injury_feed_available": true,
     "note": "Context is post-prediction risk/confidence only until NFL point-in-time historical validation earns a score adjustment.",
     "qb_coverage": 1.0,
@@ -21,22 +21,22 @@
   "current_recent_form": {
     "blend_weight": 0.5,
     "coverage": 1.0,
-    "covered_games": 2,
+    "covered_games": 1,
     "feature_set": [
       "epa_per_play",
       "success_rate"
     ],
     "forward_capture": {
       "appended_rows": 0,
-      "candidate_rows": 2,
+      "candidate_rows": 1,
       "path": "history/recent_form_shadow_predictions_v1.csv",
       "skipped_duplicate": 1,
       "skipped_incomplete": 0,
-      "skipped_post_kickoff": 1,
+      "skipped_post_kickoff": 0,
       "status": "READY",
       "total_rows": 16
     },
-    "games": 2,
+    "games": 1,
     "recent_alpha": 0.2,
     "release_state": "SHADOW",
     "ridge_alpha": 10.0,
@@ -54,45 +54,45 @@
   },
   "data_quality": {
     "context_source_errors": [],
-    "market_rows": 6,
+    "market_rows": 3,
     "market_source_errors": [],
-    "projection_games": 2,
+    "projection_games": 1,
     "recent_form_source_errors": [],
     "status": "OK",
-    "target_games": 2
+    "target_games": 1
   },
-  "generated_at": "2026-10-05T02:04:14.013643+00:00",
+  "generated_at": "2026-10-05T12:53:41.629143+00:00",
   "market_coverage": {
-    "games": 2,
-    "moneyline": 2,
-    "spread": 2,
-    "total": 2
+    "games": 1,
+    "moneyline": 1,
+    "spread": 1,
+    "total": 1
   },
   "market_intelligence": {
     "api_key_required": false,
     "complete_market_coverage": 1.0,
     "distinct_books": 7,
-    "games": 2,
+    "games": 1,
     "market_source": "canonical current NFL market aggregation",
-    "moneyline": 2,
+    "moneyline": 1,
     "multi_book_coverage": 1.0,
-    "multi_book_games": 2,
+    "multi_book_games": 1,
     "probability_training_games": 1135,
     "release_state": "RESEARCH",
     "research_fallback_rows": 0,
     "research_market_coverage": 1.0,
-    "research_moneyline": 2,
-    "research_spread": 2,
-    "research_total": 2,
+    "research_moneyline": 1,
+    "research_spread": 1,
+    "research_total": 1,
     "source_breadth": {
       "action_network_books": 7,
       "action_network_diagnostic": {
         "attempts": [
           {
-            "collector_observed_at": "2026-10-05T02:04:20.985519+00:00",
+            "collector_observed_at": "2026-10-05T12:53:48.644859+00:00",
             "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
             "games_with_markets": 16,
-            "parsed_rows": 34,
+            "parsed_rows": 20,
             "payload_games": 16,
             "provider_timestamp_available": false,
             "sample": {
@@ -236,13 +236,13 @@
               }
             },
             "status": "READY",
-            "team_matches": 2
+            "team_matches": 1
           }
         ],
-        "collector_observed_at": "2026-10-05T02:04:20.985519+00:00",
+        "collector_observed_at": "2026-10-05T12:53:48.644859+00:00",
         "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
         "games_with_markets": 16,
-        "parsed_rows": 34,
+        "parsed_rows": 20,
         "payload_games": 16,
         "provider_timestamp_available": false,
         "sample": {
@@ -386,18 +386,18 @@
           }
         },
         "status": "READY",
-        "team_matches": 2
+        "team_matches": 1
       },
       "action_network_enabled": true,
-      "action_network_games": 2,
-      "action_network_rows": 34,
+      "action_network_games": 1,
+      "action_network_rows": 20,
       "action_network_timestamp_policy": "provider update timestamp when supplied; otherwise UTC collector observation time at response receipt",
       "books": 7,
       "execution_note": "nflverse schedule fallback has no sportsbook identity or quote-update timestamp and is research-only",
-      "games": 2,
-      "games_with_any_market": 2,
+      "games": 1,
+      "games_with_any_market": 1,
       "multi_book_coverage": 1.0,
-      "multi_book_games": 2,
+      "multi_book_games": 1,
       "optional_source_configured": false,
       "optional_source_rows": 0,
       "primary_source": "ESPN + Action Network public endpoints",
@@ -409,16 +409,16 @@
         "espn"
       ],
       "status": "READY",
-      "verified_games_with_any_market": 2,
-      "verified_rows": 40,
+      "verified_games_with_any_market": 1,
+      "verified_rows": 23,
       "verified_sources": [
         "action_network",
         "espn"
       ]
     },
-    "spread": 2,
-    "total": 2,
-    "verified_market_rows": 6
+    "spread": 1,
+    "total": 1,
+    "verified_market_rows": 3
   },
   "probability": {
     "candidate_pass": false,
@@ -438,7 +438,7 @@
     "validation_season": 2024
   },
   "projection_audit": {
-    "games": 2,
+    "games": 1,
     "qb_margin_release_state": "DISABLED",
     "qb_total_release_state": "SHADOW",
     "qb_training_games": 831,

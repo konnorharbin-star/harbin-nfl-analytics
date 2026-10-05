@@ -1,9 +1,9 @@
 {
   "context_source_errors": [],
-  "market_rows": 6,
+  "market_rows": 3,
   "market_source_errors": [],
-  "projection_games": 2,
+  "projection_games": 1,
   "recent_form_source_errors": [],
   "status": "OK",
-  "target_games": 2
+  "target_games": 1
 }
