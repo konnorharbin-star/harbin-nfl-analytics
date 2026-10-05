@@ -1,33 +1,33 @@
 {
-  "baseline_total_mae": 10.236994430877887,
-  "baseline_total_rmse": 11.274322610432057,
+  "baseline_total_mae": 9.911374389662818,
+  "baseline_total_rmse": 10.979363173971414,
   "evidence": {
     "confidence": 0.95,
-    "games": 14,
+    "games": 15,
     "mae": {
-      "lower": -0.7424105106964377,
-      "point_improvement": -0.122830763293722,
-      "probability_improvement": 0.3468,
-      "upper": 0.5471764395547729
+      "lower": -0.6830069279356458,
+      "point_improvement": -0.13843890884379917,
+      "probability_improvement": 0.3062,
+      "upper": 0.4708202617999078
     },
     "minimum_games": 128,
     "rmse": {
-      "lower": -0.6660339476639624,
-      "point_improvement": -0.06935267105377818,
-      "probability_improvement": 0.4014,
-      "upper": 0.5684499735109907
+      "lower": -0.6301189508640638,
+      "point_improvement": -0.0783811125754692,
+      "probability_improvement": 0.3734,
+      "upper": 0.5160487551114743
     },
     "status": "SHADOW_INSUFFICIENT_SAMPLE"
   },
-  "graded_games": 14,
+  "graded_games": 15,
   "ledger_rows": 16,
   "meaning": "Prospective first-snapshot pre-kickoff evidence only. The frozen recent-form specification is not retuned on these outcomes.",
   "minimum_games": 128,
   "promotion_eligible": false,
-  "shadow_total_mae": 10.35982519417161,
-  "shadow_total_rmse": 11.343675281485835,
+  "shadow_total_mae": 10.049813298506617,
+  "shadow_total_rmse": 11.057744286546884,
   "status": "SHADOW_INSUFFICIENT_SAMPLE",
-  "total_mae_improvement": -0.122830763293722,
-  "total_rmse_improvement": -0.06935267105377818,
+  "total_mae_improvement": -0.13843890884379917,
+  "total_rmse_improvement": -0.0783811125754692,
   "valid_pregame_rows": 16
 }
