@@ -1,26 +1,26 @@
 {
   "canonical_probability_change_enabled": false,
-  "graded_games": 9,
+  "graded_games": 13,
   "home_win": {
-    "baseline_brier": 0.22605675557659477,
-    "baseline_ece": 0.3681381693090233,
-    "baseline_log_loss": 0.6426102196867709,
+    "baseline_brier": 0.19665298652270707,
+    "baseline_ece": 0.3631835838635049,
+    "baseline_log_loss": 0.5809974348415317,
     "brier_improvement": {
-      "lower": 0.00468335968692102,
-      "point_improvement": 0.015544252197988214,
-      "probability_improvement": 0.9972,
-      "upper": 0.02524678055815388
+      "lower": 0.0059165650526434585,
+      "point_improvement": 0.014000814060230906,
+      "probability_improvement": 0.9994,
+      "upper": 0.022005244908924537
     },
     "log_loss_improvement": {
-      "lower": 0.00983950718814097,
-      "point_improvement": 0.03181507604762071,
-      "probability_improvement": 0.9984,
-      "upper": 0.05107457996030778
+      "lower": 0.012887033796798337,
+      "point_improvement": 0.028947866077872645,
+      "probability_improvement": 1.0,
+      "upper": 0.04503059875435162
     },
     "promotion_eligible": false,
-    "shadow_brier": 0.2105125033786066,
-    "shadow_ece": 0.34774411747293976,
-    "shadow_log_loss": 0.6107951436391501,
+    "shadow_brier": 0.18265217246247617,
+    "shadow_ece": 0.34497190422735174,
+    "shadow_log_loss": 0.552049568763659,
     "status": "SHADOW_INSUFFICIENT_SAMPLE"
   },
   "ledger_rows": 15,
@@ -28,20 +28,20 @@
   "margin_scale": 1.0,
   "meaning": "First-snapshot pre-kickoff 2026 evidence only. Stage 23 forms are frozen and are not retuned on 2026 outcomes. Canonical probabilities stay unchanged.",
   "minimum_games": 128,
-  "non_tied_games": 9,
+  "non_tied_games": 13,
   "promotion_eligible": false,
   "spec_version": "stage23_nested_probability_v1",
   "status": "READY",
   "total_distribution": {
-    "baseline_nll": 3.8602316135695123,
+    "baseline_nll": 3.8801182222500996,
     "nll_improvement": {
-      "lower": -0.018323390753520827,
-      "point_improvement": 0.02619323948214615,
-      "probability_improvement": 0.8746,
-      "upper": 0.06729890005553663
+      "lower": -0.012835597004438317,
+      "point_improvement": 0.0215284794212677,
+      "probability_improvement": 0.896,
+      "upper": 0.05361973609640121
     },
     "promotion_eligible": false,
-    "shadow_nll": 3.8340383740873656,
+    "shadow_nll": 3.858589742828831,
     "status": "SHADOW_INSUFFICIENT_SAMPLE"
   },
   "total_scale": 0.9,
