@@ -4,7 +4,7 @@
   "candidates": {
     "probability_home_win": {
       "canonical_change_enabled": false,
-      "graded_games": 13,
+      "graded_games": 14,
       "ledger_capture_coverage": 1.0,
       "ledger_captured_eligible_games": 15,
       "ledger_eligible_games": 15,
@@ -12,24 +12,24 @@
       "ledger_health_status": "PASS",
       "ledger_rows": 15,
       "metrics": {
-        "baseline_brier": 0.19665298652270707,
-        "baseline_ece": 0.3631835838635049,
-        "baseline_log_loss": 0.5809974348415317,
+        "baseline_brier": 0.19809015936174856,
+        "baseline_ece": 0.3039855199637195,
+        "baseline_log_loss": 0.5842540933949782,
         "brier_improvement": {
-          "lower": 0.0059165650526434585,
-          "point_improvement": 0.014000814060230906,
-          "probability_improvement": 0.9994,
-          "upper": 0.022005244908924537
+          "lower": 0.002153920992294033,
+          "point_improvement": 0.011424402296797078,
+          "probability_improvement": 0.9926,
+          "upper": 0.020122072286343648
         },
         "log_loss_improvement": {
-          "lower": 0.012887033796798337,
-          "point_improvement": 0.028947866077872645,
-          "probability_improvement": 1.0,
-          "upper": 0.04503059875435162
+          "lower": 0.005489122070424583,
+          "point_improvement": 0.023720341995814638,
+          "probability_improvement": 0.9938,
+          "upper": 0.040886828379471024
         },
-        "shadow_brier": 0.18265217246247617,
-        "shadow_ece": 0.34497190422735174,
-        "shadow_log_loss": 0.552049568763659
+        "shadow_brier": 0.18666575706495148,
+        "shadow_ece": 0.28542283922517614,
+        "shadow_log_loss": 0.5605337513991635
       },
       "minimum_games": 128,
       "name": "probability_home_win",
@@ -44,7 +44,7 @@
     },
     "probability_total_distribution": {
       "canonical_change_enabled": false,
-      "graded_games": 13,
+      "graded_games": 14,
       "ledger_capture_coverage": 1.0,
       "ledger_captured_eligible_games": 15,
       "ledger_eligible_games": 15,
@@ -52,14 +52,14 @@
       "ledger_health_status": "PASS",
       "ledger_rows": 15,
       "metrics": {
-        "baseline_nll": 3.8801182222500996,
+        "baseline_nll": 3.8605349708640304,
         "nll_improvement": {
-          "lower": -0.012835597004438317,
-          "point_improvement": 0.0215284794212677,
-          "probability_improvement": 0.896,
-          "upper": 0.05361973609640121
+          "lower": -0.00621709895548314,
+          "point_improvement": 0.026122081598246836,
+          "probability_improvement": 0.9382,
+          "upper": 0.05597600235672237
         },
-        "shadow_nll": 3.858589742828831
+        "shadow_nll": 3.8344128892657827
       },
       "minimum_games": 128,
       "name": "probability_total_distribution",
