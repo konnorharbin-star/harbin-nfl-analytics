@@ -4,7 +4,7 @@
   "candidates": {
     "probability_home_win": {
       "canonical_change_enabled": false,
-      "graded_games": 9,
+      "graded_games": 13,
       "ledger_capture_coverage": 1.0,
       "ledger_captured_eligible_games": 15,
       "ledger_eligible_games": 15,
@@ -12,24 +12,24 @@
       "ledger_health_status": "PASS",
       "ledger_rows": 15,
       "metrics": {
-        "baseline_brier": 0.22605675557659477,
-        "baseline_ece": 0.3681381693090233,
-        "baseline_log_loss": 0.6426102196867709,
+        "baseline_brier": 0.19665298652270707,
+        "baseline_ece": 0.3631835838635049,
+        "baseline_log_loss": 0.5809974348415317,
         "brier_improvement": {
-          "lower": 0.00468335968692102,
-          "point_improvement": 0.015544252197988214,
-          "probability_improvement": 0.9972,
-          "upper": 0.02524678055815388
+          "lower": 0.0059165650526434585,
+          "point_improvement": 0.014000814060230906,
+          "probability_improvement": 0.9994,
+          "upper": 0.022005244908924537
         },
         "log_loss_improvement": {
-          "lower": 0.00983950718814097,
-          "point_improvement": 0.03181507604762071,
-          "probability_improvement": 0.9984,
-          "upper": 0.05107457996030778
+          "lower": 0.012887033796798337,
+          "point_improvement": 0.028947866077872645,
+          "probability_improvement": 1.0,
+          "upper": 0.04503059875435162
         },
-        "shadow_brier": 0.2105125033786066,
-        "shadow_ece": 0.34774411747293976,
-        "shadow_log_loss": 0.6107951436391501
+        "shadow_brier": 0.18265217246247617,
+        "shadow_ece": 0.34497190422735174,
+        "shadow_log_loss": 0.552049568763659
       },
       "minimum_games": 128,
       "name": "probability_home_win",
@@ -44,7 +44,7 @@
     },
     "probability_total_distribution": {
       "canonical_change_enabled": false,
-      "graded_games": 9,
+      "graded_games": 13,
       "ledger_capture_coverage": 1.0,
       "ledger_captured_eligible_games": 15,
       "ledger_eligible_games": 15,
@@ -52,14 +52,14 @@
       "ledger_health_status": "PASS",
       "ledger_rows": 15,
       "metrics": {
-        "baseline_nll": 3.8602316135695123,
+        "baseline_nll": 3.8801182222500996,
         "nll_improvement": {
-          "lower": -0.018323390753520827,
-          "point_improvement": 0.02619323948214615,
-          "probability_improvement": 0.8746,
-          "upper": 0.06729890005553663
+          "lower": -0.012835597004438317,
+          "point_improvement": 0.0215284794212677,
+          "probability_improvement": 0.896,
+          "upper": 0.05361973609640121
         },
-        "shadow_nll": 3.8340383740873656
+        "shadow_nll": 3.858589742828831
       },
       "minimum_games": 128,
       "name": "probability_total_distribution",
@@ -129,23 +129,23 @@
     }
   },
   "canonical_betting": {
-    "avg_clv": 0.10333333333333332,
+    "avg_clv": 0.06458333333333333,
     "clv_coverage": 1.0,
     "clv_integrity_passed": true,
-    "clv_samples": 5,
+    "clv_samples": 8,
     "entry_integrity_passed": true,
     "entry_quote_coverage": 1.0,
     "evidence_source": "portfolio_decisions_v1",
     "execution_ready_coverage": 1.0,
     "forward_betting_gate_passed": false,
-    "graded_bets": 5,
-    "max_drawdown": 3.090909090909091,
+    "graded_bets": 8,
+    "max_drawdown": 3.0,
     "minimum_bets": 300,
     "minimum_clv_coverage": 0.9,
     "portfolio_verified": true,
     "prospective_only": true,
     "retrospective_reconstruction_allowed": false,
-    "roi": -0.6181818181818182,
+    "roi": -0.28409090909090906,
     "roi_ci_95": [
       null,
       null
