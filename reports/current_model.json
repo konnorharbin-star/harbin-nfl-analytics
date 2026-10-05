@@ -23,8 +23,8 @@
       },
       "spread": {
         "average_clv_proxy": null,
-        "average_expected_value_per_unit": 0.15080034679951348,
-        "average_probability_edge": 0.099285346624586,
+        "average_expected_value_per_unit": 0.15080034679951362,
+        "average_probability_edge": 0.09928534662458605,
         "bets": 868,
         "clv_samples": 0,
         "losses": 431,
@@ -38,8 +38,8 @@
       },
       "total": {
         "average_clv_proxy": null,
-        "average_expected_value_per_unit": 0.12019619008271465,
-        "average_probability_edge": 0.08421820000769722,
+        "average_expected_value_per_unit": 0.12019619008271412,
+        "average_probability_edge": 0.08421820000769696,
         "bets": 830,
         "clv_samples": 0,
         "losses": 422,
@@ -55,8 +55,8 @@
     "by_season": {
       "2022": {
         "average_clv_proxy": null,
-        "average_expected_value_per_unit": 0.1819468509974012,
-        "average_probability_edge": 0.08477160554180173,
+        "average_expected_value_per_unit": 0.18194685099740143,
+        "average_probability_edge": 0.08477160554180177,
         "bets": 551,
         "clv_samples": 0,
         "losses": 319,
@@ -70,8 +70,8 @@
       },
       "2023": {
         "average_clv_proxy": null,
-        "average_expected_value_per_unit": 0.1692436367319411,
-        "average_probability_edge": 0.09062108774578626,
+        "average_expected_value_per_unit": 0.16924363673194104,
+        "average_probability_edge": 0.09062108774578624,
         "bets": 687,
         "clv_samples": 0,
         "losses": 370,
@@ -85,8 +85,8 @@
       },
       "2024": {
         "average_clv_proxy": null,
-        "average_expected_value_per_unit": 0.18128399958845828,
-        "average_probability_edge": 0.0959252215034489,
+        "average_expected_value_per_unit": 0.1812839995884581,
+        "average_probability_edge": 0.09592522150344884,
         "bets": 671,
         "clv_samples": 0,
         "losses": 365,
@@ -100,8 +100,8 @@
       },
       "2025": {
         "average_clv_proxy": null,
-        "average_expected_value_per_unit": 0.21593433324330097,
-        "average_probability_edge": 0.10041430506907423,
+        "average_expected_value_per_unit": 0.2159343332433004,
+        "average_probability_edge": 0.10041430506907402,
         "bets": 675,
         "clv_samples": 0,
         "losses": 384,
@@ -117,8 +117,8 @@
     "note": "Free nflverse archive-final fallbacks and opening-line observations without opening juice remain valid research observations, but they are not promotion-quality entry-price evidence. ESPN provider-labeled archived opening/closing stages qualify without fabricating timestamps. ROBUST status requires verified entry prices plus positive uncertainty-adjusted ROI/CLV across multiple markets and seasons with broad closing-snapshot coverage.",
     "overall": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.18727567027766845,
-      "average_probability_edge": 0.09330933494014212,
+      "average_expected_value_per_unit": 0.18727567027766828,
+      "average_probability_edge": 0.09330933494014204,
       "bets": 2584,
       "clv_samples": 0,
       "losses": 1438,
@@ -131,50 +131,50 @@
       "wins": 1115
     },
     "promotion_sample": {
-      "avg_verified_clv_proxy": 0.06351649044003473,
+      "avg_verified_clv_proxy": 0.06351649044003474,
       "by_market": {
         "moneyline": {
-          "average_clv_proxy": 0.002354807850648686,
+          "average_clv_proxy": 0.002354807850648683,
           "average_expected_value_per_unit": 0.26993121084242727,
-          "average_probability_edge": 0.09582428137918841,
+          "average_probability_edge": 0.09582428137918846,
           "bets": 456,
           "clv_samples": 455,
           "losses": 293,
-          "max_drawdown": 60.17050967604254,
+          "max_drawdown": 52.018515372893845,
           "net_units": -39.452605374225215,
           "pushes": 1,
-          "roi_ci_95_high": 0.04128960882359604,
-          "roi_ci_95_low": -0.2131641715484197,
+          "roi_ci_95_high": 0.041469140838595556,
+          "roi_ci_95_low": -0.21411297123493617,
           "roi_per_unit_staked": -0.08651887143470442,
           "wins": 162
         },
         "spread": {
           "average_clv_proxy": 0.1670616113744076,
           "average_expected_value_per_unit": 0.13351610043164527,
-          "average_probability_edge": 0.09289877371219514,
+          "average_probability_edge": 0.09289877371219515,
           "bets": 423,
           "clv_samples": 422,
           "losses": 216,
-          "max_drawdown": 41.54581677963407,
+          "max_drawdown": 42.05486542443061,
           "net_units": -33.56719893541515,
           "pushes": 9,
-          "roi_ci_95_high": 0.010617032941348642,
-          "roi_ci_95_low": -0.17105519708608224,
+          "roi_ci_95_high": 0.013456016793081001,
+          "roi_ci_95_low": -0.17110852316812347,
           "roi_per_unit_staked": -0.07935508022556773,
           "wins": 198
         },
         "total": {
           "average_clv_proxy": 0.026004728132387706,
-          "average_expected_value_per_unit": 0.109922443024546,
-          "average_probability_edge": 0.0808540627315802,
+          "average_expected_value_per_unit": 0.10992244302454596,
+          "average_probability_edge": 0.08085406273158019,
           "bets": 424,
           "clv_samples": 423,
           "losses": 219,
-          "max_drawdown": 32.074639116717144,
+          "max_drawdown": 46.48895306363992,
           "net_units": -31.455638552064492,
           "pushes": 0,
-          "roi_ci_95_high": 0.017169561621725303,
-          "roi_ci_95_low": -0.1632848397597719,
+          "roi_ci_95_high": 0.019439234628591727,
+          "roi_ci_95_low": -0.165099099525673,
           "roi_per_unit_staked": -0.074187826773737,
           "wins": 205
         }
@@ -182,31 +182,31 @@
       "by_season": {
         "2024": {
           "average_clv_proxy": 0.058172380259974024,
-          "average_expected_value_per_unit": 0.16472244757601331,
-          "average_probability_edge": 0.0880439709725843,
+          "average_expected_value_per_unit": 0.1647224475760133,
+          "average_probability_edge": 0.08804397097258433,
           "bets": 656,
           "clv_samples": 653,
           "losses": 360,
-          "max_drawdown": 70.57971445151504,
-          "net_units": -52.16437471878389,
+          "max_drawdown": 67.07165494143156,
+          "net_units": -52.164374718783876,
           "pushes": 8,
-          "roi_ci_95_high": 0.005857451378976415,
-          "roi_ci_95_low": -0.1626495785330426,
-          "roi_per_unit_staked": -0.0795188639005852,
+          "roi_ci_95_high": 0.007218639332726063,
+          "roi_ci_95_low": -0.16494175411646841,
+          "roi_per_unit_staked": -0.07951886390058517,
           "wins": 288
         },
         "2025": {
-          "average_clv_proxy": 0.06891015960167252,
+          "average_clv_proxy": 0.06891015960167249,
           "average_expected_value_per_unit": 0.18255816516116777,
-          "average_probability_edge": 0.0919896927810559,
+          "average_probability_edge": 0.09198969278105593,
           "bets": 647,
           "clv_samples": 647,
           "losses": 368,
-          "max_drawdown": 58.75579562846696,
-          "net_units": -52.31106814292096,
+          "max_drawdown": 61.27211579092518,
+          "net_units": -52.311068142920966,
           "pushes": 2,
-          "roi_ci_95_high": 0.009028859292192222,
-          "roi_ci_95_low": -0.16554804951579466,
+          "roi_ci_95_high": 0.00811462318183218,
+          "roi_ci_95_low": -0.1705029913729265,
           "roi_per_unit_staked": -0.08085172819616841,
           "wins": 277
         }
@@ -226,8 +226,8 @@
       "verified_clv_samples": 1300,
       "verified_provider_bets": 1632,
       "verified_roi_ci_95": [
-        -0.14094910585426884,
-        -0.020136512101737634
+        -0.1398574397458489,
+        -0.019757903153731052
       ],
       "verified_roi_per_unit_staked": -0.08018069290998071,
       "verified_timestamped_provider_bets": 0
@@ -280,7 +280,7 @@
       "away_travel_miles": 424.39913467144305,
       "bankroll_adjusted_units": 0.025205,
       "calibrated_home_probability": 0.5790472558548826,
-      "context_as_of": "2026-10-05T17:52:50.940476+00:00",
+      "context_as_of": "2026-10-05T19:49:34.137640+00:00",
       "context_injuries_personnel_available": true,
       "context_quality": 1.0,
       "context_rest_travel_available": true,
@@ -365,7 +365,7 @@
       "quant_odds": -105,
       "quant_price": 47.5,
       "quant_probability": 0.573670490825207,
-      "quant_quote_at": "2026-10-05T17:52:58.196677+00:00",
+      "quant_quote_at": "2026-10-05T19:49:40.930812+00:00",
       "quant_side": "under",
       "quant_signal": "PASS",
       "recent_form_alpha": 0.2,
@@ -408,7 +408,7 @@
       "away_travel_miles": 424.39913467144305,
       "bankroll_adjusted_units": 0.016465,
       "calibrated_home_probability": 0.5790472558548826,
-      "context_as_of": "2026-10-05T17:52:50.940476+00:00",
+      "context_as_of": "2026-10-05T19:49:34.137640+00:00",
       "context_injuries_personnel_available": true,
       "context_quality": 1.0,
       "context_rest_travel_available": true,
@@ -493,7 +493,7 @@
       "quant_odds": -118,
       "quant_price": null,
       "quant_probability": 0.5790472558548826,
-      "quant_quote_at": "2026-10-05T17:52:58.196677+00:00",
+      "quant_quote_at": "2026-10-05T19:49:40.930812+00:00",
       "quant_side": "home",
       "quant_signal": "PASS",
       "recent_form_alpha": 0.2,
@@ -534,9 +534,9 @@
       "away_team": "ATL",
       "away_timezone_shift_hours": 1.0,
       "away_travel_miles": 424.39913467144305,
-      "bankroll_adjusted_units": 0.012295,
+      "bankroll_adjusted_units": 0.005951,
       "calibrated_home_probability": 0.5790472558548826,
-      "context_as_of": "2026-10-05T17:52:50.940476+00:00",
+      "context_as_of": "2026-10-05T19:49:34.137640+00:00",
       "context_injuries_personnel_available": true,
       "context_quality": 1.0,
       "context_rest_travel_available": true,
@@ -570,14 +570,14 @@
       "model_margin_home": 2.4522740125933034,
       "model_total": 44.858118261819186,
       "neutral_site": false,
-      "paper_stake_units": 0.012295,
-      "performance_adjusted_units": 0.012295,
+      "paper_stake_units": 0.005951,
+      "performance_adjusted_units": 0.005951,
       "performance_feedback_reason": "neutral: no sufficiently sampled adverse segment",
       "performance_multiplier": 1.0,
       "portfolio_action": "PASS",
       "portfolio_candidate_units": 0.0,
       "portfolio_limit_reason": "portfolio cap below minimum allocation",
-      "portfolio_signal": "BET",
+      "portfolio_signal": "LEAN",
       "portfolio_stake_units": 0.0,
       "precip_probability": 0.0,
       "production_signal": "PASS",
@@ -613,15 +613,15 @@
       "qb_total_release_state": "SHADOW",
       "qb_total_shadow_correction": -0.31259764573000415,
       "qb_total_shadow_total": 44.545520616089185,
-      "quant_book": "BetMGM",
-      "quant_edge": 0.041814084144425,
-      "quant_ev": 0.05692049222882423,
+      "quant_book": "BetRivers",
+      "quant_edge": 0.03786610575380667,
+      "quant_ev": 0.02755149213183583,
       "quant_market": "spread",
-      "quant_market_probability": 0.5069715560513106,
+      "quant_market_probability": 0.4956702459300312,
       "quant_odds": -108,
-      "quant_price": -1.0,
-      "quant_probability": 0.5487856401957356,
-      "quant_quote_at": "2026-10-05T17:52:58.196677+00:00",
+      "quant_price": -1.5,
+      "quant_probability": 0.5335363516838378,
+      "quant_quote_at": "2026-10-05T19:49:40.930812+00:00",
       "quant_side": "home",
       "quant_signal": "PASS",
       "recent_form_alpha": 0.2,
@@ -630,8 +630,8 @@
       "recent_form_shadow_total": 44.08261890447314,
       "recent_form_total_adjustment": -0.7754993573460502,
       "recent_form_total_release_state": "SHADOW",
-      "research_signal": "BET",
-      "research_stake_units": 0.012295,
+      "research_signal": "LEAN",
+      "research_stake_units": 0.005951,
       "roof": "dome",
       "season": 2026,
       "source_event_id": "290902",
@@ -647,7 +647,7 @@
       "wind_mph": 0.0
     }
   ],
-  "generated_at": "2026-10-05T17:53:04.908132+00:00",
+  "generated_at": "2026-10-05T19:49:47.500543+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
@@ -689,11 +689,11 @@
     "eligible_verified_markets": 24,
     "path": "history/market_snapshots.csv",
     "skipped_research_only": 0,
-    "total_rows": 12393
+    "total_rows": 12417
   },
   "meta": {
     "current_context": {
-      "as_of": "2026-10-05T17:52:50.940476+00:00",
+      "as_of": "2026-10-05T19:49:34.137640+00:00",
       "components": {
         "injuries_personnel": 1.0,
         "quarterback": 1.0,
@@ -754,7 +754,7 @@
       "status": "OK",
       "target_games": 1
     },
-    "generated_at": "2026-10-05T17:52:50.940476+00:00",
+    "generated_at": "2026-10-05T19:49:34.137640+00:00",
     "market_coverage": {
       "games": 1,
       "moneyline": 1,
@@ -782,7 +782,7 @@
         "action_network_diagnostic": {
           "attempts": [
             {
-              "collector_observed_at": "2026-10-05T17:52:58.196677+00:00",
+              "collector_observed_at": "2026-10-05T19:49:40.930812+00:00",
               "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
               "games_with_markets": 16,
               "parsed_rows": 21,
@@ -932,7 +932,7 @@
               "team_matches": 1
             }
           ],
-          "collector_observed_at": "2026-10-05T17:52:58.196677+00:00",
+          "collector_observed_at": "2026-10-05T19:49:40.930812+00:00",
           "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
           "games_with_markets": 16,
           "parsed_rows": 21,
@@ -1167,8 +1167,8 @@
     "evidence": {
       "historical": {
         "average_clv_proxy": null,
-        "average_expected_value_per_unit": 0.18727567027766845,
-        "average_probability_edge": 0.09330933494014212,
+        "average_expected_value_per_unit": 0.18727567027766828,
+        "average_probability_edge": 0.09330933494014204,
         "bets": 2584,
         "clv_samples": 0,
         "losses": 1438,
@@ -1182,50 +1182,50 @@
       },
       "historical_status": "ESTABLISHED SAMPLE",
       "promotion_sample": {
-        "avg_verified_clv_proxy": 0.06351649044003473,
+        "avg_verified_clv_proxy": 0.06351649044003474,
         "by_market": {
           "moneyline": {
-            "average_clv_proxy": 0.002354807850648686,
+            "average_clv_proxy": 0.002354807850648683,
             "average_expected_value_per_unit": 0.26993121084242727,
-            "average_probability_edge": 0.09582428137918841,
+            "average_probability_edge": 0.09582428137918846,
             "bets": 456,
             "clv_samples": 455,
             "losses": 293,
-            "max_drawdown": 60.17050967604254,
+            "max_drawdown": 52.018515372893845,
             "net_units": -39.452605374225215,
             "pushes": 1,
-            "roi_ci_95_high": 0.04128960882359604,
-            "roi_ci_95_low": -0.2131641715484197,
+            "roi_ci_95_high": 0.041469140838595556,
+            "roi_ci_95_low": -0.21411297123493617,
             "roi_per_unit_staked": -0.08651887143470442,
             "wins": 162
           },
           "spread": {
             "average_clv_proxy": 0.1670616113744076,
             "average_expected_value_per_unit": 0.13351610043164527,
-            "average_probability_edge": 0.09289877371219514,
+            "average_probability_edge": 0.09289877371219515,
             "bets": 423,
             "clv_samples": 422,
             "losses": 216,
-            "max_drawdown": 41.54581677963407,
+            "max_drawdown": 42.05486542443061,
             "net_units": -33.56719893541515,
             "pushes": 9,
-            "roi_ci_95_high": 0.010617032941348642,
-            "roi_ci_95_low": -0.17105519708608224,
+            "roi_ci_95_high": 0.013456016793081001,
+            "roi_ci_95_low": -0.17110852316812347,
             "roi_per_unit_staked": -0.07935508022556773,
             "wins": 198
           },
           "total": {
             "average_clv_proxy": 0.026004728132387706,
-            "average_expected_value_per_unit": 0.109922443024546,
-            "average_probability_edge": 0.0808540627315802,
+            "average_expected_value_per_unit": 0.10992244302454596,
+            "average_probability_edge": 0.08085406273158019,
             "bets": 424,
             "clv_samples": 423,
             "losses": 219,
-            "max_drawdown": 32.074639116717144,
+            "max_drawdown": 46.48895306363992,
             "net_units": -31.455638552064492,
             "pushes": 0,
-            "roi_ci_95_high": 0.017169561621725303,
-            "roi_ci_95_low": -0.1632848397597719,
+            "roi_ci_95_high": 0.019439234628591727,
+            "roi_ci_95_low": -0.165099099525673,
             "roi_per_unit_staked": -0.074187826773737,
             "wins": 205
           }
@@ -1233,31 +1233,31 @@
         "by_season": {
           "2024": {
             "average_clv_proxy": 0.058172380259974024,
-            "average_expected_value_per_unit": 0.16472244757601331,
-            "average_probability_edge": 0.0880439709725843,
+            "average_expected_value_per_unit": 0.1647224475760133,
+            "average_probability_edge": 0.08804397097258433,
             "bets": 656,
             "clv_samples": 653,
             "losses": 360,
-            "max_drawdown": 70.57971445151504,
-            "net_units": -52.16437471878389,
+            "max_drawdown": 67.07165494143156,
+            "net_units": -52.164374718783876,
             "pushes": 8,
-            "roi_ci_95_high": 0.005857451378976415,
-            "roi_ci_95_low": -0.1626495785330426,
-            "roi_per_unit_staked": -0.0795188639005852,
+            "roi_ci_95_high": 0.007218639332726063,
+            "roi_ci_95_low": -0.16494175411646841,
+            "roi_per_unit_staked": -0.07951886390058517,
             "wins": 288
           },
           "2025": {
-            "average_clv_proxy": 0.06891015960167252,
+            "average_clv_proxy": 0.06891015960167249,
             "average_expected_value_per_unit": 0.18255816516116777,
-            "average_probability_edge": 0.0919896927810559,
+            "average_probability_edge": 0.09198969278105593,
             "bets": 647,
             "clv_samples": 647,
             "losses": 368,
-            "max_drawdown": 58.75579562846696,
-            "net_units": -52.31106814292096,
+            "max_drawdown": 61.27211579092518,
+            "net_units": -52.311068142920966,
             "pushes": 2,
-            "roi_ci_95_high": 0.009028859292192222,
-            "roi_ci_95_low": -0.16554804951579466,
+            "roi_ci_95_high": 0.00811462318183218,
+            "roi_ci_95_low": -0.1705029913729265,
             "roi_per_unit_staked": -0.08085172819616841,
             "wins": 277
           }
@@ -1277,8 +1277,8 @@
         "verified_clv_samples": 1300,
         "verified_provider_bets": 1632,
         "verified_roi_ci_95": [
-          -0.14094910585426884,
-          -0.020136512101737634
+          -0.1398574397458489,
+          -0.019757903153731052
         ],
         "verified_roi_per_unit_staked": -0.08018069290998071,
         "verified_timestamped_provider_bets": 0
@@ -1402,7 +1402,7 @@
     "execution_blocked_bets": 0,
     "mode": "paper",
     "paper_or_shadow_allocated_units": 0.0,
-    "performance_adjusted_proposed_units": 0.053965,
+    "performance_adjusted_proposed_units": 0.047621,
     "performance_feedback": {
       "enabled": true,
       "graded_bets": 11,
@@ -1567,9 +1567,9 @@
     "production_block_reason": "",
     "production_eligible": false,
     "production_gate_open": false,
-    "proposed_units": 0.053965,
+    "proposed_units": 0.047621,
     "release_state": "PAPER",
-    "risk_adjusted_proposed_units": 0.053965
+    "risk_adjusted_proposed_units": 0.047621
   },
   "production_eligible": false,
   "publication": {
@@ -1590,7 +1590,7 @@
       "validation": "outputs/publication_validation.json"
     },
     "cache_safe_png_pages": [
-      "outputs/nfl_week_4_run_20261005_125250_CT_page1.png"
+      "outputs/nfl_week_4_run_20261005_144934_CT_page1.png"
     ],
     "html": "outputs/nfl_week_4.html",
     "latest_png": "outputs/latest.png",
@@ -1599,7 +1599,7 @@
     ],
     "presentation": "cfb_style_weekly_picks_v3_cache_safe",
     "release_state": "PAPER",
-    "run_tag": "20261005_125250_CT"
+    "run_tag": "20261005_144934_CT"
   },
   "release_gate": {
     "blockers": [
@@ -1694,8 +1694,8 @@
           "status": "ESTABLISHED SAMPLE",
           "verified_clv_coverage": 0.7965686274509803,
           "verified_roi_ci_95": [
-            -0.14094910585426884,
-            -0.020136512101737634
+            -0.1398574397458489,
+            -0.019757903153731052
           ]
         }
       },
