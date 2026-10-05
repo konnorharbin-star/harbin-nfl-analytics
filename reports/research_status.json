@@ -38,7 +38,7 @@
         "status": "ACCUMULATING_FORWARD_EVIDENCE"
       },
       "recent_form_total": {
-        "graded_games": 1,
+        "graded_games": 14,
         "ledger_capture_coverage": 1.0,
         "ledger_health_status": "PASS",
         "minimum_games": 128,
