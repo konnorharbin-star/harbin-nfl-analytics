@@ -52,6 +52,9 @@ on:
       - "nfl/schedule_market.py"
       - "nfl/market_intel.py"
       - "nfl/execution_market.py"
+      - "nfl/policy.py"
+      - "nfl/portfolio.py"
+      - "nfl/pregame_refresh.py"
       - "nfl/line_history.py"
       - "nfl/release_gate.py"
       - "nfl/model_card.py"
@@ -59,7 +62,10 @@ on:
       - "nfl/publication.py"
       - "nfl/reporting.py"
       - "scripts/push_generated_state.sh"
+      - "scripts/should_pregame_refresh.py"
       - "tests/test_current_projection.py"
+      - "tests/test_operational_parity.py"
+      - "tests/test_pregame_refresh.py"
       - "tests/test_render.py"
       - "tests/test_stage7_publication.py"
       - "tests/test_generated_state_push_reconciliation.py"
@@ -69,6 +75,7 @@ on:
       - "tests/test_market_outage_failclosed.py"
       - "tests/test_schedule_market.py"
       - ".github/workflows/nfl-model.yml"
+      - ".github/workflows/nfl-pregame-refresh.yml"
   push:
     branches: [main]
     paths-ignore: ["outputs/**", "history/**", "reports/**", "docs/**"]
