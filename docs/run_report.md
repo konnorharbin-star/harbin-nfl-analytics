@@ -1,6 +1,6 @@
 # Harbin NFL Run Report
 
-**Season / Week:** 2026 / 4  
+**Season / Week:** 2026 / 5  
 **Publication status:** WARN  
 **Release state:** PAPER  
 **Reconciliation:** PASS  
@@ -10,8 +10,8 @@
 - Margin / total 80% coverage: **78.31% / 80.51%**.
 
 ## Monitoring and execution
-- Live readiness: **92.4/100**.
-- Portfolio mode: **PAPER**; proposed **0.13u**; approved **0.00u**.
+- Live readiness: **94.5/100**.
+- Portfolio mode: **PAPER**; proposed **1.35u**; approved **0.00u**.
 - Historical evidence: **2584 bets**, ROI **-7.84%**, CLV **—**.
 - Independent forward evidence: **11 bets**, ROI **12.33%**, CLV **4.70%**.
 

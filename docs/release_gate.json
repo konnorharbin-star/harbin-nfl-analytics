@@ -32,7 +32,7 @@
       "name": "context_coverage",
       "passed": true,
       "requirement": ">=90% current injury/rest/weather/travel context coverage",
-      "value": 1.0
+      "value": 0.95
     },
     {
       "detail": "",
@@ -50,7 +50,7 @@
       "name": "live_monitoring",
       "passed": true,
       "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
-      "value": 91.7
+      "value": 94.0
     },
     {
       "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -91,8 +91,8 @@
         "status": "ESTABLISHED SAMPLE",
         "verified_clv_coverage": 0.7965686274509803,
         "verified_roi_ci_95": [
-          -0.1414058005633931,
-          -0.0170803338248468
+          -0.1374615097193839,
+          -0.01929234261090555
         ]
       }
     },
