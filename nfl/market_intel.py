@@ -20,6 +20,7 @@ from .pregame import kickoff_iso_map
 from .probability import GaussianScoreDistribution
 from .schedule_market import is_research_only_market
 
+
 def _book_key(market: ESPNTwoWayMarket) -> str:
     return canonical_book_identity(market.book or market.provider)
 
