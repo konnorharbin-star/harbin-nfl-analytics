@@ -62,6 +62,16 @@ def _write_policy(tmp_path, *, mode: str = "production"):
                     "spread": {"enabled": True},
                     "total": {"enabled": False},
                 },
+                "regime_reliability": {
+                    "status": "READY",
+                    "operational_ready": True,
+                    "fail_closed": True,
+                    "market_status": {
+                        "moneyline": "RELIABLE",
+                        "spread": "RELIABLE",
+                        "total": "UNRELIABLE",
+                    },
+                },
             }
         ),
         encoding="utf-8",
@@ -277,6 +287,72 @@ def test_release_gate_cannot_claim_production_with_paper_policy(tmp_path) -> Non
     assert gate["production_policy_ready"] is False
     assert checks["production_policy"]["passed"] is False
     assert gate["release_state"] == "SHADOW"
+    assert gate["production_eligible"] is False
+
+
+def test_release_gate_blocks_unreliable_market_regimes(tmp_path) -> None:
+    meta = _meta(datetime.now(UTC))
+    meta["market_intelligence"] = {"multi_book_coverage": 1.0}
+
+    evidence_path = tmp_path / "regime-evidence.json"
+    evidence_path.write_text(
+        json.dumps(
+            {
+                "status": "ROBUST",
+                "promotion_sample": {
+                    "entry_quote_verified": True,
+                    "verified_bets": 1200,
+                    "verified_roi_ci_95": [0.01, 0.05],
+                    "avg_verified_clv_proxy": 0.02,
+                    "verified_clv_samples": 1080,
+                    "verified_clv_coverage": 0.90,
+                    "positive_markets": 2,
+                    "positive_seasons": 2,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    live_path = tmp_path / "regime-live.json"
+    live_path.write_text(
+        json.dumps(
+            {
+                "evidence_source": "portfolio_decisions_v1",
+                "portfolio_verified": True,
+                "graded_bets": 300,
+                "roi": 0.01,
+                "avg_clv": 0.02,
+                "entry_quote_coverage": 1.0,
+                "execution_ready_coverage": 1.0,
+                "clv_samples": 270,
+                "clv_coverage": 0.90,
+            }
+        ),
+        encoding="utf-8",
+    )
+    policy_path = _write_policy(tmp_path)
+    policy = json.loads(policy_path.read_text(encoding="utf-8"))
+    policy["regime_reliability"]["operational_ready"] = False
+    policy["regime_reliability"]["market_status"] = {
+        "moneyline": "UNRELIABLE",
+        "spread": "UNRELIABLE",
+        "total": "UNRELIABLE",
+    }
+    policy_path.write_text(json.dumps(policy), encoding="utf-8")
+
+    gate = build_release_gate(
+        meta,
+        {"engineering_readiness_score": 95},
+        {"status": "OK"},
+        evidence_path=evidence_path,
+        live_path=live_path,
+        policy_path=policy_path,
+    )
+    checks = {check["name"]: check for check in gate["checks"]}
+
+    assert checks["regime_edge_reliability"]["passed"] is False
+    assert gate["regime_reliability_ready"] is False
+    assert gate["production_policy_ready"] is False
     assert gate["production_eligible"] is False
 
 
