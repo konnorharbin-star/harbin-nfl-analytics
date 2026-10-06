@@ -17,7 +17,7 @@
     "status": "OK",
     "target_games": 15
   },
-  "generated_at": "2026-10-06T03:44:16.250532+00:00",
+  "generated_at": "2026-10-06T03:59:12.190960+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
@@ -67,7 +67,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-06T03:44:00.533624+00:00",
+    "model_generated_at": "2026-10-06T03:58:48.148579+00:00",
     "prediction_games": 15,
     "prediction_rows": 45,
     "season": 2026,
@@ -113,7 +113,7 @@
       }
     },
     "live_readiness_score": 93.4,
-    "recent_readiness_delta": 1.0,
+    "recent_readiness_delta": 0.0,
     "scores": {
       "calibration": 91.80250233233775,
       "context": 91.66666666666667,
@@ -514,8 +514,8 @@
           "status": "ESTABLISHED SAMPLE",
           "verified_clv_coverage": 0.7965686274509803,
           "verified_roi_ci_95": [
-            -0.1416499592338217,
-            -0.018046852979411266
+            -0.13677010010346258,
+            -0.017660585368404612
           ]
         }
       },
@@ -592,18 +592,6 @@
   "schema_version": 1,
   "status": "WARN",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 89.5,
-      "generated_at": "2026-10-04T20:14:24.744467+00:00",
-      "live_readiness_score": 96.0,
-      "model_generated_at": "2026-10-04T20:14:02.791043+00:00",
-      "publication_status": "WARN",
-      "release_state": "PAPER",
-      "season": 2026,
-      "week": 4
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -733,6 +721,18 @@
       "model_generated_at": "2026-10-06T03:29:48.257983+00:00",
       "publication_status": "WARN",
       "release_state": "PAPER",
+      "season": 2026,
+      "week": 5
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 80.7,
+      "generated_at": "2026-10-06T03:44:16.250532+00:00",
+      "live_readiness_score": 93.4,
+      "model_generated_at": "2026-10-06T03:44:00.533624+00:00",
+      "publication_status": "WARN",
+      "release_state": "RESEARCH",
       "season": 2026,
       "week": 5
     }
