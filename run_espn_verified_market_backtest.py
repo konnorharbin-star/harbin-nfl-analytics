@@ -22,9 +22,9 @@ def schedule_seasons_for_evidence(
     start_season: int,
     end_season: int,
 ) -> list[int]:
-    """Include one pre-projection season before probability-history projections."""
+    """Load enough seasons for point-in-time probability validation."""
 
-    return list(range(start_season - 2, end_season + 1))
+    return list(range(start_season - 5, end_season + 1))
 
 
 def main() -> None:
@@ -58,7 +58,7 @@ def main() -> None:
     )
     projections = build_archive_projection_dataset(
         schedules,
-        start_season=args.start_season - 1,
+        start_season=args.start_season - 4,
         end_season=args.end_season,
     )
     evidence_targets = projections.filter(
