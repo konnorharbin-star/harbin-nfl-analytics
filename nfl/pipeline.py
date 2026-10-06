@@ -23,8 +23,8 @@ from .monitoring import write_live_monitoring
 from .policy import load_policy
 from .portfolio import apply_portfolio_controls
 from .pro_market import collect_current_markets
-from .proof import write_evidence_report
 from .probability_runtime import apply_probability_reliability_veto
+from .proof import write_evidence_report
 from .qb_current import apply_qb_certainty_veto
 from .recent_form_current import (
     attach_current_recent_form_shadow,
