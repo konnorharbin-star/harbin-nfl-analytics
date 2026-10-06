@@ -125,20 +125,20 @@
     "wins": 1115
   },
   "promotion_sample": {
-    "avg_verified_clv_proxy": 0.06351649044003473,
+    "avg_verified_clv_proxy": 0.06351649044003474,
     "by_market": {
       "moneyline": {
-        "average_clv_proxy": 0.002354807850648685,
+        "average_clv_proxy": 0.002354807850648684,
         "average_expected_value_per_unit": 0.26993121084242727,
         "average_probability_edge": 0.09582428137918844,
         "bets": 456,
         "clv_samples": 455,
         "losses": 293,
-        "max_drawdown": 54.50516947678934,
+        "max_drawdown": 59.248669384207254,
         "net_units": -39.452605374225215,
         "pushes": 1,
-        "roi_ci_95_high": 0.03763585352185193,
-        "roi_ci_95_low": -0.21290603542503123,
+        "roi_ci_95_high": 0.04517915251424051,
+        "roi_ci_95_low": -0.20979508504611813,
         "roi_per_unit_staked": -0.08651887143470442,
         "wins": 162
       },
@@ -149,27 +149,27 @@
         "bets": 423,
         "clv_samples": 422,
         "losses": 216,
-        "max_drawdown": 44.65710106227384,
+        "max_drawdown": 40.93213834383275,
         "net_units": -33.56719893541515,
         "pushes": 9,
-        "roi_ci_95_high": 0.00824682569261948,
-        "roi_ci_95_low": -0.1696042521464516,
+        "roi_ci_95_high": 0.01097861151215358,
+        "roi_ci_95_low": -0.17465572850385916,
         "roi_per_unit_staked": -0.07935508022556773,
         "wins": 198
       },
       "total": {
         "average_clv_proxy": 0.026004728132387706,
-        "average_expected_value_per_unit": 0.109922443024546,
-        "average_probability_edge": 0.08085406273158019,
+        "average_expected_value_per_unit": 0.10992244302454601,
+        "average_probability_edge": 0.0808540627315802,
         "bets": 424,
         "clv_samples": 423,
         "losses": 219,
-        "max_drawdown": 42.27636928289096,
-        "net_units": -31.455638552064485,
+        "max_drawdown": 46.88891542012391,
+        "net_units": -31.455638552064492,
         "pushes": 0,
-        "roi_ci_95_high": 0.016244255285877363,
-        "roi_ci_95_low": -0.1626884706925155,
-        "roi_per_unit_staked": -0.07418782677373699,
+        "roi_ci_95_high": 0.01867505055563615,
+        "roi_ci_95_low": -0.1650252280099178,
+        "roi_per_unit_staked": -0.074187826773737,
         "wins": 205
       }
     },
@@ -177,30 +177,30 @@
       "2024": {
         "average_clv_proxy": 0.058172380259974024,
         "average_expected_value_per_unit": 0.1647224475760133,
-        "average_probability_edge": 0.08804397097258432,
+        "average_probability_edge": 0.0880439709725843,
         "bets": 656,
         "clv_samples": 653,
         "losses": 360,
-        "max_drawdown": 62.14731258183639,
+        "max_drawdown": 68.01839316410668,
         "net_units": -52.16437471878389,
         "pushes": 8,
-        "roi_ci_95_high": 0.004271606466318456,
-        "roi_ci_95_low": -0.1629612866007231,
+        "roi_ci_95_high": -0.0009566230585978936,
+        "roi_ci_95_low": -0.16125175145040002,
         "roi_per_unit_staked": -0.0795188639005852,
         "wins": 288
       },
       "2025": {
-        "average_clv_proxy": 0.06891015960167252,
+        "average_clv_proxy": 0.06891015960167249,
         "average_expected_value_per_unit": 0.18255816516116777,
         "average_probability_edge": 0.09198969278105591,
         "bets": 647,
         "clv_samples": 647,
         "losses": 368,
-        "max_drawdown": 68.40581421615978,
+        "max_drawdown": 74.33990319562014,
         "net_units": -52.31106814292096,
         "pushes": 2,
-        "roi_ci_95_high": 0.009397552272644728,
-        "roi_ci_95_low": -0.16820461277566973,
+        "roi_ci_95_high": 0.00899291018940487,
+        "roi_ci_95_low": -0.17201751900413084,
         "roi_per_unit_staked": -0.08085172819616841,
         "wins": 277
       }
@@ -220,10 +220,10 @@
     "verified_clv_samples": 1300,
     "verified_provider_bets": 1632,
     "verified_roi_ci_95": [
-      -0.14379771405019368,
-      -0.02223092836102142
+      -0.13894196269812528,
+      -0.019127802193950234
     ],
-    "verified_roi_per_unit_staked": -0.08018069290998071,
+    "verified_roi_per_unit_staked": -0.0801806929099807,
     "verified_timestamped_provider_bets": 0
   },
   "source": {
