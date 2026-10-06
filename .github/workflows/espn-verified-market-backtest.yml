@@ -5,8 +5,13 @@ on:
     branches: [main]
     paths:
       - "nfl/espn_historical.py"
+      - "nfl/probability.py"
+      - "nfl/probability_runtime.py"
+      - "nfl/win_probability.py"
+      - "nfl/market.py"
       - "run_espn_verified_market_backtest.py"
       - "tests/test_espn_historical.py"
+      - "tests/test_probability_runtime.py"
       - ".github/workflows/espn-verified-market-backtest.yml"
   workflow_run:
     workflows:
