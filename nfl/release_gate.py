@@ -67,7 +67,13 @@ def build_release_gate(
     if not isinstance(context, dict):
         context = {}
     context_coverage = float(context.get("coverage", 0.0) or 0.0)
-    qb_coverage = float(context.get("qb_coverage", context_coverage) or 0.0)
+    qb_identity_coverage = float(
+        context.get("qb_identity_coverage", context.get("qb_coverage", 0.0)) or 0.0
+    )
+    qb_coverage = float(
+        context.get("qb_decision_ready_coverage", context.get("qb_coverage", 0.0))
+        or 0.0
+    )
 
     intel = meta.get("market_intelligence")
     if not isinstance(intel, dict):
@@ -181,8 +187,14 @@ def build_release_gate(
         _check(
             "quarterback_context_coverage",
             qb_coverage >= 0.95,
-            round(qb_coverage, 4),
-            ">=95% current games with starting-QB state",
+            {
+                "identity_coverage": round(qb_identity_coverage, 4),
+                "decision_ready_coverage": round(qb_coverage, 4),
+            },
+            (
+                ">=95% current games with identified, decision-ready expected "
+                "starting-QB state"
+            ),
         ),
         _check(
             "context_coverage",
@@ -342,6 +354,11 @@ def build_release_gate(
         f"{check['name']}: {check['requirement']}" for check in checks if not check["passed"]
     ]
     next_steps: list[str] = []
+    if qb_coverage < 0.95:
+        next_steps.append(
+            "Resolve expected starting-QB identity/certainty for at least 95% "
+            "of current games before betting release."
+        )
     if context_coverage < 0.90:
         next_steps.append(
             "Complete timestamp-safe NFL injuries/rest/weather/travel context coverage."
