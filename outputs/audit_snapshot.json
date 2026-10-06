@@ -17,7 +17,7 @@
     "status": "OK",
     "target_games": 15
   },
-  "generated_at": "2026-10-06T04:07:20.685524+00:00",
+  "generated_at": "2026-10-06T11:34:27.038234+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
@@ -70,7 +70,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-06T04:07:03.705796+00:00",
+    "model_generated_at": "2026-10-06T11:34:11.122669+00:00",
     "prediction_games": 15,
     "prediction_rows": 45,
     "season": 2026,
@@ -536,8 +536,8 @@
           "status": "ESTABLISHED SAMPLE",
           "verified_clv_coverage": 0.7965686274509803,
           "verified_roi_ci_95": [
-            -0.14336235825679047,
-            -0.020048232775547584
+            -0.139628384955542,
+            -0.020086253967219504
           ]
         }
       },
@@ -616,18 +616,6 @@
   "schema_version": 1,
   "status": "WARN",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 65.0,
-      "generated_at": "2026-10-05T12:53:55.250303+00:00",
-      "live_readiness_score": 92.4,
-      "model_generated_at": "2026-10-05T12:53:41.629143+00:00",
-      "publication_status": "WARN",
-      "release_state": "PAPER",
-      "season": 2026,
-      "week": 4
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -755,6 +743,18 @@
       "generated_at": "2026-10-06T04:01:13.917463+00:00",
       "live_readiness_score": 93.4,
       "model_generated_at": "2026-10-06T04:00:26.611285+00:00",
+      "publication_status": "WARN",
+      "release_state": "RESEARCH",
+      "season": 2026,
+      "week": 5
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 80.7,
+      "generated_at": "2026-10-06T04:07:20.685524+00:00",
+      "live_readiness_score": 89.5,
+      "model_generated_at": "2026-10-06T04:07:03.705796+00:00",
       "publication_status": "WARN",
       "release_state": "RESEARCH",
       "season": 2026,
