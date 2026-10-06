@@ -13,7 +13,11 @@ from math import isfinite
 import polars as pl
 
 from .contracts import DataContractError, require_columns
-from .injuries import normalize_injuries, summarize_team_injuries
+from .injuries import (
+    injury_feed_freshness,
+    normalize_injuries,
+    summarize_team_injuries,
+)
 from .personnel import (
     normalize_depth_charts,
     normalize_rosters,
@@ -96,6 +100,48 @@ CONTEXT_VETO_STARTER_GAP = 0.25
 CONTEXT_VETO_REST_GAP_DAYS = -2.0
 
 
+def apply_context_freshness_veto(candidates: pl.DataFrame) -> pl.DataFrame:
+    """Fail closed when current injury/personnel state is stale or unknown."""
+
+    if candidates.is_empty():
+        return candidates
+
+    rows: list[dict[str, object]] = []
+    required = {"context_injuries_personnel_fresh"}
+    missing = not required.issubset(candidates.columns)
+    for row in candidates.iter_rows(named=True):
+        fresh = (
+            False
+            if missing
+            else bool(row.get("context_injuries_personnel_fresh"))
+        )
+        veto = not fresh
+        reason = str(row.get("context_freshness_reason") or "")
+        if veto and not reason:
+            reason = (
+                "current injury/personnel freshness is unavailable"
+                if missing
+                else "injury/personnel context is stale or unknown"
+            )
+        item = dict(row)
+        item["context_freshness_veto"] = veto
+        item["context_freshness_veto_reason"] = reason if veto else ""
+        if veto:
+            for field in (
+                "quant_signal",
+                "production_signal",
+                "research_signal",
+                "portfolio_signal",
+            ):
+                if field in item:
+                    item[field] = "PASS"
+            for field in ("stake_units", "research_stake_units"):
+                if field in item:
+                    item[field] = 0.0
+        rows.append(item)
+    return pl.DataFrame(rows)
+
+
 def apply_context_confidence_veto(candidates: pl.DataFrame) -> pl.DataFrame:
     """Fail closed on side bets facing stacked, severe adverse current context.
 
@@ -113,7 +159,7 @@ def apply_context_confidence_veto(candidates: pl.DataFrame) -> pl.DataFrame:
     required = {
         "quant_market",
         "quant_side",
-        "context_injuries_personnel_available",
+        "context_injuries_personnel_fresh",
         "context_rest_travel_available",
         "home_injury_risk",
         "away_injury_risk",
@@ -136,7 +182,7 @@ def apply_context_confidence_veto(candidates: pl.DataFrame) -> pl.DataFrame:
         reason = ""
         market = str(row.get("quant_market") or "").lower()
         side = str(row.get("quant_side") or "").lower()
-        context_ready = bool(row.get("context_injuries_personnel_available")) and bool(
+        context_ready = bool(row.get("context_injuries_personnel_fresh")) and bool(
             row.get("context_rest_travel_available")
         )
 
@@ -222,6 +268,23 @@ def build_current_context(
     injury_source = injuries if injuries is not None else pl.DataFrame()
     depth_source = depth_charts if depth_charts is not None else pl.DataFrame()
     roster_source = rosters if rosters is not None else pl.DataFrame()
+
+    injury_feed_state = (
+        injury_feed_freshness(
+            injury_source,
+            season=season,
+            week=week,
+            as_of=stamp,
+        )
+        if not injury_source.is_empty()
+        else {
+            "status": "UNKNOWN",
+            "current_week_rows": 0,
+            "latest_reported_at": None,
+            "latest_age_days": None,
+            "reason": "injury feed is empty",
+        }
+    )
 
     normalized_injuries = (
         normalize_injuries(
@@ -384,11 +447,62 @@ def build_current_context(
             and home_personnel_available
             and away_personnel_available
         )
+
+        injury_feed_status = str(
+            injury_feed_state.get("status") or "UNKNOWN"
+        ).upper()
+        home_injury_status = str(
+            home_injury.get("injury_freshness_status")
+            or injury_feed_status
+        ).upper()
+        away_injury_status = str(
+            away_injury.get("injury_freshness_status")
+            or injury_feed_status
+        ).upper()
+        home_personnel_status = str(
+            home_personnel.get("personnel_freshness_status") or "UNKNOWN"
+        ).upper()
+        away_personnel_status = str(
+            away_personnel.get("personnel_freshness_status") or "UNKNOWN"
+        ).upper()
+
+        personnel_fresh = (
+            injury_feed_status == "FRESH"
+            and home_injury_status == "FRESH"
+            and away_injury_status == "FRESH"
+            and home_personnel_status == "FRESH"
+            and away_personnel_status == "FRESH"
+        )
+        freshness_reasons: list[str] = []
+        if injury_feed_status != "FRESH":
+            freshness_reasons.append(
+                "injury feed "
+                + injury_feed_status.lower()
+                + ": "
+                + str(injury_feed_state.get("reason") or "unverified")
+            )
+        if home_injury_status != "FRESH":
+            freshness_reasons.append(
+                f"{home_team} injury state {home_injury_status.lower()}"
+            )
+        if away_injury_status != "FRESH":
+            freshness_reasons.append(
+                f"{away_team} injury state {away_injury_status.lower()}"
+            )
+        if home_personnel_status != "FRESH":
+            freshness_reasons.append(
+                f"{home_team} personnel {home_personnel_status.lower()}"
+            )
+        if away_personnel_status != "FRESH":
+            freshness_reasons.append(
+                f"{away_team} personnel {away_personnel_status.lower()}"
+            )
+
         rest_travel_available = rest_available and travel_available
         stadium_available = roof not in {None, ""} and coordinates is not None
         weather_stadium_available = weather_available and (stadium_available or indoor)
 
-        if personnel_available:
+        if personnel_fresh:
             component_counts["injuries_personnel"] += 1
         if rest_travel_available:
             component_counts["rest_travel"] += 1
@@ -396,7 +510,7 @@ def build_current_context(
             component_counts["weather_stadium"] += 1
 
         quality = (
-            float(personnel_available)
+            float(personnel_fresh)
             + float(rest_travel_available)
             + float(weather_stadium_available)
         ) / 3.0
@@ -406,6 +520,33 @@ def build_current_context(
                 "context_as_of": stamp.isoformat(),
                 "context_quality": quality,
                 "context_injuries_personnel_available": personnel_available,
+                "context_injuries_personnel_fresh": personnel_fresh,
+                "context_freshness_reason": "; ".join(freshness_reasons),
+                "injury_feed_freshness_status": injury_feed_status,
+                "injury_feed_latest_reported_at": injury_feed_state.get(
+                    "latest_reported_at"
+                ),
+                "injury_feed_age_days": injury_feed_state.get("latest_age_days"),
+                "home_injury_freshness_status": home_injury_status,
+                "away_injury_freshness_status": away_injury_status,
+                "home_depth_freshness_status": home_personnel.get(
+                    "depth_freshness_status"
+                ),
+                "away_depth_freshness_status": away_personnel.get(
+                    "depth_freshness_status"
+                ),
+                "home_depth_age_days": home_personnel.get("depth_age_days"),
+                "away_depth_age_days": away_personnel.get("depth_age_days"),
+                "home_roster_freshness_status": home_personnel.get(
+                    "roster_freshness_status"
+                ),
+                "away_roster_freshness_status": away_personnel.get(
+                    "roster_freshness_status"
+                ),
+                "home_roster_week_gap": home_personnel.get("roster_week_gap"),
+                "away_roster_week_gap": away_personnel.get("roster_week_gap"),
+                "home_personnel_freshness_status": home_personnel_status,
+                "away_personnel_freshness_status": away_personnel_status,
                 "context_rest_travel_available": rest_travel_available,
                 "context_weather_stadium_available": weather_stadium_available,
                 "home_injury_count": int(home_injury.get("injury_count", 0) or 0),
@@ -487,6 +628,10 @@ def build_current_context(
         "components": coverage,
         "coverage": sum(coverage.values()) / len(coverage) if coverage else 0.0,
         "injury_feed_available": injury_feed_available,
+        "injury_feed_freshness": injury_feed_state,
+        "injury_feed_fresh": (
+            str(injury_feed_state.get("status") or "").upper() == "FRESH"
+        ),
         "depth_feed_available": depth_feed_available,
         "roster_feed_available": roster_feed_available,
         "weather_errors": weather_errors,
@@ -496,8 +641,8 @@ def build_current_context(
         "expected_qb_state": qb_state_meta,
         "score_adjustment_enabled": False,
         "note": (
-            "Context is post-prediction risk/confidence only until NFL point-in-time "
-            "historical validation earns a score adjustment."
+            "Context is post-prediction risk/confidence only. Injury/personnel "
+            "sources must be FRESH to permit betting; stale/unknown state fails closed."
         ),
     }
     return context, meta
