@@ -74,6 +74,24 @@ def build_live_monitoring(
         100.0 * float(intelligence.get("multi_book_coverage", 0.0) or 0.0)
     )
 
+    market_edge = intelligence.get("market_edge_calibration")
+    if not isinstance(market_edge, dict):
+        market_edge = {}
+    validated_edge_markets = market_edge.get(
+        "validated_incremental_markets", []
+    )
+    if not isinstance(validated_edge_markets, list):
+        validated_edge_markets = []
+    scores["market_edge_value"] = _clip(
+        100.0 * len(validated_edge_markets) / 3.0
+    )
+    if bool(market_edge.get("fail_closed", False)) and len(
+        validated_edge_markets
+    ) < 2:
+        alerts.append(
+            "fewer than two markets prove incremental value beyond no-vig pricing"
+        )
+
     regime = intelligence.get("regime_reliability")
     if not isinstance(regime, dict):
         regime = {}
@@ -185,20 +203,25 @@ def build_live_monitoring(
         alerts.append("NFL injury/weather/travel context coverage is not yet release-ready")
 
     weights = {
-        "market_coverage": 0.16,
-        "multi_book": 0.08,
-        "regime_reliability": 0.10,
-        "context": 0.14,
-        "calibration": 0.18,
-        "freshness": 0.11,
-        "distribution_stability": 0.13,
-        "output_completeness": 0.10,
+        "market_coverage": 0.14,
+        "multi_book": 0.07,
+        "market_edge_value": 0.10,
+        "regime_reliability": 0.08,
+        "context": 0.13,
+        "calibration": 0.17,
+        "freshness": 0.10,
+        "distribution_stability": 0.12,
+        "output_completeness": 0.09,
     }
     score = sum(weights[name] * scores.get(name, 0.0) for name in weights)
     engineering_weights = {
         name: weight
         for name, weight in weights.items()
-        if name not in {"multi_book", "regime_reliability"}
+        if name not in {
+            "multi_book",
+            "market_edge_value",
+            "regime_reliability",
+        }
     }
     engineering_weight_total = sum(engineering_weights.values())
     engineering_score = (
