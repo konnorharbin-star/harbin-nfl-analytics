@@ -80,7 +80,7 @@
       "ledger_eligible_games": 16,
       "ledger_health_pass": true,
       "ledger_health_status": "PASS",
-      "ledger_rows": 16,
+      "ledger_rows": 31,
       "metrics": {
         "baseline_total_mae": 9.911374389662818,
         "baseline_total_rmse": 10.979363173971414,
