@@ -8,7 +8,7 @@
     "status": "OK",
     "target_games": 15
   },
-  "live_readiness_score": 89.5,
+  "live_readiness_score": 88.9,
   "meaning": "operational health; not a profitability or staking signal",
   "monitor_alerts": [],
   "production_eligible": false,

@@ -61,11 +61,16 @@
       "detail": "",
       "name": "probability_calibration",
       "passed": true,
-      "requirement": "chronological NFL probability holdout meets calibration guardrails",
+      "requirement": "validated chronological probability reliability clears Brier/ECE, 58%-62% confidence-band, and margin/total interval guardrails",
       "value": {
-        "brier": 0.22995807657360515,
+        "brier": 0.22871501280256115,
+        "ece": 0.059829425614887,
         "margin_80_coverage": 0.7830882352941176,
-        "total_80_coverage": 0.8051470588235294
+        "mid_confidence_games": 39,
+        "mid_confidence_gap": 0.012503230466271442,
+        "model_family": "gaussian+logistic_moneyline",
+        "total_80_coverage": 0.8051470588235294,
+        "validated_reliability_ready": true
       }
     },
     {
@@ -73,7 +78,7 @@
       "name": "live_monitoring",
       "passed": false,
       "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
-      "value": 88.6
+      "value": 88.0
     },
     {
       "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -114,8 +119,8 @@
         "status": "ESTABLISHED SAMPLE",
         "verified_clv_coverage": 0.7965686274509803,
         "verified_roi_ci_95": [
-          -0.14141282391575422,
-          -0.017035270345523854
+          -0.13963542424144326,
+          -0.017035752180173374
         ]
       }
     },

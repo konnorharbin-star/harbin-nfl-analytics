@@ -6,11 +6,11 @@
 **Reconciliation:** PASS  
 
 ## Probability validation
-- Home-win Brier: **0.2300**.
+- Home-win Brier: **0.2287**.
 - Margin / total 80% coverage: **78.31% / 80.51%**.
 
 ## Monitoring and execution
-- Live readiness: **89.5/100**.
+- Live readiness: **88.9/100**.
 - Portfolio mode: **PAPER**; proposed **0.00u**; approved **0.00u**.
 - Historical evidence: **2584 bets**, ROI **-7.84%**, CLV **—**.
 - Independent forward evidence: **11 bets**, ROI **12.33%**, CLV **4.70%**.
