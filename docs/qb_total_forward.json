@@ -22,7 +22,7 @@
   },
   "feature_set": "quality",
   "graded_games": 15,
-  "ledger_rows": 16,
+  "ledger_rows": 31,
   "meaning": "Prospective first-snapshot pre-kickoff evidence only. The frozen Stage 15 QB-total specification is not retuned on 2026 outcomes and does not alter canonical totals.",
   "minimum_games": 128,
   "promotion_eligible": false,
@@ -40,5 +40,5 @@
     2024,
     2025
   ],
-  "valid_pregame_rows": 16
+  "valid_pregame_rows": 31
 }
