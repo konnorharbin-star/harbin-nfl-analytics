@@ -7,10 +7,12 @@ on:
       - "nfl/win_probability.py"
       - "nfl/win_probability_audit.py"
       - "nfl/probability.py"
+      - "nfl/probability_runtime.py"
       - "nfl/ratings.py"
       - "nfl/recency.py"
       - "run_win_probability_audit.py"
       - "tests/test_win_probability.py"
+      - "tests/test_probability_runtime.py"
       - ".github/workflows/win-probability-holdout.yml"
   workflow_dispatch:
 
@@ -30,7 +32,13 @@ jobs:
           cache: pip
 
       - name: Install package
-        run: python -m pip install -e .
+        run: python -m pip install -e ".[dev]"
+
+      - name: Probability unit tests
+        run: >
+          python -m pytest -q
+          tests/test_win_probability.py
+          tests/test_probability_runtime.py
 
       - name: Run home-win probability holdout
         run: |
