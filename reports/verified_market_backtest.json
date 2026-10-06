@@ -4,8 +4,8 @@
   "by_market": {
     "moneyline": {
       "average_clv_proxy": 0.002354807850648687,
-      "average_expected_value_per_unit": 0.26993121084242727,
-      "average_probability_edge": 0.09582428137918844,
+      "average_expected_value_per_unit": 0.2699312108424267,
+      "average_probability_edge": 0.09582428137918829,
       "bets": 456,
       "clv_samples": 455,
       "losses": 293,
@@ -19,8 +19,8 @@
     },
     "spread": {
       "average_clv_proxy": 0.1670616113744076,
-      "average_expected_value_per_unit": 0.13351610043164527,
-      "average_probability_edge": 0.09289877371219515,
+      "average_expected_value_per_unit": 0.13351610043164508,
+      "average_probability_edge": 0.09289877371219506,
       "bets": 423,
       "clv_samples": 422,
       "losses": 216,
@@ -34,8 +34,8 @@
     },
     "total": {
       "average_clv_proxy": 0.026004728132387706,
-      "average_expected_value_per_unit": 0.10992244302454598,
-      "average_probability_edge": 0.0808540627315802,
+      "average_expected_value_per_unit": 0.10992244302454572,
+      "average_probability_edge": 0.08085406273158006,
       "bets": 424,
       "clv_samples": 423,
       "losses": 219,
@@ -51,8 +51,8 @@
   "by_season": {
     "2024": {
       "average_clv_proxy": 0.058172380259974024,
-      "average_expected_value_per_unit": 0.1647224475760133,
-      "average_probability_edge": 0.08804397097258432,
+      "average_expected_value_per_unit": 0.16472244757601318,
+      "average_probability_edge": 0.08804397097258426,
       "bets": 656,
       "clv_samples": 653,
       "losses": 360,
@@ -66,8 +66,8 @@
     },
     "2025": {
       "average_clv_proxy": 0.06891015960167252,
-      "average_expected_value_per_unit": 0.18255816516116774,
-      "average_probability_edge": 0.09198969278105591,
+      "average_expected_value_per_unit": 0.1825581651611673,
+      "average_probability_edge": 0.09198969278105569,
       "bets": 647,
       "clv_samples": 647,
       "losses": 368,
@@ -100,8 +100,8 @@
   "meaning": "Historical promotion sample uses ESPN's explicit archived provider open and close snapshots. These are verified archive stages, not fabricated point-in-time timestamps. Forward evidence retains strict timestamped capture requirements.",
   "overall": {
     "average_clv_proxy": 0.06351649044003473,
-    "average_expected_value_per_unit": 0.17357870949281679,
-    "average_probability_edge": 0.09000320505553222,
+    "average_expected_value_per_unit": 0.17357870949281645,
+    "average_probability_edge": 0.09000320505553207,
     "bets": 1303,
     "clv_samples": 1300,
     "losses": 728,
