@@ -78,15 +78,28 @@ def build_live_monitoring(
     if not isinstance(probability, dict):
         probability = {}
     brier = probability.get("home_win_brier")
+    ece = probability.get("home_win_ece")
     margin_80 = probability.get("margin_80_coverage")
     total_80 = probability.get("total_80_coverage")
+    mid_games = int(probability.get("mid_confidence_games", 0) or 0)
+    mid_gap = probability.get("mid_confidence_gap")
     calibration = 65.0
     if brier is not None:
         calibration = 100.0 - 200.0 * max(0.0, float(brier) - 0.20)
+    if ece is not None:
+        calibration -= 150.0 * max(0.0, float(ece) - 0.04)
     if margin_80 is not None:
         calibration -= 100.0 * abs(float(margin_80) - 0.80)
     if total_80 is not None:
         calibration -= 100.0 * abs(float(total_80) - 0.80)
+    if mid_games >= 30 and mid_gap is not None:
+        calibration -= 150.0 * max(0.0, float(mid_gap) - 0.04)
+    if (
+        "reliability_ready" in probability
+        and not bool(probability.get("reliability_ready"))
+    ):
+        calibration = min(calibration, 55.0)
+        alerts.append("probability reliability check is not ready")
     scores["calibration"] = _clip(calibration)
 
     context = meta.get("current_context")
