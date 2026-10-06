@@ -70,10 +70,40 @@ def test_segment_keys_are_fixed() -> None:
     )
     assert keys["market"] == "market:spread"
     assert keys["role"] == "role:spread:favorite"
-    assert keys["confidence"] == "confidence:58_62"
-    assert keys["edge"] == "edge:10_plus"
-    assert keys["margin_environment"] == "margin_environment:moderate"
-    assert keys["season_phase"] == "season_phase:middle"
+    assert keys["confidence"] == "confidence:spread:58_62"
+    assert keys["edge"] == "edge:spread:10_plus"
+    assert keys["margin_environment"] == (
+        "margin_environment:spread:moderate"
+    )
+    assert keys["season_phase"] == "season_phase:spread:middle"
+
+
+def test_confidence_and_edge_segments_do_not_mix_markets() -> None:
+    moneyline = candidate_segment_keys(
+        market_type="moneyline",
+        side="home",
+        model_probability=0.60,
+        no_vig_probability=0.55,
+        probability_edge=0.05,
+        projected_home_margin=5.0,
+        projected_total=45.0,
+        week=8,
+    )
+    total = candidate_segment_keys(
+        market_type="total",
+        side="over",
+        model_probability=0.60,
+        no_vig_probability=0.55,
+        probability_edge=0.05,
+        projected_home_margin=5.0,
+        projected_total=45.0,
+        line=44.5,
+        week=8,
+    )
+
+    assert moneyline["confidence"] != total["confidence"]
+    assert moneyline["edge"] != total["edge"]
+    assert moneyline["season_phase"] != total["season_phase"]
 
 
 def test_reliable_market_requires_two_seasons() -> None:
@@ -108,8 +138,8 @@ def test_candidate_gate_blocks_unreliable_segment() -> None:
     report = build_regime_reliability_report(_history())
     registry = report["operational_registry"]
     segments = registry["segments"]
-    segments["confidence:58_62"] = {
-        **segments["confidence:58_62"],
+    segments["confidence:moneyline:58_62"] = {
+        **segments["confidence:moneyline:58_62"],
         "status": "UNRELIABLE",
     }
     assessment = assess_candidate_regime_reliability(
@@ -124,7 +154,7 @@ def test_candidate_gate_blocks_unreliable_segment() -> None:
         week=8,
     )
     assert assessment["ready"] is False
-    assert "confidence:58_62" in assessment["blocked_segments"]
+    assert "confidence:moneyline:58_62" in assessment["blocked_segments"]
 
 
 def test_candidate_gate_missing_registry_fails_closed() -> None:
