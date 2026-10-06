@@ -486,7 +486,17 @@ def test_release_gate_cannot_promote_without_independent_evidence(tmp_path) -> N
     meta = {
         "market_coverage": {"games": 16, "moneyline": 16, "spread": 16, "total": 16},
         "market_intelligence": {"multi_book_coverage": 1.0},
-        "current_context": {"coverage": 1.0, "qb_coverage": 1.0},
+        "current_context": {
+            "coverage": 1.0,
+            "qb_coverage": 1.0,
+            "components": {
+                "quarterback": 1.0,
+                "injuries_personnel": 1.0,
+                "rest_travel": 1.0,
+                "weather_stadium": 1.0,
+            },
+            "injury_feed_freshness": {"status": "FRESH"},
+        },
         "probability": {
             "home_win_brier": 0.23,
             "margin_80_coverage": 0.80,
