@@ -6,13 +6,11 @@ on:
     paths:
       - "nfl/probability.py"
       - "nfl/probability_runtime.py"
-      - "nfl/probability_runtime.py"
       - "nfl/probability_audit.py"
       - "nfl/ratings.py"
       - "nfl/recency.py"
       - "run_probability_audit.py"
       - "tests/test_probability.py"
-      - "tests/test_probability_runtime.py"
       - "tests/test_probability_runtime.py"
       - ".github/workflows/probability-holdout.yml"
   workflow_dispatch:
@@ -34,9 +32,6 @@ jobs:
 
       - name: Install package
         run: python -m pip install -e ".[dev]"
-
-      - name: Probability unit tests
-        run: python -m pytest -q tests/test_probability.py tests/test_probability_runtime.py
 
       - name: Probability unit tests
         run: >
