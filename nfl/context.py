@@ -81,6 +81,99 @@ def _neutral_travel(
     }
 
 
+
+CONTEXT_VETO_INJURY_GAP = 0.40
+CONTEXT_VETO_STARTER_GAP = 0.25
+CONTEXT_VETO_REST_GAP_DAYS = -2.0
+
+
+def apply_context_confidence_veto(candidates: pl.DataFrame) -> pl.DataFrame:
+    """Fail closed on side bets facing stacked, severe adverse current context.
+
+    This is deliberately a confidence/risk veto, not a score adjustment. It only
+    suppresses moneyline/spread bet signals when current injury/personnel feeds and
+    rest context all agree that the selected side is materially disadvantaged.
+    """
+
+    if candidates.is_empty():
+        return candidates.with_columns(
+            pl.lit(False).alias("context_veto"),
+            pl.lit("").alias("context_veto_reason"),
+        )
+
+    required = {
+        "quant_market",
+        "quant_side",
+        "context_injuries_personnel_available",
+        "context_rest_travel_available",
+        "home_injury_risk",
+        "away_injury_risk",
+        "home_starter_injury_risk",
+        "away_starter_injury_risk",
+        "home_rest_advantage_days",
+    }
+    if not required.issubset(candidates.columns):
+        return candidates.with_columns(
+            pl.lit(False).alias("context_veto"),
+            pl.lit("").alias("context_veto_reason"),
+        )
+
+    rows: list[dict[str, object]] = []
+    signal_fields = ("quant_signal", "production_signal", "research_signal", "portfolio_signal")
+    stake_fields = ("stake_units", "research_stake_units")
+
+    for row in candidates.iter_rows(named=True):
+        veto = False
+        reason = ""
+        market = str(row.get("quant_market") or "").lower()
+        side = str(row.get("quant_side") or "").lower()
+        context_ready = bool(row.get("context_injuries_personnel_available")) and bool(
+            row.get("context_rest_travel_available")
+        )
+
+        if context_ready and market in {"moneyline", "spread"} and side in {"home", "away"}:
+            home_injury = float(row.get("home_injury_risk") or 0.0)
+            away_injury = float(row.get("away_injury_risk") or 0.0)
+            home_starter = float(row.get("home_starter_injury_risk") or 0.0)
+            away_starter = float(row.get("away_starter_injury_risk") or 0.0)
+            home_rest_adv = float(row.get("home_rest_advantage_days") or 0.0)
+
+            if side == "home":
+                injury_gap = home_injury - away_injury
+                starter_gap = home_starter - away_starter
+                selected_rest_gap = home_rest_adv
+            else:
+                injury_gap = away_injury - home_injury
+                starter_gap = away_starter - home_starter
+                selected_rest_gap = -home_rest_adv
+
+            veto = (
+                injury_gap >= CONTEXT_VETO_INJURY_GAP
+                and starter_gap >= CONTEXT_VETO_STARTER_GAP
+                and selected_rest_gap <= CONTEXT_VETO_REST_GAP_DAYS
+            )
+            if veto:
+                reason = (
+                    "stacked adverse context: selected side has "
+                    f"{injury_gap:.2f} injury-risk gap, "
+                    f"{starter_gap:.2f} starter-risk gap, and "
+                    f"{selected_rest_gap:.1f} rest-day gap"
+                )
+
+        item = dict(row)
+        item["context_veto"] = veto
+        item["context_veto_reason"] = reason
+        if veto:
+            for field in signal_fields:
+                if field in item:
+                    item[field] = "PASS"
+            for field in stake_fields:
+                if field in item:
+                    item[field] = 0.0
+        rows.append(item)
+
+    return pl.DataFrame(rows)
+
 def build_current_context(
     targets: pl.DataFrame,
     *,
