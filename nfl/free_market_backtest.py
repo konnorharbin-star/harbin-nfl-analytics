@@ -302,7 +302,7 @@ def build_free_archive_bets(
     market_store: FreeNFLMarketStore,
     *,
     min_probability_training_games: int = 64,
-    enforce_probability_reliability: bool = True,
+    enforce_probability_reliability: bool = False,
 ) -> pl.DataFrame:
     """Create one best-side opportunity per game/market with chronological probabilities."""
 
