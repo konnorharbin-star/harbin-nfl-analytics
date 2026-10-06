@@ -14,7 +14,7 @@ import numpy as np
 import polars as pl
 
 from .contracts import DataContractError, require_columns
-from .data import completed_games, schedule_to_team_games
+from .data import canonical_team_code, completed_games, schedule_to_team_games
 
 VALIDATED_PRIOR_SEASON_WEIGHT = 0.10
 
@@ -159,18 +159,20 @@ class FairScoreModel:
             raise DataContractError(f"team {team!r} was not present in the training history")
 
     def project(self, home_team: str, away_team: str) -> FairScoreProjection:
-        self._check_team(home_team)
-        self._check_team(away_team)
+        home_key = canonical_team_code(home_team)
+        away_key = canonical_team_code(away_team)
+        self._check_team(home_key)
+        self._check_team(away_key)
         assert self.league_points is not None
         assert self.home_field is not None
 
         home_points = (
             self.league_points
-            + self.offense[home_team]
-            - self.defense[away_team]
+            + self.offense[home_key]
+            - self.defense[away_key]
             + self.home_field
         )
-        away_points = self.league_points + self.offense[away_team] - self.defense[home_team]
+        away_points = self.league_points + self.offense[away_key] - self.defense[home_key]
 
         return FairScoreProjection(
             home_team=home_team,
