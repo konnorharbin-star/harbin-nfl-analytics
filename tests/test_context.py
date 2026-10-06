@@ -275,6 +275,47 @@ def test_depth_and_roster_sources_expose_freshness_state() -> None:
     }
 
 
+def test_roster_normalization_uses_latest_team_snapshot() -> None:
+    rosters = pl.DataFrame(
+        [
+            {
+                "season": 2026,
+                "week": 3,
+                "team": "BUF",
+                "position": "QB",
+                "gsis_id": "old-qb",
+                "full_name": "Old QB",
+                "status": "Active",
+            },
+            {
+                "season": 2026,
+                "week": 4,
+                "team": "BUF",
+                "position": "QB",
+                "gsis_id": "current-qb",
+                "full_name": "Current QB",
+                "status": "Active",
+            },
+            {
+                "season": 2026,
+                "week": 4,
+                "team": "BUF",
+                "position": "WR",
+                "gsis_id": "current-wr",
+                "full_name": "Current WR",
+                "status": "Active",
+            },
+        ]
+    )
+
+    normalized = normalize_rosters(rosters, season=2026, week=4)
+
+    assert normalized.height == 2
+    assert "old-qb" not in normalized.get_column("gsis_id").to_list()
+    assert normalized.filter(pl.col("position") == "QB").height == 1
+    assert set(normalized.get_column("roster_week").to_list()) == {4}
+
+
 def test_personnel_matches_injuries_to_top_depth_players() -> None:
     injuries = normalize_injuries(_injuries(), season=2026, week=4, as_of=AS_OF)
     depth = normalize_depth_charts(_depth(), season=2026, week=4, as_of=AS_OF)
