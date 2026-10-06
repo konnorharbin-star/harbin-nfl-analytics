@@ -115,10 +115,10 @@ def _signal(
     if not row or row.get("execution_ready") is not True:
         return ""
 
-    # Keep the publication layer aligned with the CFB board: in PAPER/SHADOW
-    # mode, show every current executable model suggestion even when portfolio
-    # concentration/minimum-allocation rules decide not to allocate units to it.
-    # The portfolio action remains authoritative for staking.
+    # Public bet badges must be evidence-gated. Exploratory research signals
+    # remain in machine-readable outputs, but PAPER/SHADOW boards must not present
+    # them as actionable BET/STRONG recommendations when the active NFL policy
+    # has not validated that market.
     if release_state.upper() == "PRODUCTION":
         action = str(row.get("portfolio_action") or "PASS").upper()
         stake_units = _number(row.get("portfolio_stake_units")) or 0.0
@@ -126,10 +126,7 @@ def _signal(
             return ""
         raw = row.get("production_signal", row.get("quant_signal"))
     else:
-        raw = row.get(
-            "research_signal",
-            row.get("portfolio_signal", row.get("quant_signal")),
-        )
+        raw = row.get("quant_signal", row.get("production_signal", "PASS"))
     value = str(raw or "PASS").upper()
     return "" if value == "PASS" else value
 
@@ -386,7 +383,7 @@ def render_html(
         pages.append(
             f'<section class="page" id="p{page}"><div class="head"><div>'
             f'<div class="title">NFL MODEL · WEEK {week} PICKS</div>'
-            '<div class="sub">Projected scores &amp; best bets · Updated '
+            '<div class="sub">Projected scores &amp; evidence-gated bets · Updated '
             f'{html.escape(formatted_updated_at)}</div>'
             f'<div class="status {warn_class}">{html.escape(status)}</div></div>'
             f'<div class="counter">{game_range}<br>{page} / {page_count}</div></div>'
@@ -518,7 +515,7 @@ def render_png(
     draw.text((17, 13), f"NFL MODEL · WEEK {week} PICKS", font=title_font, fill=TEXT)
     draw.text(
         (17, 43),
-        f"Projected scores & best bets · Updated {_display_updated_at(updated_at)}",
+        f"Projected scores & evidence-gated bets · Updated {_display_updated_at(updated_at)}",
         font=sub_font,
         fill=MUTED,
     )

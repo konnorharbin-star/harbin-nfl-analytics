@@ -6,7 +6,7 @@ from datetime import UTC, datetime
 
 import polars as pl
 
-from .context import build_current_context
+from .context import apply_context_confidence_veto, build_current_context
 from .current import run_current_projection, unplayed_regular_games
 from .data import NFLDataClient
 from .decision_ledger import append_portfolio_decisions
@@ -317,6 +317,7 @@ def run_operational_pipeline(
     context = _merge_context_meta(raw_context_meta, projection)
     if not candidates.is_empty() and not context_frame.is_empty():
         candidates = candidates.join(context_frame, on="game_id", how="left")
+    candidates = apply_context_confidence_veto(candidates)
 
     evidence = write_evidence_report()
     probability = _probability_meta(historical, season)

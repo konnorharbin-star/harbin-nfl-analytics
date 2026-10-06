@@ -81,12 +81,35 @@ def test_weekly_board_breaks_display_tie_toward_projected_winner() -> None:
     assert row["home_score"] == row["away_score"] + 1
 
 
-def test_weekly_publication_shows_executable_research_signal_without_allocation(
+def test_weekly_publication_hides_unvalidated_research_signal(
     tmp_path,
 ) -> None:
     current = _current().with_columns(
         pl.lit(0.0).alias("portfolio_candidate_units"),
         pl.lit("PASS").alias("portfolio_action"),
+        pl.lit(True).alias("execution_ready"),
+    )
+    write_weekly_publication(
+        current,
+        week=4,
+        updated_at="2026-10-02T16:41:28+00:00",
+        release_state="PAPER",
+        output_dir=tmp_path,
+    )
+    document = (tmp_path / "nfl_week_4.html").read_text()
+    assert '<span class="badge strong">STRONG</span>' not in document
+    assert '<span class="badge bet">BET</span>' not in document
+    assert '<span class="badge lean">LEAN</span>' not in document
+
+
+def test_weekly_publication_shows_evidence_gated_signal(tmp_path) -> None:
+    current = _current().with_columns(
+        pl.when(pl.col("quant_market") == "moneyline")
+        .then(pl.lit("STRONG"))
+        .when(pl.col("quant_market") == "spread")
+        .then(pl.lit("BET"))
+        .otherwise(pl.lit("LEAN"))
+        .alias("quant_signal"),
         pl.lit(True).alias("execution_ready"),
     )
     write_weekly_publication(
@@ -132,16 +155,20 @@ def test_weekly_publication_matches_cfb_picks_layout(tmp_path) -> None:
 
     document = (tmp_path / "nfl_week_4.html").read_text()
     assert "NFL MODEL · WEEK 4 PICKS" in document
-    assert "Projected scores &amp; best bets · Updated Oct 2, 2026 · 11:41 AM CT" in document
+    assert (
+        "Projected scores &amp; evidence-gated bets · "
+        "Updated Oct 2, 2026 · 11:41 AM CT"
+        in document
+    )
     assert "MATCHUP (WINNER BOLD)" in document
     assert "<th>CTX</th>" not in document
     assert "PIT -150" in document
     assert "NYJ +3.5" in document
     assert "O 42.5" in document
     assert "proj 44" in document
-    assert '<span class="badge strong">STRONG</span>' in document
-    assert '<span class="badge bet">BET</span>' in document
-    assert '<span class="badge lean">LEAN</span>' in document
+    assert '<span class="badge strong">STRONG</span>' not in document
+    assert '<span class="badge bet">BET</span>' not in document
+    assert '<span class="badge lean">LEAN</span>' not in document
     assert "STRONG/PAPER" not in document
     assert "PAPER evidence mode" in document
     assert "not production staking" in document
