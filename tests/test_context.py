@@ -5,9 +5,17 @@ from datetime import UTC, datetime
 import polars as pl
 import pytest
 
-from nfl.context import apply_context_confidence_veto, build_current_context
+from nfl.context import (
+    apply_context_confidence_veto,
+    apply_context_freshness_veto,
+    build_current_context,
+)
 from nfl.contracts import DataContractError
-from nfl.injuries import normalize_injuries, summarize_team_injuries
+from nfl.injuries import (
+    injury_feed_freshness,
+    normalize_injuries,
+    summarize_team_injuries,
+)
 from nfl.personnel import normalize_depth_charts, normalize_rosters, summarize_team_personnel
 from nfl.weather import OpenMeteoNFLWeather
 
@@ -169,11 +177,143 @@ def test_injury_normalization_uses_latest_admissible_status() -> None:
     assert ne.get_column("injury_risk")[0] > 0
 
 
+def test_prior_week_injury_status_does_not_carry_into_fresh_week() -> None:
+    frame = pl.DataFrame(
+        [
+            {
+                "season": 2026,
+                "week": 3,
+                "team": "BUF",
+                "gsis_id": "qb-buf",
+                "position": "QB",
+                "full_name": "Buffalo QB",
+                "report_status": "Out",
+                "practice_status": "Did Not Participate",
+                "date_modified": "2026-09-24T12:00:00Z",
+            },
+            {
+                "season": 2026,
+                "week": 4,
+                "team": "NE",
+                "gsis_id": "wr-ne",
+                "position": "WR",
+                "full_name": "New England WR",
+                "report_status": "Questionable",
+                "practice_status": "Limited Participation",
+                "date_modified": "2026-09-30T13:00:00Z",
+            },
+        ]
+    )
+
+    normalized = normalize_injuries(
+        frame,
+        season=2026,
+        week=4,
+        as_of=AS_OF,
+    )
+
+    assert normalized.filter(pl.col("team") == "BUF").is_empty()
+    assert normalized.filter(pl.col("team") == "NE").height == 1
+
+
+def test_injury_feed_without_target_week_is_stale_and_risk_is_not_carried() -> None:
+    prior = _injuries().with_columns(pl.lit(3).alias("week"))
+
+    freshness = injury_feed_freshness(
+        prior,
+        season=2026,
+        week=4,
+        as_of=AS_OF,
+    )
+    normalized = normalize_injuries(
+        prior,
+        season=2026,
+        week=4,
+        as_of=AS_OF,
+    )
+    summary = summarize_team_injuries(normalized)
+
+    assert freshness["status"] == "STALE"
+    assert freshness["current_week_rows"] == 0
+    assert summary.get_column("injury_count").sum() == 0
+    assert set(summary.get_column("injury_freshness_status").to_list()) == {
+        "STALE"
+    }
+
+
 def test_depth_chart_future_snapshot_is_excluded() -> None:
     depth = normalize_depth_charts(_depth(), season=2026, week=4, as_of=AS_OF)
     buffalo = depth.filter(pl.col("team") == "BUF")
     assert buffalo.height == 1
     assert buffalo.get_column("depth_rank")[0] == 1
+
+
+def test_depth_and_roster_sources_expose_freshness_state() -> None:
+    depth = normalize_depth_charts(
+        _depth(),
+        season=2026,
+        week=4,
+        as_of=AS_OF,
+    )
+    rosters = normalize_rosters(_rosters(), season=2026, week=4)
+    injuries = normalize_injuries(
+        _injuries(),
+        season=2026,
+        week=4,
+        as_of=AS_OF,
+    )
+    summary = summarize_team_personnel(depth, rosters, injuries)
+
+    assert set(depth.get_column("depth_freshness_status").to_list()) == {
+        "FRESH"
+    }
+    assert set(rosters.get_column("roster_freshness_status").to_list()) == {
+        "FRESH"
+    }
+    assert set(summary.get_column("personnel_freshness_status").to_list()) == {
+        "FRESH"
+    }
+
+
+def test_roster_normalization_uses_latest_team_snapshot() -> None:
+    rosters = pl.DataFrame(
+        [
+            {
+                "season": 2026,
+                "week": 3,
+                "team": "BUF",
+                "position": "QB",
+                "gsis_id": "old-qb",
+                "full_name": "Old QB",
+                "status": "Active",
+            },
+            {
+                "season": 2026,
+                "week": 4,
+                "team": "BUF",
+                "position": "QB",
+                "gsis_id": "current-qb",
+                "full_name": "Current QB",
+                "status": "Active",
+            },
+            {
+                "season": 2026,
+                "week": 4,
+                "team": "BUF",
+                "position": "WR",
+                "gsis_id": "current-wr",
+                "full_name": "Current WR",
+                "status": "Active",
+            },
+        ]
+    )
+
+    normalized = normalize_rosters(rosters, season=2026, week=4)
+
+    assert normalized.height == 2
+    assert "old-qb" not in normalized.get_column("gsis_id").to_list()
+    assert normalized.filter(pl.col("position") == "QB").height == 1
+    assert set(normalized.get_column("roster_week").to_list()) == {4}
 
 
 def test_personnel_matches_injuries_to_top_depth_players() -> None:
@@ -238,6 +378,53 @@ def test_outdoor_context_uses_nearest_open_meteo_hour() -> None:
     assert meta["components"]["rest_travel"] == 1.0
 
 
+def test_current_context_marks_fresh_injury_personnel_state() -> None:
+    context, meta = build_current_context(
+        _target(roof="dome"),
+        season=2026,
+        week=4,
+        injuries=_injuries(),
+        depth_charts=_depth(),
+        rosters=_rosters(),
+        as_of=AS_OF,
+    )
+
+    row = context.row(0, named=True)
+    assert row["context_injuries_personnel_available"] is True
+    assert row["context_injuries_personnel_fresh"] is True
+    assert row["injury_feed_freshness_status"] == "FRESH"
+    assert row["home_personnel_freshness_status"] == "FRESH"
+    assert row["away_personnel_freshness_status"] == "FRESH"
+    assert meta["injury_feed_fresh"] is True
+    assert meta["components"]["injuries_personnel"] == 1.0
+
+
+def test_context_freshness_veto_blocks_every_market_when_state_is_stale() -> None:
+    candidates = pl.DataFrame(
+        [
+            {
+                "game_id": "g1",
+                "quant_market": "total",
+                "quant_signal": "BET",
+                "production_signal": "BET",
+                "research_signal": "STRONG",
+                "stake_units": 0.4,
+                "research_stake_units": 0.4,
+                "context_injuries_personnel_fresh": False,
+                "context_freshness_reason": "injury feed stale",
+            }
+        ]
+    )
+
+    row = apply_context_freshness_veto(candidates).row(0, named=True)
+
+    assert row["context_freshness_veto"] is True
+    assert row["quant_signal"] == "PASS"
+    assert row["research_signal"] == "PASS"
+    assert row["stake_units"] == 0.0
+    assert "injury feed stale" in row["context_freshness_veto_reason"]
+
+
 def test_current_context_fails_closed_for_historical_season() -> None:
     with pytest.raises(DataContractError, match="disabled for historical season"):
         build_current_context(
@@ -261,6 +448,7 @@ def test_stacked_adverse_context_veto_blocks_side_bet() -> None:
                 "stake_units": 0.0,
                 "research_stake_units": 0.20,
                 "context_injuries_personnel_available": True,
+                "context_injuries_personnel_fresh": True,
                 "context_rest_travel_available": True,
                 "home_injury_risk": 0.875,
                 "away_injury_risk": 0.3125,
@@ -290,6 +478,7 @@ def test_context_veto_does_not_block_when_rest_is_not_adverse() -> None:
                 "stake_units": 0.0,
                 "research_stake_units": 0.15,
                 "context_injuries_personnel_available": True,
+                "context_injuries_personnel_fresh": True,
                 "context_rest_travel_available": True,
                 "home_injury_risk": 0.90,
                 "away_injury_risk": 0.30,

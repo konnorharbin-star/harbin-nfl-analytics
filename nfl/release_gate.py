@@ -67,6 +67,12 @@ def build_release_gate(
     if not isinstance(context, dict):
         context = {}
     context_coverage = float(context.get("coverage", 0.0) or 0.0)
+    context_components = context.get("components")
+    if not isinstance(context_components, dict):
+        context_components = {}
+    injury_personnel_freshness = float(
+        context_components.get("injuries_personnel", 0.0) or 0.0
+    )
     qb_identity_coverage = float(
         context.get("qb_identity_coverage", context.get("qb_coverage", 0.0)) or 0.0
     )
@@ -194,6 +200,18 @@ def build_release_gate(
             (
                 ">=95% current games with identified, decision-ready expected "
                 "starting-QB state"
+            ),
+        ),
+        _check(
+            "injury_personnel_freshness",
+            injury_personnel_freshness >= 0.95,
+            {
+                "fresh_game_coverage": round(injury_personnel_freshness, 4),
+                "feed": context.get("injury_feed_freshness", {}),
+            },
+            (
+                ">=95% current games have FRESH injury, depth-chart, and roster "
+                "context; STALE/UNKNOWN state fails closed"
             ),
         ),
         _check(
@@ -329,6 +347,7 @@ def build_release_gate(
         "data_contracts",
         "complete_market_coverage",
         "quarterback_context_coverage",
+        "injury_personnel_freshness",
         "context_coverage",
         "probability_calibration",
         "live_monitoring",
@@ -358,6 +377,11 @@ def build_release_gate(
         next_steps.append(
             "Resolve expected starting-QB identity/certainty for at least 95% "
             "of current games before betting release."
+        )
+    if injury_personnel_freshness < 0.95:
+        next_steps.append(
+            "Refresh injury, depth-chart, and roster sources until at least 95% "
+            "of current games have FRESH personnel context."
         )
     if context_coverage < 0.90:
         next_steps.append(

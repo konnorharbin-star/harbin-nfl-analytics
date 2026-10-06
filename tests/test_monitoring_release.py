@@ -38,6 +38,13 @@ def _meta(now: datetime) -> dict[str, object]:
         "current_context": {
             "coverage": 1.0,
             "qb_coverage": 1.0,
+            "components": {
+                "quarterback": 1.0,
+                "injuries_personnel": 1.0,
+                "rest_travel": 1.0,
+                "weather_stadium": 1.0,
+            },
+            "injury_feed_freshness": {"status": "FRESH"},
         },
     }
 
@@ -99,6 +106,31 @@ def test_release_gate_uses_engineering_readiness_not_multibook_score(tmp_path) -
     assert gate["engineering_ready"] is True
     assert gate["release_state"] == "PAPER"
     assert gate["production_eligible"] is False
+
+
+def test_release_gate_fails_when_injury_personnel_context_is_stale(
+    tmp_path,
+) -> None:
+    now = datetime.now(UTC)
+    meta = _meta(now)
+    meta["current_context"]["components"]["injuries_personnel"] = 0.75
+    meta["current_context"]["injury_feed_freshness"] = {
+        "status": "STALE",
+        "reason": "no current-week injury reports",
+    }
+
+    gate = build_release_gate(
+        meta,
+        {"engineering_readiness_score": 95},
+        {"status": "OK"},
+        evidence_path=tmp_path / "missing-evidence.json",
+        live_path=tmp_path / "missing-live.json",
+    )
+    checks = {check["name"]: check for check in gate["checks"]}
+
+    assert checks["injury_personnel_freshness"]["passed"] is False
+    assert gate["engineering_ready"] is False
+    assert gate["release_state"] == "RESEARCH"
 
 
 def test_release_gate_requires_broad_historical_clv_coverage(tmp_path) -> None:

@@ -44,6 +44,9 @@ on:
     branches: [main]
     paths:
       - "nfl/pipeline.py"
+      - "nfl/context.py"
+      - "nfl/injuries.py"
+      - "nfl/personnel.py"
       - "nfl/current.py"
       - "nfl/pregame.py"
       - "nfl/data.py"
@@ -64,6 +67,7 @@ on:
       - "nfl/reporting.py"
       - "scripts/push_generated_state.sh"
       - "scripts/should_pregame_refresh.py"
+      - "tests/test_context.py"
       - "tests/test_current_projection.py"
       - "tests/test_operational_parity.py"
       - "tests/test_pregame_refresh.py"

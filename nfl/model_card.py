@@ -79,6 +79,8 @@ def build_model_card(
             "production_requires_release_gate": True,
             "expected_starting_qb_required": True,
             "uncertain_or_changed_qb_blocks_betting": True,
+            "fresh_injury_personnel_context_required": True,
+            "stale_or_unknown_context_blocks_betting": True,
             "production_policy_mode": production_policy.get(
                 "deployment_mode", "paper"
             ),
@@ -121,6 +123,10 @@ def build_model_card(
             (
                 "A starter change relative to the last-observed QB remains "
                 "betting-blocked until a validated replacement-QB adjustment exists."
+            ),
+            (
+                "Prior-week injury designations cannot carry forward as current "
+                "risk; injury, depth, and roster context must be FRESH."
             ),
             "Historical archive fallbacks do not become verified opening entries by relabeling.",
             "No production staking until every hard release gate passes.",
