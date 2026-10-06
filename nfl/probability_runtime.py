@@ -20,7 +20,11 @@ from .probability import (
     GaussianScoreDistribution,
     evaluate_conditional_probability_holdout,
 )
-from .win_probability import LogisticWinModel, evaluate_win_probability_holdout
+from .win_probability import (
+    LogisticWinModel,
+    evaluate_win_probability_holdout,
+    score_gaussian,
+)
 
 
 class ScoreDistribution(Protocol):
@@ -202,26 +206,45 @@ def build_operational_probability_distribution(
     margin_use_candidate = conditional.margin_candidate_pass
     total_use_candidate = conditional.total_candidate_pass
 
-    score = ConditionalStudentTScoreDistribution(
-        margin_scale=(
+    score_kwargs = {
+        "margin_scale": (
             conditional.margin_scale
             if margin_use_candidate
             else conditional.baseline_margin_scale
         ),
-        total_scale=(
+        "total_scale": (
             conditional.total_scale
             if total_use_candidate
             else conditional.baseline_total_scale
         ),
-        margin_df=conditional.margin_df if margin_use_candidate else NORMAL_DF,
-        total_df=conditional.total_df if total_use_candidate else NORMAL_DF,
-        margin_strength=(
+        "margin_df": (
+            conditional.margin_df if margin_use_candidate else NORMAL_DF
+        ),
+        "total_df": (
+            conditional.total_df if total_use_candidate else NORMAL_DF
+        ),
+        "margin_strength": (
             conditional.margin_strength if margin_use_candidate else 0.0
         ),
-        total_strength=(
+        "total_strength": (
             conditional.total_strength if total_use_candidate else 0.0
         ),
-    ).fit(historical)
+    }
+    score = ConditionalStudentTScoreDistribution(**score_kwargs).fit(
+        historical
+    )
+
+    holdout_training = full_past.filter(
+        pl.col("season") < holdout_season
+    )
+    holdout = full_past.filter(pl.col("season") == holdout_season)
+    holdout_score = ConditionalStudentTScoreDistribution(
+        **score_kwargs
+    ).fit(holdout_training)
+    selected_score_win_metrics = score_gaussian(
+        holdout,
+        holdout_score,
+    )
 
     win_model: LogisticWinModel | None = None
     if win.candidate_pass:
@@ -240,7 +263,9 @@ def build_operational_probability_distribution(
     total_metrics = (
         selected_score_metrics if total_use_candidate else baseline_score_metrics
     )
-    selected_win_metrics = win.logistic if win.candidate_pass else win.gaussian
+    selected_win_metrics = (
+        win.logistic if win.candidate_pass else selected_score_win_metrics
+    )
 
     mid_gap = selected_win_metrics.mid_confidence_gap
     mid_reliable = (
