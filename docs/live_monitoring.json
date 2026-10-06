@@ -2,9 +2,9 @@
   "alerts": [],
   "drift_details": {
     "margin": {
-      "live_mean": -0.4239397243262078,
+      "live_mean": -0.42393972432596644,
       "live_n": 45,
-      "live_std": 2.670639207225341,
+      "live_std": 2.67063920722533,
       "mean_z": 0.5779,
       "reference_mean": 1.965844996473403,
       "reference_n": 1087,
@@ -13,7 +13,7 @@
       "std_ratio": 0.6458
     },
     "total": {
-      "live_mean": 45.70944021962045,
+      "live_mean": 45.70944021962023,
       "live_n": 45,
       "live_std": 3.2358847522438627,
       "mean_z": 0.3063,
@@ -29,7 +29,7 @@
   "live_readiness_score": 94.5,
   "meaning": "operational/model-monitoring score; not a profitability guarantee",
   "scores": {
-    "calibration": 91.80250233233778,
+    "calibration": 91.80250233233775,
     "context": 95.0,
     "distribution_stability": 82.4,
     "freshness": 100.0,

@@ -1,6 +1,6 @@
 {
-  "allocated_bets": 10,
-  "candidate_units": 0.7197179999999999,
+  "allocated_bets": 0,
+  "candidate_units": 0.0,
   "caps": {
     "book": 2.0,
     "game": 1.0,

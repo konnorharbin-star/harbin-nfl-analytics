@@ -1,4 +1,5 @@
 {
+  "active_recommendations": 0,
   "approved_bets": 0,
   "approved_units": 0.0,
   "bankroll_risk": {
@@ -14,7 +15,7 @@
     "trailing_roi": 0.123306,
     "trailing_window_bets": 11
   },
-  "bets": 10,
+  "bets": 0,
   "committed_exposure": {
     "integrity_ok": true,
     "invalid_rows": 0,
@@ -30,12 +31,13 @@
         5
       ]
     ],
-    "total_open_bets_after_allocation": 10,
-    "total_open_units_after_allocation": 0.719718
+    "total_open_bets_after_allocation": 0,
+    "total_open_units_after_allocation": 0.0
   },
-  "execution_blocked_bets": 0,
+  "execution_blocked_bets": 45,
+  "expired_recommendations": 0,
   "mode": "paper",
-  "paper_or_shadow_allocated_units": 0.719718,
+  "paper_or_shadow_allocated_units": 0.0,
   "performance_adjusted_proposed_units": 1.353277,
   "performance_feedback": {
     "enabled": true,

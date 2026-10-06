@@ -329,7 +329,7 @@
   "graded_bets": 11,
   "grading_audit": {
     "decisions": {
-      "eligible_decisions": 311,
+      "eligible_decisions": 321,
       "errors": 0,
       "evidence_source": "portfolio_decisions_v1",
       "execution_excluded_rows": 0,
