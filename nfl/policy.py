@@ -71,6 +71,8 @@ DEFAULT_POLICY: dict[str, object] = {
         "min_market_book_count_for_execution": 1,
         "require_quote_timestamp_for_execution": True,
         "max_quote_age_minutes": 60,
+        "max_public_recommendation_age_minutes": 45,
+        "min_minutes_to_kickoff_for_execution": 5,
         "require_live_history_for_production": True,
         "require_open_exposure_ledger_for_production": True,
     },
