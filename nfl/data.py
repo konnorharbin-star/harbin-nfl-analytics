@@ -25,7 +25,6 @@ from .contracts import (
     require_unique,
 )
 
-
 FRANCHISE_TEAM_ALIASES = {
     "OAK": "LV",
     "SD": "LAC",
