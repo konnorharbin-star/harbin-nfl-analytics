@@ -65,8 +65,9 @@ def filter_future_kickoffs(
         keep.append(kickoff > reference)
 
     if require_kickoff and missing:
+        games = ", ".join(sorted(missing))
         raise DataContractError(
-            f"{dataset} missing/invalid kickoff for game(s): " + ", ".join(sorted(missing))
+            f"{dataset} missing/invalid kickoff for game(s): {games}"
         )
     return frame.filter(pl.Series("_pregame_keep", keep))
 
