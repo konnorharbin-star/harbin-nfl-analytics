@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-from datetime import UTC, datetime
-from zoneinfo import ZoneInfo
 
 import polars as pl
 
@@ -13,31 +11,9 @@ from .contracts import DataContractError, require_columns
 from .espn_market import ESPNTwoWayMarket
 from .market import MarketComparison, MarketQuote, compare_two_way_market
 from .policy import DEFAULT_POLICY, fractional_kelly_units, load_policy, signal_from_policy
+from .pregame import kickoff_iso_map
 from .probability import GaussianScoreDistribution
 from .schedule_market import is_research_only_market
-
-NFL_SCHEDULE_TIMEZONE = ZoneInfo("America/New_York")
-
-
-def _kickoff_map(targets: pl.DataFrame) -> dict[str, object]:
-    require_columns(targets, {"game_id", "gameday"}, "current_targets")
-    mapping: dict[str, object] = {}
-    for row in targets.iter_rows(named=True):
-        game_id = str(row["game_id"])
-        day = row.get("gameday")
-        time = row.get("gametime")
-        kickoff: str | None = None
-        if day is not None and time not in {None, ""}:
-            try:
-                local = datetime.fromisoformat(f"{day}T{time}")
-                if local.tzinfo is None:
-                    local = local.replace(tzinfo=NFL_SCHEDULE_TIMEZONE)
-                kickoff = local.astimezone(UTC).isoformat()
-            except ValueError:
-                kickoff = None
-        mapping[game_id] = kickoff
-    return mapping
-
 
 def _book_key(market: ESPNTwoWayMarket) -> str:
     return canonical_book_identity(market.book or market.provider)
@@ -122,7 +98,7 @@ def build_market_intelligence(
 
     distribution = GaussianScoreDistribution().fit(historical)
     projected = {str(row["game_id"]): row for row in projection.iter_rows(named=True)}
-    kickoff = _kickoff_map(targets)
+    kickoff = kickoff_iso_map(targets)
 
     grouped: dict[
         tuple[str, str],
