@@ -24,6 +24,10 @@ on:
     paths:
       - "nfl/free_market.py"
       - "nfl/free_market_backtest.py"
+      - "nfl/probability.py"
+      - "nfl/probability_runtime.py"
+      - "nfl/win_probability.py"
+      - "nfl/market.py"
       - "nfl/backtest_runtime.py"
       - "nfl/entry_integrity.py"
       - "nfl/backtest_audit.py"
@@ -35,6 +39,8 @@ on:
       - "run_free_market_backtest.py"
       - "run_policy_calibration.py"
       - "tests/test_entry_integrity.py"
+      - "tests/test_free_market_backtest.py"
+      - "tests/test_probability_runtime.py"
       - "tests/test_policy_calibration.py"
       - ".github/workflows/free-market-backtest.yml"
   push:
@@ -42,6 +48,10 @@ on:
     paths:
       - "nfl/free_market.py"
       - "nfl/free_market_backtest.py"
+      - "nfl/probability.py"
+      - "nfl/probability_runtime.py"
+      - "nfl/win_probability.py"
+      - "nfl/market.py"
       - "nfl/backtest_runtime.py"
       - "nfl/entry_integrity.py"
       - "nfl/backtest_audit.py"
@@ -53,6 +63,8 @@ on:
       - "run_free_market_backtest.py"
       - "run_policy_calibration.py"
       - "tests/test_entry_integrity.py"
+      - "tests/test_free_market_backtest.py"
+      - "tests/test_probability_runtime.py"
       - "tests/test_policy_calibration.py"
       - ".github/workflows/free-market-backtest.yml"
   schedule:
@@ -73,7 +85,7 @@ concurrency:
 jobs:
   backtest:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
