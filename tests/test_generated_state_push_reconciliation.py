@@ -22,6 +22,7 @@ EXPECTED_WRITERS = {
     "probability-forward-grade.yml",
     "qb-total-forward-capture.yml",
     "qb-total-forward-grade.yml",
+    "regime-edge-reliability.yml",
     "research-status.yml",
     "verified-market-backtest.yml",
 }

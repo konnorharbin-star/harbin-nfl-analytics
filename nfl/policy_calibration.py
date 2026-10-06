@@ -19,6 +19,10 @@ from pathlib import Path
 import polars as pl
 
 from .policy import DEFAULT_POLICY
+from .regime_reliability import (
+    build_regime_reliability_report,
+    compact_registry,
+)
 
 CALIBRATION_REQUIRED = {
     "season",
@@ -314,11 +318,37 @@ def derive_policy_from_frame(
     """Derive a frozen NFL policy without allowing evaluation data to select thresholds."""
 
     policy = deepcopy(DEFAULT_POLICY)
+    regime_report = build_regime_reliability_report(raw_bets)
+    regime_registry = compact_registry(regime_report)
+    policy["regime_reliability"] = regime_registry
+
+    markets = policy.get("markets")
+    regime_registry_ready = (
+        str(regime_registry.get("status") or "").upper() == "READY"
+    )
+    if isinstance(markets, dict) and regime_registry_ready:
+        market_status = regime_registry.get("market_status")
+        if not isinstance(market_status, dict):
+            market_status = {}
+        for market_name, config in markets.items():
+            if not isinstance(config, dict):
+                continue
+            status = str(
+                market_status.get(str(market_name), "INSUFFICIENT")
+            ).upper()
+            if status != "RELIABLE":
+                config["enabled"] = False
+                config["disabled_reason"] = (
+                    "market-level probability/edge regime reliability "
+                    f"is {status.lower()}"
+                )
+
     promotion = _promotion_sample(raw_bets)
     diagnostics: dict[str, object] = {
         "selection_uses_evaluation": False,
         "raw_archive_rows": int(raw_bets.height),
         "promotion_rows": int(promotion.height),
+        "regime_reliability": regime_report.get("summary", {}),
     }
 
     if promotion.is_empty():

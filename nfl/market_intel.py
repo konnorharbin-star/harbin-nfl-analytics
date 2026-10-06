@@ -21,6 +21,7 @@ from .probability_runtime import (
     ScoreDistribution,
     build_operational_probability_distribution,
 )
+from .regime_reliability import assess_candidate_regime_reliability
 from .schedule_market import is_research_only_market
 
 
@@ -179,6 +180,37 @@ def build_market_intelligence(
             week=int(game["week"]),
             policy=active,
         )
+
+        regime_registry = active.get("regime_reliability")
+        regime_enforced = (
+            isinstance(regime_registry, dict)
+            and bool(regime_registry.get("fail_closed", False))
+        )
+        if regime_enforced:
+            regime_reliability = assess_candidate_regime_reliability(
+                regime_registry,
+                market_type=chosen.market_type,
+                side=chosen.side,
+                model_probability=chosen.model_probability,
+                no_vig_probability=chosen.no_vig_probability,
+                probability_edge=chosen.probability_edge,
+                projected_home_margin=float(game["baseline_home_margin"]),
+                projected_total=float(game["baseline_total"]),
+                line=chosen.line,
+                week=int(game["week"]),
+            )
+        else:
+            regime_reliability = {
+                "ready": True,
+                "status": "NOT_ENFORCED",
+                "reason": "regime reliability registry is not configured",
+                "matched_segments": {},
+                "blocked_segments": [],
+                "missing_segments": [],
+            }
+        if not bool(regime_reliability.get("ready", False)):
+            production_signal = "PASS"
+
         execution_verified = not is_research_only_market(source_market)
         signal = production_signal if execution_verified else "PASS"
         research_stake = 0.0
@@ -219,6 +251,23 @@ def build_market_intelligence(
             "probability_model_family": probability_meta.get("model_family"),
             "probability_reliability_ready": bool(
                 probability_meta.get("reliability_ready", False)
+            ),
+            "regime_reliability_ready": bool(
+                regime_reliability.get("ready", False)
+            ),
+            "regime_reliability_status": regime_reliability.get("status"),
+            "regime_reliability_reason": regime_reliability.get("reason"),
+            "regime_reliability_blocked_segments": ";".join(
+                str(value)
+                for value in regime_reliability.get(
+                    "blocked_segments", []
+                )
+            ),
+            "regime_reliability_missing_segments": ";".join(
+                str(value)
+                for value in regime_reliability.get(
+                    "missing_segments", []
+                )
             ),
             "model_margin_sigma": margin_sigma,
             "model_total_sigma": total_sigma,
@@ -301,6 +350,15 @@ def build_market_intelligence(
         "api_key_required": False,
         "probability_training_games": historical.height,
         "probability_model": probability_meta,
+        "regime_reliability": (
+            active.get("regime_reliability")
+            if isinstance(active.get("regime_reliability"), dict)
+            else {
+                "status": "NOT_CONFIGURED",
+                "operational_ready": False,
+                "fail_closed": False,
+            }
+        ),
         "release_state": "RESEARCH",
     }
     return frame.sort(["game_id", "quant_market"]) if not frame.is_empty() else frame, metadata

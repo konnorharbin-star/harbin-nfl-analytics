@@ -53,6 +53,15 @@ def test_team_features_calculate_offense_and_defense() -> None:
     assert a["off_rush_epa_per_attempt"] == pytest.approx(-0.5)
 
 
+def test_team_features_accept_float_down_values() -> None:
+    pbp = _pbp().with_columns(pl.col("down").cast(pl.Float64))
+    features = team_pbp_features(pregame_pbp(pbp, 2025, 3))
+
+    assert not features.is_empty()
+    a = features.filter(pl.col("team") == "A").row(0, named=True)
+    assert a["off_early_down_epa"] == pytest.approx((1.0 - 0.5) / 2)
+
+
 def test_target_week_plays_cannot_change_pregame_features() -> None:
     low = pregame_team_pbp_features(_pbp(target_week_epa=-20.0), 2025, 3)
     high = pregame_team_pbp_features(_pbp(target_week_epa=20.0), 2025, 3)
