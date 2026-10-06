@@ -229,9 +229,13 @@ def candidate_segment_keys(
     keys: dict[str, str] = {
         "market": f"market:{market}",
         "side": f"side:{market}:{side_name}",
-        "confidence": f"confidence:{_confidence_bucket(model_probability)}",
-        "edge": f"edge:{_edge_bucket(probability_edge)}",
-        "season_phase": f"season_phase:{_season_phase(week)}",
+        "confidence": (
+            f"confidence:{market}:{_confidence_bucket(model_probability)}"
+        ),
+        "edge": f"edge:{market}:{_edge_bucket(probability_edge)}",
+        "season_phase": (
+            f"season_phase:{market}:{_season_phase(week)}"
+        ),
     }
     role = _role(
         market_type=market,
@@ -244,11 +248,13 @@ def candidate_segment_keys(
 
     if market in {"moneyline", "spread"}:
         keys["margin_environment"] = (
-            f"margin_environment:{_margin_environment(projected_home_margin)}"
+            f"margin_environment:{market}:"
+            f"{_margin_environment(projected_home_margin)}"
         )
     if market == "total":
         keys["total_environment"] = (
-            f"total_environment:{_total_environment(projected_total)}"
+            f"total_environment:{market}:"
+            f"{_total_environment(projected_total)}"
         )
     return keys
 
