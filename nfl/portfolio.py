@@ -11,7 +11,7 @@ from pathlib import Path
 
 import polars as pl
 
-from .execution_market import validate_execution_row
+from .execution_market import recommendation_freshness, validate_execution_row
 from .performance_feedback import build_performance_feedback, performance_feedback_for_row
 from .policy import load_policy
 
@@ -447,11 +447,17 @@ def apply_portfolio_controls(
         row["portfolio_action"] = "PASS"
         row["portfolio_limit_reason"] = ""
 
+        freshness = recommendation_freshness(row, limits=limits, now=now)
+        row.update(freshness)
         executable, reason = validate_execution_row(row, limits=limits, now=now)
-        row["execution_ready"] = executable
-        if not executable:
+        row["execution_ready"] = executable and freshness["recommendation_status"] == "ACTIVE"
+        if not row["execution_ready"]:
             blocked += 1
-            row["portfolio_limit_reason"] = reason
+            row["portfolio_limit_reason"] = (
+                reason
+                if not executable
+                else str(freshness["recommendation_freshness_reason"])
+            )
             # A non-executable quote must not consume portfolio capacity in any
             # mode. PAPER/SHADOW retain the research signal for diagnostics, but
             # portfolio allocation is reserved for timestamp-valid pre-kickoff
@@ -561,4 +567,12 @@ def apply_portfolio_controls(
             1 for row in rows if row.get("portfolio_action") == "BET"
         ),
         "execution_blocked_bets": blocked,
+        "active_recommendations": sum(
+            str(row.get("recommendation_status") or "").upper() == "ACTIVE"
+            for row in rows
+        ),
+        "expired_recommendations": sum(
+            str(row.get("recommendation_status") or "").upper() == "EXPIRED"
+            for row in rows
+        ),
     }

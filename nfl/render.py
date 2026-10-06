@@ -114,6 +114,9 @@ def _signal(
 ) -> str:
     if not row or row.get("execution_ready") is not True:
         return ""
+    freshness = str(row.get("recommendation_status") or "ACTIVE").upper()
+    if freshness != "ACTIVE":
+        return ""
 
     # Public bet badges must be evidence-gated. Exploratory research signals
     # remain in machine-readable outputs, but PAPER/SHADOW boards must not present
@@ -129,6 +132,22 @@ def _signal(
         raw = row.get("quant_signal", row.get("production_signal", "PASS"))
     value = str(raw or "PASS").upper()
     return "" if value == "PASS" else value
+
+
+def _expiry_text(row: dict[str, object] | None) -> str:
+    if not row:
+        return ""
+    raw = row.get("recommendation_valid_until")
+    if raw in {None, ""}:
+        return ""
+    try:
+        stamp = datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+    except ValueError:
+        return ""
+    if stamp.tzinfo is None:
+        return ""
+    local = stamp.astimezone(ZoneInfo("America/Chicago"))
+    return f"exp {local.strftime('%I:%M %p').lstrip('0')} CT"
 
 
 def _moneyline_text(row: dict[str, object] | None) -> str | None:
@@ -257,7 +276,15 @@ def _market_html(
         parts.append(f'<span class="projtot">{html.escape(projection)}</span>')
     if signal:
         parts.append(_badge_html(signal))
-    return " ".join(parts)
+        expiry = _expiry_text(row)
+        if expiry:
+            parts.append(f'<span class="expiry">{html.escape(expiry)}</span>')
+    value = " ".join(parts)
+    valid_until = str((row or {}).get("recommendation_valid_until") or "")
+    if signal and valid_until:
+        escaped = html.escape(valid_until, quote=True)
+        return f'<span class="market" data-valid-until="{escaped}">{value}</span>'
+    return value
 
 
 def _has_live_market(board: pl.DataFrame) -> bool:
@@ -310,7 +337,9 @@ def render_html(
             ".badge{font-size:8px;font-weight:800;border-radius:4px;padding:3px 5px;",
             "margin-left:4px}.strong{background:#5fc468;color:#0c2c12}",
             ".bet{background:#1f462a;color:#63c76d}",
-            ".lean{background:#483b1e;color:#e3b549}.nav{text-align:center;padding:14px}",
+            ".lean{background:#483b1e;color:#e3b549}.expired{background:#34383d;color:#b0b4b8}",
+            ".expiry{font-size:8px;color:#777c81;margin-left:4px}.market-expired{color:#777c81}",
+            ".market-expired .expiry{color:#d6a44b}.nav{text-align:center;padding:14px}",
             ".nav button{background:#202328;border:1px solid #373b40;color:#eee;",
             "border-radius:5px;padding:6px 10px;margin:2px}",
             ".c1{width:23%}.c2{width:7%}.c3{width:9%}.c4{width:23%}",
@@ -404,7 +433,15 @@ def render_html(
         f'<title>NFL Model Week {week}</title><style>{css}</style></head><body>'
         f'<div class="shell">{"".join(pages)}<div class="nav">{nav}</div></div>'
         '<script>function show(n){document.querySelectorAll(".page").forEach('
-        '(e,i)=>e.style.display=i===n-1?"block":"none")}show(1)</script></body></html>'
+        '(e,i)=>e.style.display=i===n-1?"block":"none")}'
+        'function expireMarkets(){const now=Date.now();'
+        'document.querySelectorAll(".market[data-valid-until]").forEach(e=>{'
+        'const expiry=Date.parse(e.dataset.validUntil||"");'
+        'if(Number.isFinite(expiry)&&now>=expiry){e.classList.add("market-expired");'
+        'e.querySelectorAll(".badge").forEach(b=>{b.textContent="EXPIRED";'
+        'b.className="badge expired"});const x=e.querySelector(".expiry");'
+        'if(x)x.textContent="expired"}})}show(1);expireMarkets();'
+        'setInterval(expireMarkets,15000)</script></body></html>'
     )
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -477,7 +514,10 @@ def _draw_market(
         draw.text((next_x, y + 2), projection, font=small_font, fill=(143, 147, 151))
         next_x += _text_width(draw, projection, small_font) + 5
     if active:
-        _draw_badge(draw, next_x, y, signal, badge_font)
+        next_x += _draw_badge(draw, next_x, y, signal, badge_font)
+        expiry = _expiry_text(row)
+        if expiry:
+            draw.text((next_x, y + 2), expiry, font=small_font, fill=MUTED)
 
 
 def render_png(

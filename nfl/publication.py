@@ -563,6 +563,12 @@ def _card_columns(current: pl.DataFrame) -> list[str]:
         "quant_edge",
         "quant_ev",
         "market_book_count",
+        "quant_quote_at",
+        "quote_age_minutes",
+        "recommendation_status",
+        "recommendation_valid_until",
+        "recommendation_minutes_remaining",
+        "recommendation_freshness_reason",
         "paper_stake_units",
         "portfolio_candidate_units",
         "portfolio_stake_units",
@@ -599,18 +605,30 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
         and signal_column is not None
         and "execution_ready" in card.columns
     ):
+        active_freshness = (
+            pl.col("recommendation_status").fill_null("ACTIVE") == "ACTIVE"
+            if "recommendation_status" in card.columns
+            else pl.lit(True)
+        )
         suggestions = card.filter(
             pl.col("execution_ready").fill_null(False)
+            & active_freshness
             & (pl.col(signal_column).fill_null("PASS") != "PASS")
         )
 
     required = {"portfolio_action", "portfolio_candidate_units", "execution_ready"}
     recommendations = card.head(0)
     if not card.is_empty() and required.issubset(card.columns):
+        active_freshness = (
+            pl.col("recommendation_status").fill_null("ACTIVE") == "ACTIVE"
+            if "recommendation_status" in card.columns
+            else pl.lit(True)
+        )
         recommendations = card.filter(
             pl.col("portfolio_action").is_in(["PAPER", "SHADOW", "BET"])
             & (pl.col("portfolio_candidate_units") > 0)
             & pl.col("execution_ready").fill_null(False)
+            & active_freshness
         )
 
     if columns:
@@ -634,22 +652,27 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
         portfolio_display = portfolio_action
         if portfolio_action == "PASS" and limit_reason:
             portfolio_display = f"PASS · {limit_reason}"
+        valid_until = html.escape(
+            str(row.get("recommendation_valid_until") or ""),
+            quote=True,
+        )
         rows.append(
-            "<tr>"
+            f'<tr class="recommendation-row" data-valid-until="{valid_until}">'
             f"<td>{html.escape(str(row.get('away_team', '')))} @ "
             f"{html.escape(str(row.get('home_team', '')))}</td>"
-            f"<td>{html.escape(str(signal))}</td>"
+            f'<td data-role="signal">{html.escape(str(signal))}</td>'
             f"<td>{html.escape(str(row.get('quant_market', '')))}</td>"
             f"<td>{html.escape(str(row.get('quant_side', '')))}</td>"
             f"<td>{html.escape(str(row.get('quant_price', '')))}</td>"
             f"<td>{html.escape(str(row.get('quant_odds', '')))}</td>"
             f"<td>{html.escape(str(row.get('quant_book', '')))}</td>"
-            f"<td>{html.escape(portfolio_display)}</td>"
+            f"<td>{html.escape(str(row.get('recommendation_valid_until', '')))}</td>"
+            f'<td data-role="portfolio">{html.escape(portfolio_display)}</td>'
             "</tr>"
         )
     body = (
         "".join(rows)
-        or '<tr><td colspan="8">No current executable model suggestions.</td></tr>'
+        or '<tr><td colspan="9">No current executable model suggestions.</td></tr>'
     )
     document = (
         "<!doctype html><html><head><meta charset=\"utf-8\">"
@@ -657,14 +680,23 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
         "<title>Harbin NFL Quant Card</title><style>"
         "body{background:#0f1113;color:#f0f1f2;font-family:Arial,sans-serif;margin:24px}"
         "table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid #333}"
-        "th{text-align:left;color:#969ba1}a{color:#74a7ff}</style></head><body>"
+        "th{text-align:left;color:#969ba1}a{color:#74a7ff}"
+        ".recommendation-row.expired{color:#777c81}</style></head><body>"
         "<h1>Harbin NFL · Model Suggestions</h1>"
-        "<p>Current executable research/PAPER signals. Portfolio action is shown "
-        "separately and remains authoritative for allocation or real execution.</p>"
+        "<p>Current executable evidence-gated signals only. Every recommendation "
+        "has a hard expiration; portfolio action remains authoritative.</p>"
         "<p><a href=\"./\">← Weekly board</a> · <a href=\"audit.html\">System audit</a></p>"
         "<table><thead><tr><th>Matchup</th><th>Signal</th><th>Market</th><th>Side</th>"
-        "<th>Line</th><th>Odds</th><th>Book</th><th>Portfolio</th></tr></thead>"
-        f"<tbody>{body}</tbody></table></body></html>"
+        "<th>Line</th><th>Odds</th><th>Book</th><th>Valid until</th>"
+        "<th>Portfolio</th></tr></thead>"
+        f"<tbody>{body}</tbody></table>"
+        "<script>function expireRows(){const now=Date.now();"
+        "document.querySelectorAll('.recommendation-row[data-valid-until]').forEach(r=>{"
+        "const expiry=Date.parse(r.dataset.validUntil||'');"
+        "if(Number.isFinite(expiry)&&now>=expiry){r.classList.add('expired');"
+        "const s=r.querySelector('[data-role=signal]');if(s)s.textContent='EXPIRED';"
+        "const p=r.querySelector('[data-role=portfolio]');if(p)p.textContent='EXPIRED';}})}"
+        "expireRows();setInterval(expireRows,15000)</script></body></html>"
     )
     (output_dir / "quant_card.html").write_text(document)
     (docs_dir / "quant.html").write_text(document)

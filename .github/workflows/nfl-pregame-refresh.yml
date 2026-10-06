@@ -1,0 +1,48 @@
+name: NFL Pregame Freshness Refresh
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Sunday: covers international, early, late, and SNF pregame windows.
+    - cron: "*/15 11-23 * 1,9-12 0"
+    # Early Monday UTC catches SNF; late Monday/early Tuesday catches MNF.
+    - cron: "*/15 0-4 * 1,9-12 1"
+    - cron: "*/15 22-23 * 1,9-12 1"
+    - cron: "*/15 0-4 * 1,9-12 2"
+    # Thursday night and early Friday UTC.
+    - cron: "*/15 22-23 * 1,9-12 4"
+    - cron: "*/15 0-4 * 1,9-12 5"
+    # Late-season Saturday NFL windows.
+    - cron: "*/15 11-23 * 1,12 6"
+
+permissions:
+  contents: write
+
+jobs:
+  check-window:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      run: ${{ steps.check.outputs.run }}
+      season: ${{ steps.check.outputs.season }}
+      week: ${{ steps.check.outputs.week }}
+      checkpoint: ${{ steps.check.outputs.checkpoint }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: check
+        name: Check 120/75/20-minute freshness windows
+        shell: bash
+        run: |
+          python3 scripts/should_pregame_refresh.py \
+            --report outputs/current_model.json \
+            --github-output "$GITHUB_OUTPUT"
+
+  refresh:
+    needs: check-window
+    if: needs.check-window.outputs.run == 'true'
+    uses: ./.github/workflows/nfl-model.yml
+    with:
+      season: ${{ needs.check-window.outputs.season }}
+      week: ${{ needs.check-window.outputs.week }}
+      history_seasons: "4"
+    secrets: inherit

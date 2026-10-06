@@ -6,7 +6,7 @@ import polars as pl
 
 from nfl.decision_ledger import append_portfolio_decisions
 from nfl.espn_market import ESPNTwoWayMarket
-from nfl.execution_market import validate_execution_row
+from nfl.execution_market import recommendation_freshness, validate_execution_row
 from nfl.grading import grade_portfolio_decisions, summarize_live_grading
 from nfl.line_history import append_market_snapshots, load_market_snapshots
 from nfl.policy import DEFAULT_POLICY, fractional_kelly_units, signal_from_policy
@@ -52,8 +52,56 @@ def test_policy_and_kelly_are_conservative() -> None:
     assert isinstance(portfolio, dict)
     assert portfolio["min_market_book_count_for_execution"] == 1
     assert portfolio["require_open_exposure_ledger_for_production"] is True
+    assert portfolio["max_public_recommendation_age_minutes"] == 45
+    assert portfolio["min_minutes_to_kickoff_for_execution"] == 5
     units = fractional_kelly_units(0.58, -110, kelly_fraction=0.20, max_units=1.0)
     assert 0.0 < units <= 1.0
+
+
+
+def test_recommendation_freshness_expires_at_earliest_guardrail() -> None:
+    now = datetime(2026, 10, 4, 12, 0, tzinfo=UTC)
+    row = _candidate(
+        quant_quote_at=(now - timedelta(minutes=30)).isoformat(),
+        kickoff=(now + timedelta(hours=4)).isoformat(),
+    )
+    freshness = recommendation_freshness(
+        row,
+        limits={
+            "max_quote_age_minutes": 60,
+            "max_public_recommendation_age_minutes": 45,
+            "min_minutes_to_kickoff_for_execution": 5,
+        },
+        now=now,
+    )
+
+    assert freshness["recommendation_status"] == "ACTIVE"
+    assert freshness["quote_age_minutes"] == 30.0
+    assert freshness["recommendation_minutes_remaining"] == 30.0
+    assert freshness["recommendation_valid_until"] == (
+        now + timedelta(minutes=30)
+    ).isoformat()
+
+
+def test_execution_market_rejects_inside_kickoff_buffer() -> None:
+    now = datetime(2026, 10, 4, 12, 0, tzinfo=UTC)
+    row = _candidate(
+        quant_quote_at=(now - timedelta(minutes=1)).isoformat(),
+        kickoff=(now + timedelta(minutes=4)).isoformat(),
+    )
+    ready, reason = validate_execution_row(
+        row,
+        limits={
+            "require_quote_timestamp_for_execution": True,
+            "max_quote_age_minutes": 60,
+            "max_public_recommendation_age_minutes": 45,
+            "min_minutes_to_kickoff_for_execution": 5,
+        },
+        now=now,
+    )
+
+    assert ready is False
+    assert "pre-kickoff execution buffer" in reason
 
 
 def test_execution_market_rejects_stale_quote() -> None:
@@ -116,6 +164,7 @@ def test_paper_invalid_quote_does_not_consume_portfolio_capacity(tmp_path) -> No
     assert summary["mode"] == "paper"
     assert summary["execution_blocked_bets"] == 1
     assert summary["paper_or_shadow_allocated_units"] == 0.0
+    assert frame.get_column("recommendation_status")[0] == "EXPIRED"
     assert frame.get_column("portfolio_candidate_units").sum() == 0.0
     assert frame.get_column("portfolio_stake_units").sum() == 0.0
     assert frame.get_column("portfolio_action")[0] == "PASS"
