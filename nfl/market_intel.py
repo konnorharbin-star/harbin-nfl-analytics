@@ -17,7 +17,10 @@ from .policy import (
     signal_from_policy,
 )
 from .pregame import kickoff_iso_map
-from .probability import GaussianScoreDistribution
+from .probability_runtime import (
+    ScoreDistribution,
+    build_operational_probability_distribution,
+)
 from .schedule_market import is_research_only_market
 
 
@@ -26,7 +29,7 @@ def _book_key(market: ESPNTwoWayMarket) -> str:
 
 
 def _pair_best(
-    distribution: GaussianScoreDistribution,
+    distribution: ScoreDistribution,
     game: dict[str, object],
     market: ESPNTwoWayMarket,
 ) -> MarketComparison:
@@ -102,8 +105,28 @@ def build_market_intelligence(
     kelly_fraction = float(portfolio.get("kelly_fraction", 0.20))
     max_units = float(portfolio.get("max_single_bet_units", 1.0))
 
-    distribution = GaussianScoreDistribution().fit(historical)
-    projected = {str(row["game_id"]): row for row in projection.iter_rows(named=True)}
+    projection_seasons = (
+        projection.get_column("season")
+        .cast(pl.Int64, strict=False)
+        .drop_nulls()
+        .unique()
+        .to_list()
+    )
+    if len(projection_seasons) != 1:
+        raise DataContractError(
+            "current projection must contain exactly one NFL season"
+        )
+    current_season = int(projection_seasons[0])
+    distribution, probability_meta = (
+        build_operational_probability_distribution(
+            historical,
+            current_season=current_season,
+        )
+    )
+    projected = {
+        str(row["game_id"]): row
+        for row in projection.iter_rows(named=True)
+    }
     kickoff = kickoff_iso_map(targets)
 
     grouped: dict[
@@ -167,8 +190,19 @@ def build_market_intelligence(
                 max_units=max_units,
             )
         stake = research_stake if signal != "PASS" else 0.0
+        baseline_margin = float(game["baseline_home_margin"])
+        baseline_total = float(game["baseline_total"])
         home_probability = distribution.home_win_probability(
-            float(game["baseline_home_margin"])
+            baseline_margin,
+            baseline_total,
+        )
+        margin_sigma = distribution.margin_sigma_for(
+            baseline_margin,
+            baseline_total,
+        )
+        total_sigma = distribution.total_sigma_for(
+            baseline_total,
+            baseline_margin,
         )
 
         row: dict[str, object] = {
@@ -182,6 +216,12 @@ def build_market_intelligence(
             "model_margin_home": float(game["baseline_home_margin"]),
             "model_total": float(game["baseline_total"]),
             "calibrated_home_probability": home_probability,
+            "probability_model_family": probability_meta.get("model_family"),
+            "probability_reliability_ready": bool(
+                probability_meta.get("reliability_ready", False)
+            ),
+            "model_margin_sigma": margin_sigma,
+            "model_total_sigma": total_sigma,
             "quant_signal": signal,
             "research_signal": research_signal,
             "production_signal": production_signal,
@@ -260,6 +300,7 @@ def build_market_intelligence(
         "market_source": "canonical current NFL market aggregation",
         "api_key_required": False,
         "probability_training_games": historical.height,
+        "probability_model": probability_meta,
         "release_state": "RESEARCH",
     }
     return frame.sort(["game_id", "quant_market"]) if not frame.is_empty() else frame, metadata
