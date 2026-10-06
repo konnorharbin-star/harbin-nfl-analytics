@@ -7,7 +7,10 @@ from dataclasses import asdict, dataclass
 import polars as pl
 
 from .data import NFLDataClient
-from .probability import evaluate_probability_holdout
+from .probability import (
+    evaluate_conditional_probability_holdout,
+    evaluate_probability_holdout,
+)
 from .recency import build_score_walkforward
 
 
@@ -32,6 +35,21 @@ class ProbabilityAudit:
     margin_80_coverage: float
     total_50_coverage: float
     total_80_coverage: float
+    gaussian_candidate_pass: bool
+    conditional_margin_scale: float
+    conditional_total_scale: float
+    conditional_margin_df: float
+    conditional_total_df: float
+    conditional_margin_strength: float
+    conditional_total_strength: float
+    conditional_margin_nll: float
+    conditional_total_nll: float
+    conditional_margin_80_coverage: float
+    conditional_total_80_coverage: float
+    conditional_margin_nll_improvement: float
+    conditional_total_nll_improvement: float
+    conditional_margin_candidate_pass: bool
+    conditional_total_candidate_pass: bool
     candidate_pass: bool
 
     def to_dict(self) -> dict[str, object]:
@@ -77,8 +95,14 @@ def run_probability_audit(
         validation_season=validation_season,
         holdout_season=holdout_season,
     )
+    conditional = evaluate_conditional_probability_holdout(
+        dataset,
+        validation_season=validation_season,
+        holdout_season=holdout_season,
+    )
     calibrated = evaluation.holdout_calibrated
     baseline = evaluation.holdout_uncalibrated
+    conditional_metrics = conditional.holdout_candidate
     return ProbabilityAudit(
         seasons=seasons,
         rows=dataset.height,
@@ -99,5 +123,20 @@ def run_probability_audit(
         margin_80_coverage=calibrated.margin_80_coverage,
         total_50_coverage=calibrated.total_50_coverage,
         total_80_coverage=calibrated.total_80_coverage,
-        candidate_pass=evaluation.candidate_pass,
+        gaussian_candidate_pass=evaluation.candidate_pass,
+        conditional_margin_scale=conditional.margin_scale,
+        conditional_total_scale=conditional.total_scale,
+        conditional_margin_df=conditional.margin_df,
+        conditional_total_df=conditional.total_df,
+        conditional_margin_strength=conditional.margin_strength,
+        conditional_total_strength=conditional.total_strength,
+        conditional_margin_nll=conditional_metrics.margin_nll,
+        conditional_total_nll=conditional_metrics.total_nll,
+        conditional_margin_80_coverage=conditional_metrics.margin_80_coverage,
+        conditional_total_80_coverage=conditional_metrics.total_80_coverage,
+        conditional_margin_nll_improvement=conditional.margin_nll_improvement,
+        conditional_total_nll_improvement=conditional.total_nll_improvement,
+        conditional_margin_candidate_pass=conditional.margin_candidate_pass,
+        conditional_total_candidate_pass=conditional.total_candidate_pass,
+        candidate_pass=conditional.candidate_pass,
     )
