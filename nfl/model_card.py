@@ -70,6 +70,7 @@ def build_model_card(
             "conditional_uncertainty_requires_untouched_holdout_gain": True,
             "moneyline_calibration_requires_untouched_holdout_gain": True,
             "reliability_gate_required": True,
+            "regime_edge_reliability_required": True,
             "holdout": meta.get("probability", {}),
         },
         "markets": {
@@ -89,6 +90,14 @@ def build_model_card(
             "stale_or_unknown_context_blocks_betting": True,
             "probability_reliability_required": True,
             "unvalidated_probability_model_blocks_betting": True,
+            "regime_edge_reliability_required": True,
+            "unreliable_or_undersampled_regime_blocks_betting": True,
+            "regime_reliability_ready": bool(
+                gate.get("regime_reliability_ready", False)
+            ),
+            "reliable_regime_markets": gate.get(
+                "reliable_regime_markets", []
+            ),
             "production_policy_mode": production_policy.get(
                 "deployment_mode", "paper"
             ),
@@ -143,6 +152,15 @@ def build_model_card(
             (
                 "The 58%-62% confidence band is audited explicitly when the holdout "
                 "contains an adequate sample."
+            ),
+            (
+                "Market, side, favorite/underdog role, confidence, edge-size, "
+                "scoring environment, and season-phase regimes must validate on "
+                "both a validation season and a later untouched holdout."
+            ),
+            (
+                "A current opportunity in an unreliable or undersampled required "
+                "regime fails closed instead of inheriting a global average edge."
             ),
             "Historical archive fallbacks do not become verified opening entries by relabeling.",
             "No production staking until every hard release gate passes.",
