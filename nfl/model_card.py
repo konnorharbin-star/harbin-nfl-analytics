@@ -56,7 +56,10 @@ def build_model_card(
             "fair_score": "ridge-regularized team offense/defense scoring model",
             "sportsbook_prices_in_score_model": False,
             "prior_season_weight": 0.10,
-            "quarterback_layer": "separate NFL-specific research/shadow subsystem",
+            "quarterback_layer": (
+                "historical QB shadow subsystem plus current expected-starter "
+                "identity/certainty gate"
+            ),
         },
         "probability": {
             "method": "chronologically fitted Gaussian score residual distribution",
@@ -74,6 +77,8 @@ def build_model_card(
             "portfolio_caps": True,
             "drawdown_throttle": True,
             "production_requires_release_gate": True,
+            "expected_starting_qb_required": True,
+            "uncertain_or_changed_qb_blocks_betting": True,
             "production_policy_mode": production_policy.get(
                 "deployment_mode", "paper"
             ),
@@ -109,6 +114,14 @@ def build_model_card(
             "No sportsbook line in the independent fair-score engine.",
             "NFL parameters are validated independently from CFB.",
             "Missing quotes/context are not invented.",
+            (
+                "Current betting requires an identified, decision-ready expected "
+                "starting QB for both teams."
+            ),
+            (
+                "A starter change relative to the last-observed QB remains "
+                "betting-blocked until a validated replacement-QB adjustment exists."
+            ),
             "Historical archive fallbacks do not become verified opening entries by relabeling.",
             "No production staking until every hard release gate passes.",
         ],

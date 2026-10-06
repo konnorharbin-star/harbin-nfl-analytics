@@ -21,6 +21,7 @@ from .portfolio import apply_portfolio_controls
 from .pro_market import collect_current_markets
 from .probability import evaluate_probability_holdout
 from .proof import write_evidence_report
+from .qb_current import apply_qb_certainty_veto
 from .recent_form_current import (
     attach_current_recent_form_shadow,
     blocked_recent_form_shadow,
@@ -68,7 +69,7 @@ def _probability_meta(historical: pl.DataFrame, season: int) -> dict[str, object
     }
 
 
-def _qb_coverage(projection: pl.DataFrame) -> float:
+def _qb_proxy_coverage(projection: pl.DataFrame) -> float:
     if projection.is_empty():
         return 0.0
     required = {"home_qb_proxy_id", "away_qb_proxy_id"}
@@ -108,14 +109,24 @@ def _merge_context_meta(
     context_meta: dict[str, object],
     projection: pl.DataFrame,
 ) -> dict[str, object]:
-    qb = _qb_coverage(projection)
+    proxy_coverage = _qb_proxy_coverage(projection)
+    identity_coverage = float(
+        context_meta.get("expected_qb_identity_coverage", 0.0) or 0.0
+    )
+    decision_ready = float(
+        context_meta.get("qb_decision_ready_coverage", 0.0) or 0.0
+    )
     components = context_meta.get("components")
     if not isinstance(components, dict):
         components = {}
     combined = {
-        "quarterback": qb,
-        "injuries_personnel": float(components.get("injuries_personnel", 0.0) or 0.0),
-        "weather_stadium": float(components.get("weather_stadium", 0.0) or 0.0),
+        "quarterback": decision_ready,
+        "injuries_personnel": float(
+            components.get("injuries_personnel", 0.0) or 0.0
+        ),
+        "weather_stadium": float(
+            components.get("weather_stadium", 0.0) or 0.0
+        ),
         "rest_travel": float(components.get("rest_travel", 0.0) or 0.0),
     }
     coverage = sum(combined.values()) / len(combined)
@@ -124,7 +135,9 @@ def _merge_context_meta(
         {
             "status": "READY" if min(combined.values()) >= 0.90 else "PARTIAL",
             "coverage": coverage,
-            "qb_coverage": qb,
+            "qb_coverage": decision_ready,
+            "qb_identity_coverage": identity_coverage,
+            "qb_proxy_coverage": proxy_coverage,
             "components": combined,
             "score_adjustment_enabled": False,
         }
@@ -309,6 +322,7 @@ def run_operational_pipeline(
             injuries=context_frames["injuries"],
             depth_charts=context_frames["depth_charts"],
             rosters=context_frames["rosters_weekly"],
+            projection=projection,
             as_of=run_at,
         )
     except Exception as exc:
@@ -324,6 +338,7 @@ def run_operational_pipeline(
     context = _merge_context_meta(raw_context_meta, projection)
     if not candidates.is_empty() and not context_frame.is_empty():
         candidates = candidates.join(context_frame, on="game_id", how="left")
+    candidates = apply_qb_certainty_veto(candidates)
     candidates = apply_context_confidence_veto(candidates)
 
     evidence = write_evidence_report()

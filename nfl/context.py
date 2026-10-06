@@ -14,7 +14,16 @@ import polars as pl
 
 from .contracts import DataContractError, require_columns
 from .injuries import normalize_injuries, summarize_team_injuries
-from .personnel import normalize_depth_charts, normalize_rosters, summarize_team_personnel
+from .personnel import (
+    normalize_depth_charts,
+    normalize_rosters,
+    summarize_team_personnel,
+)
+from .qb_current import (
+    attach_expected_qb_context,
+    build_expected_qb_state,
+    qb_game_coverage,
+)
 from .weather import (
     TEAM_HOME,
     OpenMeteoNFLWeather,
@@ -182,6 +191,7 @@ def build_current_context(
     injuries: pl.DataFrame | None = None,
     depth_charts: pl.DataFrame | None = None,
     rosters: pl.DataFrame | None = None,
+    projection: pl.DataFrame | None = None,
     as_of: datetime | None = None,
     weather_client: OpenMeteoNFLWeather | None = None,
     allow_historical: bool = False,
@@ -245,6 +255,33 @@ def build_current_context(
         normalized_rosters,
         normalized_injuries,
     )
+
+    qb_state = pl.DataFrame()
+    qb_state_meta: dict[str, object] = {
+        "identity_coverage": 0.0,
+        "decision_ready_team_coverage": 0.0,
+        "status": "BLOCKED",
+        "reason": "current projection was not supplied for QB reconciliation",
+    }
+    if projection is not None and not projection.is_empty():
+        try:
+            qb_state, qb_state_meta = build_expected_qb_state(
+                targets,
+                projection,
+                depth=normalized_depth,
+                rosters=normalized_rosters,
+                injuries=normalized_injuries,
+                as_of=stamp,
+            )
+            qb_state_meta["status"] = "READY"
+        except Exception as exc:
+            qb_state = pl.DataFrame()
+            qb_state_meta = {
+                "identity_coverage": 0.0,
+                "decision_ready_team_coverage": 0.0,
+                "status": "BLOCKED",
+                "reason": f"{type(exc).__name__}: {exc}",
+            }
 
     injury_map = _team_map(injury_summary)
     personnel_map = _team_map(personnel_summary)
@@ -437,6 +474,9 @@ def build_current_context(
         )
 
     context = pl.DataFrame(rows).sort("game_id") if rows else pl.DataFrame()
+    if not context.is_empty() and not qb_state.is_empty():
+        context = attach_expected_qb_context(context, targets, qb_state)
+    qb_coverage = qb_game_coverage(context)
     games = max(1, targets.height)
     coverage = {name: count / games for name, count in component_counts.items()}
     meta = {
@@ -451,6 +491,9 @@ def build_current_context(
         "roster_feed_available": roster_feed_available,
         "weather_errors": weather_errors,
         "as_of": stamp.isoformat(),
+        "expected_qb_identity_coverage": qb_coverage["identity_coverage"],
+        "qb_decision_ready_coverage": qb_coverage["decision_ready_coverage"],
+        "expected_qb_state": qb_state_meta,
         "score_adjustment_enabled": False,
         "note": (
             "Context is post-prediction risk/confidence only until NFL point-in-time "
