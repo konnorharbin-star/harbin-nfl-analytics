@@ -88,6 +88,13 @@ def build_evidence_report(
                 archive_verified = bets.filter(
                     _bool_column(bets, "entry_price_verified")
                 )
+                if "probability_reliability_ready" in archive_verified.columns:
+                    archive_verified = archive_verified.filter(
+                        _bool_column(
+                            archive_verified,
+                            "probability_reliability_ready",
+                        )
+                    )
         excluded_unverified = raw_rows - archive_verified.height
 
     provider_verified = pl.DataFrame()
@@ -108,6 +115,13 @@ def build_evidence_report(
                 _bool_column(provider_bets, "entry_price_verified")
                 & _bool_column(provider_bets, "entry_quote_verified")
             )
+            if "probability_reliability_ready" in provider_verified.columns:
+                provider_verified = provider_verified.filter(
+                    _bool_column(
+                        provider_verified,
+                        "probability_reliability_ready",
+                    )
+                )
 
     verified_frames = [
         frame
@@ -226,7 +240,9 @@ def build_evidence_report(
             "Free nflverse archive-final fallbacks and opening-line observations without "
             "opening juice remain valid research observations, but they are not promotion-quality "
             "entry-price evidence. ESPN provider-labeled archived opening/closing stages "
-            "qualify without fabricating timestamps. ROBUST status requires verified entry "
+            "qualify without fabricating timestamps. When probability reliability provenance "
+            "is present, only rows that cleared the chronological reliability gate can enter "
+            "promotion evidence. ROBUST status requires verified entry "
             "prices plus positive "
             "uncertainty-adjusted ROI/CLV across multiple markets and seasons with "
             "broad closing-snapshot coverage."
