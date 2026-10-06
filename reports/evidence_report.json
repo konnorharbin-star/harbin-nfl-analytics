@@ -108,7 +108,7 @@
       "wins": 289
     }
   },
-  "note": "Free nflverse archive-final fallbacks and opening-line observations without opening juice remain valid research observations, but they are not promotion-quality entry-price evidence. ESPN provider-labeled archived opening/closing stages qualify without fabricating timestamps. ROBUST status requires verified entry prices plus positive uncertainty-adjusted ROI/CLV across multiple markets and seasons with broad closing-snapshot coverage.",
+  "note": "Free nflverse archive-final fallbacks and opening-line observations without opening juice remain valid research observations, but they are not promotion-quality entry-price evidence. ESPN provider-labeled archived opening/closing stages qualify without fabricating timestamps. When probability reliability provenance is present, only rows that cleared the chronological reliability gate can enter promotion evidence. ROBUST status requires verified entry prices plus positive uncertainty-adjusted ROI/CLV across multiple markets and seasons with broad closing-snapshot coverage.",
   "overall": {
     "average_clv_proxy": null,
     "average_expected_value_per_unit": 0.18727567027766828,
@@ -125,82 +125,82 @@
     "wins": 1115
   },
   "promotion_sample": {
-    "avg_verified_clv_proxy": 0.06351649044003474,
+    "avg_verified_clv_proxy": 0.06351649044003473,
     "by_market": {
       "moneyline": {
-        "average_clv_proxy": 0.002354807850648686,
-        "average_expected_value_per_unit": 0.2699312108424267,
+        "average_clv_proxy": 0.0023548078506486843,
+        "average_expected_value_per_unit": 0.26993121084242677,
         "average_probability_edge": 0.09582428137918828,
         "bets": 456,
         "clv_samples": 455,
         "losses": 293,
-        "max_drawdown": 45.48464921060663,
-        "net_units": -39.45260537422521,
+        "max_drawdown": 66.60963140840171,
+        "net_units": -39.452605374225215,
         "pushes": 1,
-        "roi_ci_95_high": 0.04239930881949737,
-        "roi_ci_95_low": -0.21555700285594256,
-        "roi_per_unit_staked": -0.08651887143470441,
+        "roi_ci_95_high": 0.042912294755515855,
+        "roi_ci_95_low": -0.21696224376846257,
+        "roi_per_unit_staked": -0.08651887143470442,
         "wins": 162
       },
       "spread": {
         "average_clv_proxy": 0.1670616113744076,
-        "average_expected_value_per_unit": 0.13351610043164505,
-        "average_probability_edge": 0.09289877371219507,
+        "average_expected_value_per_unit": 0.13351610043164508,
+        "average_probability_edge": 0.09289877371219504,
         "bets": 423,
         "clv_samples": 422,
         "losses": 216,
-        "max_drawdown": 40.612380565379375,
+        "max_drawdown": 45.33840795657299,
         "net_units": -33.56719893541515,
         "pushes": 9,
-        "roi_ci_95_high": 0.010708878280473202,
-        "roi_ci_95_low": -0.1700137300179242,
+        "roi_ci_95_high": 0.015104580666185202,
+        "roi_ci_95_low": -0.16698172964710076,
         "roi_per_unit_staked": -0.07935508022556773,
         "wins": 198
       },
       "total": {
         "average_clv_proxy": 0.026004728132387706,
-        "average_expected_value_per_unit": 0.10992244302454571,
-        "average_probability_edge": 0.08085406273158006,
+        "average_expected_value_per_unit": 0.10992244302454572,
+        "average_probability_edge": 0.08085406273158009,
         "bets": 424,
         "clv_samples": 423,
         "losses": 219,
-        "max_drawdown": 53.97729154903065,
-        "net_units": -31.45563855206448,
+        "max_drawdown": 39.189781220989694,
+        "net_units": -31.455638552064485,
         "pushes": 0,
-        "roi_ci_95_high": 0.0162409757360033,
-        "roi_ci_95_low": -0.16589934116360897,
+        "roi_ci_95_high": 0.01717823278025839,
+        "roi_ci_95_low": -0.16991765264584138,
         "roi_per_unit_staked": -0.07418782677373699,
         "wins": 205
       }
     },
     "by_season": {
       "2024": {
-        "average_clv_proxy": 0.058172380259974024,
+        "average_clv_proxy": 0.05817238025997402,
         "average_expected_value_per_unit": 0.16472244757601315,
-        "average_probability_edge": 0.08804397097258426,
+        "average_probability_edge": 0.08804397097258425,
         "bets": 656,
         "clv_samples": 653,
         "losses": 360,
-        "max_drawdown": 72.68641887690487,
-        "net_units": -52.16437471878388,
+        "max_drawdown": 66.59009403374276,
+        "net_units": -52.16437471878389,
         "pushes": 8,
-        "roi_ci_95_high": 0.006404044267728474,
-        "roi_ci_95_low": -0.16257832516818632,
-        "roi_per_unit_staked": -0.07951886390058518,
+        "roi_ci_95_high": 0.006379092387742565,
+        "roi_ci_95_low": -0.1592503974719114,
+        "roi_per_unit_staked": -0.0795188639005852,
         "wins": 288
       },
       "2025": {
-        "average_clv_proxy": 0.0689101596016725,
-        "average_expected_value_per_unit": 0.18255816516116724,
-        "average_probability_edge": 0.09198969278105569,
+        "average_clv_proxy": 0.06891015960167253,
+        "average_expected_value_per_unit": 0.1825581651611673,
+        "average_probability_edge": 0.0919896927810557,
         "bets": 647,
         "clv_samples": 647,
         "losses": 368,
-        "max_drawdown": 59.4612319489287,
+        "max_drawdown": 80.06115162295332,
         "net_units": -52.31106814292096,
         "pushes": 2,
-        "roi_ci_95_high": 0.00808823106322278,
-        "roi_ci_95_low": -0.16969071652394438,
+        "roi_ci_95_high": 0.009557289476375888,
+        "roi_ci_95_low": -0.16493820038753756,
         "roi_per_unit_staked": -0.08085172819616841,
         "wins": 277
       }
@@ -220,10 +220,10 @@
     "verified_clv_samples": 1300,
     "verified_provider_bets": 1632,
     "verified_roi_ci_95": [
-      -0.1391564148994841,
-      -0.0201937741451418
+      -0.1376366233639336,
+      -0.019486613025260138
     ],
-    "verified_roi_per_unit_staked": -0.08018069290998071,
+    "verified_roi_per_unit_staked": -0.08018069290998069,
     "verified_timestamped_provider_bets": 0
   },
   "source": {
