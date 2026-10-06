@@ -81,7 +81,7 @@ def assert_target_week_schedule_integrity(
     require_columns(targets, {"game_id", "away_team", "home_team"}, "target_games")
     if targets.is_empty():
         raise DataContractError(
-            f"no unplayed regular-season games found for {season} week {week}"
+            f"no active pregame regular-season games found for {season} week {week}"
         )
 
     duplicate_game_ids = (
@@ -132,16 +132,37 @@ def next_unplayed_regular_week(
         & (pl.col("game_type") == "REG")
         & (pl.col("home_score").is_null() | pl.col("away_score").is_null())
     )
-    if as_of is not None or require_future_kickoff:
-        future = filter_future_kickoffs(
-            future,
+    if future.is_empty():
+        raise DataContractError(
+            f"no active pregame regular-season games found for {season}"
+        )
+    if as_of is None and not require_future_kickoff:
+        return int(future.get_column("week").min())
+
+    weeks = (
+        future.get_column("week")
+        .cast(pl.Int64, strict=False)
+        .drop_nulls()
+        .unique()
+        .sort()
+        .to_list()
+    )
+    for candidate_week in weeks:
+        slate = future.filter(
+            pl.col("week").cast(pl.Int64, strict=False) == int(candidate_week)
+        )
+        active = filter_future_kickoffs(
+            slate,
             as_of=as_of,
             require_kickoff=require_future_kickoff,
-            dataset="future_regular_games",
+            dataset=f"future_regular_games_week_{int(candidate_week)}",
         )
-    if future.is_empty():
-        raise DataContractError(f"no active pregame regular-season games found for {season}")
-    return int(future.get_column("week").min())
+        if not active.is_empty():
+            return int(candidate_week)
+
+    raise DataContractError(
+        f"no active pregame regular-season games found for {season}"
+    )
 
 
 def build_current_qb_projection(
