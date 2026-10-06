@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
-from nfl.pregame_refresh import load_refresh_checkpoint
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from nfl.pregame_refresh import load_refresh_checkpoint  # noqa: E402
 
 
 def main() -> None:
