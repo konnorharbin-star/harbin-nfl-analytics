@@ -21,6 +21,7 @@ from .data import completed_games
 from .free_market import FreeArchiveQuote, FreeNFLMarketStore
 from .market import MarketComparison, MarketQuote, compare_two_way_market, remove_two_way_vig
 from .probability import GaussianScoreDistribution
+from .probability_runtime import build_operational_probability_distribution
 from .ratings import fit_pregame_fair_score
 
 PROJECTION_REQUIRED = {
@@ -301,6 +302,7 @@ def build_free_archive_bets(
     market_store: FreeNFLMarketStore,
     *,
     min_probability_training_games: int = 64,
+    enforce_probability_reliability: bool = True,
 ) -> pl.DataFrame:
     """Create one best-side opportunity per game/market with chronological probabilities."""
 
@@ -319,7 +321,15 @@ def build_free_archive_bets(
         )
         if history.height < min_probability_training_games:
             continue
-        distribution = GaussianScoreDistribution().fit(history)
+        distribution, probability_meta = build_operational_probability_distribution(
+            history,
+            current_season=season,
+        )
+        if (
+            enforce_probability_reliability
+            and not bool(probability_meta.get("reliability_ready", False))
+        ):
+            continue
         targets = projections.filter(
             (pl.col("season") == season) & (pl.col("week") == week)
         ).sort("game_id")
@@ -381,6 +391,10 @@ def build_free_archive_bets(
                         ),
                         "result": result,
                         "net_units": net_units,
+                        "probability_model_family": probability_meta.get("model_family"),
+                        "probability_reliability_ready": bool(
+                            probability_meta.get("reliability_ready", False)
+                        ),
                     }
                 )
     if not rows:
