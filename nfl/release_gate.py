@@ -265,6 +265,21 @@ def build_release_gate(
             ),
         ),
         _check(
+            "regime_edge_reliability",
+            regime_reliability_ready,
+            {
+                "status": regime_registry.get("status"),
+                "validation_season": regime_registry.get("validation_season"),
+                "holdout_season": regime_registry.get("holdout_season"),
+                "reliable_markets": reliable_regime_markets,
+                "market_status": regime_market_status,
+            },
+            (
+                "at least two markets clear fixed regime-specific probability and "
+                "edge reliability on validation plus untouched holdout"
+            ),
+        ),
+        _check(
             "live_monitoring",
             monitor_score >= 90,
             monitor_score,
