@@ -3,7 +3,9 @@
   "market_rows": 45,
   "market_source_errors": [],
   "projection_games": 15,
-  "recent_form_source_errors": [],
-  "status": "OK",
+  "recent_form_source_errors": [
+    "recent-form shadow ERROR: InvalidOperationError: 'is_in' cannot check for Float64 values in List(Int64) data.\nHint: Before version 2.0, Polars would perform this check by lossily coercing the operands to Float64. However, since Polars 2.0, for 'is_in' it is required to explicitly cast (one of) the operands to a compatible type."
+  ],
+  "status": "WARN",
   "target_games": 15
 }

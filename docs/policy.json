@@ -1,51 +1,9 @@
 {
   "deployment_mode": "paper",
   "diagnostics": {
-    "moneyline": {
-      "development_bets": 272,
-      "evaluation": null,
-      "evaluation_bets": 137,
-      "evaluation_passed": false,
-      "selected": null,
-      "tune_bets": 135
-    },
-    "passed_markets": 0,
-    "promotion_rows": 1632,
+    "promotion_rows": 0,
     "raw_archive_rows": 4701,
-    "robust_evidence": false,
-    "selection_uses_evaluation": false,
-    "spread": {
-      "development_bets": 272,
-      "evaluation": null,
-      "evaluation_bets": 137,
-      "evaluation_passed": false,
-      "selected": null,
-      "tune_bets": 135
-    },
-    "total": {
-      "development_bets": 272,
-      "evaluation": {
-        "avg_clv": -0.30158730158730157,
-        "lcb": -0.3373997284872148,
-        "n": 63,
-        "roi": -0.18426799793259407
-      },
-      "evaluation_bets": 137,
-      "evaluation_passed": false,
-      "excluded_weeks": [],
-      "selected": [
-        0.06,
-        0.06,
-        0.56,
-        {
-          "avg_clv": 0.2549019607843137,
-          "lcb": -0.15956981964820546,
-          "n": 51,
-          "roi": 0.013503688695504555
-        }
-      ],
-      "tune_bets": 135
-    }
+    "selection_uses_evaluation": false
   },
   "markets": {
     "moneyline": {
@@ -54,8 +12,7 @@
         "min_ev": 0.04,
         "min_prob": 0.54
       },
-      "disabled_reason": "no threshold passed pre-evaluation development/tuning validation",
-      "enabled": false,
+      "enabled": true,
       "excluded_weeks": [],
       "lean": {
         "min_edge": 0.015,
@@ -74,8 +31,7 @@
         "min_ev": 0.04,
         "min_prob": 0.54
       },
-      "disabled_reason": "no threshold passed pre-evaluation development/tuning validation",
-      "enabled": false,
+      "enabled": true,
       "excluded_weeks": [],
       "lean": {
         "min_edge": 0.02,
@@ -90,22 +46,21 @@
     },
     "total": {
       "bet": {
-        "min_edge": 0.06999999999999999,
-        "min_ev": 0.075,
-        "min_prob": 0.5750000000000001
+        "min_edge": 0.04,
+        "min_ev": 0.04,
+        "min_prob": 0.54
       },
-      "disabled_reason": "frozen threshold failed untouched chronological evaluation",
-      "enabled": false,
+      "enabled": true,
       "excluded_weeks": [],
       "lean": {
-        "min_edge": 0.06,
-        "min_ev": 0.06,
-        "min_prob": 0.56
+        "min_edge": 0.025,
+        "min_ev": 0.02,
+        "min_prob": 0.52
       },
       "strong": {
-        "min_edge": 0.08499999999999999,
-        "min_ev": 0.1,
-        "min_prob": 0.5900000000000001
+        "min_edge": 0.06,
+        "min_ev": 0.07,
+        "min_prob": 0.57
       }
     }
   },
@@ -146,7 +101,7 @@
     "trailing_roi_throttle": -0.1,
     "trailing_window_bets": 50
   },
-  "source": "nested chronological NFL policy calibration on verified archived opening entries; untouched evaluation is release-only",
-  "split": "whole-week 50/25/25 nested chronology",
+  "source": "paper only; no verified archived opening-entry sample",
+  "split": "unavailable",
   "version": 1
 }
