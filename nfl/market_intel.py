@@ -10,7 +10,12 @@ from .book_identity import canonical_book_identity
 from .contracts import DataContractError, require_columns
 from .espn_market import ESPNTwoWayMarket
 from .market import MarketComparison, MarketQuote, compare_two_way_market
-from .policy import DEFAULT_POLICY, fractional_kelly_units, load_policy, signal_from_policy
+from .policy import (
+    DEFAULT_POLICY,
+    fractional_kelly_units,
+    load_policy,
+    signal_from_policy,
+)
 from .pregame import kickoff_iso_map
 from .probability import GaussianScoreDistribution
 from .schedule_market import is_research_only_market
