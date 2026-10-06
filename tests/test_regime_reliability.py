@@ -53,7 +53,7 @@ def _history(holdout_rate: float = 0.60) -> pl.DataFrame:
                         "entry_quote_verified": True,
                     }
                 )
-    return pl.DataFrame(rows)
+    return pl.DataFrame(rows, infer_schema_length=None)
 
 
 def test_segment_keys_are_fixed() -> None:
