@@ -255,7 +255,36 @@ def normalize_rosters(
         )
     if not rows:
         return pl.DataFrame()
-    normalized = pl.DataFrame(rows).sort(
+    normalized = pl.DataFrame(rows)
+
+    # Weekly roster data are team snapshots, not an append-only current roster.
+    # Retaining each player's latest season row can leave traded/released/backup QBs
+    # from old weeks in the "current" roster. Keep only the latest admissible team
+    # snapshot whenever a weekly key is available.
+    if normalized.get_column("roster_week").drop_nulls().len():
+        latest_week: dict[str, int] = {}
+        for row in normalized.filter(
+            pl.col("roster_week").is_not_null()
+        ).iter_rows(named=True):
+            team = str(row["team"])
+            row_week = int(row["roster_week"])
+            latest_week[team] = max(latest_week.get(team, row_week), row_week)
+        normalized = normalized.filter(
+            pl.struct(["team", "roster_week"]).map_elements(
+                lambda value: (
+                    value["roster_week"] is None
+                    and str(value["team"]) not in latest_week
+                )
+                or (
+                    value["roster_week"] is not None
+                    and latest_week.get(str(value["team"]))
+                    == int(value["roster_week"])
+                ),
+                return_dtype=pl.Boolean,
+            )
+        )
+
+    normalized = normalized.sort(
         ["team", "player_key", "roster_week"],
         nulls_last=False,
     )
