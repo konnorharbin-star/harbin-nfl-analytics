@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 import polars as pl
 import pytest
 
-from nfl.context import build_current_context
+from nfl.context import apply_context_confidence_veto, build_current_context
 from nfl.contracts import DataContractError
 from nfl.injuries import normalize_injuries, summarize_team_injuries
 from nfl.personnel import normalize_depth_charts, normalize_rosters, summarize_team_personnel
@@ -246,3 +246,60 @@ def test_current_context_fails_closed_for_historical_season() -> None:
             week=4,
             as_of=AS_OF,
         )
+
+
+def test_stacked_adverse_context_veto_blocks_side_bet() -> None:
+    candidates = pl.DataFrame(
+        [
+            {
+                "game_id": "2026_04_ATL_NO",
+                "quant_market": "moneyline",
+                "quant_side": "home",
+                "quant_signal": "PASS",
+                "production_signal": "PASS",
+                "research_signal": "STRONG",
+                "stake_units": 0.0,
+                "research_stake_units": 0.20,
+                "context_injuries_personnel_available": True,
+                "context_rest_travel_available": True,
+                "home_injury_risk": 0.875,
+                "away_injury_risk": 0.3125,
+                "home_starter_injury_risk": 0.5739,
+                "away_starter_injury_risk": 0.2083,
+                "home_rest_advantage_days": -3.0,
+            }
+        ]
+    )
+    row = apply_context_confidence_veto(candidates).row(0, named=True)
+    assert row["context_veto"] is True
+    assert "stacked adverse context" in row["context_veto_reason"]
+    assert row["research_signal"] == "PASS"
+    assert row["research_stake_units"] == 0.0
+
+
+def test_context_veto_does_not_block_when_rest_is_not_adverse() -> None:
+    candidates = pl.DataFrame(
+        [
+            {
+                "game_id": "g1",
+                "quant_market": "spread",
+                "quant_side": "home",
+                "quant_signal": "PASS",
+                "production_signal": "PASS",
+                "research_signal": "BET",
+                "stake_units": 0.0,
+                "research_stake_units": 0.15,
+                "context_injuries_personnel_available": True,
+                "context_rest_travel_available": True,
+                "home_injury_risk": 0.90,
+                "away_injury_risk": 0.30,
+                "home_starter_injury_risk": 0.60,
+                "away_starter_injury_risk": 0.20,
+                "home_rest_advantage_days": 0.0,
+            }
+        ]
+    )
+    row = apply_context_confidence_veto(candidates).row(0, named=True)
+    assert row["context_veto"] is False
+    assert row["research_signal"] == "BET"
+    assert row["research_stake_units"] == 0.15
