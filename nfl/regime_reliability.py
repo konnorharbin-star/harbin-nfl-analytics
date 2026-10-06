@@ -16,9 +16,6 @@ Reliability is deliberately conservative:
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from math import log
-from typing import Any
-
 import numpy as np
 import polars as pl
 from scipy.stats import beta as beta_distribution
