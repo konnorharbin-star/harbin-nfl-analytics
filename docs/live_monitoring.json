@@ -25,17 +25,17 @@
     }
   },
   "drift_reference": "reports/free_market_predictions.csv",
-  "engineering_readiness_score": 92.9,
-  "live_readiness_score": 93.4,
+  "engineering_readiness_score": 88.6,
+  "live_readiness_score": 89.5,
   "meaning": "operational/model-monitoring score; not a profitability guarantee",
   "scores": {
     "calibration": 91.80250233233778,
-    "context": 91.66666666666667,
+    "context": 66.66666666666667,
     "distribution_stability": 80.7,
     "freshness": 100.0,
     "market_coverage": 100.0,
     "multi_book": 100.0,
-    "output_completeness": 93.81263616557735
+    "output_completeness": 92.17054263565892
   },
   "status": "OK"
 }

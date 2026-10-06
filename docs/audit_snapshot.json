@@ -1,6 +1,6 @@
 {
   "coverage": {
-    "context": 0.9166666666666667,
+    "context": 0.6666666666666667,
     "games": 15,
     "moneyline": 15,
     "multi_book": 1.0,
@@ -17,7 +17,7 @@
     "status": "OK",
     "target_games": 15
   },
-  "generated_at": "2026-10-06T04:01:13.917463+00:00",
+  "generated_at": "2026-10-06T04:07:20.685524+00:00",
   "health": {
     "data_quality": {
       "context_source_errors": [],
@@ -28,12 +28,15 @@
       "status": "OK",
       "target_games": 15
     },
-    "live_readiness_score": 93.4,
+    "live_readiness_score": 89.5,
     "meaning": "operational health; not a profitability or staking signal",
     "monitor_alerts": [],
     "production_eligible": false,
     "release_blockers": [
       "quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state",
+      "injury_personnel_freshness: >=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
+      "context_coverage: >=90% current injury/rest/weather/travel context coverage",
+      "live_monitoring: engineering readiness >=90/100; multi-book breadth gated separately",
       "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
       "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
       "production_policy: frozen nested chronological policy is production-validated with at least two enabled markets",
@@ -67,7 +70,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-06T04:00:26.611285+00:00",
+    "model_generated_at": "2026-10-06T04:07:03.705796+00:00",
     "prediction_games": 15,
     "prediction_rows": 45,
     "season": 2026,
@@ -112,16 +115,16 @@
         "std_ratio": 0.9012
       }
     },
-    "live_readiness_score": 93.4,
-    "recent_readiness_delta": 0.0,
+    "live_readiness_score": 89.5,
+    "recent_readiness_delta": -3.9000000000000057,
     "scores": {
       "calibration": 91.80250233233778,
-      "context": 91.66666666666667,
+      "context": 66.66666666666667,
       "distribution_stability": 80.7,
       "freshness": 100.0,
       "market_coverage": 100.0,
       "multi_book": 100.0,
-      "output_completeness": 93.81263616557735
+      "output_completeness": 92.17054263565892
     },
     "status": "OK"
   },
@@ -165,7 +168,7 @@
     "expired_recommendations": 0,
     "mode": "paper",
     "paper_or_shadow_allocated_units": 0.0,
-    "performance_adjusted_proposed_units": 1.24549,
+    "performance_adjusted_proposed_units": 0.0,
     "performance_feedback": {
       "enabled": true,
       "graded_bets": 11,
@@ -330,9 +333,9 @@
     "production_block_reason": "",
     "production_eligible": false,
     "production_gate_open": false,
-    "proposed_units": 1.24549,
+    "proposed_units": 0.0,
     "release_state": "RESEARCH",
-    "risk_adjusted_proposed_units": 1.24549
+    "risk_adjusted_proposed_units": 0.0
   },
   "probability": {
     "candidate_pass": false,
@@ -420,6 +423,9 @@
   "release": {
     "blockers": [
       "quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state",
+      "injury_personnel_freshness: >=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
+      "context_coverage: >=90% current injury/rest/weather/travel context coverage",
+      "live_monitoring: engineering readiness >=90/100; multi-book breadth gated separately",
       "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
       "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
       "production_policy: frozen nested chronological policy is production-validated with at least two enabled markets",
@@ -452,10 +458,26 @@
       },
       {
         "detail": "",
+        "name": "injury_personnel_freshness",
+        "passed": false,
+        "requirement": ">=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
+        "value": {
+          "feed": {
+            "current_week_rows": 0,
+            "latest_age_days": null,
+            "latest_reported_at": null,
+            "reason": "no admissible injury reports for target week 5",
+            "status": "STALE"
+          },
+          "fresh_game_coverage": 0.0
+        }
+      },
+      {
+        "detail": "",
         "name": "context_coverage",
-        "passed": true,
+        "passed": false,
         "requirement": ">=90% current injury/rest/weather/travel context coverage",
-        "value": 0.9167
+        "value": 0.6667
       },
       {
         "detail": "",
@@ -471,9 +493,9 @@
       {
         "detail": "",
         "name": "live_monitoring",
-        "passed": true,
+        "passed": false,
         "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
-        "value": 92.9
+        "value": 88.6
       },
       {
         "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -514,8 +536,8 @@
           "status": "ESTABLISHED SAMPLE",
           "verified_clv_coverage": 0.7965686274509803,
           "verified_roi_ci_95": [
-            -0.14462349425500814,
-            -0.02082774236315682
+            -0.14336235825679047,
+            -0.020048232775547584
           ]
         }
       },
@@ -583,6 +605,8 @@
     "live_evidence_ready": false,
     "next_requirements": [
       "Resolve expected starting-QB identity/certainty for at least 95% of current games before betting release.",
+      "Refresh injury, depth-chart, and roster sources until at least 95% of current games have FRESH personnel context.",
+      "Complete timestamp-safe NFL injuries/rest/weather/travel context coverage.",
       "Keep NFL policy in paper research until verified-entry chronological ROI/CLV evidence clears the hard gates.",
       "Accumulate independently graded portfolio decisions; historical backtests do not substitute for live evidence."
     ],
@@ -592,18 +616,6 @@
   "schema_version": 1,
   "status": "WARN",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 63.2,
-      "generated_at": "2026-10-05T02:04:28.034010+00:00",
-      "live_readiness_score": 92.3,
-      "model_generated_at": "2026-10-05T02:04:14.013643+00:00",
-      "publication_status": "WARN",
-      "release_state": "PAPER",
-      "season": 2026,
-      "week": 4
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -735,10 +747,25 @@
       "release_state": "RESEARCH",
       "season": 2026,
       "week": 5
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 80.7,
+      "generated_at": "2026-10-06T04:01:13.917463+00:00",
+      "live_readiness_score": 93.4,
+      "model_generated_at": "2026-10-06T04:00:26.611285+00:00",
+      "publication_status": "WARN",
+      "release_state": "RESEARCH",
+      "season": 2026,
+      "week": 5
     }
   ],
   "warnings": [
     "quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state",
+    "injury_personnel_freshness: >=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
+    "context_coverage: >=90% current injury/rest/weather/travel context coverage",
+    "live_monitoring: engineering readiness >=90/100; multi-book breadth gated separately",
     "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
     "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
     "production_policy: frozen nested chronological policy is production-validated with at least two enabled markets",
