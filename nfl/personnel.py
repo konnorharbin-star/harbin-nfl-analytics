@@ -1,17 +1,21 @@
 """NFL roster/depth-chart availability for current context.
 
-Modern nflverse depth charts include a load timestamp (``dt``); older depth-chart
-schemas are week based. This module respects whichever point-in-time key is available
-and keeps personnel state downstream of the independent fair-score model.
+Modern nflverse depth charts include a load timestamp ('dt'); older depth-chart
+schemas are week based. Personnel sources are explicitly classified as FRESH, STALE,
+or UNKNOWN so availability does not masquerade as current information.
 """
 
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from math import isfinite
 
 import polars as pl
 
 from .contracts import require_columns
+
+MAX_DEPTH_AGE_DAYS = 7.0
+MAX_ROSTER_WEEK_LAG = 1
 
 
 def _column(frame: pl.DataFrame, *names: str) -> str | None:
@@ -75,7 +79,7 @@ def normalize_depth_charts(
     week: int,
     as_of: datetime | str | None = None,
 ) -> pl.DataFrame:
-    """Normalize modern timestamped or legacy weekly depth charts."""
+    """Normalize depth charts and classify source freshness."""
 
     if frame.is_empty():
         return pl.DataFrame()
@@ -119,7 +123,26 @@ def normalize_depth_charts(
                 rank = int(float(source[rank_column]))
             except (TypeError, ValueError):
                 rank = None
-        position = _text(source.get(position_column)).upper() if position_column else ""
+
+        age_days = (
+            max(0.0, (cutoff - captured).total_seconds() / 86400.0)
+            if captured is not None
+            else None
+        )
+        if age_days is not None:
+            freshness = (
+                "FRESH" if age_days <= MAX_DEPTH_AGE_DAYS else "STALE"
+            )
+        elif row_week is None:
+            freshness = "UNKNOWN"
+        else:
+            freshness = "FRESH" if row_week == week else "STALE"
+
+        position = (
+            _text(source.get(position_column)).upper()
+            if position_column
+            else ""
+        )
         rows.append(
             {
                 "team": str(source["team"]),
@@ -129,15 +152,18 @@ def normalize_depth_charts(
                 "position": position,
                 "depth_rank": rank,
                 "depth_week": row_week,
-                "depth_captured_at": captured.isoformat() if captured is not None else None,
+                "depth_week_gap": None if row_week is None else week - row_week,
+                "depth_captured_at": (
+                    captured.isoformat() if captured is not None else None
+                ),
+                "depth_age_days": age_days,
+                "depth_freshness_status": freshness,
             }
         )
     if not rows:
         return pl.DataFrame()
 
     normalized = pl.DataFrame(rows)
-    # Modern feeds publish complete timestamped snapshots. Retain only the most recent
-    # admissible snapshot for each team when timestamps are present.
     if normalized.get_column("depth_captured_at").drop_nulls().len():
         latest: dict[str, str] = {}
         timestamped = normalized.filter(pl.col("depth_captured_at").is_not_null())
@@ -150,7 +176,8 @@ def normalize_depth_charts(
             pl.col("depth_captured_at").is_null()
             | pl.struct(["team", "depth_captured_at"]).map_elements(
                 lambda value: (
-                    latest.get(str(value["team"])) == value["depth_captured_at"]
+                    latest.get(str(value["team"]))
+                    == value["depth_captured_at"]
                 ),
                 return_dtype=pl.Boolean,
             )
@@ -168,7 +195,7 @@ def normalize_rosters(
     season: int,
     week: int,
 ) -> pl.DataFrame:
-    """Return latest admissible weekly roster state per team/player."""
+    """Return latest admissible roster state with explicit week freshness."""
 
     if frame.is_empty():
         return pl.DataFrame()
@@ -202,6 +229,13 @@ def normalize_rosters(
                 row_week = int(float(source[week_column]))
             except (TypeError, ValueError):
                 row_week = None
+        week_gap = None if row_week is None else week - row_week
+        if week_gap is None:
+            freshness = "UNKNOWN"
+        elif week_gap <= MAX_ROSTER_WEEK_LAG:
+            freshness = "FRESH"
+        else:
+            freshness = "STALE"
         rows.append(
             {
                 "team": str(source["team"]),
@@ -210,6 +244,8 @@ def normalize_rosters(
                 "player_name": _text(source.get(name_column)) if name_column else "",
                 "position": _text(source.get("position")).upper(),
                 "roster_week": row_week,
+                "roster_week_gap": week_gap,
+                "roster_freshness_status": freshness,
                 "roster_status": (
                     _text(source.get(status_column)) if status_column else ""
                 ),
@@ -238,10 +274,41 @@ def _injury_lookup(injuries: pl.DataFrame) -> dict[tuple[str, str], float]:
         {"team", "player_key", "severity"},
         "normalized_injuries",
     )
+    source = injuries
+    if "freshness_status" in source.columns:
+        source = source.filter(pl.col("freshness_status") == "FRESH")
     return {
         (str(row["team"]), str(row["player_key"])): float(row["severity"])
-        for row in injuries.iter_rows(named=True)
+        for row in source.iter_rows(named=True)
     }
+
+
+def _freshness_status(frame: pl.DataFrame, column: str) -> str:
+    if frame.is_empty() or column not in frame.columns:
+        return "UNKNOWN"
+    values = {
+        str(value).upper()
+        for value in frame.get_column(column).drop_nulls().to_list()
+        if str(value)
+    }
+    if not values:
+        return "UNKNOWN"
+    if "STALE" in values:
+        return "STALE"
+    if "UNKNOWN" in values:
+        return "UNKNOWN"
+    return "FRESH"
+
+
+def _finite_values(frame: pl.DataFrame, column: str) -> list[float]:
+    if frame.is_empty() or column not in frame.columns:
+        return []
+    values: list[float] = []
+    for value in frame.get_column(column).drop_nulls().to_list():
+        numeric = float(value)
+        if isfinite(numeric):
+            values.append(numeric)
+    return values
 
 
 def summarize_team_personnel(
@@ -249,7 +316,7 @@ def summarize_team_personnel(
     rosters: pl.DataFrame,
     injuries: pl.DataFrame,
 ) -> pl.DataFrame:
-    """Combine depth, roster, and injury state into one confidence-only team summary."""
+    """Combine availability with explicit depth/roster freshness diagnostics."""
 
     injury = _injury_lookup(injuries)
     teams: set[str] = set()
@@ -284,7 +351,10 @@ def summarize_team_personnel(
         group_risk = {"ol": 0.0, "skill": 0.0, "defense": 0.0, "qb": 0.0}
         if not starters.is_empty():
             for player in starters.iter_rows(named=True):
-                severity = injury.get((team, str(player["player_key"])), 0.0)
+                severity = injury.get(
+                    (team, str(player["player_key"])),
+                    0.0,
+                )
                 starter_risk += severity
                 position = str(player.get("position") or "").upper()
                 if position == "QB":
@@ -310,12 +380,35 @@ def summarize_team_personnel(
         roster_status_known = False
         inactive_share: float | None = None
         if not team_roster.is_empty():
-            roster_status_known = bool(team_roster.get_column("status_known").any())
+            roster_status_known = bool(
+                team_roster.get_column("status_known").any()
+            )
             qb_rows = team_roster.filter(pl.col("position") == "QB")
             active_qbs = qb_rows.filter(pl.col("active")).height
             if roster_status_known:
                 inactive = team_roster.filter(~pl.col("active")).height
                 inactive_share = inactive / team_roster.height
+
+        depth_freshness = _freshness_status(
+            team_depth,
+            "depth_freshness_status",
+        )
+        roster_freshness = _freshness_status(
+            team_roster,
+            "roster_freshness_status",
+        )
+        personnel_freshness = (
+            "FRESH"
+            if depth_freshness == "FRESH"
+            and roster_freshness == "FRESH"
+            else (
+                "STALE"
+                if "STALE" in {depth_freshness, roster_freshness}
+                else "UNKNOWN"
+            )
+        )
+        depth_ages = _finite_values(team_depth, "depth_age_days")
+        roster_gaps = _finite_values(team_roster, "roster_week_gap")
 
         starter_denominator = max(1.0, starters.height / 4.0)
         rows.append(
@@ -340,6 +433,12 @@ def summarize_team_personnel(
                 "active_qb_count": active_qbs,
                 "depth_source_available": team_depth.height > 0,
                 "roster_source_available": team_roster.height > 0,
+                "depth_freshness_status": depth_freshness,
+                "depth_age_days": min(depth_ages) if depth_ages else None,
+                "roster_freshness_status": roster_freshness,
+                "roster_week_gap": min(roster_gaps) if roster_gaps else None,
+                "personnel_freshness_status": personnel_freshness,
+                "personnel_fresh": personnel_freshness == "FRESH",
             }
         )
     return pl.DataFrame(rows).sort("team")
