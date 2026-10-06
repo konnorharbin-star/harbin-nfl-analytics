@@ -169,7 +169,6 @@ def build_operational_probability_distribution(
     require_columns(
         historical,
         {
-            "season",
             "projected_home_margin",
             "projected_total",
             "actual_home_margin",
@@ -180,6 +179,14 @@ def build_operational_probability_distribution(
     if historical.height < 64:
         raise DataContractError(
             "operational probability model requires at least 64 prior games"
+        )
+    if "season" not in historical.columns:
+        return _fallback(
+            historical,
+            reason=(
+                "historical season labels are unavailable; chronological "
+                "probability promotion is disabled"
+            ),
         )
 
     validation_season = current_season - 2
