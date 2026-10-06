@@ -165,6 +165,25 @@ def build_release_gate(
     production_policy_mode = str(
         production_policy.get("deployment_mode") or "paper"
     ).lower()
+    market_edge_registry = production_policy.get("market_edge_calibration")
+    if not isinstance(market_edge_registry, dict):
+        market_edge_registry = {}
+    market_edge_markets = market_edge_registry.get("markets")
+    if not isinstance(market_edge_markets, dict):
+        market_edge_markets = {}
+    validated_edge_markets = sorted(
+        str(name)
+        for name, value in market_edge_markets.items()
+        if isinstance(value, dict)
+        and str(value.get("status") or "").upper()
+        == "VALIDATED_INCREMENTAL"
+        and bool(value.get("decision_enabled", False))
+    )
+    market_edge_ready = (
+        bool(market_edge_registry.get("operational_ready", False))
+        and len(validated_edge_markets) >= 2
+    )
+
     regime_registry = production_policy.get("regime_reliability")
     if not isinstance(regime_registry, dict):
         regime_registry = {}
@@ -262,6 +281,23 @@ def build_release_gate(
             (
                 "validated chronological probability reliability clears Brier/ECE, "
                 "58%-62% confidence-band, and margin/total interval guardrails"
+            ),
+        ),
+        _check(
+            "market_edge_incremental_value",
+            market_edge_ready,
+            {
+                "status": market_edge_registry.get("status"),
+                "tune_season": market_edge_registry.get("tune_season"),
+                "holdout_season": market_edge_registry.get("holdout_season"),
+                "validated_incremental_markets": validated_edge_markets,
+                "market_only_markets": market_edge_registry.get(
+                    "market_only_markets", []
+                ),
+            },
+            (
+                "at least two markets show verified incremental model value beyond "
+                "the no-vig market on untouched holdout"
             ),
         ),
         _check(
@@ -408,13 +444,14 @@ def build_release_gate(
         state = "RESEARCH"
     elif (
         historical_ready
+        and market_edge_ready
         and regime_reliability_ready
         and production_policy_ready
         and multi_book >= 0.75
         and live_ready
     ):
         state = "PRODUCTION"
-    elif historical_ready and regime_reliability_ready:
+    elif historical_ready and market_edge_ready and regime_reliability_ready:
         state = "SHADOW"
     else:
         state = "PAPER"
@@ -442,6 +479,12 @@ def build_release_gate(
             "Do not release betting recommendations until chronological probability "
             "reliability clears Brier/ECE, the 58%-62% confidence band when sampled, "
             "and margin/total interval coverage."
+        )
+    if not market_edge_ready:
+        next_steps.append(
+            "Keep executable model-vs-market bets blocked until at least two "
+            "markets prove incremental probability value beyond the no-vig market "
+            "on verified chronological holdout data."
         )
     if not regime_reliability_ready:
         next_steps.append(
@@ -489,6 +532,8 @@ def build_release_gate(
         "engineering_ready": engineering_ready,
         "historical_edge_ready": historical_ready,
         "production_policy_ready": production_policy_ready,
+        "market_edge_ready": market_edge_ready,
+        "validated_edge_markets": validated_edge_markets,
         "regime_reliability_ready": regime_reliability_ready,
         "reliable_regime_markets": reliable_regime_markets,
         "live_evidence_ready": live_ready,
@@ -498,7 +543,8 @@ def build_release_gate(
         "meaning": (
             "Hard NFL deployment gate. Structural parity with CFB does not transfer CFB evidence; "
             "PRODUCTION requires independent NFL engineering, historical entry, "
-            "validated regime-specific edge reliability, a frozen policy, market breadth, "
+            "verified incremental value beyond the market, validated regime-specific "
+            "edge reliability, a frozen policy, market breadth, "
             "and portfolio-verified live evidence."
         ),
     }
