@@ -2,11 +2,7 @@ from datetime import UTC, datetime
 
 import polars as pl
 
-from nfl.qb_current import (
-    apply_qb_certainty_veto,
-    build_expected_qb_state,
-)
-
+from nfl.qb_current import apply_qb_certainty_veto, build_expected_qb_state
 
 AS_OF = datetime(2026, 10, 8, 16, tzinfo=UTC)
 
