@@ -652,18 +652,22 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
         portfolio_display = portfolio_action
         if portfolio_action == "PASS" and limit_reason:
             portfolio_display = f"PASS · {limit_reason}"
+        valid_until = html.escape(
+            str(row.get("recommendation_valid_until") or ""),
+            quote=True,
+        )
         rows.append(
-            "<tr>"
+            f'<tr class="recommendation-row" data-valid-until="{valid_until}">'
             f"<td>{html.escape(str(row.get('away_team', '')))} @ "
             f"{html.escape(str(row.get('home_team', '')))}</td>"
-            f"<td>{html.escape(str(signal))}</td>"
+            f'<td data-role="signal">{html.escape(str(signal))}</td>'
             f"<td>{html.escape(str(row.get('quant_market', '')))}</td>"
             f"<td>{html.escape(str(row.get('quant_side', '')))}</td>"
             f"<td>{html.escape(str(row.get('quant_price', '')))}</td>"
             f"<td>{html.escape(str(row.get('quant_odds', '')))}</td>"
             f"<td>{html.escape(str(row.get('quant_book', '')))}</td>"
             f"<td>{html.escape(str(row.get('recommendation_valid_until', '')))}</td>"
-            f"<td>{html.escape(portfolio_display)}</td>"
+            f'<td data-role="portfolio">{html.escape(portfolio_display)}</td>'
             "</tr>"
         )
     body = (
@@ -676,7 +680,8 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
         "<title>Harbin NFL Quant Card</title><style>"
         "body{background:#0f1113;color:#f0f1f2;font-family:Arial,sans-serif;margin:24px}"
         "table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid #333}"
-        "th{text-align:left;color:#969ba1}a{color:#74a7ff}</style></head><body>"
+        "th{text-align:left;color:#969ba1}a{color:#74a7ff}"
+        ".recommendation-row.expired{color:#777c81}</style></head><body>"
         "<h1>Harbin NFL · Model Suggestions</h1>"
         "<p>Current executable evidence-gated signals only. Every recommendation "
         "has a hard expiration; portfolio action remains authoritative.</p>"
@@ -684,7 +689,14 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
         "<table><thead><tr><th>Matchup</th><th>Signal</th><th>Market</th><th>Side</th>"
         "<th>Line</th><th>Odds</th><th>Book</th><th>Valid until</th>"
         "<th>Portfolio</th></tr></thead>"
-        f"<tbody>{body}</tbody></table></body></html>"
+        f"<tbody>{body}</tbody></table>"
+        "<script>function expireRows(){const now=Date.now();"
+        "document.querySelectorAll('.recommendation-row[data-valid-until]').forEach(r=>{"
+        "const expiry=Date.parse(r.dataset.validUntil||'');"
+        "if(Number.isFinite(expiry)&&now>=expiry){r.classList.add('expired');"
+        "const s=r.querySelector('[data-role=signal]');if(s)s.textContent='EXPIRED';"
+        "const p=r.querySelector('[data-role=portfolio]');if(p)p.textContent='EXPIRED';}})}"
+        "expireRows();setInterval(expireRows,15000)</script></body></html>"
     )
     (output_dir / "quant_card.html").write_text(document)
     (docs_dir / "quant.html").write_text(document)
