@@ -70,6 +70,7 @@ on:
       - "nfl/line_history.py"
       - "nfl/release_gate.py"
       - "nfl/model_card.py"
+      - "nfl/monitoring.py"
       - "nfl/render.py"
       - "nfl/publication.py"
       - "nfl/reporting.py"
