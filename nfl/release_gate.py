@@ -90,9 +90,12 @@ def build_release_gate(
     if not isinstance(probability, dict):
         probability = {}
     brier = probability.get("home_win_brier")
+    ece = probability.get("home_win_ece")
     margin_80 = probability.get("margin_80_coverage")
     total_80 = probability.get("total_80_coverage")
-    probability_ready = (
+    mid_games = int(probability.get("mid_confidence_games", 0) or 0)
+    mid_gap = probability.get("mid_confidence_gap")
+    legacy_probability_ready = (
         brier is not None
         and float(brier) <= 0.25
         and margin_80 is not None
@@ -100,6 +103,21 @@ def build_release_gate(
         and total_80 is not None
         and 0.70 <= float(total_80) <= 0.90
     )
+    probability_ready = (
+        bool(probability.get("reliability_ready"))
+        if "reliability_ready" in probability
+        else legacy_probability_ready
+    )
+    probability_reliability_detail = {
+        "model_family": probability.get("model_family"),
+        "brier": brier,
+        "ece": ece,
+        "margin_80_coverage": margin_80,
+        "total_80_coverage": total_80,
+        "mid_confidence_games": mid_games,
+        "mid_confidence_gap": mid_gap,
+        "validated_reliability_ready": probability.get("reliability_ready"),
+    }
 
     monitor_score = float(
         monitor.get(
@@ -223,12 +241,11 @@ def build_release_gate(
         _check(
             "probability_calibration",
             probability_ready,
-            {
-                "brier": brier,
-                "margin_80_coverage": margin_80,
-                "total_80_coverage": total_80,
-            },
-            "chronological NFL probability holdout meets calibration guardrails",
+            probability_reliability_detail,
+            (
+                "validated chronological probability reliability clears Brier/ECE, "
+                "58%-62% confidence-band, and margin/total interval guardrails"
+            ),
         ),
         _check(
             "live_monitoring",
@@ -386,6 +403,12 @@ def build_release_gate(
     if context_coverage < 0.90:
         next_steps.append(
             "Complete timestamp-safe NFL injuries/rest/weather/travel context coverage."
+        )
+    if not probability_ready:
+        next_steps.append(
+            "Do not release betting recommendations until chronological probability "
+            "reliability clears Brier/ECE, the 58%-62% confidence band when sampled, "
+            "and margin/total interval coverage."
         )
     if multi_book < 0.75:
         next_steps.append(
