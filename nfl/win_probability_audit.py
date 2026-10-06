@@ -25,6 +25,12 @@ class WinProbabilityAudit:
     logistic_brier: float
     gaussian_log_loss: float
     logistic_log_loss: float
+    gaussian_ece: float
+    logistic_ece: float
+    logistic_mid_confidence_games: int
+    logistic_mid_confidence_mean_probability: float | None
+    logistic_mid_confidence_actual_rate: float | None
+    logistic_mid_confidence_gap: float | None
     brier_improvement: float
     log_loss_improvement: float
     candidate_pass: bool
@@ -82,6 +88,16 @@ def run_win_probability_audit(
         logistic_brier=evaluation.logistic.brier,
         gaussian_log_loss=evaluation.gaussian.log_loss,
         logistic_log_loss=evaluation.logistic.log_loss,
+        gaussian_ece=evaluation.gaussian.ece,
+        logistic_ece=evaluation.logistic.ece,
+        logistic_mid_confidence_games=evaluation.logistic.mid_confidence_games,
+        logistic_mid_confidence_mean_probability=(
+            evaluation.logistic.mid_confidence_mean_probability
+        ),
+        logistic_mid_confidence_actual_rate=(
+            evaluation.logistic.mid_confidence_actual_rate
+        ),
+        logistic_mid_confidence_gap=evaluation.logistic.mid_confidence_gap,
         brier_improvement=evaluation.brier_improvement,
         log_loss_improvement=evaluation.log_loss_improvement,
         candidate_pass=evaluation.candidate_pass,
