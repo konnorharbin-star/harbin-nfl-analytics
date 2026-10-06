@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "nfl/current.py"
+      - "nfl/pregame.py"
       - "run_current_projection.py"
       - "tests/test_current_projection.py"
       - ".github/workflows/current-projection.yml"

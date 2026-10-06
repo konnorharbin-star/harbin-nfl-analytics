@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import UTC, date, datetime
 
 import polars as pl
 import pytest
@@ -26,6 +26,7 @@ def _schedule() -> pl.DataFrame:
                 date(2025, 9, 21),
                 date(2025, 9, 28),
             ],
+            "gametime": ["13:00", "13:00", "13:00", "13:00"],
             "away_team": ["A", "B", "B", "A"],
             "home_team": ["B", "A", "A", "B"],
             "away_score": [20, 17, None, None],
@@ -100,6 +101,43 @@ def test_next_unplayed_week_and_target_filter() -> None:
         "g3"
     ]
 
+
+
+def test_started_game_is_not_active_when_final_score_feed_lags() -> None:
+    schedules = _schedule()
+    after_week_3_kickoff = datetime(2025, 9, 21, 18, 0, tzinfo=UTC)
+
+    week_3 = unplayed_regular_games(
+        schedules,
+        2025,
+        3,
+        as_of=after_week_3_kickoff,
+        require_future_kickoff=True,
+    )
+
+    assert week_3.is_empty()
+    assert (
+        next_unplayed_regular_week(
+            schedules,
+            2025,
+            as_of=after_week_3_kickoff,
+            require_future_kickoff=True,
+        )
+        == 4
+    )
+
+
+def test_live_pregame_filter_fails_closed_without_kickoff() -> None:
+    schedules = _schedule().drop("gametime")
+
+    with pytest.raises(DataContractError, match="missing/invalid kickoff"):
+        unplayed_regular_games(
+            schedules,
+            2025,
+            3,
+            as_of=datetime(2025, 9, 20, 12, 0, tzinfo=UTC),
+            require_future_kickoff=True,
+        )
 
 def test_duplicate_team_week_assignment_blocks_projection() -> None:
     targets = pl.DataFrame(
