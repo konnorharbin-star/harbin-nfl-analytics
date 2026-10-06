@@ -9,11 +9,13 @@ Sportsbook prices are not accepted by this module.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 
 import polars as pl
 
 from .contracts import SCHEDULE_REQUIRED, DataContractError, require_columns
 from .data import NFLDataClient
+from .pregame import filter_future_kickoffs
 from .qb_dataset import build_qb_walkforward_dataset
 from .qb_state import QB_PRIOR_DROPBACKS, qb_matchup_signals, team_qb_state
 from .qb_validated import ValidatedQBAdjustment
@@ -41,16 +43,27 @@ def unplayed_regular_games(
     schedules: pl.DataFrame,
     season: int,
     week: int,
+    *,
+    as_of: datetime | None = None,
+    require_future_kickoff: bool = False,
 ) -> pl.DataFrame:
-    """Return regular-season target games that do not yet have final scores."""
+    """Return active pregame targets, not merely games missing final scores."""
 
     require_columns(schedules, SCHEDULE_REQUIRED, "schedules")
-    return schedules.filter(
+    targets = schedules.filter(
         (pl.col("season") == season)
         & (pl.col("week") == week)
         & (pl.col("game_type") == "REG")
         & (pl.col("home_score").is_null() | pl.col("away_score").is_null())
     ).sort("game_id")
+    if as_of is not None or require_future_kickoff:
+        targets = filter_future_kickoffs(
+            targets,
+            as_of=as_of,
+            require_kickoff=require_future_kickoff,
+            dataset="target_games",
+        )
+    return targets
 
 
 def assert_target_week_schedule_integrity(
@@ -104,8 +117,14 @@ def assert_target_week_schedule_integrity(
         )
 
 
-def next_unplayed_regular_week(schedules: pl.DataFrame, season: int) -> int:
-    """Return the earliest regular-season week containing any unplayed game."""
+def next_unplayed_regular_week(
+    schedules: pl.DataFrame,
+    season: int,
+    *,
+    as_of: datetime | None = None,
+    require_future_kickoff: bool = False,
+) -> int:
+    """Return the earliest week containing at least one not-yet-started game."""
 
     require_columns(schedules, SCHEDULE_REQUIRED, "schedules")
     future = schedules.filter(
@@ -113,8 +132,15 @@ def next_unplayed_regular_week(schedules: pl.DataFrame, season: int) -> int:
         & (pl.col("game_type") == "REG")
         & (pl.col("home_score").is_null() | pl.col("away_score").is_null())
     )
+    if as_of is not None or require_future_kickoff:
+        future = filter_future_kickoffs(
+            future,
+            as_of=as_of,
+            require_kickoff=require_future_kickoff,
+            dataset="future_regular_games",
+        )
     if future.is_empty():
-        raise DataContractError(f"no unplayed regular-season games found for {season}")
+        raise DataContractError(f"no active pregame regular-season games found for {season}")
     return int(future.get_column("week").min())
 
 
@@ -127,12 +153,20 @@ def build_current_qb_projection(
     *,
     score_ridge: float = 8.0,
     qb_prior_dropbacks: float = QB_PRIOR_DROPBACKS,
+    as_of: datetime | None = None,
+    require_future_kickoff: bool = False,
 ) -> pl.DataFrame:
     """Project unplayed games using only state known before the selected week."""
 
     if week < 2:
         raise DataContractError("QB-assisted current projection requires week >= 2")
-    targets = unplayed_regular_games(schedules, season, week)
+    targets = unplayed_regular_games(
+        schedules,
+        season,
+        week,
+        as_of=as_of,
+        require_future_kickoff=require_future_kickoff,
+    )
     assert_target_week_schedule_integrity(targets, season, week)
 
     qb_state = team_qb_state(
@@ -227,6 +261,7 @@ def run_current_projection(
     qb_prior_dropbacks: float = QB_PRIOR_DROPBACKS,
     client: NFLDataClient | None = None,
     refresh: bool = False,
+    as_of: datetime | None = None,
 ) -> tuple[pl.DataFrame, CurrentProjectionAudit]:
     """Load sources, fit frozen QB structures, and project the next selected week."""
 
@@ -235,10 +270,26 @@ def run_current_projection(
         raise ValueError("training seasons must all precede the projection season")
 
     source = client or NFLDataClient()
+    reference = as_of or datetime.now(UTC)
     schedule_seasons = sorted({min(training) - 1, *training, season})
     schedules = source.load_schedules(schedule_seasons, refresh=refresh)
-    target_week = next_unplayed_regular_week(schedules, season) if week is None else week
-    targets = unplayed_regular_games(schedules, season, target_week)
+    target_week = (
+        next_unplayed_regular_week(
+            schedules,
+            season,
+            as_of=reference,
+            require_future_kickoff=True,
+        )
+        if week is None
+        else week
+    )
+    targets = unplayed_regular_games(
+        schedules,
+        season,
+        target_week,
+        as_of=reference,
+        require_future_kickoff=True,
+    )
     assert_target_week_schedule_integrity(targets, season, target_week)
 
     stats_seasons = sorted({*training, season})
@@ -258,6 +309,8 @@ def run_current_projection(
         adjustment,
         score_ridge=score_ridge,
         qb_prior_dropbacks=qb_prior_dropbacks,
+        as_of=reference,
+        require_future_kickoff=True,
     )
     audit = CurrentProjectionAudit(
         season=season,
