@@ -165,9 +165,26 @@ def build_release_gate(
     production_policy_mode = str(
         production_policy.get("deployment_mode") or "paper"
     ).lower()
+    regime_registry = production_policy.get("regime_reliability")
+    if not isinstance(regime_registry, dict):
+        regime_registry = {}
+    regime_market_status = regime_registry.get("market_status")
+    if not isinstance(regime_market_status, dict):
+        regime_market_status = {}
+    reliable_regime_markets = sorted(
+        str(name)
+        for name, status in regime_market_status.items()
+        if str(status).upper() == "RELIABLE"
+    )
+    regime_reliability_ready = (
+        bool(regime_registry.get("operational_ready", False))
+        and len(reliable_regime_markets) >= 2
+    )
+
     production_policy_ready = (
         production_policy_mode == "production"
         and len(enabled_policy_markets) >= 2
+        and regime_reliability_ready
     )
 
     live_n = int(live.get("graded_bets", live.get("bets", 0)) or 0)
