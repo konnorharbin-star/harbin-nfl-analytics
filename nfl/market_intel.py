@@ -10,6 +10,7 @@ from .book_identity import canonical_book_identity
 from .contracts import DataContractError, require_columns
 from .espn_market import ESPNTwoWayMarket
 from .market import MarketComparison, MarketQuote, compare_two_way_market
+from .market_edge_runtime import assess_market_edge_candidate
 from .policy import (
     DEFAULT_POLICY,
     fractional_kelly_units,
@@ -29,11 +30,11 @@ def _book_key(market: ESPNTwoWayMarket) -> str:
     return canonical_book_identity(market.book or market.provider)
 
 
-def _pair_best(
+def _pair_candidates(
     distribution: ScoreDistribution,
     game: dict[str, object],
     market: ESPNTwoWayMarket,
-) -> MarketComparison:
+) -> tuple[MarketComparison, MarketComparison]:
     first = MarketQuote(
         market_type=market.market_type,
         side=market.first_side,
@@ -50,21 +51,12 @@ def _pair_best(
         book=market.book,
         captured_at=market.captured_at,
     )
-    pair = compare_two_way_market(
+    return compare_two_way_market(
         distribution,
         projected_home_margin=float(game["baseline_home_margin"]),
         projected_total=float(game["baseline_total"]),
         first=first,
         second=second,
-    )
-    return max(
-        pair,
-        key=lambda value: (
-            value.expected_value_per_unit,
-            value.probability_edge,
-            value.american_odds,
-            value.side,
-        ),
     )
 
 
@@ -139,8 +131,13 @@ def build_market_intelligence(
         game = projected.get(market.game_id)
         if game is None:
             continue
-        chosen = _pair_best(distribution, game, market)
-        grouped.setdefault((market.game_id, market.market_type), []).append((chosen, market))
+        pair = _pair_candidates(distribution, game, market)
+        group = grouped.setdefault(
+            (market.game_id, market.market_type),
+            [],
+        )
+        for comparison in pair:
+            group.append((comparison, market))
         if not is_research_only_market(market):
             verified_books_by_game.setdefault(market.game_id, set()).add(_book_key(market))
 
@@ -154,7 +151,7 @@ def build_market_intelligence(
                 if not is_research_only_market(market)
             }
         )
-        chosen, source_market = max(
+        raw_chosen, raw_source_market = max(
             candidates,
             key=lambda item: (
                 item[0].expected_value_per_unit,
@@ -164,18 +161,62 @@ def build_market_intelligence(
                 str(item[1].book),
             ),
         )
+
+        edge_registry = active.get("market_edge_calibration")
+        edge_registry_value = (
+            edge_registry if isinstance(edge_registry, dict) else None
+        )
+        assessed = [
+            (
+                comparison,
+                market,
+                assess_market_edge_candidate(
+                    edge_registry_value,
+                    market_type=comparison.market_type,
+                    model_probability=comparison.model_probability,
+                    no_vig_probability=comparison.no_vig_probability,
+                    decimal_odds=comparison.decimal_odds,
+                ),
+            )
+            for comparison, market in candidates
+        ]
+        executable_edge_candidates = [
+            item for item in assessed if item[2].ready
+        ]
+        if executable_edge_candidates:
+            chosen, source_market, market_edge = max(
+                executable_edge_candidates,
+                key=lambda item: (
+                    item[2].decision_expected_value_per_unit,
+                    item[2].decision_probability_edge,
+                    item[0].american_odds,
+                    item[0].side,
+                    str(item[1].book),
+                ),
+            )
+        else:
+            chosen = raw_chosen
+            source_market = raw_source_market
+            market_edge = assess_market_edge_candidate(
+                edge_registry_value,
+                market_type=chosen.market_type,
+                model_probability=chosen.model_probability,
+                no_vig_probability=chosen.no_vig_probability,
+                decimal_odds=chosen.decimal_odds,
+            )
+
         research_signal = signal_from_policy(
-            chosen.expected_value_per_unit,
-            chosen.probability_edge,
-            chosen.model_probability,
+            market_edge.raw_expected_value_per_unit,
+            market_edge.raw_probability_edge,
+            market_edge.raw_model_probability,
             chosen.market_type,
             week=int(game["week"]),
             policy=DEFAULT_POLICY,
         )
         production_signal = signal_from_policy(
-            chosen.expected_value_per_unit,
-            chosen.probability_edge,
-            chosen.model_probability,
+            market_edge.decision_expected_value_per_unit,
+            market_edge.decision_probability_edge,
+            market_edge.decision_probability,
             chosen.market_type,
             week=int(game["week"]),
             policy=active,
@@ -208,7 +249,10 @@ def build_market_intelligence(
                 "blocked_segments": [],
                 "missing_segments": [],
             }
-        if not bool(regime_reliability.get("ready", False)):
+        if (
+            not market_edge.ready
+            or not bool(regime_reliability.get("ready", False))
+        ):
             production_signal = "PASS"
 
         execution_verified = not is_research_only_market(source_market)
@@ -216,12 +260,19 @@ def build_market_intelligence(
         research_stake = 0.0
         if research_signal != "PASS":
             research_stake = fractional_kelly_units(
-                chosen.model_probability,
+                market_edge.raw_model_probability,
                 chosen.american_odds,
                 kelly_fraction=kelly_fraction,
                 max_units=max_units,
             )
-        stake = research_stake if signal != "PASS" else 0.0
+        stake = 0.0
+        if signal != "PASS":
+            stake = fractional_kelly_units(
+                market_edge.decision_probability,
+                chosen.american_odds,
+                kelly_fraction=kelly_fraction,
+                max_units=max_units,
+            )
         baseline_margin = float(game["baseline_home_margin"])
         baseline_total = float(game["baseline_total"])
         home_probability = distribution.home_win_probability(
@@ -252,6 +303,16 @@ def build_market_intelligence(
             "probability_reliability_ready": bool(
                 probability_meta.get("reliability_ready", False)
             ),
+            "market_edge_ready": market_edge.ready,
+            "market_edge_status": market_edge.status,
+            "market_edge_reason": market_edge.reason,
+            "market_edge_selected_alpha": market_edge.selected_alpha,
+            "market_edge_alpha": market_edge.operational_alpha,
+            "raw_model_probability": market_edge.raw_model_probability,
+            "raw_probability_edge": market_edge.raw_probability_edge,
+            "raw_expected_value_per_unit": (
+                market_edge.raw_expected_value_per_unit
+            ),
             "regime_reliability_ready": bool(
                 regime_reliability.get("ready", False)
             ),
@@ -280,10 +341,10 @@ def build_market_intelligence(
             "quant_price": chosen.line,
             "quant_odds": chosen.american_odds,
             "quant_quote_at": source_market.captured_at.isoformat(),
-            "quant_probability": chosen.model_probability,
+            "quant_probability": market_edge.decision_probability,
             "quant_market_probability": chosen.no_vig_probability,
-            "quant_ev": chosen.expected_value_per_unit,
-            "quant_edge": chosen.probability_edge,
+            "quant_ev": market_edge.decision_expected_value_per_unit,
+            "quant_edge": market_edge.decision_probability_edge,
             "market_book_count": len(verified_books),
             "market_books": ";".join(verified_books),
             "market_provider": source_market.provider,
@@ -350,6 +411,15 @@ def build_market_intelligence(
         "api_key_required": False,
         "probability_training_games": historical.height,
         "probability_model": probability_meta,
+        "market_edge_calibration": (
+            active.get("market_edge_calibration")
+            if isinstance(active.get("market_edge_calibration"), dict)
+            else {
+                "status": "NOT_CONFIGURED",
+                "operational_ready": False,
+                "fail_closed": True,
+            }
+        ),
         "regime_reliability": (
             active.get("regime_reliability")
             if isinstance(active.get("regime_reliability"), dict)
