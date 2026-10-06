@@ -57,6 +57,7 @@ on:
       - "nfl/market.py"
       - "nfl/probability.py"
       - "nfl/probability_runtime.py"
+      - "nfl/regime_reliability.py"
       - "nfl/win_probability.py"
       - "nfl/execution_market.py"
       - "nfl/policy.py"
@@ -77,6 +78,7 @@ on:
       - "tests/test_operational_parity.py"
       - "tests/test_probability.py"
       - "tests/test_probability_runtime.py"
+      - "tests/test_regime_reliability.py"
       - "tests/test_win_probability.py"
       - "tests/test_pregame_refresh.py"
       - "tests/test_qb_current.py"
@@ -156,7 +158,7 @@ jobs:
               print("## NFL model\nNo canonical report was produced.")
               raise SystemExit(0)
           report=json.load(open(path))
-          meta=report.get("meta",{}); market=meta.get("market_coverage",{}); intel=meta.get("market_intelligence",{}); port=report.get("portfolio",{}); gate=report.get("release_gate",{}); mon=report.get("monitoring",{}); prob=meta.get("probability",{}); ctx=meta.get("current_context",{}); pub=report.get("publication",{}); bundle=pub.get("bundle",{}) if isinstance(pub,dict) else {}
+          meta=report.get("meta",{}); market=meta.get("market_coverage",{}); intel=meta.get("market_intelligence",{}); regime=intel.get("regime_reliability",{}) if isinstance(intel,dict) else {}; port=report.get("portfolio",{}); gate=report.get("release_gate",{}); mon=report.get("monitoring",{}); prob=meta.get("probability",{}); ctx=meta.get("current_context",{}); pub=report.get("publication",{}); bundle=pub.get("bundle",{}) if isinstance(pub,dict) else {}
           print(f"## Harbin NFL Analytics — {meta.get('season')} Week {meta.get('week')}")
           print(f"- Release state: **{gate.get('release_state','UNKNOWN')}** · Production eligible: **{gate.get('production_eligible',False)}**")
           print(f"- Verified ML/Spread/Total: **{market.get('moneyline',0)}/{market.get('spread',0)}/{market.get('total',0)}**")
@@ -165,6 +167,7 @@ jobs:
           print(f"- Probability: **{prob.get('model_family','unknown')}** · Reliability ready: **{prob.get('reliability_ready',False)}**")
           print(f"- Brier/ECE: **{prob.get('home_win_brier','n/a')} / {prob.get('home_win_ece','n/a')}** · Margin/Total 80% coverage: **{prob.get('margin_80_coverage','n/a')} / {prob.get('total_80_coverage','n/a')}**")
           print(f"- 58%-62% band: **n={prob.get('mid_confidence_games',0)} · predicted={prob.get('mid_confidence_mean_probability','n/a')} · actual={prob.get('mid_confidence_actual_rate','n/a')}**")
+          print(f"- Regime reliability: **{regime.get('market_status',{})}** · Operational ready: **{regime.get('operational_ready',False)}**")
           print(f"- QB coverage: **{ctx.get('qb_coverage',0):.1%}** · Broad context: **{ctx.get('coverage',0):.1%}** · Depth feed: **{ctx.get('depth_feed_available',False)}**")
           print(f"- Weather errors: **{len(ctx.get('weather_errors',[]) or [])}**")
           print(f"- Portfolio mode: **{str(port.get('mode','paper')).upper()}** · Approved stake: **{port.get('approved_units',0)}u**")
