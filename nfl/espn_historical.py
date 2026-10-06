@@ -24,7 +24,7 @@ from .espn_market import ESPN_CORE_ODDS_URL, ESPN_SCOREBOARD_URL, _event_teams
 from .free_market_backtest import PROJECTION_REQUIRED, summarize_archive_bets
 from .market import MarketQuote, compare_two_way_market, remove_two_way_vig
 from .market_backtest import grade_market_comparisons
-from .probability import GaussianScoreDistribution
+from .probability_runtime import build_operational_probability_distribution
 
 ARCHIVE_QUOTE_REQUIRED = {
     "game_id",
@@ -475,7 +475,15 @@ def _compare_archive_entries(
     require_columns(entries, ARCHIVE_QUOTE_REQUIRED, "espn_archive_entries")
 
     output: list[dict[str, object]] = []
-    groups = projections.select("season", "week").unique().sort(["season", "week"])
+    entry_game_ids = entries.get_column("game_id").unique().to_list()
+    target_projections = projections.filter(
+        pl.col("game_id").is_in(entry_game_ids)
+    )
+    groups = (
+        target_projections.select("season", "week")
+        .unique()
+        .sort(["season", "week"])
+    )
     for group in groups.iter_rows(named=True):
         season = int(group["season"])
         week = int(group["week"])
@@ -508,7 +516,12 @@ def _compare_archive_entries(
             )
             grouped.setdefault(key, []).append(row)
 
-        distribution = GaussianScoreDistribution().fit(history)
+        distribution, probability_meta = (
+            build_operational_probability_distribution(
+                history,
+                current_season=season,
+            )
+        )
         for rows in grouped.values():
             if len(rows) != 2:
                 continue
@@ -563,6 +576,12 @@ def _compare_archive_entries(
                         ),
                         "projected_total": float(
                             projection["projected_total"]
+                        ),
+                        "probability_model_family": probability_meta.get(
+                            "model_family"
+                        ),
+                        "probability_reliability_ready": bool(
+                            probability_meta.get("reliability_ready", False)
                         ),
                     }
                 )

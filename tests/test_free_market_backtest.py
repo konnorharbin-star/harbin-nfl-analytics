@@ -64,7 +64,11 @@ def _projection_dataset() -> pl.DataFrame:
 def test_free_archive_backtest_emits_one_side_per_market() -> None:
     store = FreeNFLMarketStore(_target_schedule())
 
-    bets = build_free_archive_bets(_projection_dataset(), store)
+    bets = build_free_archive_bets(
+        _projection_dataset(),
+        store,
+        enforce_probability_reliability=False,
+    )
 
     assert bets.height == 3
     assert set(bets.get_column("market_type").to_list()) == {

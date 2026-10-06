@@ -21,6 +21,11 @@ class WinProbabilityMetrics:
     games: int
     brier: float
     log_loss: float
+    ece: float
+    mid_confidence_games: int
+    mid_confidence_mean_probability: float | None
+    mid_confidence_actual_rate: float | None
+    mid_confidence_gap: float | None
 
 
 @dataclass(frozen=True)
@@ -140,7 +145,38 @@ def _metrics(actual_margin: np.ndarray, probability: np.ndarray) -> WinProbabili
     log_loss = float(
         -np.mean(actual * np.log(predicted) + (1.0 - actual) * np.log(1.0 - predicted))
     )
-    return WinProbabilityMetrics(games=actual.size, brier=brier, log_loss=log_loss)
+
+    edges = np.linspace(0.0, 1.0, 11)
+    ece = 0.0
+    for index in range(10):
+        upper = edges[index + 1] + (1e-12 if index == 9 else 0.0)
+        mask = (predicted >= edges[index]) & (predicted < upper)
+        if np.any(mask):
+            ece += float(np.mean(mask)) * abs(
+                float(np.mean(actual[mask])) - float(np.mean(predicted[mask]))
+            )
+
+    confidence = np.maximum(predicted, 1.0 - predicted)
+    selected_side_won = np.where(predicted >= 0.5, actual, 1.0 - actual)
+    mid = (confidence >= 0.58) & (confidence <= 0.62)
+    mid_games = int(np.sum(mid))
+    mid_mean = float(np.mean(confidence[mid])) if mid_games else None
+    mid_actual = float(np.mean(selected_side_won[mid])) if mid_games else None
+    mid_gap = (
+        abs(mid_mean - mid_actual)
+        if mid_mean is not None and mid_actual is not None
+        else None
+    )
+    return WinProbabilityMetrics(
+        games=int(actual.size),
+        brier=brier,
+        log_loss=log_loss,
+        ece=float(ece),
+        mid_confidence_games=mid_games,
+        mid_confidence_mean_probability=mid_mean,
+        mid_confidence_actual_rate=mid_actual,
+        mid_confidence_gap=mid_gap,
+    )
 
 
 def score_logistic(frame: pl.DataFrame, model: LogisticWinModel) -> WinProbabilityMetrics:

@@ -54,6 +54,10 @@ on:
       - "nfl/pro_market.py"
       - "nfl/schedule_market.py"
       - "nfl/market_intel.py"
+      - "nfl/market.py"
+      - "nfl/probability.py"
+      - "nfl/probability_runtime.py"
+      - "nfl/win_probability.py"
       - "nfl/execution_market.py"
       - "nfl/policy.py"
       - "nfl/portfolio.py"
@@ -62,6 +66,7 @@ on:
       - "nfl/line_history.py"
       - "nfl/release_gate.py"
       - "nfl/model_card.py"
+      - "nfl/monitoring.py"
       - "nfl/render.py"
       - "nfl/publication.py"
       - "nfl/reporting.py"
@@ -70,6 +75,9 @@ on:
       - "tests/test_context.py"
       - "tests/test_current_projection.py"
       - "tests/test_operational_parity.py"
+      - "tests/test_probability.py"
+      - "tests/test_probability_runtime.py"
+      - "tests/test_win_probability.py"
       - "tests/test_pregame_refresh.py"
       - "tests/test_qb_current.py"
       - "tests/test_render.py"
@@ -154,7 +162,9 @@ jobs:
           print(f"- Verified ML/Spread/Total: **{market.get('moneyline',0)}/{market.get('spread',0)}/{market.get('total',0)}**")
           print(f"- Research ML/Spread/Total: **{intel.get('research_moneyline',0)}/{intel.get('research_spread',0)}/{intel.get('research_total',0)}**")
           print(f"- Distinct verified books: **{intel.get('distinct_books',0)}** · Multi-book coverage: **{float(intel.get('multi_book_coverage',0) or 0):.1%}**")
-          print(f"- Brier: **{prob.get('home_win_brier','n/a')}** · Margin/Total 80% coverage: **{prob.get('margin_80_coverage','n/a')} / {prob.get('total_80_coverage','n/a')}**")
+          print(f"- Probability: **{prob.get('model_family','unknown')}** · Reliability ready: **{prob.get('reliability_ready',False)}**")
+          print(f"- Brier/ECE: **{prob.get('home_win_brier','n/a')} / {prob.get('home_win_ece','n/a')}** · Margin/Total 80% coverage: **{prob.get('margin_80_coverage','n/a')} / {prob.get('total_80_coverage','n/a')}**")
+          print(f"- 58%-62% band: **n={prob.get('mid_confidence_games',0)} · predicted={prob.get('mid_confidence_mean_probability','n/a')} · actual={prob.get('mid_confidence_actual_rate','n/a')}**")
           print(f"- QB coverage: **{ctx.get('qb_coverage',0):.1%}** · Broad context: **{ctx.get('coverage',0):.1%}** · Depth feed: **{ctx.get('depth_feed_available',False)}**")
           print(f"- Weather errors: **{len(ctx.get('weather_errors',[]) or [])}**")
           print(f"- Portfolio mode: **{str(port.get('mode','paper')).upper()}** · Approved stake: **{port.get('approved_units',0)}u**")

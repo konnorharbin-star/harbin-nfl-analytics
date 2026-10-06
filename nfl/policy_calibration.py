@@ -77,6 +77,13 @@ def _promotion_sample(frame: pl.DataFrame) -> pl.DataFrame:
         .cast(pl.Boolean, strict=False)
         .fill_null(False)
     )
+    if "probability_reliability_ready" in frame.columns:
+        reliable = (
+            pl.col("probability_reliability_ready")
+            .cast(pl.Boolean, strict=False)
+            .fill_null(False)
+        )
+        return frame.filter(verified & reliable)
     return frame.filter(verified)
 
 

@@ -133,6 +133,36 @@ def test_release_gate_fails_when_injury_personnel_context_is_stale(
     assert gate["release_state"] == "RESEARCH"
 
 
+def test_explicit_probability_reliability_failure_forces_research(
+    tmp_path,
+) -> None:
+    now = datetime.now(UTC)
+    meta = _meta(now)
+    meta["probability"] = {
+        "home_win_brier": 0.22,
+        "home_win_ece": 0.11,
+        "margin_80_coverage": 0.80,
+        "total_80_coverage": 0.80,
+        "mid_confidence_games": 40,
+        "mid_confidence_gap": 0.12,
+        "reliability_ready": False,
+        "model_family": "conditional_student_t",
+    }
+
+    gate = build_release_gate(
+        meta,
+        {"engineering_readiness_score": 95},
+        {"status": "OK"},
+        evidence_path=tmp_path / "missing-evidence.json",
+        live_path=tmp_path / "missing-live.json",
+    )
+    checks = {check["name"]: check for check in gate["checks"]}
+
+    assert checks["probability_calibration"]["passed"] is False
+    assert gate["engineering_ready"] is False
+    assert gate["release_state"] == "RESEARCH"
+
+
 def test_release_gate_requires_broad_historical_clv_coverage(tmp_path) -> None:
     meta = _meta(datetime.now(UTC))
     meta["market_intelligence"] = {"multi_book_coverage": 1.0}

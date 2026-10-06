@@ -6,6 +6,9 @@ on:
     paths:
       - "nfl/temporal_validation.py"
       - "nfl/nested_probability.py"
+      - "nfl/probability.py"
+      - "nfl/probability_runtime.py"
+      - "nfl/win_probability.py"
       - "nfl/nested_probability_audit.py"
       - "run_nested_probability_audit.py"
       - "tests/test_temporal_validation.py"
@@ -32,6 +35,7 @@ jobs:
           tests/test_nested_probability.py
           tests/test_probability.py
           tests/test_win_probability.py
+          tests/test_probability_runtime.py
       - name: Ruff
         run: ruff check .
       - name: Run 2021-2025 nested probability audit

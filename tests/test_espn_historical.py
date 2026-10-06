@@ -260,6 +260,9 @@ def test_espn_archive_bets_are_verified_without_fabricated_timestamps() -> None:
 
 def test_espn_evidence_schedule_window_includes_2022_for_2024_start() -> None:
     assert schedule_seasons_for_evidence(2024, 2025) == [
+        2019,
+        2020,
+        2021,
         2022,
         2023,
         2024,

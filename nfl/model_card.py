@@ -62,8 +62,14 @@ def build_model_card(
             ),
         },
         "probability": {
-            "method": "chronologically fitted Gaussian score residual distribution",
+            "method": (
+                "chronologically validated score distribution with optional "
+                "conditional Student-t uncertainty and logistic moneyline calibration"
+            ),
             "sportsbook_lines_as_inputs": False,
+            "conditional_uncertainty_requires_untouched_holdout_gain": True,
+            "moneyline_calibration_requires_untouched_holdout_gain": True,
+            "reliability_gate_required": True,
             "holdout": meta.get("probability", {}),
         },
         "markets": {
@@ -81,6 +87,8 @@ def build_model_card(
             "uncertain_or_changed_qb_blocks_betting": True,
             "fresh_injury_personnel_context_required": True,
             "stale_or_unknown_context_blocks_betting": True,
+            "probability_reliability_required": True,
+            "unvalidated_probability_model_blocks_betting": True,
             "production_policy_mode": production_policy.get(
                 "deployment_mode", "paper"
             ),
@@ -127,6 +135,14 @@ def build_model_card(
             (
                 "Prior-week injury designations cannot carry forward as current "
                 "risk; injury, depth, and roster context must be FRESH."
+            ),
+            (
+                "Probability changes must improve an untouched chronological holdout; "
+                "unvalidated reliability blocks betting rather than increasing confidence."
+            ),
+            (
+                "The 58%-62% confidence band is audited explicitly when the holdout "
+                "contains an adequate sample."
             ),
             "Historical archive fallbacks do not become verified opening entries by relabeling.",
             "No production staking until every hard release gate passes.",

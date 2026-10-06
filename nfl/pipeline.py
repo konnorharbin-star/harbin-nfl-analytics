@@ -23,7 +23,7 @@ from .monitoring import write_live_monitoring
 from .policy import load_policy
 from .portfolio import apply_portfolio_controls
 from .pro_market import collect_current_markets
-from .probability import evaluate_probability_holdout
+from .probability_runtime import apply_probability_reliability_veto
 from .proof import write_evidence_report
 from .qb_current import apply_qb_certainty_veto
 from .recent_form_current import (
@@ -34,43 +34,6 @@ from .recent_form_forward import append_recent_form_forward_predictions
 from .recent_form_shadow import FROZEN_SELECTION_SEASONS
 from .release_gate import write_release_gate
 from .reporting import write_canonical_report
-
-
-def _probability_meta(historical: pl.DataFrame, season: int) -> dict[str, object]:
-    past = historical.filter(pl.col("season") < season)
-    validation_season = season - 2
-    holdout_season = season - 1
-    try:
-        evaluation = evaluate_probability_holdout(
-            past,
-            validation_season=validation_season,
-            holdout_season=holdout_season,
-        )
-    except Exception as exc:
-        return {
-            "status": "BLOCKED",
-            "validation_season": validation_season,
-            "holdout_season": holdout_season,
-            "reason": f"{type(exc).__name__}: {exc}",
-        }
-    metrics = evaluation.holdout_calibrated
-    return {
-        "status": "READY",
-        "validation_season": evaluation.validation_season,
-        "holdout_season": evaluation.holdout_season,
-        "training_games": evaluation.training_games,
-        "holdout_games": evaluation.holdout_games,
-        "margin_scale": evaluation.margin_scale,
-        "total_scale": evaluation.total_scale,
-        "margin_nll": metrics.margin_nll,
-        "total_nll": metrics.total_nll,
-        "home_win_brier": metrics.home_win_brier,
-        "margin_50_coverage": metrics.margin_50_coverage,
-        "margin_80_coverage": metrics.margin_80_coverage,
-        "total_50_coverage": metrics.total_50_coverage,
-        "total_80_coverage": metrics.total_80_coverage,
-        "candidate_pass": evaluation.candidate_pass,
-    }
 
 
 def _qb_proxy_coverage(projection: pl.DataFrame) -> float:
@@ -342,12 +305,23 @@ def run_operational_pipeline(
     context = _merge_context_meta(raw_context_meta, projection)
     if not candidates.is_empty() and not context_frame.is_empty():
         candidates = candidates.join(context_frame, on="game_id", how="left")
+    probability = market_meta.get("probability_model")
+    if not isinstance(probability, dict):
+        probability = {
+            "status": "BLOCKED",
+            "reliability_ready": False,
+            "reason": "market intelligence did not return probability validation",
+        }
+
+    candidates = apply_probability_reliability_veto(
+        candidates,
+        probability,
+    )
     candidates = apply_qb_certainty_veto(candidates)
     candidates = apply_context_freshness_veto(candidates)
     candidates = apply_context_confidence_veto(candidates)
 
     evidence = write_evidence_report()
-    probability = _probability_meta(historical, season)
     context_errors = [
         value for value in context_source_status.values() if value.startswith("ERROR:")
     ]

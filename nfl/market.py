@@ -12,7 +12,7 @@ from dataclasses import asdict, dataclass
 from datetime import datetime
 from typing import Literal
 
-from .probability import GaussianScoreDistribution
+from .probability_runtime import ScoreDistribution
 
 MarketType = Literal["moneyline", "spread", "total"]
 MarketSide = Literal["home", "away", "over", "under"]
@@ -112,7 +112,7 @@ def _validate_pair(first: MarketQuote, second: MarketQuote) -> None:
 
 
 def model_probability_for_quote(
-    distribution: GaussianScoreDistribution,
+    distribution: ScoreDistribution,
     *,
     projected_home_margin: float,
     projected_total: float,
@@ -121,30 +121,42 @@ def model_probability_for_quote(
     """Evaluate one quote against an already-fitted football distribution."""
 
     if quote.market_type == "moneyline":
-        home = distribution.home_win_probability(projected_home_margin)
+        home = distribution.home_win_probability(
+            projected_home_margin,
+            projected_total,
+        )
         return home if quote.side == "home" else 1.0 - home
 
     if quote.market_type == "spread":
         assert quote.line is not None
         if quote.side == "home":
-            return distribution.home_cover_probability(projected_home_margin, quote.line)
-        margin_mean, margin_sigma, _, _ = distribution._require_fit()
-        fair_margin = projected_home_margin + margin_mean
-        threshold = quote.line
-        # Away covers when -home_margin + away_spread > 0, or home_margin < away_spread.
-        from math import erf, sqrt
-
-        z = (threshold - fair_margin) / margin_sigma
-        return 0.5 * (1.0 + erf(z / sqrt(2.0)))
+            return distribution.home_cover_probability(
+                projected_home_margin,
+                quote.line,
+                projected_total,
+            )
+        # Away +x is the complement of home -x under a continuous residual
+        # distribution. Calling the distribution method preserves conditional
+        # uncertainty instead of reaching into a global sigma.
+        home = distribution.home_cover_probability(
+            projected_home_margin,
+            -quote.line,
+            projected_total,
+        )
+        return 1.0 - home
 
     assert quote.market_type == "total"
     assert quote.line is not None
-    over = distribution.over_probability(projected_total, quote.line)
+    over = distribution.over_probability(
+        projected_total,
+        quote.line,
+        projected_home_margin,
+    )
     return over if quote.side == "over" else 1.0 - over
 
 
 def compare_two_way_market(
-    distribution: GaussianScoreDistribution,
+    distribution: ScoreDistribution,
     *,
     projected_home_margin: float,
     projected_total: float,
