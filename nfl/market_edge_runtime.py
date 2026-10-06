@@ -425,3 +425,76 @@ def assess_market_edge_candidate(
         decision_expected_value_per_unit=decision_ev,
         reason=reason,
     )
+
+
+
+def apply_market_edge_registry_to_frame(
+    frame: pl.DataFrame,
+    registry: dict[str, object] | None,
+) -> pl.DataFrame:
+    """Attach executable market-anchored probability fields to historical rows."""
+
+    required = {
+        "market_type",
+        "model_probability",
+        "no_vig_probability",
+        "decimal_odds",
+    }
+    require_columns(frame, required, "market_edge_application")
+    if frame.is_empty():
+        return frame
+
+    rows: list[dict[str, object]] = []
+    for source in frame.iter_rows(named=True):
+        try:
+            decision = assess_market_edge_candidate(
+                registry,
+                market_type=str(source["market_type"]),
+                model_probability=float(source["model_probability"]),
+                no_vig_probability=float(source["no_vig_probability"]),
+                decimal_odds=float(source["decimal_odds"]),
+            )
+        except (TypeError, ValueError):
+            item = dict(source)
+            item.update(
+                {
+                    "raw_model_probability": source.get("model_probability"),
+                    "raw_probability_edge": source.get("probability_edge"),
+                    "raw_expected_value_per_unit": source.get(
+                        "expected_value_per_unit"
+                    ),
+                    "decision_probability": None,
+                    "decision_probability_edge": None,
+                    "decision_expected_value_per_unit": None,
+                    "market_edge_status": "INVALID",
+                    "market_edge_ready": False,
+                    "market_edge_alpha": 0.0,
+                    "market_edge_reason": "invalid historical market row",
+                }
+            )
+            rows.append(item)
+            continue
+
+        item = dict(source)
+        item.update(
+            {
+                "raw_model_probability": decision.raw_model_probability,
+                "raw_probability_edge": decision.raw_probability_edge,
+                "raw_expected_value_per_unit": (
+                    decision.raw_expected_value_per_unit
+                ),
+                "decision_probability": decision.decision_probability,
+                "decision_probability_edge": (
+                    decision.decision_probability_edge
+                ),
+                "decision_expected_value_per_unit": (
+                    decision.decision_expected_value_per_unit
+                ),
+                "market_edge_status": decision.status,
+                "market_edge_ready": decision.ready,
+                "market_edge_alpha": decision.operational_alpha,
+                "market_edge_reason": decision.reason,
+            }
+        )
+        rows.append(item)
+    return pl.DataFrame(rows)
