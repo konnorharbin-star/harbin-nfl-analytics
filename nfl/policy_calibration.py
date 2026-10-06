@@ -323,7 +323,10 @@ def derive_policy_from_frame(
     policy["regime_reliability"] = regime_registry
 
     markets = policy.get("markets")
-    if isinstance(markets, dict):
+    regime_registry_ready = (
+        str(regime_registry.get("status") or "").upper() == "READY"
+    )
+    if isinstance(markets, dict) and regime_registry_ready:
         market_status = regime_registry.get("market_status")
         if not isinstance(market_status, dict):
             market_status = {}
