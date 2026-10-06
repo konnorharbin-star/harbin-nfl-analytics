@@ -408,12 +408,13 @@ def build_release_gate(
         state = "RESEARCH"
     elif (
         historical_ready
+        and regime_reliability_ready
         and production_policy_ready
         and multi_book >= 0.75
         and live_ready
     ):
         state = "PRODUCTION"
-    elif historical_ready:
+    elif historical_ready and regime_reliability_ready:
         state = "SHADOW"
     else:
         state = "PAPER"
@@ -441,6 +442,11 @@ def build_release_gate(
             "Do not release betting recommendations until chronological probability "
             "reliability clears Brier/ECE, the 58%-62% confidence band when sampled, "
             "and margin/total interval coverage."
+        )
+    if not regime_reliability_ready:
+        next_steps.append(
+            "Keep production disabled until at least two NFL markets clear the "
+            "fixed regime-specific reliability audit on validation and holdout."
         )
     if multi_book < 0.75:
         next_steps.append(
@@ -483,14 +489,17 @@ def build_release_gate(
         "engineering_ready": engineering_ready,
         "historical_edge_ready": historical_ready,
         "production_policy_ready": production_policy_ready,
+        "regime_reliability_ready": regime_reliability_ready,
+        "reliable_regime_markets": reliable_regime_markets,
         "live_evidence_ready": live_ready,
         "checks": checks,
         "blockers": blockers,
         "next_requirements": next_steps,
         "meaning": (
             "Hard NFL deployment gate. Structural parity with CFB does not transfer CFB evidence; "
-            "PRODUCTION requires independent NFL engineering, historical entry, a "
-            "validated frozen policy, market breadth, and portfolio-verified live evidence."
+            "PRODUCTION requires independent NFL engineering, historical entry, "
+            "validated regime-specific edge reliability, a frozen policy, market breadth, "
+            "and portfolio-verified live evidence."
         ),
     }
 
