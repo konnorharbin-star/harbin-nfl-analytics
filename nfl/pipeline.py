@@ -232,6 +232,7 @@ def run_operational_pipeline(
         week,
         client=source,
         refresh=refresh,
+        as_of=run_at,
     )
     target_week = projection_audit.week
     history_start = season - history_seasons
@@ -239,7 +240,13 @@ def run_operational_pipeline(
         list(range(history_start - 1, season + 1)),
         refresh=refresh,
     )
-    targets = unplayed_regular_games(schedules, season, target_week)
+    targets = unplayed_regular_games(
+        schedules,
+        season,
+        target_week,
+        as_of=run_at,
+        require_future_kickoff=True,
+    )
 
     projection, recent_form_meta, recent_form_errors = _attach_recent_form_shadow(
         projection,
