@@ -549,8 +549,11 @@ def _card_columns(current: pl.DataFrame) -> list[str]:
         "model_margin_home",
         "model_total",
         "quant_signal",
+        "production_signal",
         "research_signal",
         "portfolio_signal",
+        "context_veto",
+        "context_veto_reason",
         "quant_market",
         "quant_side",
         "quant_book",
@@ -586,7 +589,7 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
     signal_column = next(
         (
             name
-            for name in ("research_signal", "portfolio_signal", "quant_signal")
+            for name in ("quant_signal", "production_signal", "research_signal", "portfolio_signal")
             if name in card.columns
         ),
         None,
@@ -620,9 +623,10 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
     rows: list[str] = []
     for row in suggestions.to_dicts():
         signal = (
-            row.get("research_signal")
+            row.get("quant_signal")
+            or row.get("production_signal")
+            or row.get("research_signal")
             or row.get("portfolio_signal")
-            or row.get("quant_signal")
             or "PASS"
         )
         limit_reason = str(row.get("portfolio_limit_reason") or "")
