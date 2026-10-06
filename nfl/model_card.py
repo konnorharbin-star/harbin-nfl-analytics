@@ -71,6 +71,7 @@ def build_model_card(
             "moneyline_calibration_requires_untouched_holdout_gain": True,
             "reliability_gate_required": True,
             "regime_edge_reliability_required": True,
+            "verified_market_edge_anchor_required": True,
             "holdout": meta.get("probability", {}),
         },
         "markets": {
@@ -92,6 +93,10 @@ def build_model_card(
             "unvalidated_probability_model_blocks_betting": True,
             "regime_edge_reliability_required": True,
             "unreliable_or_undersampled_regime_blocks_betting": True,
+            "verified_incremental_market_edge_required": True,
+            "market_only_preference_blocks_model_edge_betting": True,
+            "market_edge_ready": bool(gate.get("market_edge_ready", False)),
+            "validated_edge_markets": gate.get("validated_edge_markets", []),
             "regime_reliability_ready": bool(
                 gate.get("regime_reliability_ready", False)
             ),
@@ -161,6 +166,14 @@ def build_model_card(
             (
                 "A current opportunity in an unreliable or undersampled required "
                 "regime fails closed instead of inheriting a global average edge."
+            ),
+            (
+                "Executable model-vs-market edges are log-odds shrunk toward the "
+                "no-vig market using verified chronological evidence."
+            ),
+            (
+                "If the no-vig market outperforms the model on verified holdout "
+                "data, operational alpha is zero and the model receives no betting edge."
             ),
             "Historical archive fallbacks do not become verified opening entries by relabeling.",
             "No production staking until every hard release gate passes.",
