@@ -155,7 +155,11 @@ def test_weekly_publication_matches_cfb_picks_layout(tmp_path) -> None:
 
     document = (tmp_path / "nfl_week_4.html").read_text()
     assert "NFL MODEL · WEEK 4 PICKS" in document
-    assert "Projected scores &amp; evidence-gated bets · Updated Oct 2, 2026 · 11:41 AM CT" in document
+    assert (
+        "Projected scores &amp; evidence-gated bets · "
+        "Updated Oct 2, 2026 · 11:41 AM CT"
+        in document
+    )
     assert "MATCHUP (WINNER BOLD)" in document
     assert "<th>CTX</th>" not in document
     assert "PIT -150" in document
