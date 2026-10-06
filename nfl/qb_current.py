@@ -7,7 +7,7 @@ from math import isfinite
 
 import polars as pl
 
-from .contracts import DataContractError, require_columns
+from .contracts import require_columns
 
 
 def _as_utc(value: object) -> datetime | None:
