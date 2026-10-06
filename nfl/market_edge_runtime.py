@@ -347,19 +347,20 @@ def assess_market_edge_candidate(
     raw_ev = raw * odds - 1.0
 
     if not isinstance(registry, dict):
+        decision_probability = market_probability
         return MarketEdgeDecision(
             market_type=market,
-            status="NOT_ENFORCED",
-            ready=True,
+            status="BLOCKED",
+            ready=False,
             selected_alpha=None,
-            operational_alpha=1.0,
+            operational_alpha=0.0,
             raw_model_probability=raw,
             no_vig_probability=market_probability,
-            decision_probability=raw,
+            decision_probability=decision_probability,
             raw_probability_edge=raw_edge,
-            decision_probability_edge=raw_edge,
+            decision_probability_edge=0.0,
             raw_expected_value_per_unit=raw_ev,
-            decision_expected_value_per_unit=raw_ev,
+            decision_expected_value_per_unit=decision_probability * odds - 1.0,
             reason="market-edge registry is not configured",
         )
 
