@@ -1,6 +1,6 @@
 {
   "current_context": {
-    "as_of": "2026-10-06T03:58:48.148579+00:00",
+    "as_of": "2026-10-06T04:00:26.611285+00:00",
     "components": {
       "injuries_personnel": 1.0,
       "quarterback": 0.8666666666666667,
@@ -11,7 +11,7 @@
     "depth_feed_available": true,
     "expected_qb_identity_coverage": 1.0,
     "expected_qb_state": {
-      "as_of": "2026-10-06T03:58:48.148579+00:00",
+      "as_of": "2026-10-06T04:00:26.611285+00:00",
       "decision_ready_team_coverage": 0.9333333333333333,
       "decision_ready_teams": 28,
       "identified_teams": 30,
@@ -74,7 +74,7 @@
     "status": "OK",
     "target_games": 15
   },
-  "generated_at": "2026-10-06T03:58:48.148579+00:00",
+  "generated_at": "2026-10-06T04:00:26.611285+00:00",
   "market_coverage": {
     "games": 15,
     "moneyline": 15,
@@ -102,7 +102,7 @@
       "action_network_diagnostic": {
         "attempts": [
           {
-            "collector_observed_at": "2026-10-06T03:58:59.543370+00:00",
+            "collector_observed_at": "2026-10-06T04:00:38.930847+00:00",
             "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
             "games_with_markets": 15,
             "parsed_rows": 309,
@@ -266,7 +266,7 @@
             "team_matches": 15
           }
         ],
-        "collector_observed_at": "2026-10-06T03:58:59.543370+00:00",
+        "collector_observed_at": "2026-10-06T04:00:38.930847+00:00",
         "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
         "games_with_markets": 15,
         "parsed_rows": 309,
@@ -465,15 +465,15 @@
     "candidate_pass": false,
     "holdout_games": 272,
     "holdout_season": 2025,
-    "home_win_brier": 0.22995807657360534,
+    "home_win_brier": 0.22995807657360515,
     "margin_50_coverage": 0.5110294117647058,
     "margin_80_coverage": 0.7830882352941176,
-    "margin_nll": 3.9948617498156644,
+    "margin_nll": 3.9948617498156627,
     "margin_scale": 1.0,
     "status": "READY",
     "total_50_coverage": 0.5147058823529411,
     "total_80_coverage": 0.8051470588235294,
-    "total_nll": 4.019776337747561,
+    "total_nll": 4.019776337747562,
     "total_scale": 1.0,
     "training_games": 815,
     "validation_season": 2024

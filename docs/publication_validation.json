@@ -97,7 +97,7 @@
       "severity": "ERROR"
     },
     {
-      "detail": "outputs/nfl_week_5_run_20261005_225848_CT_page1.png exists and is non-empty",
+      "detail": "outputs/nfl_week_5_run_20261005_230026_CT_page1.png exists and is non-empty",
       "name": "cache_safe_page1_present",
       "passed": true,
       "severity": "ERROR"
