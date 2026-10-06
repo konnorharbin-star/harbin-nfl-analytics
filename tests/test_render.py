@@ -21,6 +21,8 @@ def _current() -> pl.DataFrame:
         "portfolio_stake_units": 0.0,
         "portfolio_action": "PAPER",
         "execution_ready": True,
+        "recommendation_status": "ACTIVE",
+        "recommendation_valid_until": "2026-10-04T16:00:00+00:00",
     }
     return pl.DataFrame(
         [
@@ -123,6 +125,46 @@ def test_weekly_publication_shows_evidence_gated_signal(tmp_path) -> None:
     assert '<span class="badge strong">STRONG</span>' in document
     assert '<span class="badge bet">BET</span>' in document
     assert '<span class="badge lean">LEAN</span>' in document
+
+
+
+def test_weekly_publication_embeds_recommendation_expiry_guard(tmp_path) -> None:
+    current = _current().with_columns(
+        pl.when(pl.col("quant_market") == "moneyline")
+        .then(pl.lit("STRONG"))
+        .otherwise(pl.lit("PASS"))
+        .alias("quant_signal"),
+    )
+    write_weekly_publication(
+        current,
+        week=4,
+        updated_at="2026-10-02T16:41:28+00:00",
+        release_state="PAPER",
+        output_dir=tmp_path,
+    )
+
+    document = (tmp_path / "nfl_week_4.html").read_text()
+    assert 'data-valid-until="2026-10-04T16:00:00+00:00"' in document
+    assert "exp 11:00 AM CT" in document
+    assert "expireMarkets()" in document
+    assert 'b.textContent="EXPIRED"' in document
+
+
+def test_weekly_publication_hides_expired_recommendation_status(tmp_path) -> None:
+    current = _current().with_columns(
+        pl.lit("STRONG").alias("quant_signal"),
+        pl.lit("EXPIRED").alias("recommendation_status"),
+    )
+    write_weekly_publication(
+        current,
+        week=4,
+        updated_at="2026-10-02T16:41:28+00:00",
+        release_state="PAPER",
+        output_dir=tmp_path,
+    )
+
+    document = (tmp_path / "nfl_week_4.html").read_text()
+    assert '<span class="badge strong">STRONG</span>' not in document
 
 
 def test_weekly_publication_hides_closed_signals(tmp_path) -> None:
