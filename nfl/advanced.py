@@ -70,7 +70,11 @@ def _eligible_scrimmage_plays(pbp: pl.DataFrame) -> pl.DataFrame:
             .fill_null(False)
             .cast(pl.Float64)
             .alias("_explosive"),
-            pl.col("down").is_in([1, 2]).fill_null(False).alias("_early_down"),
+            pl.col("down")
+            .cast(pl.Int64, strict=False)
+            .is_in([1, 2])
+            .fill_null(False)
+            .alias("_early_down"),
         )
     )
 
