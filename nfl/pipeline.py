@@ -380,6 +380,7 @@ def run_operational_pipeline(
         candidates,
         policy=policy,
         release_gate=gate,
+        now=run_at,
     )
     line_capture = (
         append_market_snapshots(markets, targets) if capture_lines else {"status": "disabled"}
