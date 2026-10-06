@@ -377,12 +377,30 @@ def _metrics(rows: list[dict[str, object]]) -> SegmentMetrics:
 
     games = len(outcomes)
     if games == 0:
-        empty = _metrics([])
         return SegmentMetrics(
-            **{
-                **empty.to_dict(),
-                "pushes": pushes,
-            }
+            games=0,
+            wins=0,
+            losses=0,
+            pushes=pushes,
+            mean_model_probability=None,
+            mean_market_probability=None,
+            mean_model_edge=None,
+            raw_win_rate=None,
+            shrunk_win_rate=None,
+            raw_calibration_gap=None,
+            shrunk_calibration_gap=None,
+            posterior_low_80=None,
+            posterior_high_80=None,
+            realized_edge_shrunk=None,
+            edge_retention_ratio=None,
+            model_brier=None,
+            market_brier=None,
+            model_log_loss=None,
+            market_log_loss=None,
+            roi=None,
+            clv_samples=0,
+            clv_coverage=0.0,
+            average_clv=None,
         )
 
     actual = np.asarray(outcomes, dtype=float)
