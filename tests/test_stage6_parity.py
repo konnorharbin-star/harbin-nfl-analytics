@@ -154,6 +154,67 @@ def test_paper_mode_keeps_research_picks_when_production_markets_are_disabled() 
     assert summary["bets"] == 1
 
 
+def test_regime_reliability_blocks_production_signal_when_missing() -> None:
+    projection = pl.DataFrame(
+        [
+            {
+                "season": 2026,
+                "week": 4,
+                "game_id": "g1",
+                "gameday": "2026-10-04",
+                "away_team": "NYJ",
+                "home_team": "PIT",
+                "baseline_home_margin": 7.0,
+                "baseline_total": 44.0,
+            }
+        ]
+    )
+    targets = pl.DataFrame(
+        [
+            {
+                "game_id": "g1",
+                "gameday": "2026-10-04",
+                "gametime": "13:00",
+                "away_team": "NYJ",
+                "home_team": "PIT",
+            }
+        ]
+    )
+    policy = deepcopy(DEFAULT_POLICY)
+    policy["regime_reliability"] = {
+        "status": "READY",
+        "operational_ready": False,
+        "fail_closed": True,
+        "required_dimensions_by_market": {
+            "moneyline": [
+                "market",
+                "side",
+                "role",
+                "confidence",
+                "edge",
+                "margin_environment",
+                "season_phase",
+            ]
+        },
+        "segments": {},
+    }
+
+    frame, _ = build_market_intelligence(
+        projection,
+        targets,
+        [_market(book="Book B", provider="espn", home_odds=-120, away_odds=105)],
+        _historical_games(),
+        policy=policy,
+    )
+    row = frame.row(0, named=True)
+
+    assert row["research_signal"] in {"LEAN", "BET", "STRONG"}
+    assert row["production_signal"] == "PASS"
+    assert row["quant_signal"] == "PASS"
+    assert row["regime_reliability_ready"] is False
+    assert row["regime_reliability_missing_segments"]
+
+
 def test_current_odds_api_uses_bookmaker_last_update() -> None:
     payload = [
         {
