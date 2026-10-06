@@ -18,6 +18,10 @@ from pathlib import Path
 
 import polars as pl
 
+from .market_edge_runtime import (
+    apply_market_edge_registry_to_frame,
+    build_verified_market_edge_registry,
+)
 from .policy import DEFAULT_POLICY
 from .regime_reliability import (
     build_regime_reliability_report,
@@ -318,6 +322,9 @@ def derive_policy_from_frame(
     """Derive a frozen NFL policy without allowing evaluation data to select thresholds."""
 
     policy = deepcopy(DEFAULT_POLICY)
+    market_edge_registry = build_verified_market_edge_registry(raw_bets)
+    policy["market_edge_calibration"] = market_edge_registry
+
     regime_report = build_regime_reliability_report(raw_bets)
     regime_registry = compact_registry(regime_report)
     policy["regime_reliability"] = regime_registry
@@ -344,11 +351,43 @@ def derive_policy_from_frame(
                 )
 
     promotion = _promotion_sample(raw_bets)
+    if (
+        str(market_edge_registry.get("status") or "").upper() == "READY"
+        and {
+            "market_type",
+            "model_probability",
+            "no_vig_probability",
+            "decimal_odds",
+        }.issubset(promotion.columns)
+    ):
+        promotion = apply_market_edge_registry_to_frame(
+            promotion,
+            market_edge_registry,
+        ).with_columns(
+            pl.col("decision_probability").alias("model_probability"),
+            pl.col("decision_probability_edge").alias("probability_edge"),
+            pl.col("decision_expected_value_per_unit").alias(
+                "expected_value_per_unit"
+            ),
+        )
+
     diagnostics: dict[str, object] = {
         "selection_uses_evaluation": False,
         "raw_archive_rows": int(raw_bets.height),
         "promotion_rows": int(promotion.height),
         "regime_reliability": regime_report.get("summary", {}),
+        "market_edge_calibration": {
+            "status": market_edge_registry.get("status"),
+            "operational_ready": market_edge_registry.get(
+                "operational_ready", False
+            ),
+            "validated_incremental_markets": market_edge_registry.get(
+                "validated_incremental_markets", []
+            ),
+            "market_only_markets": market_edge_registry.get(
+                "market_only_markets", []
+            ),
+        },
     }
 
     if promotion.is_empty():
@@ -506,6 +545,52 @@ def derive_policy_from_frame(
         )
         diagnostics[market] = market_diag
 
+    markets = policy["markets"]
+    assert isinstance(markets, dict)
+
+    edge_markets = market_edge_registry.get("markets")
+    if not isinstance(edge_markets, dict):
+        edge_markets = {}
+    edge_registry_ready = (
+        str(market_edge_registry.get("status") or "").upper() == "READY"
+    )
+
+    regime_market_status = regime_registry.get("market_status")
+    if not isinstance(regime_market_status, dict):
+        regime_market_status = {}
+
+    for market_name, config in markets.items():
+        if not isinstance(config, dict):
+            continue
+        if edge_registry_ready:
+            edge_entry = edge_markets.get(str(market_name))
+            edge_status = (
+                str(edge_entry.get("status") or "INSUFFICIENT_DATA").upper()
+                if isinstance(edge_entry, dict)
+                else "INSUFFICIENT_DATA"
+            )
+            if edge_status != "VALIDATED_INCREMENTAL":
+                config["enabled"] = False
+                config["disabled_reason"] = (
+                    "verified market-edge calibration does not show incremental "
+                    f"model value ({edge_status.lower()})"
+                )
+        if regime_registry_ready:
+            regime_status = str(
+                regime_market_status.get(str(market_name), "INSUFFICIENT")
+            ).upper()
+            if regime_status != "RELIABLE":
+                config["enabled"] = False
+                config["disabled_reason"] = (
+                    "market-level probability/edge regime reliability "
+                    f"is {regime_status.lower()}"
+                )
+
+    enabled_markets = sum(
+        isinstance(config, dict) and bool(config.get("enabled", False))
+        for config in markets.values()
+    )
+
     evidence = evidence or {}
     promotion_evidence = evidence.get("promotion_sample")
     if not isinstance(promotion_evidence, dict):
@@ -515,14 +600,15 @@ def derive_policy_from_frame(
         and bool(promotion_evidence.get("entry_quote_verified", False))
     )
     policy["deployment_mode"] = (
-        "production" if robust and passed_markets >= 2 else "paper"
+        "production" if robust and enabled_markets >= 2 else "paper"
     )
     policy["source"] = (
         "nested chronological NFL policy calibration on verified archived opening "
         "entries; untouched evaluation is release-only"
     )
     policy["split"] = split_description
-    diagnostics["passed_markets"] = passed_markets
+    diagnostics["threshold_passed_markets"] = passed_markets
+    diagnostics["passed_markets"] = enabled_markets
     diagnostics["robust_evidence"] = robust
     policy["diagnostics"] = diagnostics
     return policy
