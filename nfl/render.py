@@ -131,7 +131,15 @@ def _signal(
     else:
         raw = row.get("quant_signal", row.get("production_signal", "PASS"))
     value = str(raw or "PASS").upper()
-    return "" if value == "PASS" else value
+    if value != "PASS":
+        return value
+    if (
+        release_state.upper() != "PRODUCTION"
+        and bool(row.get("candidate_watch", False))
+        and not bool(row.get("selected_quote_outlier", False))
+    ):
+        return "WATCH"
+    return ""
 
 
 def _expiry_text(row: dict[str, object] | None) -> str:
@@ -311,7 +319,10 @@ def render_html(
         else "Projection-only · no verified live lines"
     )
     if state != "PRODUCTION":
-        status = f"{status} · {state} evidence mode · not production staking"
+        status = (
+            f"{status} · {state} evidence mode · WATCH = model edge blocked by "
+            "safety gates; not a bet"
+        )
 
     css = "\n".join(
         [
@@ -337,7 +348,7 @@ def render_html(
             ".badge{font-size:8px;font-weight:800;border-radius:4px;padding:3px 5px;",
             "margin-left:4px}.strong{background:#5fc468;color:#0c2c12}",
             ".bet{background:#1f462a;color:#63c76d}",
-            ".lean{background:#483b1e;color:#e3b549}.expired{background:#34383d;color:#b0b4b8}",
+            ".lean,.watch{background:#483b1e;color:#e3b549}.expired{background:#34383d;color:#b0b4b8}",
             ".expiry{font-size:8px;color:#777c81;margin-left:4px}.market-expired{color:#777c81}",
             ".market-expired .expiry{color:#d6a44b}.nav{text-align:center;padding:14px}",
             ".nav button{background:#202328;border:1px solid #373b40;color:#eee;",
@@ -550,7 +561,9 @@ def render_png(
     live_market = _has_live_market(board)
     status = "Live market data" if live_market else "Projection-only · no verified live lines"
     if state != "PRODUCTION":
-        status = f"{status} · {state} evidence mode · not production staking"
+        status = (
+            f"{status} · {state} evidence mode · WATCH = blocked candidate; not a bet"
+        )
 
     draw.text((17, 13), f"NFL MODEL · WEEK {week} PICKS", font=title_font, fill=TEXT)
     draw.text(
