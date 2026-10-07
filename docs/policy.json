@@ -7,12 +7,15 @@
     "moneyline_disagreement_high_probability": 0.09,
     "moneyline_disagreement_warn_probability": 0.05,
     "moneyline_dispersion_warn_probability": 0.035,
+    "moneyline_quote_outlier_probability": 0.1,
     "spread_disagreement_high_points": 3.5,
     "spread_disagreement_warn_points": 2.0,
     "spread_dispersion_warn_points": 0.75,
+    "spread_quote_outlier_points": 2.0,
     "total_disagreement_high_points": 4.5,
     "total_disagreement_warn_points": 2.5,
-    "total_dispersion_warn_points": 1.0
+    "total_dispersion_warn_points": 1.0,
+    "total_quote_outlier_points": 3.0
   },
   "deployment_mode": "paper",
   "diagnostics": {
