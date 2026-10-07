@@ -7,6 +7,7 @@ import polars as pl
 from nfl.decision_intelligence import (
     attach_decision_intelligence,
     consensus_diagnostics,
+    selected_quote_consensus_diagnostics,
 )
 from nfl.espn_market import ESPNTwoWayMarket
 from nfl.policy import DEFAULT_POLICY
@@ -178,3 +179,74 @@ def test_research_only_quote_fails_closed() -> None:
     assert row["execution_action"] == "PASS"
     assert row["research_execution_action"] == "PASS"
     assert "research-only" in row["execution_action_reason"]
+
+
+def test_selected_quote_outlier_detects_detached_spread() -> None:
+    now = datetime(2026, 10, 6, 18, tzinfo=UTC)
+    selected = _spread_market(book="Book C", home_line=1.5, captured_at=now)
+    consensus = {
+        "market_consensus_value": 7.0,
+        "market_consensus_books": 5,
+    }
+
+    result = selected_quote_consensus_diagnostics(
+        selected,
+        consensus,
+        config=DEFAULT_POLICY["decision_intelligence"],
+    )
+
+    assert result["selected_quote_outlier"] is True
+    assert abs(float(result["selected_quote_consensus_distance"]) - 8.5) < 1e-12
+
+
+def test_blocked_candidate_is_retained_as_watch_state() -> None:
+    now = datetime(2026, 10, 6, 18, tzinfo=UTC)
+    frame, meta = attach_decision_intelligence(
+        pl.DataFrame(
+            [
+                _candidate(
+                    now,
+                    quant_signal="PASS",
+                    research_signal="PASS",
+                    model_candidate_signal="BET",
+                    context_freshness_veto=True,
+                    context_freshness_veto_reason="injury report pending",
+                    selected_quote_outlier=False,
+                )
+            ]
+        ),
+        policy=DEFAULT_POLICY,
+        snapshots=pl.DataFrame(),
+        now=now,
+    )
+
+    row = frame.row(0, named=True)
+    assert row["candidate_state"] == "WATCH_BLOCKED"
+    assert row["candidate_watch"] is True
+    assert row["candidate_block_reason"] == "injury report pending"
+    assert meta["watch_candidate_rows"] == 1
+
+
+def test_quote_outlier_never_becomes_watch_candidate() -> None:
+    now = datetime(2026, 10, 6, 18, tzinfo=UTC)
+    frame, meta = attach_decision_intelligence(
+        pl.DataFrame(
+            [
+                _candidate(
+                    now,
+                    quant_signal="PASS",
+                    research_signal="PASS",
+                    model_candidate_signal="STRONG",
+                    selected_quote_outlier=True,
+                )
+            ]
+        ),
+        policy=DEFAULT_POLICY,
+        snapshots=pl.DataFrame(),
+        now=now,
+    )
+
+    row = frame.row(0, named=True)
+    assert row["candidate_state"] == "BLOCKED_MARKET_OUTLIER"
+    assert row["candidate_watch"] is False
+    assert meta["selected_quote_outlier_rows"] == 1

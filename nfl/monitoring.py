@@ -94,6 +94,12 @@ def build_live_monitoring(
         alerts.append(
             f"{high_disagreement_rows} market rows have high model-vs-consensus disagreement"
         )
+    selected_quote_outliers = int(decision.get("selected_quote_outlier_rows", 0) or 0)
+    watch_candidates = int(decision.get("watch_candidate_rows", 0) or 0)
+    if selected_quote_outliers:
+        alerts.append(
+            f"{selected_quote_outliers} selected sportsbook quotes are consensus outliers"
+        )
 
     data_quality = meta.get("data_quality")
     if not isinstance(data_quality, dict):
@@ -253,6 +259,8 @@ def build_live_monitoring(
             "status": decision_status,
             "enforced": bool(decision.get("enforced", False)),
             "high_disagreement_rows": high_disagreement_rows,
+            "selected_quote_outlier_rows": selected_quote_outliers,
+            "watch_candidate_rows": watch_candidates,
             "research_execution_actions": research_actions,
             "movement_coverage": decision.get("movement_coverage"),
         },
