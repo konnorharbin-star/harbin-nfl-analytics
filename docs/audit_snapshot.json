@@ -9,37 +9,75 @@
     "total": 15
   },
   "data_quality": {
+    "candidate_rows": 45,
     "context_source_errors": [],
-    "market_rows": 45,
+    "decision_intelligence_errors": [],
+    "duplicate_game_count": 0,
+    "duplicate_market_rows": 0,
+    "errors": [],
+    "extra_projection_games": [],
+    "future_verified_quote_rows": 0,
+    "games_without_candidate_rows": [],
+    "market_rows": 354,
     "market_source_errors": [],
+    "meaning": "current-run structural and chronological data integrity; missing values are never fabricated",
+    "missing_data_count": 0,
+    "missing_projection_games": [],
+    "post_kickoff_verified_quote_rows": 0,
     "projection_games": 15,
-    "recent_form_source_errors": [
-      "recent-form shadow ERROR: InvalidOperationError: 'is_in' cannot check for Float64 values in List(Int64) data.\nHint: Before version 2.0, Polars would perform this check by lossily coercing the operands to Float64. However, since Polars 2.0, for 'is_in' it is required to explicitly cast (one of) the operands to a compatible type."
-    ],
-    "status": "WARN",
-    "target_games": 15
+    "recent_form_source_errors": [],
+    "source_health": {
+      "errors": [],
+      "status": "OK"
+    },
+    "status": "OK",
+    "target_games": 15,
+    "unmatched_market_rows": 0,
+    "verified_quote_rows": 354,
+    "warnings": []
   },
-  "generated_at": "2026-10-06T21:43:08.188441+00:00",
+  "generated_at": "2026-10-07T00:49:46.489293+00:00",
   "health": {
     "data_quality": {
+      "candidate_rows": 45,
       "context_source_errors": [],
-      "market_rows": 45,
+      "decision_intelligence_errors": [],
+      "duplicate_game_count": 0,
+      "duplicate_market_rows": 0,
+      "errors": [],
+      "extra_projection_games": [],
+      "future_verified_quote_rows": 0,
+      "games_without_candidate_rows": [],
+      "market_rows": 354,
       "market_source_errors": [],
+      "meaning": "current-run structural and chronological data integrity; missing values are never fabricated",
+      "missing_data_count": 0,
+      "missing_projection_games": [],
+      "post_kickoff_verified_quote_rows": 0,
       "projection_games": 15,
-      "recent_form_source_errors": [
-        "recent-form shadow ERROR: InvalidOperationError: 'is_in' cannot check for Float64 values in List(Int64) data.\nHint: Before version 2.0, Polars would perform this check by lossily coercing the operands to Float64. However, since Polars 2.0, for 'is_in' it is required to explicitly cast (one of) the operands to a compatible type."
-      ],
-      "status": "WARN",
-      "target_games": 15
+      "recent_form_source_errors": [],
+      "source_health": {
+        "errors": [],
+        "status": "OK"
+      },
+      "status": "OK",
+      "target_games": 15,
+      "unmatched_market_rows": 0,
+      "verified_quote_rows": 354,
+      "warnings": []
     },
-    "live_readiness_score": 88.7,
+    "live_readiness_score": 80.1,
     "meaning": "operational health; not a profitability or staking signal",
-    "monitor_alerts": [],
+    "monitor_alerts": [
+      "17 market rows have high model-vs-consensus disagreement",
+      "fewer than two markets clear regime-specific edge reliability"
+    ],
     "production_eligible": false,
     "release_blockers": [
       "quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state",
       "injury_personnel_freshness: >=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
       "context_coverage: >=90% current injury/rest/weather/travel context coverage",
+      "regime_edge_reliability: at least two markets clear fixed regime-specific probability and edge reliability on validation plus untouched holdout",
       "live_monitoring: engineering readiness >=90/100; multi-book breadth gated separately",
       "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
       "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
@@ -54,7 +92,7 @@
       "football": "nflverse",
       "historical_market": "nflverse public archive",
       "injuries": "OK",
-      "recent_form_pbp": "recent-form shadow ERROR: InvalidOperationError: 'is_in' cannot check for Float64 values in List(Int64) data.\nHint: Before version 2.0, Polars would perform this check by lossily coercing the operands to Float64. However, since Polars 2.0, for 'is_in' it is required to explicitly cast (one of) the operands to a compatible type.",
+      "recent_form_pbp": "nflverse",
       "rosters_weekly": "OK",
       "weather": "Open-Meteo"
     },
@@ -74,7 +112,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-06T21:42:25.629998+00:00",
+    "model_generated_at": "2026-10-07T00:49:44.393884+00:00",
     "prediction_games": 15,
     "prediction_rows": 45,
     "season": 2026,
@@ -94,46 +132,50 @@
   },
   "meaning": "NFL publication/audit snapshot. Readiness, model error, historical evidence, and forward evidence remain separate; none guarantees future profitability.",
   "monitoring": {
-    "alerts": [],
+    "alerts": [
+      "17 market rows have high model-vs-consensus disagreement",
+      "fewer than two markets clear regime-specific edge reliability"
+    ],
     "drift_details": {
       "margin": {
-        "live_mean": -0.6415292359522636,
+        "live_mean": -0.6415292359525051,
         "live_n": 45,
-        "live_std": 2.7182077084195653,
+        "live_std": 2.718207708419573,
         "mean_z": 0.6305,
-        "reference_mean": 1.965844996473403,
+        "reference_mean": 1.9658449964734308,
         "reference_n": 1087,
         "reference_std": 4.135525119268018,
         "stability_score": 73.7,
         "std_ratio": 0.6573
       },
       "total": {
-        "live_mean": 45.99450648394739,
+        "live_mean": 45.994506483947596,
         "live_n": 45,
-        "live_std": 3.164686511171227,
+        "live_std": 3.1646865111712272,
         "mean_z": 0.3874,
-        "reference_mean": 44.63397276559055,
+        "reference_mean": 44.633972765590514,
         "reference_n": 1087,
-        "reference_std": 3.511677071871183,
+        "reference_std": 3.511677071871184,
         "stability_score": 87.7,
         "std_ratio": 0.9012
       }
     },
-    "live_readiness_score": 88.7,
-    "recent_readiness_delta": 0.0,
+    "live_readiness_score": 80.1,
+    "recent_readiness_delta": -8.600000000000009,
     "scores": {
-      "calibration": 89.07670124431355,
+      "calibration": 89.07670124431358,
       "context": 66.66666666666667,
       "distribution_stability": 80.7,
       "freshness": 100.0,
       "market_coverage": 100.0,
       "multi_book": 100.0,
-      "output_completeness": 90.187265917603
+      "output_completeness": 92.70935960591133,
+      "regime_reliability": 0.0
     },
-    "status": "OK"
+    "status": "WARN"
   },
   "portfolio": {
-    "active_recommendations": 0,
+    "active_recommendations": 45,
     "approved_bets": 0,
     "approved_units": 0.0,
     "bankroll_risk": {
@@ -168,7 +210,8 @@
       "total_open_bets_after_allocation": 0,
       "total_open_units_after_allocation": 0.0
     },
-    "execution_blocked_bets": 45,
+    "execution_blocked_bets": 0,
+    "execution_timing_enforced": false,
     "expired_recommendations": 0,
     "mode": "paper",
     "paper_or_shadow_allocated_units": 0.0,
@@ -339,7 +382,8 @@
     "production_gate_open": false,
     "proposed_units": 0.0,
     "release_state": "RESEARCH",
-    "risk_adjusted_proposed_units": 0.0
+    "risk_adjusted_proposed_units": 0.0,
+    "timing_blocked_bets": 0
   },
   "probability": {
     "conditional_holdout": {
@@ -348,29 +392,29 @@
       "candidate_pass": false,
       "holdout_baseline": {
         "games": 272,
-        "home_win_brier": 0.22995807657360534,
+        "home_win_brier": 0.22995807657360515,
         "margin_50_coverage": 0.5110294117647058,
         "margin_80_coverage": 0.7830882352941176,
-        "margin_nll": 3.9948617498156644,
+        "margin_nll": 3.9948617498156627,
         "total_50_coverage": 0.5147058823529411,
         "total_80_coverage": 0.8051470588235294,
-        "total_nll": 4.019776337747561
+        "total_nll": 4.019776337747562
       },
       "holdout_candidate": {
         "games": 272,
-        "home_win_brier": 0.23011821765823376,
+        "home_win_brier": 0.23011821765823362,
         "margin_50_coverage": 0.4889705882352941,
         "margin_80_coverage": 0.7757352941176471,
-        "margin_nll": 3.99727086779415,
+        "margin_nll": 3.9972708677941493,
         "total_50_coverage": 0.5,
         "total_80_coverage": 0.7830882352941176,
-        "total_nll": 4.024862314722081
+        "total_nll": 4.024862314722082
       },
       "holdout_games": 272,
       "holdout_season": 2025,
       "margin_candidate_pass": false,
       "margin_df": 20.0,
-      "margin_nll_improvement": -0.002409117978485753,
+      "margin_nll_improvement": -0.0024091179784866412,
       "margin_scale": 1.0,
       "margin_strength": 0.0,
       "total_candidate_pass": false,
@@ -385,21 +429,21 @@
     "conditional_uncertainty_enabled": false,
     "holdout_games": 272,
     "holdout_season": 2025,
-    "home_win_brier": 0.22871501280256112,
-    "home_win_ece": 0.05982942561488687,
-    "home_win_log_loss": 0.647506482524082,
+    "home_win_brier": 0.2287150128025609,
+    "home_win_ece": 0.05982942561488695,
+    "home_win_log_loss": 0.6475064825240814,
     "margin_50_coverage": 0.5110294117647058,
     "margin_80_coverage": 0.7830882352941176,
     "margin_conditional_enabled": false,
     "margin_conditional_strength": 0.0,
     "margin_df": 1000000.0,
-    "margin_nll": 3.9948617498156644,
-    "margin_nll_improvement": -0.002409117978485753,
+    "margin_nll": 3.9948617498156627,
+    "margin_nll_improvement": -0.0024091179784866412,
     "margin_scale": 1.0,
     "mid_confidence_actual_rate": 0.5897435897435898,
     "mid_confidence_games": 39,
-    "mid_confidence_gap": 0.01250323046627122,
-    "mid_confidence_mean_probability": 0.602246820209861,
+    "mid_confidence_gap": 0.012503230466270998,
+    "mid_confidence_mean_probability": 0.6022468202098608,
     "model_family": "gaussian+logistic_moneyline",
     "moneyline_logistic_enabled": true,
     "reliability_ready": true,
@@ -409,37 +453,37 @@
     "total_conditional_enabled": false,
     "total_conditional_strength": 0.0,
     "total_df": 1000000.0,
-    "total_nll": 4.019776337747561,
+    "total_nll": 4.019776337747562,
     "total_nll_improvement": -0.005085976974520179,
     "total_scale": 1.0,
     "training_games": 1151,
     "validation_season": 2024,
     "win_holdout": {
       "alpha": 0.0,
-      "brier_improvement": 0.0012430637710442172,
+      "brier_improvement": 0.001243063771044245,
       "candidate_pass": true,
       "gaussian": {
-        "brier": 0.22995807657360534,
-        "ece": 0.07547415207839268,
+        "brier": 0.22995807657360515,
+        "ece": 0.07547415207839255,
         "games": 271,
-        "log_loss": 0.6500275662457817,
+        "log_loss": 0.6500275662457812,
         "mid_confidence_actual_rate": 0.6341463414634146,
         "mid_confidence_games": 41,
-        "mid_confidence_gap": 0.03204560925968225,
-        "mid_confidence_mean_probability": 0.6021007322037324
+        "mid_confidence_gap": 0.03204560925968236,
+        "mid_confidence_mean_probability": 0.6021007322037323
       },
       "holdout_games": 272,
       "holdout_season": 2025,
-      "log_loss_improvement": 0.0025210837216996795,
+      "log_loss_improvement": 0.0025210837216997906,
       "logistic": {
-        "brier": 0.22871501280256112,
-        "ece": 0.05982942561488687,
+        "brier": 0.2287150128025609,
+        "ece": 0.05982942561488695,
         "games": 271,
-        "log_loss": 0.647506482524082,
+        "log_loss": 0.6475064825240814,
         "mid_confidence_actual_rate": 0.5897435897435898,
         "mid_confidence_games": 39,
-        "mid_confidence_gap": 0.01250323046627122,
-        "mid_confidence_mean_probability": 0.602246820209861
+        "mid_confidence_gap": 0.012503230466270998,
+        "mid_confidence_mean_probability": 0.6022468202098608
       },
       "training_games": 813,
       "validation_games": 272,
@@ -449,9 +493,9 @@
   "reconciliation": {
     "checks": [
       {
-        "detail": "predictions=45 metadata=45",
+        "detail": "predictions=45 metadata=354",
         "name": "market_row_count",
-        "passed": true,
+        "passed": false,
         "severity": "ERROR"
       },
       {
@@ -479,7 +523,7 @@
         "severity": "ERROR"
       },
       {
-        "detail": "status=WARN",
+        "detail": "status=OK",
         "name": "data_contracts_publishable",
         "passed": true,
         "severity": "ERROR"
@@ -509,14 +553,22 @@
         "severity": "ERROR"
       }
     ],
-    "errors": [],
-    "status": "PASS"
+    "errors": [
+      {
+        "detail": "predictions=45 metadata=354",
+        "name": "market_row_count",
+        "passed": false,
+        "severity": "ERROR"
+      }
+    ],
+    "status": "FAIL"
   },
   "release": {
     "blockers": [
       "quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state",
       "injury_personnel_freshness: >=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
       "context_coverage: >=90% current injury/rest/weather/travel context coverage",
+      "regime_edge_reliability: at least two markets clear fixed regime-specific probability and edge reliability on validation plus untouched holdout",
       "live_monitoring: engineering readiness >=90/100; multi-book breadth gated separately",
       "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
       "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
@@ -529,7 +581,7 @@
         "name": "data_contracts",
         "passed": true,
         "requirement": "no ERROR-level data-contract violations",
-        "value": "WARN"
+        "value": "OK"
       },
       {
         "detail": "",
@@ -577,11 +629,11 @@
         "passed": true,
         "requirement": "validated chronological probability reliability clears Brier/ECE, 58%-62% confidence-band, and margin/total interval guardrails",
         "value": {
-          "brier": 0.22871501280256112,
-          "ece": 0.05982942561488687,
+          "brier": 0.2287150128025609,
+          "ece": 0.05982942561488695,
           "margin_80_coverage": 0.7830882352941176,
           "mid_confidence_games": 39,
-          "mid_confidence_gap": 0.01250323046627122,
+          "mid_confidence_gap": 0.012503230466270998,
           "model_family": "gaussian+logistic_moneyline",
           "total_80_coverage": 0.8051470588235294,
           "validated_reliability_ready": true
@@ -589,10 +641,27 @@
       },
       {
         "detail": "",
+        "name": "regime_edge_reliability",
+        "passed": false,
+        "requirement": "at least two markets clear fixed regime-specific probability and edge reliability on validation plus untouched holdout",
+        "value": {
+          "holdout_season": 2025,
+          "market_status": {
+            "moneyline": "UNRELIABLE",
+            "spread": "UNRELIABLE",
+            "total": "UNRELIABLE"
+          },
+          "reliable_markets": [],
+          "status": "READY",
+          "validation_season": 2024
+        }
+      },
+      {
+        "detail": "",
         "name": "live_monitoring",
         "passed": false,
         "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
-        "value": 87.7
+        "value": 88.0
       },
       {
         "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -633,8 +702,8 @@
           "status": "ESTABLISHED SAMPLE",
           "verified_clv_coverage": 0.7965686274509803,
           "verified_roi_ci_95": [
-            -0.1396121090985705,
-            -0.016165832156321128
+            -0.13928705223691926,
+            -0.016877899281981575
           ]
         }
       },
@@ -645,11 +714,7 @@
         "requirement": "frozen nested chronological policy is production-validated with at least two enabled markets",
         "value": {
           "deployment_mode": "paper",
-          "enabled_markets": [
-            "moneyline",
-            "spread",
-            "total"
-          ],
+          "enabled_markets": [],
           "source": "paper only; no verified archived opening-entry sample",
           "split": "unavailable"
         }
@@ -708,6 +773,7 @@
       "Resolve expected starting-QB identity/certainty for at least 95% of current games before betting release.",
       "Refresh injury, depth-chart, and roster sources until at least 95% of current games have FRESH personnel context.",
       "Complete timestamp-safe NFL injuries/rest/weather/travel context coverage.",
+      "Keep production disabled until at least two NFL markets clear the fixed regime-specific reliability audit on validation and holdout.",
       "Keep NFL policy in paper research until verified-entry chronological ROI/CLV evidence clears the hard gates.",
       "Accumulate independently graded portfolio decisions; historical backtests do not substitute for live evidence."
     ],
@@ -715,20 +781,8 @@
     "state": "RESEARCH"
   },
   "schema_version": 1,
-  "status": "WARN",
+  "status": "FAIL",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 80.7,
-      "generated_at": "2026-10-06T03:59:12.190960+00:00",
-      "live_readiness_score": 93.4,
-      "model_generated_at": "2026-10-06T03:58:48.148579+00:00",
-      "publication_status": "WARN",
-      "release_state": "RESEARCH",
-      "season": 2026,
-      "week": 5
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -860,12 +914,27 @@
       "release_state": "RESEARCH",
       "season": 2026,
       "week": 5
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "WARN",
+      "distribution_stability": 80.7,
+      "generated_at": "2026-10-06T21:43:08.188441+00:00",
+      "live_readiness_score": 88.7,
+      "model_generated_at": "2026-10-06T21:42:25.629998+00:00",
+      "publication_status": "WARN",
+      "release_state": "RESEARCH",
+      "season": 2026,
+      "week": 5
     }
   ],
   "warnings": [
+    "17 market rows have high model-vs-consensus disagreement",
+    "fewer than two markets clear regime-specific edge reliability",
     "quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state",
     "injury_personnel_freshness: >=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
     "context_coverage: >=90% current injury/rest/weather/travel context coverage",
+    "regime_edge_reliability: at least two markets clear fixed regime-specific probability and edge reliability on validation plus untouched holdout",
     "live_monitoring: engineering readiness >=90/100; multi-book breadth gated separately",
     "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
     "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",

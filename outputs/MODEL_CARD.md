@@ -30,5 +30,7 @@
 - Prior-week injury designations cannot carry forward as current risk; injury, depth, and roster context must be FRESH.
 - Probability changes must improve an untouched chronological holdout; unvalidated reliability blocks betting rather than increasing confidence.
 - The 58%-62% confidence band is audited explicitly when the holdout contains an adequate sample.
+- Market, side, favorite/underdog role, confidence, edge-size, scoring environment, and season-phase regimes must validate on both a validation season and a later untouched holdout.
+- A current opportunity in an unreliable or undersampled required regime fails closed instead of inheriting a global average edge.
 - Historical archive fallbacks do not become verified opening entries by relabeling.
 - No production staking until every hard release gate passes.

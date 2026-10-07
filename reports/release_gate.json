@@ -3,6 +3,7 @@
     "quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state",
     "injury_personnel_freshness: >=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
     "context_coverage: >=90% current injury/rest/weather/travel context coverage",
+    "regime_edge_reliability: at least two markets clear fixed regime-specific probability and edge reliability on validation plus untouched holdout",
     "live_monitoring: engineering readiness >=90/100; multi-book breadth gated separately",
     "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
     "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
@@ -15,7 +16,7 @@
       "name": "data_contracts",
       "passed": true,
       "requirement": "no ERROR-level data-contract violations",
-      "value": "WARN"
+      "value": "OK"
     },
     {
       "detail": "",
@@ -63,11 +64,11 @@
       "passed": true,
       "requirement": "validated chronological probability reliability clears Brier/ECE, 58%-62% confidence-band, and margin/total interval guardrails",
       "value": {
-        "brier": 0.22871501280256112,
-        "ece": 0.05982942561488687,
+        "brier": 0.2287150128025609,
+        "ece": 0.05982942561488695,
         "margin_80_coverage": 0.7830882352941176,
         "mid_confidence_games": 39,
-        "mid_confidence_gap": 0.01250323046627122,
+        "mid_confidence_gap": 0.012503230466270998,
         "model_family": "gaussian+logistic_moneyline",
         "total_80_coverage": 0.8051470588235294,
         "validated_reliability_ready": true
@@ -75,10 +76,27 @@
     },
     {
       "detail": "",
+      "name": "regime_edge_reliability",
+      "passed": false,
+      "requirement": "at least two markets clear fixed regime-specific probability and edge reliability on validation plus untouched holdout",
+      "value": {
+        "holdout_season": 2025,
+        "market_status": {
+          "moneyline": "UNRELIABLE",
+          "spread": "UNRELIABLE",
+          "total": "UNRELIABLE"
+        },
+        "reliable_markets": [],
+        "status": "READY",
+        "validation_season": 2024
+      }
+    },
+    {
+      "detail": "",
       "name": "live_monitoring",
       "passed": false,
       "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
-      "value": 87.7
+      "value": 88.0
     },
     {
       "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -119,8 +137,8 @@
         "status": "ESTABLISHED SAMPLE",
         "verified_clv_coverage": 0.7965686274509803,
         "verified_roi_ci_95": [
-          -0.1396121090985705,
-          -0.016165832156321128
+          -0.13928705223691926,
+          -0.016877899281981575
         ]
       }
     },
@@ -131,11 +149,7 @@
       "requirement": "frozen nested chronological policy is production-validated with at least two enabled markets",
       "value": {
         "deployment_mode": "paper",
-        "enabled_markets": [
-          "moneyline",
-          "spread",
-          "total"
-        ],
+        "enabled_markets": [],
         "source": "paper only; no verified archived opening-entry sample",
         "split": "unavailable"
       }
@@ -190,15 +204,18 @@
   "engineering_ready": false,
   "historical_edge_ready": false,
   "live_evidence_ready": false,
-  "meaning": "Hard NFL deployment gate. Structural parity with CFB does not transfer CFB evidence; PRODUCTION requires independent NFL engineering, historical entry, a validated frozen policy, market breadth, and portfolio-verified live evidence.",
+  "meaning": "Hard NFL deployment gate. Structural parity with CFB does not transfer CFB evidence; PRODUCTION requires independent NFL engineering, historical entry, validated regime-specific edge reliability, a frozen policy, market breadth, and portfolio-verified live evidence.",
   "next_requirements": [
     "Resolve expected starting-QB identity/certainty for at least 95% of current games before betting release.",
     "Refresh injury, depth-chart, and roster sources until at least 95% of current games have FRESH personnel context.",
     "Complete timestamp-safe NFL injuries/rest/weather/travel context coverage.",
+    "Keep production disabled until at least two NFL markets clear the fixed regime-specific reliability audit on validation and holdout.",
     "Keep NFL policy in paper research until verified-entry chronological ROI/CLV evidence clears the hard gates.",
     "Accumulate independently graded portfolio decisions; historical backtests do not substitute for live evidence."
   ],
   "production_eligible": false,
   "production_policy_ready": false,
-  "release_state": "RESEARCH"
+  "regime_reliability_ready": false,
+  "release_state": "RESEARCH",
+  "reliable_regime_markets": []
 }

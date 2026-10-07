@@ -1,23 +1,44 @@
 {
   "data_quality": {
+    "candidate_rows": 45,
     "context_source_errors": [],
-    "market_rows": 45,
+    "decision_intelligence_errors": [],
+    "duplicate_game_count": 0,
+    "duplicate_market_rows": 0,
+    "errors": [],
+    "extra_projection_games": [],
+    "future_verified_quote_rows": 0,
+    "games_without_candidate_rows": [],
+    "market_rows": 354,
     "market_source_errors": [],
+    "meaning": "current-run structural and chronological data integrity; missing values are never fabricated",
+    "missing_data_count": 0,
+    "missing_projection_games": [],
+    "post_kickoff_verified_quote_rows": 0,
     "projection_games": 15,
-    "recent_form_source_errors": [
-      "recent-form shadow ERROR: InvalidOperationError: 'is_in' cannot check for Float64 values in List(Int64) data.\nHint: Before version 2.0, Polars would perform this check by lossily coercing the operands to Float64. However, since Polars 2.0, for 'is_in' it is required to explicitly cast (one of) the operands to a compatible type."
-    ],
-    "status": "WARN",
-    "target_games": 15
+    "recent_form_source_errors": [],
+    "source_health": {
+      "errors": [],
+      "status": "OK"
+    },
+    "status": "OK",
+    "target_games": 15,
+    "unmatched_market_rows": 0,
+    "verified_quote_rows": 354,
+    "warnings": []
   },
-  "live_readiness_score": 88.7,
+  "live_readiness_score": 80.1,
   "meaning": "operational health; not a profitability or staking signal",
-  "monitor_alerts": [],
+  "monitor_alerts": [
+    "17 market rows have high model-vs-consensus disagreement",
+    "fewer than two markets clear regime-specific edge reliability"
+  ],
   "production_eligible": false,
   "release_blockers": [
     "quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state",
     "injury_personnel_freshness: >=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
     "context_coverage: >=90% current injury/rest/weather/travel context coverage",
+    "regime_edge_reliability: at least two markets clear fixed regime-specific probability and edge reliability on validation plus untouched holdout",
     "live_monitoring: engineering readiness >=90/100; multi-book breadth gated separately",
     "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
     "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
@@ -32,7 +53,7 @@
     "football": "nflverse",
     "historical_market": "nflverse public archive",
     "injuries": "OK",
-    "recent_form_pbp": "recent-form shadow ERROR: InvalidOperationError: 'is_in' cannot check for Float64 values in List(Int64) data.\nHint: Before version 2.0, Polars would perform this check by lossily coercing the operands to Float64. However, since Polars 2.0, for 'is_in' it is required to explicitly cast (one of) the operands to a compatible type.",
+    "recent_form_pbp": "nflverse",
     "rosters_weekly": "OK",
     "weather": "Open-Meteo"
   },
