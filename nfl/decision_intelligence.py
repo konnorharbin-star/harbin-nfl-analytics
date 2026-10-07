@@ -197,6 +197,50 @@ def consensus_diagnostics(
     }
 
 
+
+def selected_quote_consensus_diagnostics(
+    market: ESPNTwoWayMarket,
+    consensus: Mapping[str, object],
+    *,
+    config: Mapping[str, object] | None = None,
+) -> dict[str, object]:
+    """Flag a selected book quote that is materially detached from robust consensus."""
+
+    cfg = config or {}
+    selected = _canonical_market_value(market)
+    consensus_value = _number(consensus.get("market_consensus_value"))
+    books = int(float(consensus.get("market_consensus_books", 0) or 0))
+    defaults = {
+        "moneyline": 0.06,
+        "spread": 1.5,
+        "total": 2.0,
+    }
+    keys = {
+        "moneyline": "moneyline_selected_quote_outlier_probability",
+        "spread": "spread_selected_quote_outlier_points",
+        "total": "total_selected_quote_outlier_points",
+    }
+    threshold = max(
+        0.0,
+        float(cfg.get(keys.get(market.market_type, ""), defaults.get(market.market_type, 1.0))),
+    )
+    if selected is None or consensus_value is None:
+        return {
+            "selected_quote_consensus_value": selected,
+            "selected_quote_consensus_distance": None,
+            "selected_quote_outlier_threshold": threshold,
+            "selected_quote_outlier": False,
+        }
+    distance = abs(float(selected) - consensus_value)
+    return {
+        "selected_quote_consensus_value": float(selected),
+        "selected_quote_consensus_distance": distance,
+        "selected_quote_outlier_threshold": threshold,
+        # Require at least three canonical books so a two-book disagreement is
+        # surfaced as dispersion rather than declaring either book erroneous.
+        "selected_quote_outlier": books >= 3 and distance >= threshold,
+    }
+
 def _snapshot_side_quote(
     snapshot: Mapping[str, object],
     side: str,
@@ -330,6 +374,8 @@ def _execution_action(
     severity = str(row.get("market_disagreement_severity") or "UNKNOWN").upper()
     if severity == "HIGH":
         return "WAIT", "high model-vs-consensus disagreement requires review"
+    if bool(row.get("selected_quote_outlier", False)):
+        return "WAIT", "selected sportsbook quote is detached from cross-book consensus"
     if bool(row.get("market_dispersion_high", False)):
         return "WAIT", "cross-book market dispersion is elevated"
 
@@ -394,15 +440,70 @@ def attach_decision_intelligence(
     research_counts: dict[str, int] = {"BET_NOW": 0, "WAIT": 0, "PASS": 0}
     movement_rows = 0
     high_disagreement = 0
+    quote_outliers = 0
+    watch_candidates = 0
     for source in candidates.to_dicts():
         row = dict(source)
         prior = _latest_prior_snapshot(row, history)
         movement = _movement(row, prior)
         row.update(movement)
+        candidate_signal = str(row.get("model_candidate_signal") or "PASS").upper()
+        final_signal = str(row.get("quant_signal") or "PASS").upper()
+        candidate_watch = candidate_signal != "PASS" and final_signal == "PASS"
+        if bool(row.get("selected_quote_outlier", False)):
+            candidate_watch = False
+            candidate_state = "BLOCKED_MARKET_OUTLIER"
+            candidate_reason = "selected quote is detached from cross-book consensus"
+        elif final_signal != "PASS":
+            candidate_state = "ACTIVE"
+            candidate_reason = ""
+        elif candidate_signal == "PASS":
+            candidate_state = "PASS"
+            candidate_reason = ""
+        else:
+            candidate_state = "WATCH_BLOCKED"
+            if bool(row.get("probability_reliability_veto", False)):
+                candidate_reason = str(
+                    row.get("probability_reliability_veto_reason") or
+                    "probability reliability gate is not ready"
+                )
+            elif bool(row.get("qb_certainty_veto", False)):
+                candidate_reason = str(
+                    row.get("qb_certainty_veto_reason") or
+                    "starting-QB certainty is not decision-ready"
+                )
+            elif bool(row.get("context_freshness_veto", False)):
+                candidate_reason = str(
+                    row.get("context_freshness_veto_reason") or
+                    "injury/personnel context is not fresh"
+                )
+            elif bool(row.get("context_veto", False)):
+                candidate_reason = str(
+                    row.get("context_veto_reason") or
+                    "adverse context risk veto is active"
+                )
+            elif not bool(row.get("regime_reliability_ready", True)):
+                candidate_reason = str(
+                    row.get("regime_reliability_reason") or
+                    "market regime has not cleared reliability validation"
+                )
+            else:
+                candidate_reason = "candidate is blocked by downstream safety policy"
+        row.update(
+            {
+                "candidate_state": candidate_state,
+                "candidate_watch": candidate_watch,
+                "candidate_block_reason": candidate_reason,
+            }
+        )
         if movement["timing_market_move"] != "NO_HISTORY":
             movement_rows += 1
         if str(row.get("market_disagreement_severity") or "").upper() == "HIGH":
             high_disagreement += 1
+        if bool(row.get("selected_quote_outlier", False)):
+            quote_outliers += 1
+        if bool(row.get("candidate_watch", False)):
+            watch_candidates += 1
 
         quant_action, quant_reason = _execution_action(
             row,
@@ -439,6 +540,8 @@ def attach_decision_intelligence(
         "research_execution_actions": research_counts,
         "movement_coverage": movement_rows / len(rows),
         "high_disagreement_rows": high_disagreement,
+        "selected_quote_outlier_rows": quote_outliers,
+        "watch_candidate_rows": watch_candidates,
         "meaning": (
             "shadow execution timing and model/market diagnostics; market prices remain "
             "downstream of the independent fair-score projection"
