@@ -50,6 +50,8 @@ on:
       - "nfl/current.py"
       - "nfl/pregame.py"
       - "nfl/data.py"
+      - "nfl/data_integrity.py"
+      - "nfl/decision_intelligence.py"
       - "nfl/weather.py"
       - "nfl/pro_market.py"
       - "nfl/schedule_market.py"
@@ -75,6 +77,8 @@ on:
       - "scripts/should_pregame_refresh.py"
       - "tests/test_context.py"
       - "tests/test_current_projection.py"
+      - "tests/test_data_integrity.py"
+      - "tests/test_decision_intelligence.py"
       - "tests/test_operational_parity.py"
       - "tests/test_probability.py"
       - "tests/test_probability_runtime.py"
@@ -158,12 +162,14 @@ jobs:
               print("## NFL model\nNo canonical report was produced.")
               raise SystemExit(0)
           report=json.load(open(path))
-          meta=report.get("meta",{}); market=meta.get("market_coverage",{}); intel=meta.get("market_intelligence",{}); regime=intel.get("regime_reliability",{}) if isinstance(intel,dict) else {}; port=report.get("portfolio",{}); gate=report.get("release_gate",{}); mon=report.get("monitoring",{}); prob=meta.get("probability",{}); ctx=meta.get("current_context",{}); pub=report.get("publication",{}); bundle=pub.get("bundle",{}) if isinstance(pub,dict) else {}
+          meta=report.get("meta",{}); market=meta.get("market_coverage",{}); intel=meta.get("market_intelligence",{}); decision=meta.get("decision_intelligence",{}); quality=meta.get("data_quality",{}); regime=intel.get("regime_reliability",{}) if isinstance(intel,dict) else {}; port=report.get("portfolio",{}); gate=report.get("release_gate",{}); mon=report.get("monitoring",{}); prob=meta.get("probability",{}); ctx=meta.get("current_context",{}); pub=report.get("publication",{}); bundle=pub.get("bundle",{}) if isinstance(pub,dict) else {}
           print(f"## Harbin NFL Analytics — {meta.get('season')} Week {meta.get('week')}")
           print(f"- Release state: **{gate.get('release_state','UNKNOWN')}** · Production eligible: **{gate.get('production_eligible',False)}**")
           print(f"- Verified ML/Spread/Total: **{market.get('moneyline',0)}/{market.get('spread',0)}/{market.get('total',0)}**")
           print(f"- Research ML/Spread/Total: **{intel.get('research_moneyline',0)}/{intel.get('research_spread',0)}/{intel.get('research_total',0)}**")
           print(f"- Distinct verified books: **{intel.get('distinct_books',0)}** · Multi-book coverage: **{float(intel.get('multi_book_coverage',0) or 0):.1%}**")
+          print(f"- Decision intelligence: **{decision.get('status','UNKNOWN')}** · Shadow actions: **{decision.get('research_execution_actions',{})}** · High disagreement: **{decision.get('high_disagreement_rows',0)}**")
+          print(f"- Data integrity: **{quality.get('status','UNKNOWN')}** · Missing: **{quality.get('missing_data_count',0)}** · Future/post-kickoff quotes: **{quality.get('future_verified_quote_rows',0)}/{quality.get('post_kickoff_verified_quote_rows',0)}**")
           print(f"- Probability: **{prob.get('model_family','unknown')}** · Reliability ready: **{prob.get('reliability_ready',False)}**")
           print(f"- Brier/ECE: **{prob.get('home_win_brier','n/a')} / {prob.get('home_win_ece','n/a')}** · Margin/Total 80% coverage: **{prob.get('margin_80_coverage','n/a')} / {prob.get('total_80_coverage','n/a')}**")
           print(f"- 58%-62% band: **n={prob.get('mid_confidence_games',0)} · predicted={prob.get('mid_confidence_mean_probability','n/a')} · actual={prob.get('mid_confidence_actual_rate','n/a')}**")
