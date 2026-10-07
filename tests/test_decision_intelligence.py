@@ -7,6 +7,7 @@ import polars as pl
 from nfl.decision_intelligence import (
     attach_decision_intelligence,
     consensus_diagnostics,
+    quote_sanity,
 )
 from nfl.espn_market import ESPNTwoWayMarket
 from nfl.policy import DEFAULT_POLICY
@@ -178,3 +179,51 @@ def test_research_only_quote_fails_closed() -> None:
     assert row["execution_action"] == "PASS"
     assert row["research_execution_action"] == "PASS"
     assert "research-only" in row["execution_action_reason"]
+
+
+def test_consensus_deduplicates_same_canonical_book_across_providers() -> None:
+    now = datetime(2026, 10, 6, 18, tzinfo=UTC)
+    duplicate = _spread_market(book="DraftKings", home_line=-3.0, captured_at=now)
+    newer_duplicate = ESPNTwoWayMarket(
+        **{
+            **duplicate.to_dict(),
+            "provider": "other-provider",
+            "captured_at": now + timedelta(seconds=1),
+            "first_line": -3.5,
+            "second_line": 3.5,
+        }
+    )
+    markets = [
+        duplicate,
+        newer_duplicate,
+        _spread_market(book="FanDuel", home_line=-4.0, captured_at=now),
+    ]
+
+    result = consensus_diagnostics(
+        "spread",
+        markets,
+        model_home_margin=4.0,
+        model_total=45.0,
+        model_home_probability=0.60,
+        config=DEFAULT_POLICY["decision_intelligence"],
+    )
+
+    assert result["market_consensus_books"] == 2
+    assert abs(float(result["market_consensus_value"]) - 3.75) < 1e-12
+
+
+def test_quote_sanity_rejects_extreme_cross_book_outlier() -> None:
+    now = datetime(2026, 10, 6, 18, tzinfo=UTC)
+    normal_a = _spread_market(book="Book A", home_line=-3.0, captured_at=now)
+    normal_b = _spread_market(book="Book B", home_line=-3.5, captured_at=now)
+    outlier = _spread_market(book="Book C", home_line=4.5, captured_at=now)
+
+    result = quote_sanity(
+        outlier,
+        [normal_a, normal_b, outlier],
+        config=DEFAULT_POLICY["decision_intelligence"],
+    )
+
+    assert result["ok"] is False
+    assert float(result["deviation"]) > 2.0
+    assert "deviates" in str(result["reason"])

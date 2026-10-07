@@ -111,6 +111,85 @@ def _thresholds(
     return max(0.0, medium), max(medium, high), max(0.0, dispersion)
 
 
+def quote_sanity(
+    market: ESPNTwoWayMarket,
+    peers: Sequence[ESPNTwoWayMarket],
+    *,
+    config: Mapping[str, object] | None = None,
+) -> dict[str, object]:
+    """Reject extreme verified quote outliers from execution/line-shopping.
+
+    The quote remains available for diagnostics. This guard only prevents an isolated
+    malformed or stale provider row from manufacturing artificial EV.
+    """
+
+    if is_research_only_market(market):
+        return {
+            "ok": False,
+            "reason": "research-only quote is not execution eligible",
+            "deviation": None,
+            "consensus": None,
+        }
+
+    cfg = config or {}
+    latest_by_book: dict[str, ESPNTwoWayMarket] = {}
+    for peer in peers:
+        if peer.market_type != market.market_type or is_research_only_market(peer):
+            continue
+        book = canonical_book_identity(peer.book or peer.provider)
+        if not book:
+            continue
+        previous = latest_by_book.get(book)
+        if previous is None or peer.captured_at > previous.captured_at:
+            latest_by_book[book] = peer
+
+    values = [
+        value
+        for peer in latest_by_book.values()
+        if (value := _canonical_market_value(peer)) is not None and isfinite(value)
+    ]
+    current = _canonical_market_value(market)
+    if current is None or not isfinite(current):
+        return {
+            "ok": False,
+            "reason": "quote cannot be normalized for market sanity",
+            "deviation": None,
+            "consensus": None,
+        }
+    if not values:
+        return {
+            "ok": True,
+            "reason": "no peer consensus available; quote passes structural checks",
+            "deviation": 0.0,
+            "consensus": current,
+        }
+
+    consensus = float(median(values))
+    deviation = abs(float(current) - consensus)
+    default_limit = {
+        "moneyline": 0.10,
+        "spread": 2.0,
+        "total": 3.0,
+    }.get(market.market_type, 1.0)
+    key = {
+        "moneyline": "moneyline_quote_outlier_probability",
+        "spread": "spread_quote_outlier_points",
+        "total": "total_quote_outlier_points",
+    }.get(market.market_type, "quote_outlier_limit")
+    limit = max(0.0, float(cfg.get(key, default_limit) or default_limit))
+    ok = deviation <= limit + 1e-12
+    return {
+        "ok": ok,
+        "reason": (
+            "quote is within verified cross-book sanity range"
+            if ok
+            else f"quote deviates {deviation:.3f} from consensus beyond {limit:.3f}"
+        ),
+        "deviation": deviation,
+        "consensus": consensus,
+    }
+
+
 def consensus_diagnostics(
     market_type: str,
     markets: Sequence[ESPNTwoWayMarket],
