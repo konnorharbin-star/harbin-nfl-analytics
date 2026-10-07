@@ -8,7 +8,7 @@ import polars as pl
 
 from .book_identity import canonical_book_identity
 from .contracts import DataContractError, require_columns
-from .decision_intelligence import consensus_diagnostics
+from .decision_intelligence import consensus_diagnostics, quote_sanity
 from .espn_market import ESPNTwoWayMarket
 from .market import MarketComparison, MarketQuote, compare_two_way_market
 from .policy import (
@@ -158,16 +158,62 @@ def build_market_intelligence(
                 if not is_research_only_market(market)
             }
         )
-        chosen, source_market = max(
-            candidates,
-            key=lambda item: (
-                item[0].expected_value_per_unit,
-                item[0].probability_edge,
-                item[0].american_odds,
-                item[0].side,
-                str(item[1].book),
-            ),
-        )
+        peer_markets = [market for _, market in candidates]
+        sane_verified = [
+            (comparison, market, quote_sanity(market, peer_markets, config=decision_config))
+            for comparison, market in candidates
+            if not is_research_only_market(market)
+            and bool(quote_sanity(market, peer_markets, config=decision_config)["ok"])
+        ]
+        research_only = [
+            (comparison, market)
+            for comparison, market in candidates
+            if is_research_only_market(market)
+        ]
+        if sane_verified:
+            chosen, source_market, chosen_sanity = max(
+                sane_verified,
+                key=lambda item: (
+                    item[0].expected_value_per_unit,
+                    item[0].probability_edge,
+                    item[0].american_odds,
+                    item[0].side,
+                    str(item[1].book),
+                ),
+            )
+        elif research_only:
+            chosen, source_market = max(
+                research_only,
+                key=lambda item: (
+                    item[0].expected_value_per_unit,
+                    item[0].probability_edge,
+                    item[0].american_odds,
+                    item[0].side,
+                    str(item[1].book),
+                ),
+            )
+            chosen_sanity = {
+                "ok": False,
+                "reason": "no sane verified quote; using research-only fallback",
+                "deviation": None,
+                "consensus": None,
+            }
+        else:
+            chosen, source_market = max(
+                candidates,
+                key=lambda item: (
+                    item[0].expected_value_per_unit,
+                    item[0].probability_edge,
+                    item[0].american_odds,
+                    item[0].side,
+                    str(item[1].book),
+                ),
+            )
+            chosen_sanity = quote_sanity(
+                source_market,
+                peer_markets,
+                config=decision_config,
+            )
         research_signal = signal_from_policy(
             chosen.expected_value_per_unit,
             chosen.probability_edge,
@@ -215,7 +261,10 @@ def build_market_intelligence(
         if not bool(regime_reliability.get("ready", False)):
             production_signal = "PASS"
 
-        execution_verified = not is_research_only_market(source_market)
+        execution_verified = (
+            not is_research_only_market(source_market)
+            and bool(chosen_sanity.get("ok", False))
+        )
         signal = production_signal if execution_verified else "PASS"
         research_stake = 0.0
         if research_signal != "PASS":
@@ -303,6 +352,9 @@ def build_market_intelligence(
             "market_execution_verified": execution_verified,
             "market_quote_timestamp_verified": execution_verified,
             "market_source_role": "verified_live" if execution_verified else "research_fallback",
+            "market_quote_sanity_ok": bool(chosen_sanity.get("ok", False)),
+            "market_quote_sanity_reason": chosen_sanity.get("reason"),
+            "market_quote_consensus_deviation": chosen_sanity.get("deviation"),
             "source_event_id": source_market.source_event_id,
             "stake_units": stake,
             "research_stake_units": research_stake,
@@ -324,6 +376,11 @@ def build_market_intelligence(
                 (pl.col("quant_market") == market_name)
                 & pl.col("market_execution_verified")
             ).height
+    sanity_blocked_rows = (
+        frame.filter(~pl.col("market_quote_sanity_ok")).height
+        if not frame.is_empty() and "market_quote_sanity_ok" in frame.columns
+        else 0
+    )
     consensus_verified_rows = (
         frame.filter(pl.col("market_consensus_verified")).height
         if not frame.is_empty() and "market_consensus_verified" in frame.columns
@@ -375,6 +432,7 @@ def build_market_intelligence(
             else 0
         ),
         "consensus_verified_rows": consensus_verified_rows,
+        "sanity_blocked_rows": sanity_blocked_rows,
         "high_disagreement_rows": high_disagreement_rows,
         "high_dispersion_rows": high_dispersion_rows,
         "market_source": "canonical current NFL market aggregation",
