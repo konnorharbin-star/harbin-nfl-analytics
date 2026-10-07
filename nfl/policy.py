@@ -53,6 +53,9 @@ DEFAULT_POLICY: dict[str, object] = {
         "moneyline_dispersion_warn_probability": 0.035,
         "meaningful_line_move_points": 0.5,
         "meaningful_moneyline_decimal_move": 0.05,
+        "spread_quote_outlier_points": 2.0,
+        "total_quote_outlier_points": 3.0,
+        "moneyline_quote_outlier_probability": 0.10,
     },
     "portfolio": {
         "max_slate_units": 5.0,
