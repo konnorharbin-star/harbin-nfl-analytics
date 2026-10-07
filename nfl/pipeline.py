@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 
 import polars as pl
 
+from .candidate_ledger import append_candidate_observations
 from .context import (
     apply_context_confidence_veto,
     apply_context_freshness_veto,
@@ -431,6 +432,15 @@ def run_operational_pipeline(
         if persist_decisions
         else {"status": "disabled"}
     )
+    candidate_ledger = (
+        append_candidate_observations(
+            allocated,
+            observed_at=decision_at.isoformat(),
+        )
+        if persist_decisions
+        else {"status": "disabled"}
+    )
+    meta["candidate_ledger"] = candidate_ledger
     health = write_health(meta, monitor, gate)
     model_card = write_model_card(meta, gate, evidence)
     report = write_canonical_report(
