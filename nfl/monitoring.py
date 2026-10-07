@@ -74,6 +74,34 @@ def build_live_monitoring(
         100.0 * float(intelligence.get("multi_book_coverage", 0.0) or 0.0)
     )
 
+    decision = meta.get("decision_intelligence")
+    if not isinstance(decision, dict):
+        decision = {}
+    decision_status = str(decision.get("status") or "UNKNOWN").upper()
+    high_disagreement_rows = int(
+        decision.get(
+            "high_disagreement_rows",
+            intelligence.get("high_disagreement_rows", 0),
+        )
+        or 0
+    )
+    research_actions = decision.get("research_execution_actions")
+    if not isinstance(research_actions, dict):
+        research_actions = {}
+    if decision_status == "BLOCKED":
+        alerts.append("decision-intelligence diagnostics are blocked")
+    if high_disagreement_rows:
+        alerts.append(
+            f"{high_disagreement_rows} market rows have high model-vs-consensus disagreement"
+        )
+
+    data_quality = meta.get("data_quality")
+    if not isinstance(data_quality, dict):
+        data_quality = {}
+    data_integrity_status = str(data_quality.get("status") or "UNKNOWN").upper()
+    if data_integrity_status == "FAIL":
+        alerts.append("current-run data integrity has hard failures")
+
     regime = intelligence.get("regime_reliability")
     if not isinstance(regime, dict):
         regime = {}
@@ -221,6 +249,14 @@ def build_live_monitoring(
         "scores": scores,
         "drift_details": drift_details,
         "drift_reference": str(reference_path) if reference_path.exists() else None,
+        "decision_diagnostics": {
+            "status": decision_status,
+            "enforced": bool(decision.get("enforced", False)),
+            "high_disagreement_rows": high_disagreement_rows,
+            "research_execution_actions": research_actions,
+            "movement_coverage": decision.get("movement_coverage"),
+        },
+        "data_integrity_status": data_integrity_status,
         "alerts": list(dict.fromkeys(alerts)),
         "meaning": "operational/model-monitoring score; not a profitability guarantee",
     }

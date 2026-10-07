@@ -13,10 +13,12 @@ from .context import (
 )
 from .current import run_current_projection, unplayed_regular_games
 from .data import NFLDataClient
+from .data_integrity import assess_data_integrity
+from .decision_intelligence import attach_decision_intelligence
 from .decision_ledger import append_portfolio_decisions
 from .free_market_backtest import build_archive_projection_dataset
 from .health import write_health
-from .line_history import append_market_snapshots
+from .line_history import append_market_snapshots, load_market_snapshots
 from .market_intel import build_market_intelligence
 from .model_card import write_model_card
 from .monitoring import write_live_monitoring
@@ -321,21 +323,65 @@ def run_operational_pipeline(
     candidates = apply_context_freshness_veto(candidates)
     candidates = apply_context_confidence_veto(candidates)
 
+    # Projection/context use the run-start as-of timestamp. Execution decisions use a
+    # later timestamp so quotes collected during this run are not falsely classified
+    # as future-dated merely because network collection happened after run start.
+    decision_at = datetime.now(UTC)
+    try:
+        snapshots = load_market_snapshots()
+        candidates, decision_intelligence = attach_decision_intelligence(
+            candidates,
+            policy=policy,
+            snapshots=snapshots,
+            now=decision_at,
+        )
+    except Exception as exc:
+        message = f"decision-intelligence ERROR: {type(exc).__name__}: {exc}"
+        decision_intelligence = {
+            "status": "BLOCKED",
+            "enforced": bool(
+                isinstance(policy.get("decision_intelligence"), dict)
+                and policy["decision_intelligence"].get(
+                    "enforce_execution_timing", False
+                )
+            ),
+            "reason": message,
+        }
+        if not candidates.is_empty():
+            candidates = candidates.with_columns(
+                pl.lit("PASS").alias("execution_action"),
+                pl.lit(message).alias("execution_action_reason"),
+                pl.lit("PASS").alias("research_execution_action"),
+                pl.lit(message).alias("research_execution_action_reason"),
+            )
+
     evidence = write_evidence_report()
     context_errors = [
         value for value in context_source_status.values() if value.startswith("ERROR:")
     ]
     market_errors = [str(value) for value in market_source_meta.get("source_errors", [])]
-    source_errors = context_errors + market_errors + recent_form_errors
-    data_quality = {
-        "status": "WARN" if source_errors else "OK",
-        "projection_games": projection.height,
-        "target_games": targets.height,
-        "market_rows": candidates.height,
-        "context_source_errors": context_errors,
-        "market_source_errors": market_errors,
-        "recent_form_source_errors": recent_form_errors,
-    }
+    decision_errors = (
+        [str(decision_intelligence.get("reason"))]
+        if decision_intelligence.get("status") == "BLOCKED"
+        else []
+    )
+    source_errors = context_errors + market_errors + recent_form_errors + decision_errors
+    data_quality = assess_data_integrity(
+        projection,
+        targets,
+        markets,
+        candidates,
+        source_errors=source_errors,
+        now=decision_at,
+    )
+    data_quality.update(
+        {
+            "context_source_errors": context_errors,
+            "market_source_errors": market_errors,
+            "recent_form_source_errors": recent_form_errors,
+            "decision_intelligence_errors": decision_errors,
+        }
+    )
     market_sources = ", ".join(str(value) for value in market_source_meta.get("sources", []))
     recent_form_source = (
         "nflverse"
@@ -343,7 +389,7 @@ def run_operational_pipeline(
         else str(recent_form_meta.get("reason", "blocked"))
     )
     meta: dict[str, object] = {
-        "generated_at": run_at.isoformat(),
+        "generated_at": decision_at.isoformat(),
         "season": season,
         "week": target_week,
         "projection_audit": projection_audit.to_dict(),
@@ -355,6 +401,7 @@ def run_operational_pipeline(
             "total": market_meta.get("total", 0),
         },
         "market_intelligence": market_meta,
+        "decision_intelligence": decision_intelligence,
         "probability": probability,
         "current_context": context,
         "data_quality": data_quality,
@@ -374,7 +421,7 @@ def run_operational_pipeline(
         candidates,
         policy=policy,
         release_gate=gate,
-        now=run_at,
+        now=decision_at,
     )
     line_capture = (
         append_market_snapshots(markets, targets) if capture_lines else {"status": "disabled"}
