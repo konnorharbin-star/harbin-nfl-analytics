@@ -128,12 +128,22 @@ def consensus_diagnostics(
         for market in markets
         if market.market_type == market_type and not is_research_only_market(market)
     ]
-    observations: list[tuple[float, str]] = []
+    # Do not overweight one sportsbook merely because the same book arrives through
+    # multiple providers. Keep the latest verified observation per canonical book.
+    latest_by_book: dict[str, ESPNTwoWayMarket] = {}
     for market in verified:
+        book = canonical_book_identity(market.book or market.provider)
+        if not book:
+            continue
+        previous = latest_by_book.get(book)
+        if previous is None or market.captured_at > previous.captured_at:
+            latest_by_book[book] = market
+
+    observations: list[tuple[float, str]] = []
+    for book, market in latest_by_book.items():
         value = _canonical_market_value(market)
         if value is None or not isfinite(value):
             continue
-        book = canonical_book_identity(market.book or market.provider)
         observations.append((value, book))
 
     values = [value for value, _ in observations]
