@@ -290,6 +290,10 @@ def apply_portfolio_controls(
     limits = active.get("portfolio")
     if not isinstance(limits, dict):
         limits = {}
+    decision_config = active.get("decision_intelligence")
+    if not isinstance(decision_config, dict):
+        decision_config = {}
+    timing_enforced = bool(decision_config.get("enforce_execution_timing", False))
     gate = release_gate or _read_json(
         "outputs/release_gate.json",
         {"release_state": "PAPER", "production_eligible": False},
@@ -361,6 +365,8 @@ def apply_portfolio_controls(
             "approved_units": 0.0,
             "bankroll_risk": bankroll,
             "committed_exposure": committed_exposure,
+            "execution_timing_enforced": timing_enforced,
+            "timing_blocked_bets": 0,
         }
 
     rows = candidate_rows
@@ -420,6 +426,7 @@ def apply_portfolio_controls(
     committed_units = slate
     allocated = 0
     blocked = 0
+    timing_blocked = 0
 
     for row in rows:
         research_stake = max(
@@ -463,6 +470,26 @@ def apply_portfolio_controls(
             # portfolio allocation is reserved for timestamp-valid pre-kickoff
             # opportunities so the decision ledger remains gradeable.
             continue
+
+        if timing_enforced:
+            action_key = (
+                "execution_action"
+                if production_gate_open
+                else "research_execution_action"
+            )
+            reason_key = (
+                "execution_action_reason"
+                if production_gate_open
+                else "research_execution_action_reason"
+            )
+            timing_action = str(row.get(action_key) or "PASS").upper()
+            if timing_action != "BET_NOW":
+                timing_blocked += 1
+                row["portfolio_limit_reason"] = (
+                    f"decision timing {timing_action}: "
+                    f"{row.get(reason_key) or 'no validated BET_NOW state'}"
+                )
+                continue
 
         if production_gate_open and not production_allowed:
             row["portfolio_limit_reason"] = (
@@ -567,6 +594,8 @@ def apply_portfolio_controls(
             1 for row in rows if row.get("portfolio_action") == "BET"
         ),
         "execution_blocked_bets": blocked,
+        "execution_timing_enforced": timing_enforced,
+        "timing_blocked_bets": timing_blocked,
         "active_recommendations": sum(
             str(row.get("recommendation_status") or "").upper() == "ACTIVE"
             for row in rows
