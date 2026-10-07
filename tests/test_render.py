@@ -23,6 +23,8 @@ def _current() -> pl.DataFrame:
         "execution_ready": True,
         "recommendation_status": "ACTIVE",
         "recommendation_valid_until": "2026-10-04T16:00:00+00:00",
+        "candidate_watch": False,
+        "selected_quote_outlier": False,
     }
     return pl.DataFrame(
         [
@@ -213,7 +215,7 @@ def test_weekly_publication_matches_cfb_picks_layout(tmp_path) -> None:
     assert '<span class="badge lean">LEAN</span>' not in document
     assert "STRONG/PAPER" not in document
     assert "PAPER evidence mode" in document
-    assert "not production staking" in document
+    assert "WATCH = model edge blocked by safety gates; not a bet" in document
     assert result["presentation"] == "cfb_style_weekly_picks_v3_cache_safe"
     assert result["run_tag"] == "20261002_114128_CT"
     assert result["cache_safe_png_pages"] == [
@@ -228,3 +230,49 @@ def test_weekly_publication_matches_cfb_picks_layout(tmp_path) -> None:
     assert (tmp_path / "latest.png").read_bytes() == (
         tmp_path / "nfl_week_4_page1.png"
     ).read_bytes()
+
+
+def test_weekly_publication_shows_watch_without_presenting_blocked_bet(
+    tmp_path,
+) -> None:
+    current = _current().with_columns(
+        pl.when(pl.col("quant_market") == "spread")
+        .then(pl.lit(True))
+        .otherwise(pl.lit(False))
+        .alias("candidate_watch"),
+        pl.lit(False).alias("selected_quote_outlier"),
+        pl.lit("PASS").alias("quant_signal"),
+    )
+    write_weekly_publication(
+        current,
+        week=4,
+        updated_at="2026-10-02T16:41:28+00:00",
+        release_state="PAPER",
+        output_dir=tmp_path,
+    )
+    document = (tmp_path / "nfl_week_4.html").read_text()
+    assert '<span class="badge watch">WATCH</span>' in document
+    assert '<span class="badge bet">BET</span>' not in document
+
+
+def test_weekly_publication_hides_watch_for_quote_outlier(tmp_path) -> None:
+    current = _current().with_columns(
+        pl.when(pl.col("quant_market") == "spread")
+        .then(pl.lit(True))
+        .otherwise(pl.lit(False))
+        .alias("candidate_watch"),
+        pl.when(pl.col("quant_market") == "spread")
+        .then(pl.lit(True))
+        .otherwise(pl.lit(False))
+        .alias("selected_quote_outlier"),
+        pl.lit("PASS").alias("quant_signal"),
+    )
+    write_weekly_publication(
+        current,
+        week=4,
+        updated_at="2026-10-02T16:41:28+00:00",
+        release_state="PAPER",
+        output_dir=tmp_path,
+    )
+    document = (tmp_path / "nfl_week_4.html").read_text()
+    assert '<span class="badge watch">WATCH</span>' not in document
