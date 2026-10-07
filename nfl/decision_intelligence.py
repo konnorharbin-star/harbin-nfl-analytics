@@ -365,6 +365,7 @@ def attach_decision_intelligence(
     portfolio = policy.get("portfolio")
     execution_limits = portfolio if isinstance(portfolio, Mapping) else {}
     history = snapshots if snapshots is not None else pl.DataFrame()
+    timing_config = {**dict(execution_limits), **dict(config)}
     enforced = bool(config.get("enforce_execution_timing", False))
 
     if candidates.is_empty():
@@ -396,14 +397,14 @@ def attach_decision_intelligence(
         quant_action, quant_reason = _execution_action(
             row,
             str(row.get("quant_signal") or "PASS"),
-            config=execution_limits,
+            config=timing_config,
             now=now,
             movement=movement,
         )
         research_action, research_reason = _execution_action(
             row,
             str(row.get("research_signal") or "PASS"),
-            config=execution_limits,
+            config=timing_config,
             now=now,
             movement=movement,
         )
