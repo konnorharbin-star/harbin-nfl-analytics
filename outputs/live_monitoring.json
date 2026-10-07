@@ -1,17 +1,17 @@
 {
   "alerts": [
-    "17 market rows have high model-vs-consensus disagreement",
+    "15 market rows have high model-vs-consensus disagreement",
     "fewer than two markets clear regime-specific edge reliability"
   ],
   "data_integrity_status": "OK",
   "decision_diagnostics": {
     "enforced": false,
-    "high_disagreement_rows": 17,
-    "movement_coverage": 0.9555555555555556,
+    "high_disagreement_rows": 15,
+    "movement_coverage": 1.0,
     "research_execution_actions": {
-      "BET_NOW": 9,
-      "PASS": 15,
-      "WAIT": 21
+      "BET_NOW": 12,
+      "PASS": 16,
+      "WAIT": 17
     },
     "status": "READY"
   },
@@ -40,17 +40,17 @@
     }
   },
   "drift_reference": "reports/free_market_predictions.csv",
-  "engineering_readiness_score": 88.0,
-  "live_readiness_score": 80.1,
+  "engineering_readiness_score": 87.6,
+  "live_readiness_score": 79.8,
   "meaning": "operational/model-monitoring score; not a profitability guarantee",
   "scores": {
     "calibration": 89.07670124431358,
-    "context": 66.66666666666667,
+    "context": 65.0,
     "distribution_stability": 80.7,
     "freshness": 100.0,
     "market_coverage": 100.0,
     "multi_book": 100.0,
-    "output_completeness": 92.67094017094017,
+    "output_completeness": 91.85897435897435,
     "regime_reliability": 0.0
   },
   "status": "WARN"

@@ -10,7 +10,7 @@
 - Margin / total 80% coverage: **78.31% / 80.51%**.
 
 ## Monitoring and execution
-- Live readiness: **80.1/100**.
+- Live readiness: **79.8/100**.
 - Portfolio mode: **PAPER**; proposed **0.00u**; approved **0.00u**.
 - Historical evidence: **2584 bets**, ROI **-7.84%**, CLV **—**.
 - Independent forward evidence: **11 bets**, ROI **12.33%**, CLV **4.70%**.
@@ -27,7 +27,7 @@
 - live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV, complete entry provenance, and >=90% CLV coverage
 
 ## Operational alerts
-- 17 market rows have high model-vs-consensus disagreement
+- 15 market rows have high model-vs-consensus disagreement
 - fewer than two markets clear regime-specific edge reliability
 
 ## Interpretation

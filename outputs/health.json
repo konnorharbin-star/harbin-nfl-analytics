@@ -9,7 +9,7 @@
     "extra_projection_games": [],
     "future_verified_quote_rows": 0,
     "games_without_candidate_rows": [],
-    "market_rows": 354,
+    "market_rows": 357,
     "market_source_errors": [],
     "meaning": "current-run structural and chronological data integrity; missing values are never fabricated",
     "missing_data_count": 0,
@@ -24,13 +24,13 @@
     "status": "OK",
     "target_games": 15,
     "unmatched_market_rows": 0,
-    "verified_quote_rows": 354,
+    "verified_quote_rows": 357,
     "warnings": []
   },
-  "live_readiness_score": 80.1,
+  "live_readiness_score": 79.8,
   "meaning": "operational health; not a profitability or staking signal",
   "monitor_alerts": [
-    "17 market rows have high model-vs-consensus disagreement",
+    "15 market rows have high model-vs-consensus disagreement",
     "fewer than two markets clear regime-specific edge reliability"
   ],
   "production_eligible": false,
@@ -57,5 +57,5 @@
     "rosters_weekly": "OK",
     "weather": "Open-Meteo"
   },
-  "status": "OK"
+  "status": "WARN"
 }
