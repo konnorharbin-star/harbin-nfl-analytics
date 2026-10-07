@@ -39,6 +39,21 @@ DEFAULT_POLICY: dict[str, object] = {
             "strong": {"min_ev": 0.07, "min_edge": 0.060, "min_prob": 0.57},
         },
     },
+    "decision_intelligence": {
+        "enabled": True,
+        "enforce_execution_timing": False,
+        "spread_disagreement_warn_points": 2.0,
+        "spread_disagreement_high_points": 3.5,
+        "total_disagreement_warn_points": 2.5,
+        "total_disagreement_high_points": 4.5,
+        "moneyline_disagreement_warn_probability": 0.05,
+        "moneyline_disagreement_high_probability": 0.09,
+        "spread_dispersion_warn_points": 0.75,
+        "total_dispersion_warn_points": 1.0,
+        "moneyline_dispersion_warn_probability": 0.035,
+        "meaningful_line_move_points": 0.5,
+        "meaningful_moneyline_decimal_move": 0.05,
+    },
     "portfolio": {
         "max_slate_units": 5.0,
         "max_game_units": 1.0,
@@ -99,8 +114,13 @@ def load_policy(path: str | Path = "reports/production_policy.json") -> dict[str
 
     policy = _default_copy()
     for key, value in incoming.items():
-        if key not in {"markets", "portfolio"}:
+        if key not in {"markets", "portfolio", "decision_intelligence"}:
             policy[key] = value
+
+    decision_intelligence = incoming.get("decision_intelligence")
+    if isinstance(decision_intelligence, dict):
+        assert isinstance(policy["decision_intelligence"], dict)
+        policy["decision_intelligence"].update(decision_intelligence)
 
     portfolio = incoming.get("portfolio")
     if isinstance(portfolio, dict):
