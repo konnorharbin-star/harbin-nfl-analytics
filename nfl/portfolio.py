@@ -503,7 +503,11 @@ def apply_portfolio_controls(
             or committed_bets + allocated >= max_bets
             or multiplier <= 0
         ):
-            if committed_bets + allocated >= max_bets and signal != "PASS":
+            if proposed <= 0 and signal != "PASS" and row.get("context_freshness_veto"):
+                row["portfolio_limit_reason"] = (
+                    "research signal only; current injury/personnel context is not fresh"
+                )
+            elif committed_bets + allocated >= max_bets and signal != "PASS":
                 row["portfolio_limit_reason"] = "max bet count"
             continue
 
