@@ -524,6 +524,8 @@ def test_paper_research_signal_with_stale_context_is_visible_but_zero_stake(
         research_signal="BET",
         research_stake_units=0.0,
         stake_units=0.0,
+        quant_quote_at=(now - timedelta(seconds=1)).isoformat(),
+        kickoff=(now + timedelta(hours=6)).isoformat(),
         context_freshness_veto=True,
         context_freshness_veto_reason="injury feed stale",
     )
