@@ -342,3 +342,52 @@ def test_publication_validation_detects_stale_png_copy(tmp_path) -> None:
     assert validation["status"] == "FAIL"
     assert any(item["name"] == "latest_png_copy_exact" for item in validation["errors"])
 
+
+
+def test_publication_uses_portfolio_research_signal_when_quant_is_pass(
+    tmp_path,
+) -> None:
+    outputs = tmp_path / "outputs"
+    docs = tmp_path / "docs"
+    reports = tmp_path / "reports"
+    history = tmp_path / "history"
+    for directory in (outputs, docs, reports, history):
+        directory.mkdir()
+
+    html_path = outputs / "nfl_week_4.html"
+    png_path = outputs / "nfl_week_4_page1.png"
+    html_path.write_text("<html><body>NFL board</body></html>")
+    png_path.write_bytes(b"png")
+
+    current = _current().with_columns(
+        pl.lit("PASS").alias("quant_signal"),
+        pl.lit("BET").alias("research_signal"),
+        pl.lit("BET").alias("portfolio_signal"),
+        pl.lit("PASS").alias("portfolio_action"),
+        pl.lit(0.0).alias("portfolio_candidate_units"),
+        pl.lit(True).alias("execution_ready"),
+        pl.lit(True).alias("context_freshness_veto"),
+        pl.lit("injury feed pending/stale").alias("context_freshness_veto_reason"),
+    )
+    report = _report(str(html_path), str(png_path))
+    report["games"] = current.to_dicts()
+    (outputs / "current_model.json").write_text(json.dumps(report, default=str))
+    current.write_csv(outputs / "current_predictions.csv")
+
+    write_publication_bundle(
+        current,
+        report,
+        output_dir=outputs,
+        docs_dir=docs,
+        reports_dir=reports,
+        history_dir=history,
+    )
+
+    suggestions = (outputs / "suggested_bets.csv").read_text()
+    recommendations = (outputs / "quant_recommendations.csv").read_text()
+    quant_html = (outputs / "quant_card.html").read_text()
+
+    assert "BET" in suggestions
+    assert "injury feed pending/stale" in suggestions
+    assert recommendations.count("\n") == 1
+    assert "<td data-role=\"signal\">BET</td>" in quant_html

@@ -399,7 +399,7 @@ def test_current_context_marks_fresh_injury_personnel_state() -> None:
     assert meta["components"]["injuries_personnel"] == 1.0
 
 
-def test_context_freshness_veto_blocks_every_market_when_state_is_stale() -> None:
+def test_context_freshness_veto_blocks_production_but_preserves_research_signal() -> None:
     candidates = pl.DataFrame(
         [
             {
@@ -420,8 +420,11 @@ def test_context_freshness_veto_blocks_every_market_when_state_is_stale() -> Non
 
     assert row["context_freshness_veto"] is True
     assert row["quant_signal"] == "PASS"
-    assert row["research_signal"] == "PASS"
+    assert row["production_signal"] == "PASS"
+    assert row["research_signal"] == "STRONG"
     assert row["stake_units"] == 0.0
+    assert row["research_stake_units"] == 0.0
+    assert row["research_context_pending"] is True
     assert "injury feed stale" in row["context_freshness_veto_reason"]
 
 

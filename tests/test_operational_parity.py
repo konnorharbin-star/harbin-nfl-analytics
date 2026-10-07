@@ -513,3 +513,37 @@ def test_release_gate_cannot_promote_without_independent_evidence(tmp_path) -> N
     assert gate["release_state"] == "PAPER"
     assert gate["production_eligible"] is False
     assert gate["historical_edge_ready"] is False
+
+
+def test_paper_research_signal_with_stale_context_is_visible_but_zero_stake(
+    tmp_path,
+) -> None:
+    now = datetime.now(UTC)
+    row = _candidate(
+        quant_signal="PASS",
+        research_signal="BET",
+        research_stake_units=0.0,
+        stake_units=0.0,
+        quant_quote_at=(now - timedelta(seconds=1)).isoformat(),
+        kickoff=(now + timedelta(hours=6)).isoformat(),
+        context_freshness_veto=True,
+        context_freshness_veto_reason="injury feed stale",
+    )
+    policy = dict(DEFAULT_POLICY)
+    policy["deployment_mode"] = "paper"
+
+    frame, summary = apply_portfolio_controls(
+        pl.DataFrame([row]),
+        policy=policy,
+        release_gate={"release_state": "PAPER", "production_eligible": False},
+        live_bets_path=tmp_path / "none.csv",
+        now=now,
+    )
+
+    output = frame.row(0, named=True)
+    assert output["portfolio_signal"] == "BET"
+    assert output["portfolio_action"] == "PASS"
+    assert output["portfolio_candidate_units"] == 0.0
+    assert output["portfolio_stake_units"] == 0.0
+    assert "research signal only" in output["portfolio_limit_reason"]
+    assert summary["paper_or_shadow_allocated_units"] == 0.0

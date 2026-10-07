@@ -645,7 +645,7 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
     signal_column = next(
         (
             name
-            for name in ("quant_signal", "production_signal", "research_signal", "portfolio_signal")
+            for name in ("portfolio_signal", "quant_signal", "production_signal", "research_signal")
             if name in card.columns
         ),
         None,
@@ -691,10 +691,10 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
     rows: list[str] = []
     for row in suggestions.to_dicts():
         signal = (
-            row.get("quant_signal")
+            row.get("portfolio_signal")
+            or row.get("quant_signal")
             or row.get("production_signal")
             or row.get("research_signal")
-            or row.get("portfolio_signal")
             or "PASS"
         )
         limit_reason = str(row.get("portfolio_limit_reason") or "")

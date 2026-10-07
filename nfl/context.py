@@ -101,7 +101,13 @@ CONTEXT_VETO_REST_GAP_DAYS = -2.0
 
 
 def apply_context_freshness_veto(candidates: pl.DataFrame) -> pl.DataFrame:
-    """Fail closed when current injury/personnel state is stale or unknown."""
+    """Fail closed for production while preserving zero-stake research signals.
+
+    Stale or unknown injury/personnel context must never authorize a production bet.
+    The independent research signal is retained for paper/watchlist visibility, but
+    both production and research stake are forced to zero so the row cannot enter
+    portfolio evidence until current context becomes fresh.
+    """
 
     if candidates.is_empty():
         return candidates
@@ -126,11 +132,12 @@ def apply_context_freshness_veto(candidates: pl.DataFrame) -> pl.DataFrame:
         item = dict(row)
         item["context_freshness_veto"] = veto
         item["context_freshness_veto_reason"] = reason if veto else ""
+        item["research_context_pending"] = veto
+        item["research_context_pending_reason"] = reason if veto else ""
         if veto:
             for field in (
                 "quant_signal",
                 "production_signal",
-                "research_signal",
                 "portfolio_signal",
             ):
                 if field in item:
