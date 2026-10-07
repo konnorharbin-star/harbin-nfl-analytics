@@ -8,7 +8,10 @@ import polars as pl
 
 from .book_identity import canonical_book_identity
 from .contracts import DataContractError, require_columns
-from .decision_intelligence import consensus_diagnostics
+from .decision_intelligence import (
+    consensus_diagnostics,
+    selected_quote_consensus_diagnostics,
+)
 from .espn_market import ESPNTwoWayMarket
 from .market import MarketComparison, MarketQuote, compare_two_way_market
 from .policy import (
@@ -248,6 +251,11 @@ def build_market_intelligence(
             model_home_probability=home_probability,
             config=decision_config,
         )
+        quote_diagnostics = selected_quote_consensus_diagnostics(
+            source_market,
+            consensus,
+            config=decision_config,
+        )
 
         row: dict[str, object] = {
             "season": int(game["season"]),
@@ -284,6 +292,9 @@ def build_market_intelligence(
             "model_margin_sigma": margin_sigma,
             "model_total_sigma": total_sigma,
             **consensus,
+            **quote_diagnostics,
+            "model_candidate_signal": research_signal,
+            "model_candidate_stake_units": research_stake,
             "quant_signal": signal,
             "research_signal": research_signal,
             "production_signal": production_signal,
@@ -334,6 +345,11 @@ def build_market_intelligence(
         if not frame.is_empty() and "market_disagreement_severity" in frame.columns
         else 0
     )
+    selected_quote_outlier_rows = (
+        frame.filter(pl.col("selected_quote_outlier")).height
+        if not frame.is_empty() and "selected_quote_outlier" in frame.columns
+        else 0
+    )
     high_dispersion_rows = (
         frame.filter(pl.col("market_dispersion_high")).height
         if not frame.is_empty() and "market_dispersion_high" in frame.columns
@@ -377,6 +393,7 @@ def build_market_intelligence(
         "consensus_verified_rows": consensus_verified_rows,
         "high_disagreement_rows": high_disagreement_rows,
         "high_dispersion_rows": high_dispersion_rows,
+        "selected_quote_outlier_rows": selected_quote_outlier_rows,
         "market_source": "canonical current NFL market aggregation",
         "api_key_required": False,
         "probability_training_games": historical.height,
