@@ -323,13 +323,17 @@ def run_operational_pipeline(
     candidates = apply_context_freshness_veto(candidates)
     candidates = apply_context_confidence_veto(candidates)
 
+    # Projection/context use the run-start as-of timestamp. Execution decisions use a
+    # later timestamp so quotes collected during this run are not falsely classified
+    # as future-dated merely because network collection happened after run start.
+    decision_at = datetime.now(UTC)
     try:
         snapshots = load_market_snapshots()
         candidates, decision_intelligence = attach_decision_intelligence(
             candidates,
             policy=policy,
             snapshots=snapshots,
-            now=run_at,
+            now=decision_at,
         )
     except Exception as exc:
         message = f"decision-intelligence ERROR: {type(exc).__name__}: {exc}"
@@ -368,7 +372,7 @@ def run_operational_pipeline(
         markets,
         candidates,
         source_errors=source_errors,
-        now=run_at,
+        now=decision_at,
     )
     data_quality.update(
         {
@@ -385,7 +389,7 @@ def run_operational_pipeline(
         else str(recent_form_meta.get("reason", "blocked"))
     )
     meta: dict[str, object] = {
-        "generated_at": run_at.isoformat(),
+        "generated_at": decision_at.isoformat(),
         "season": season,
         "week": target_week,
         "projection_audit": projection_audit.to_dict(),
@@ -417,7 +421,7 @@ def run_operational_pipeline(
         candidates,
         policy=policy,
         release_gate=gate,
-        now=run_at,
+        now=decision_at,
     )
     line_capture = (
         append_market_snapshots(markets, targets) if capture_lines else {"status": "disabled"}
