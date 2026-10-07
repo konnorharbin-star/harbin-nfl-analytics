@@ -8,6 +8,7 @@ import polars as pl
 
 from .book_identity import canonical_book_identity
 from .contracts import DataContractError, require_columns
+from .decision_intelligence import consensus_diagnostics
 from .espn_market import ESPNTwoWayMarket
 from .market import MarketComparison, MarketQuote, compare_two_way_market
 from .policy import (
@@ -100,6 +101,9 @@ def build_market_intelligence(
         raise DataContractError("market intelligence requires at least 64 prior games")
 
     active = policy or load_policy()
+    decision_config = active.get("decision_intelligence")
+    if not isinstance(decision_config, dict):
+        decision_config = {}
     portfolio = active.get("portfolio")
     if not isinstance(portfolio, dict):
         portfolio = {}
@@ -236,6 +240,14 @@ def build_market_intelligence(
             baseline_total,
             baseline_margin,
         )
+        consensus = consensus_diagnostics(
+            chosen.market_type,
+            [market for _, market in candidates],
+            model_home_margin=baseline_margin,
+            model_total=baseline_total,
+            model_home_probability=home_probability,
+            config=decision_config,
+        )
 
         row: dict[str, object] = {
             "season": int(game["season"]),
@@ -271,6 +283,7 @@ def build_market_intelligence(
             ),
             "model_margin_sigma": margin_sigma,
             "model_total_sigma": total_sigma,
+            **consensus,
             "quant_signal": signal,
             "research_signal": research_signal,
             "production_signal": production_signal,
@@ -311,6 +324,21 @@ def build_market_intelligence(
                 (pl.col("quant_market") == market_name)
                 & pl.col("market_execution_verified")
             ).height
+    consensus_verified_rows = (
+        frame.filter(pl.col("market_consensus_verified")).height
+        if not frame.is_empty() and "market_consensus_verified" in frame.columns
+        else 0
+    )
+    high_disagreement_rows = (
+        frame.filter(pl.col("market_disagreement_severity") == "HIGH").height
+        if not frame.is_empty() and "market_disagreement_severity" in frame.columns
+        else 0
+    )
+    high_dispersion_rows = (
+        frame.filter(pl.col("market_dispersion_high")).height
+        if not frame.is_empty() and "market_dispersion_high" in frame.columns
+        else 0
+    )
     games = projection.height
     multi_book_games = sum(
         len(books) >= 2 for books in verified_books_by_game.values()
@@ -346,6 +374,9 @@ def build_market_intelligence(
             if not frame.is_empty()
             else 0
         ),
+        "consensus_verified_rows": consensus_verified_rows,
+        "high_disagreement_rows": high_disagreement_rows,
+        "high_dispersion_rows": high_dispersion_rows,
         "market_source": "canonical current NFL market aggregation",
         "api_key_required": False,
         "probability_training_games": historical.height,
