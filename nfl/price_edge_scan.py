@@ -140,7 +140,7 @@ def scan_price_edges(
     disagreement_watchlist = []
     examined = 0
     for (game, kind, line), observations in sorted(groups.items()):
-        sides = sorted(SIDES[kind])
+        sides = ("home", "away") if kind in ("moneyline", "spread") else ("over", "under")
         # Latest quote from each source/book/side is used, no mixing within book.
         distinct = {}
         for q in observations:
