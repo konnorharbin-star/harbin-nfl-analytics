@@ -15,6 +15,7 @@ from .current import run_current_projection, unplayed_regular_games
 from .data import NFLDataClient
 from .data_integrity import assess_data_integrity
 from .decision_intelligence import attach_decision_intelligence
+from .edge_discovery import enrich_edge_discovery, write_edge_discovery
 from .decision_ledger import append_portfolio_decisions
 from .free_market_backtest import build_archive_projection_dataset
 from .health import write_health
@@ -423,6 +424,14 @@ def run_operational_pipeline(
         release_gate=gate,
         now=decision_at,
     )
+    # Step 1 discovery is a diagnostic annotation AFTER portfolio policy.
+    # Rankings cannot increase exposure, re-enable disabled markets, or
+    # override the NFL production-release gate.
+    allocated, discovery_report = enrich_edge_discovery(
+        allocated, policy=policy, as_of=decision_at
+    )
+    meta["edge_discovery"] = discovery_report
+    write_edge_discovery(allocated, discovery_report)
     line_capture = (
         append_market_snapshots(markets, targets) if capture_lines else {"status": "disabled"}
     )
