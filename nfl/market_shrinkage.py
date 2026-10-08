@@ -169,6 +169,61 @@ def probability_comparison(
     }
 
 
+
+def calibration_buckets(frame: pl.DataFrame) -> dict[str, object]:
+    """Predeclared no-vig probability buckets; describe error, never fit on holdout.
+
+    Each bin reports raw/model and sportsbook forecast calibration on the
+    *same decided outcomes*. Pushes and invalid probabilities are excluded.
+    Bucketing on market probability, not model prediction/error, avoids
+    chasing extreme raw-model disagreements in the held-out year.
+    """
+    bounds = ((0.0, 0.4), (0.4, 0.5), (0.5, 0.6), (0.6, 0.7), (0.7, 1.0))
+    bins: list[list[tuple[float, float, float]]] = [[] for _ in bounds]
+    for row in frame.iter_rows(named=True):
+        outcome = _binary_outcome(row.get("result"))
+        if outcome is None:
+            continue
+        try:
+            model = float(row["model_probability"])
+            market = float(row["no_vig_probability"])
+        except (TypeError, ValueError):
+            continue
+        if not (math.isfinite(model) and math.isfinite(market)):
+            continue
+        if not (0 <= model <= 1 and 0 <= market <= 1):
+            continue
+        for index, (lower, upper) in enumerate(bounds):
+            if lower <= market < upper or (index == len(bounds) - 1 and market == 1):
+                bins[index].append((outcome, model, market))
+                break
+
+    output: dict[str, object] = {}
+    for (lower, upper), rows in zip(bounds, bins, strict=True):
+        key = f"{lower:.1f}-{upper:.1f}"
+        if not rows:
+            output[key] = {"rows": 0, "status": "EMPTY"}
+            continue
+        actual = np.array([value[0] for value in rows])
+        raw = np.array([value[1] for value in rows])
+        market = np.array([value[2] for value in rows])
+        raw_brier = float(np.mean(np.square(actual - raw)))
+        market_brier = float(np.mean(np.square(actual - market)))
+        output[key] = {
+            "rows": len(rows),
+            "status": "DESCRIPTIVE_ONLY",
+            "observed_win_rate": float(np.mean(actual)),
+            "raw_mean_probability": float(np.mean(raw)),
+            "market_mean_probability": float(np.mean(market)),
+            "raw_calibration_error": float(np.mean(raw - actual)),
+            "market_calibration_error": float(np.mean(market - actual)),
+            "raw_brier": raw_brier,
+            "market_brier": market_brier,
+            "raw_brier_minus_market": raw_brier - market_brier,
+        }
+    return output
+
+
 def fit_alpha(
     development: pl.DataFrame,
     *,
@@ -384,6 +439,11 @@ def evaluate_market_edge_shrinkage(
             "development_grid": development_grid,
             "validation_probability": validation_probability,
             "holdout_probability": holdout_probability,
+            "calibration_diagnostics": {
+                "method": "fixed no-vig probability bins; descriptive only",
+                "validation_2024": calibration_buckets(validation),
+                "holdout_2025": calibration_buckets(holdout),
+            },
             "validation_probability_pass": validation_pass,
             "holdout_probability_pass": holdout_pass,
             "probability_validated": probability_validated,
