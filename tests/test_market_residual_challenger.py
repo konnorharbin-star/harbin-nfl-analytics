@@ -2,7 +2,8 @@
 import math
 
 from nfl.market_residual_challenger import (
-    evaluate_residual_challenger, residual_prediction,
+    evaluate_residual_challenger,
+    residual_prediction,
 )
 
 
