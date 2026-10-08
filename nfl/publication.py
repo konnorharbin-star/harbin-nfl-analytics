@@ -635,15 +635,21 @@ def _card_columns(current: pl.DataFrame) -> list[str]:
 
 def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> None:
     columns = _card_columns(current)
-    card = current.select(columns) if columns and not current.is_empty() else pl.DataFrame()
+    # Preserve the schema for zero-row slates, so CSV exports are header-only
+    # instead of empty (or, worse, a leftover prior-week file).
+    card = current.select(columns) if columns else pl.DataFrame()
     portfolio_path = output_dir / "portfolio_card.csv"
     recommendation_path = output_dir / "quant_recommendations.csv"
     suggestions_path = output_dir / "suggested_bets.csv"
 
+    empty_header = (
+        "season,week,game_id,quant_market,quant_side,quant_signal,"
+        "portfolio_action,portfolio_stake_units\\n"
+    )
     if columns:
         card.write_csv(portfolio_path)
     else:
-        portfolio_path.write_text("")
+        portfolio_path.write_text(empty_header, encoding="utf-8")
 
     suggestions = card.head(0)
     signal_column = next(
@@ -689,8 +695,8 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
         suggestions.write_csv(suggestions_path)
         recommendations.write_csv(recommendation_path)
     else:
-        suggestions_path.write_text("")
-        recommendation_path.write_text("")
+        suggestions_path.write_text(empty_header, encoding="utf-8")
+        recommendation_path.write_text(empty_header, encoding="utf-8")
 
     rows: list[str] = []
     for row in suggestions.to_dicts():
