@@ -115,9 +115,7 @@ def test_one_row_per_game_across_all_markets_without_stake_changes():
     assert rows[0]["research_staking_authorized"] is False
     assert report["market_candidate_rows"] == 3
     assert report["ready_research_games"] == 1
-    assert report["score_adjustment_enabled"] is not True if (
-        "score_adjustment_enabled" in report
-    ) else report["new_moneyline_spread_total_adjustment_enabled"] is False
+    assert report["new_moneyline_spread_total_adjustment_enabled"] is False
     assert report["betting_authorized"] is False
     for row in candidates:
         assert row["quant_signal"] == "PASS"
