@@ -1,17 +1,17 @@
 {
   "current_context": {
-    "as_of": "2026-10-08T00:41:36.982635+00:00",
+    "as_of": "2026-10-08T00:55:39.598839+00:00",
     "components": {
       "injuries_personnel": 0.0,
       "quarterback": 0.8,
       "rest_travel": 1.0,
-      "weather_stadium": 0.3333333333333333
+      "weather_stadium": 0.8
     },
-    "coverage": 0.5333333333333333,
+    "coverage": 0.65,
     "depth_feed_available": true,
     "expected_qb_identity_coverage": 1.0,
     "expected_qb_state": {
-      "as_of": "2026-10-08T00:41:36.982635+00:00",
+      "as_of": "2026-10-08T00:55:39.598839+00:00",
       "decision_ready_team_coverage": 0.9,
       "decision_ready_teams": 27,
       "identified_teams": 30,
@@ -37,17 +37,7 @@
     "roster_feed_available": true,
     "score_adjustment_enabled": false,
     "status": "PARTIAL",
-    "weather_errors": [
-      "2026_05_BAL_ATL: weather source request failed: HTTP Error 503: Service Unavailable",
-      "2026_05_CHI_GB: weather source request failed: HTTP Error 503: Service Unavailable",
-      "2026_05_CIN_MIA: weather source request failed: HTTP Error 503: Service Unavailable",
-      "2026_05_CLE_NYJ: weather source request failed: <urlopen error _ssl.c:993: The handshake operation timed out>",
-      "2026_05_DET_ARI: weather source request failed: HTTP Error 503: Service Unavailable",
-      "2026_05_HOU_TEN: weather source request failed: HTTP Error 503: Service Unavailable",
-      "2026_05_IND_PIT: weather source request failed: HTTP Error 503: Service Unavailable",
-      "2026_05_LV_NE: weather source request failed: HTTP Error 503: Service Unavailable",
-      "2026_05_NYG_WAS: weather source request failed: <urlopen error _ssl.c:993: The handshake operation timed out>"
-    ]
+    "weather_errors": []
   },
   "current_recent_form": {
     "blend_weight": 0.5,
@@ -118,7 +108,7 @@
       "PASS": 45,
       "WAIT": 0
     },
-    "high_disagreement_rows": 16,
+    "high_disagreement_rows": 15,
     "meaning": "shadow execution timing and model/market diagnostics; market prices remain downstream of the independent fair-score projection",
     "movement_coverage": 1.0,
     "research_execution_actions": {
@@ -130,7 +120,7 @@
     "status": "READY"
   },
   "edge_discovery": {
-    "as_of": "2026-10-08T00:43:00.900570+00:00",
+    "as_of": "2026-10-08T00:56:21.484555+00:00",
     "categories": {
       "EVIDENCE_OR_CONTEXT_BLOCKED": 45,
       "NO_POSITIVE_RAW_EDGE": 0,
@@ -172,7 +162,7 @@
       "PASS": 45,
       "WAIT_MONITOR": 0
     },
-    "as_of": "2026-10-08T00:43:00.900570+00:00",
+    "as_of": "2026-10-08T00:56:21.484555+00:00",
     "league": "NFL",
     "limits": {
       "lookback_hours": 12,
@@ -209,7 +199,19 @@
     "status": "RESEARCH_ONLY",
     "validated_timing_strategy": false
   },
-  "generated_at": "2026-10-08T00:43:00.900570+00:00",
+  "forward_edge_capture": {
+    "appended_rows": 45,
+    "bets_authorized": false,
+    "capture_status_counts": {
+      "VALID_POINT_IN_TIME_RESEARCH_QUOTE": 45
+    },
+    "historical_backfill_allowed": false,
+    "research_only": true,
+    "schema_version": 1,
+    "status": "APPEND_ONLY_FIRST_SNAPSHOT",
+    "total_rows": 45
+  },
+  "generated_at": "2026-10-08T00:56:21.484555+00:00",
   "market_coverage": {
     "games": 15,
     "moneyline": 15,
@@ -222,7 +224,7 @@
     "consensus_verified_rows": 45,
     "distinct_books": 7,
     "games": 15,
-    "high_disagreement_rows": 16,
+    "high_disagreement_rows": 15,
     "high_dispersion_rows": 23,
     "market_source": "canonical current NFL market aggregation",
     "moneyline": 15,
@@ -2798,7 +2800,7 @@
       "action_network_diagnostic": {
         "attempts": [
           {
-            "collector_observed_at": "2026-10-08T00:41:42.909747+00:00",
+            "collector_observed_at": "2026-10-08T00:55:48.044609+00:00",
             "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
             "games_with_markets": 15,
             "parsed_rows": 312,
@@ -2962,7 +2964,7 @@
             "team_matches": 15
           }
         ],
-        "collector_observed_at": "2026-10-08T00:41:42.909747+00:00",
+        "collector_observed_at": "2026-10-08T00:55:48.044609+00:00",
         "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
         "games_with_markets": 15,
         "parsed_rows": 312,

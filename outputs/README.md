@@ -1,12 +1,12 @@
 # Latest NFL model output
 
 **Season / Week:** 2026 / 5  
-**Updated:** Oct 7, 2026 · 7:43 PM CT  
+**Updated:** Oct 7, 2026 · 7:56 PM CT  
 **Release state:** RESEARCH  
 
 ## Fresh PNGs for mobile
-- [Fresh page 1 — cache-safe](nfl_week_5_run_20261007_194300_CT_page1.png)
-- [Fresh page 2 — cache-safe](nfl_week_5_run_20261007_194300_CT_page2.png)
+- [Fresh page 1 — cache-safe](nfl_week_5_run_20261007_195621_CT_page1.png)
+- [Fresh page 2 — cache-safe](nfl_week_5_run_20261007_195621_CT_page2.png)
 
 These filenames change on every run so GitHub/mobile cannot reuse an old image preview. Use these links when checking the latest model.
 
@@ -28,6 +28,8 @@ These filenames change on every run so GitHub/mobile cannot reuse an old image p
 - [Research timing report](edge_timing_report.json)
 - [Historical edge failure diagnosis](historical_edge_failure.json)
 - [Historical edge cohort audit table](historical_edge_segments.csv)
+- [2026 prospective market-vs-model validation](forward_edge_validation.json)
+- [Frozen prospective game-market grades](forward_edge_graded.csv)
 - [Run report](RUN_REPORT.md)
 - [Model card](MODEL_CARD.md)
 - [Publication validation](publication_validation.json)

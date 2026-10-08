@@ -1,6 +1,6 @@
 {
   "coverage": {
-    "context": 0.5333333333333333,
+    "context": 0.65,
     "games": 15,
     "moneyline": 15,
     "multi_book": 1.0,
@@ -36,7 +36,7 @@
     "verified_quote_rows": 357,
     "warnings": []
   },
-  "generated_at": "2026-10-08T00:43:02.739837+00:00",
+  "generated_at": "2026-10-08T00:56:22.817726+00:00",
   "health": {
     "data_quality": {
       "candidate_rows": 45,
@@ -66,12 +66,11 @@
       "verified_quote_rows": 357,
       "warnings": []
     },
-    "live_readiness_score": 77.9,
+    "live_readiness_score": 79.8,
     "meaning": "operational health; not a profitability or staking signal",
     "monitor_alerts": [
-      "16 market rows have high model-vs-consensus disagreement",
-      "fewer than two markets clear regime-specific edge reliability",
-      "NFL injury/weather/travel context coverage is not yet release-ready"
+      "15 market rows have high model-vs-consensus disagreement",
+      "fewer than two markets clear regime-specific edge reliability"
     ],
     "production_eligible": false,
     "release_blockers": [
@@ -113,7 +112,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-08T00:43:00.900570+00:00",
+    "model_generated_at": "2026-10-08T00:56:21.484555+00:00",
     "prediction_games": 15,
     "prediction_rows": 45,
     "season": 2026,
@@ -134,9 +133,8 @@
   "meaning": "NFL publication/audit snapshot. Readiness, model error, historical evidence, and forward evidence remain separate; none guarantees future profitability.",
   "monitoring": {
     "alerts": [
-      "16 market rows have high model-vs-consensus disagreement",
-      "fewer than two markets clear regime-specific edge reliability",
-      "NFL injury/weather/travel context coverage is not yet release-ready"
+      "15 market rows have high model-vs-consensus disagreement",
+      "fewer than two markets clear regime-specific edge reliability"
     ],
     "drift_details": {
       "margin": {
@@ -162,16 +160,16 @@
         "std_ratio": 0.9012
       }
     },
-    "live_readiness_score": 77.9,
-    "recent_readiness_delta": -1.8999999999999915,
+    "live_readiness_score": 79.8,
+    "recent_readiness_delta": 0.0,
     "scores": {
       "calibration": 89.07670124431355,
-      "context": 53.333333333333336,
+      "context": 65.0,
       "distribution_stability": 80.7,
       "freshness": 100.0,
       "market_coverage": 100.0,
       "multi_book": 100.0,
-      "output_completeness": 88.97435897435896,
+      "output_completeness": 91.85897435897435,
       "regime_reliability": 0.0
     },
     "status": "WARN"
@@ -623,7 +621,7 @@
         "name": "context_coverage",
         "passed": false,
         "requirement": ">=90% current injury/rest/weather/travel context coverage",
-        "value": 0.5333
+        "value": 0.65
       },
       {
         "detail": "",
@@ -663,7 +661,7 @@
         "name": "live_monitoring",
         "passed": false,
         "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
-        "value": 85.2
+        "value": 87.6
       },
       {
         "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -704,8 +702,8 @@
           "status": "ESTABLISHED SAMPLE",
           "verified_clv_coverage": 0.7965686274509803,
           "verified_roi_ci_95": [
-            -0.13925593449272022,
-            -0.018899826239512172
+            -0.14058756798048225,
+            -0.02004880399946435
           ]
         }
       },
@@ -785,18 +783,6 @@
   "schema_version": 1,
   "status": "FAIL",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 80.7,
-      "generated_at": "2026-10-06T11:42:47.461068+00:00",
-      "live_readiness_score": 88.9,
-      "model_generated_at": "2026-10-06T11:42:24.290527+00:00",
-      "publication_status": "WARN",
-      "release_state": "RESEARCH",
-      "season": 2026,
-      "week": 5
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "WARN",
@@ -928,12 +914,23 @@
       "release_state": "RESEARCH",
       "season": 2026,
       "week": 5
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 80.7,
+      "generated_at": "2026-10-08T00:43:02.739837+00:00",
+      "live_readiness_score": 77.9,
+      "model_generated_at": "2026-10-08T00:43:00.900570+00:00",
+      "publication_status": "FAIL",
+      "release_state": "RESEARCH",
+      "season": 2026,
+      "week": 5
     }
   ],
   "warnings": [
-    "16 market rows have high model-vs-consensus disagreement",
+    "15 market rows have high model-vs-consensus disagreement",
     "fewer than two markets clear regime-specific edge reliability",
-    "NFL injury/weather/travel context coverage is not yet release-ready",
     "quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state",
     "injury_personnel_freshness: >=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
     "context_coverage: >=90% current injury/rest/weather/travel context coverage",
