@@ -248,6 +248,97 @@
       "holdout_rows": 272,
       "incremental_model_value_vs_market": false,
       "probability_validated": true,
+      "signed_residual_research": {
+        "archive_entry_prices_verified": false,
+        "betting_policy_change_enabled": false,
+        "canonical_market_probability_change_enabled": false,
+        "development_grid": {
+          "+0.00": {
+            "brier": 0.2124891502433605,
+            "log_loss": 0.6130908292875529,
+            "rows": 478
+          },
+          "+0.10": {
+            "brier": 0.2131077956044677,
+            "log_loss": 0.6144192270611153,
+            "rows": 478
+          },
+          "+0.25": {
+            "brier": 0.21435351750350481,
+            "log_loss": 0.617150609101216,
+            "rows": 478
+          },
+          "+0.50": {
+            "brier": 0.217331184153599,
+            "log_loss": 0.6237464468609253,
+            "rows": 478
+          },
+          "+0.75": {
+            "brier": 0.22150058053482785,
+            "log_loss": 0.6329967989652673,
+            "rows": 478
+          },
+          "+1.00": {
+            "brier": 0.2269117578258179,
+            "log_loss": 0.6449893585386564,
+            "rows": 478
+          },
+          "-0.10": {
+            "brier": 0.21203061986646626,
+            "log_loss": 0.6121449966435584,
+            "rows": 478
+          },
+          "-0.25": {
+            "brier": 0.2116231156952185,
+            "log_loss": 0.6114206341346166,
+            "rows": 478
+          },
+          "-0.50": {
+            "brier": 0.2116092299105179,
+            "log_loss": 0.6119734370031482,
+            "rows": 478
+          }
+        },
+        "holdout_2025": {
+          "raw_model": {
+            "brier": 0.23006046204754715,
+            "log_loss": 0.6503494551052652,
+            "rows": 271
+          },
+          "research_adjustment": {
+            "brier": 0.21232805772288338,
+            "log_loss": 0.6089835660921643,
+            "rows": 271
+          },
+          "sportsbook_no_vig": {
+            "brier": 0.21213896835079202,
+            "log_loss": 0.6093832198972614,
+            "rows": 271
+          }
+        },
+        "improves_both_years_vs_market": false,
+        "negative_alpha_means": "raw model disagreement direction reversed",
+        "selected_alpha": -0.25,
+        "selection": "pre-2024 development log loss only",
+        "status": "RESEARCH_ONLY",
+        "validation_2024": {
+          "raw_model": {
+            "brier": 0.22078821234828858,
+            "log_loss": 0.6316588142466254,
+            "rows": 272
+          },
+          "research_adjustment": {
+            "brier": 0.19892267625087412,
+            "log_loss": 0.5843585909248578,
+            "rows": 272
+          },
+          "sportsbook_no_vig": {
+            "brier": 0.2001616187888562,
+            "log_loss": 0.5874888995056521,
+            "rows": 272
+          }
+        }
+      },
       "status": "MARKET_ONLY_PREFERRED",
       "validation_betting_raw_positive": {
         "average_edge": 0.1010463225521585,
@@ -470,6 +561,97 @@
       "holdout_rows": 272,
       "incremental_model_value_vs_market": false,
       "probability_validated": true,
+      "signed_residual_research": {
+        "archive_entry_prices_verified": false,
+        "betting_policy_change_enabled": false,
+        "canonical_market_probability_change_enabled": false,
+        "development_grid": {
+          "+0.00": {
+            "brier": 0.24920780804470963,
+            "log_loss": 0.6915605021635391,
+            "rows": 458
+          },
+          "+0.10": {
+            "brier": 0.2494490963886925,
+            "log_loss": 0.6920422529134824,
+            "rows": 458
+          },
+          "+0.25": {
+            "brier": 0.2502565499161598,
+            "log_loss": 0.6936643989471282,
+            "rows": 458
+          },
+          "+0.50": {
+            "brier": 0.2527259011624157,
+            "log_loss": 0.6987370165001132,
+            "rows": 458
+          },
+          "+0.75": {
+            "brier": 0.256448196830663,
+            "log_loss": 0.706688137550367,
+            "rows": 458
+          },
+          "+1.00": {
+            "brier": 0.2612169648001105,
+            "log_loss": 0.7173858712001766,
+            "rows": 458
+          },
+          "-0.10": {
+            "brier": 0.24920836454997602,
+            "log_loss": 0.6915598872803751,
+            "rows": 458
+          },
+          "-0.25": {
+            "brier": 0.24966163540265554,
+            "log_loss": 0.6924591569827022,
+            "rows": 458
+          },
+          "-0.50": {
+            "brier": 0.2515788073485677,
+            "log_loss": 0.696330968298415,
+            "rows": 458
+          }
+        },
+        "holdout_2025": {
+          "raw_model": {
+            "brier": 0.26801291088420787,
+            "log_loss": 0.7320066222236002,
+            "rows": 271
+          },
+          "research_adjustment": {
+            "brier": 0.24912651577446773,
+            "log_loss": 0.6913993663983878,
+            "rows": 271
+          },
+          "sportsbook_no_vig": {
+            "brier": 0.24958671312680836,
+            "log_loss": 0.6923205180550218,
+            "rows": 271
+          }
+        },
+        "improves_both_years_vs_market": false,
+        "negative_alpha_means": "raw model disagreement direction reversed",
+        "selected_alpha": -0.1,
+        "selection": "pre-2024 development log loss only",
+        "status": "RESEARCH_ONLY",
+        "validation_2024": {
+          "raw_model": {
+            "brier": 0.26033202046308773,
+            "log_loss": 0.7152289947849455,
+            "rows": 268
+          },
+          "research_adjustment": {
+            "brier": 0.25141573555818214,
+            "log_loss": 0.6959827058881667,
+            "rows": 268
+          },
+          "sportsbook_no_vig": {
+            "brier": 0.2510718394824248,
+            "log_loss": 0.6952918193457776,
+            "rows": 268
+          }
+        }
+      },
       "status": "MARKET_ONLY_PREFERRED",
       "validation_betting_raw_positive": {
         "average_edge": 0.0993489768427974,
@@ -692,6 +874,97 @@
       "holdout_rows": 272,
       "incremental_model_value_vs_market": false,
       "probability_validated": true,
+      "signed_residual_research": {
+        "archive_entry_prices_verified": false,
+        "betting_policy_change_enabled": false,
+        "canonical_market_probability_change_enabled": false,
+        "development_grid": {
+          "+0.00": {
+            "brier": 0.24988985019648616,
+            "log_loss": 0.692926538132921,
+            "rows": 475
+          },
+          "+0.10": {
+            "brier": 0.2506725975907316,
+            "log_loss": 0.6944929520094394,
+            "rows": 475
+          },
+          "+0.25": {
+            "brier": 0.25213945333880194,
+            "log_loss": 0.6974402743011031,
+            "rows": 475
+          },
+          "+0.50": {
+            "brier": 0.2553235338699879,
+            "log_loss": 0.703934439166343,
+            "rows": 475
+          },
+          "+0.75": {
+            "brier": 0.25933928839134057,
+            "log_loss": 0.7123705312838401,
+            "rows": 475
+          },
+          "+1.00": {
+            "brier": 0.2640575174945631,
+            "log_loss": 0.7226881363492494,
+            "rows": 475
+          },
+          "-0.10": {
+            "brier": 0.24926681355453986,
+            "log_loss": 0.6916793700477554,
+            "rows": 475
+          },
+          "-0.25": {
+            "brier": 0.24863463570871983,
+            "log_loss": 0.6904061822472463,
+            "rows": 475
+          },
+          "-0.50": {
+            "brier": 0.24838092878494325,
+            "log_loss": 0.6898653005271715,
+            "rows": 475
+          }
+        },
+        "holdout_2025": {
+          "raw_model": {
+            "brier": 0.25448035763118215,
+            "log_loss": 0.7025677163643631,
+            "rows": 272
+          },
+          "research_adjustment": {
+            "brier": 0.25487658372352673,
+            "log_loss": 0.7030999239188733,
+            "rows": 272
+          },
+          "sportsbook_no_vig": {
+            "brier": 0.2504056398371012,
+            "log_loss": 0.6939590876085665,
+            "rows": 272
+          }
+        },
+        "improves_both_years_vs_market": false,
+        "negative_alpha_means": "raw model disagreement direction reversed",
+        "selected_alpha": -0.5,
+        "selection": "pre-2024 development log loss only",
+        "status": "RESEARCH_ONLY",
+        "validation_2024": {
+          "raw_model": {
+            "brier": 0.25634524262561553,
+            "log_loss": 0.7064939553835081,
+            "rows": 269
+          },
+          "research_adjustment": {
+            "brier": 0.25293599824413066,
+            "log_loss": 0.6991177363698846,
+            "rows": 269
+          },
+          "sportsbook_no_vig": {
+            "brier": 0.24977944777848377,
+            "log_loss": 0.6927062239462423,
+            "rows": 269
+          }
+        }
+      },
       "status": "MARKET_ONLY_PREFERRED",
       "validation_betting_raw_positive": {
         "average_edge": 0.08693721775474916,
