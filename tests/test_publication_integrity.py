@@ -189,7 +189,7 @@ def test_new_run_manifest_rejects_modified_older_model_run(tmp_path):
     write_publication_manifest(output_dir=outputs, docs_dir=docs)
     model = json.loads((outputs / "current_model.json").read_text())
     model["meta"]["generated_at"] = (
-        datetime(2026, 10, 8, 1, tzinfo=UTC).isoformat()
+        datetime(2026, 10, 7, 22, tzinfo=UTC).isoformat()
     )
     (outputs / "current_model.json").write_text(json.dumps(model))
     _is_fail(outputs, docs, "run tag does not match")
