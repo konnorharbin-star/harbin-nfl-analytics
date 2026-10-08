@@ -1144,6 +1144,8 @@ def write_publication_bundle(
         "- [Market and blended forecast comparisons](forward_market_benchmark_forecasts.csv)\n"
         "- [Fixed paper-rule and no-bet comparisons](forward_market_benchmark_policies.csv)\n"
         "- [Kickoff-week market benchmark trajectory](forward_market_benchmark_weeks.csv)\n"
+        "- [NFL context source audit](context_intelligence_report.json)\n"
+        "- [Game-level QB/injury/OL/rest/travel risk register](context_risk_register.csv)\n"
         "- [Run report](RUN_REPORT.md)\n"
         "- [Model card](MODEL_CARD.md)\n"
         "- [Publication validation](publication_validation.json)\n\n"

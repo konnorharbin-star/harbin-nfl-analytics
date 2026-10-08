@@ -47,44 +47,48 @@ def _player_key(
 
 
 def injury_severity(status: object, practice_status: object = None) -> float:
-    """Map public injury/practice status text to conservative availability severity."""
+    """Respect definitive game status over practice participation.
 
-    combined = f"{_text(status)} {_text(practice_status)}".lower()
+    Injury report designation and practice participation describe different
+    things. A player ruled OUT may still have practiced fully earlier; a
+    QUESTIONABLE player can have full participation. Also, "inactive" must
+    never match "active" through a substring search.
+    """
+
+    designation = _text(status).strip().lower()
+    practice = _text(practice_status).strip().lower()
     if any(
-        token in combined
+        token in designation
         for token in (
-            "active",
-            "available",
-            "cleared",
-            "healthy",
-            "full participation",
-        )
-    ):
-        return 0.0
-    if any(
-        token in combined
-        for token in (
+            "inactive",
             "injured reserve",
             "reserve/injured",
             "out for season",
             "season-ending",
+            "suspended",
         )
     ):
         return 1.0
-    if "out" in combined or "suspended" in combined:
+    if designation == "out" or designation.startswith("out ") or designation.endswith(" out"):
         return 1.0
-    if "doubt" in combined:
+    if "doubt" in designation:
         return 0.80
-    if "question" in combined:
+    if "question" in designation:
         return 0.45
-    if "did not participate" in combined or "dnp" in combined:
-        return 0.40
-    if "limited" in combined:
-        return 0.25
-    if "day-to-day" in combined or "day to day" in combined:
-        return 0.25
-    if "prob" in combined:
+    if "prob" in designation:
         return 0.10
+    if designation in {"active", "available", "cleared", "healthy"}:
+        return 0.0
+    # Only use practice participation when game availability is unresolved.
+    # Practice activity must not override a definitive game-day designation.
+    if "did not participate" in practice or "dnp" in practice:
+        return 0.40
+    if "limited" in practice:
+        return 0.25
+    if "day-to-day" in designation or "day to day" in designation:
+        return 0.25
+    if "full participation" in practice or practice == "full":
+        return 0.0
     return 0.0
 
 
