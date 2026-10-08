@@ -1,0 +1,39 @@
+name: NFL QB OL Error Attribution
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/game_intelligence_risk.py"
+      - "run_game_intelligence_risk.py"
+      - "tests/test_game_intelligence_risk.py"
+      - ".github/workflows/game-intelligence-risk.yml"
+
+jobs:
+  historical-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Test source provenance and leakage guards
+        run: python -m pytest -q tests/test_game_intelligence_risk.py
+      - name: Build historical QB OL and turnover analysis
+        run: |
+          python run_game_intelligence_risk.py
+          python -c 'import json; p=json.load(open("reports/game_intelligence_risk.json")); print({k:p[k] for k in ("status","games","turnover_source_status","ol_provenance_counts","source_errors")})'
+      - name: Upload source-audited research
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-qb-ol-error-attribution
+          path: |
+            reports/game_intelligence_risk.csv
+            reports/game_intelligence_risk.json
+          if-no-files-found: warn
