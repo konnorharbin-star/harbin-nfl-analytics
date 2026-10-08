@@ -33,7 +33,24 @@
       "moneyline:underdog": {
         "betting_policy_change_enabled": false,
         "development_rows": 382,
+        "effect_size_by_year": {
+          "holdout_2025": {
+            "brier_gain": -0.000870125408120509,
+            "log_loss_gain": -0.0008042315903948882,
+            "passes_minimum_effect": false
+          },
+          "validation_2024": {
+            "brier_gain": 0.0025000696457415095,
+            "log_loss_gain": 0.005987589378227076,
+            "passes_minimum_effect": true
+          }
+        },
+        "effect_size_thresholds": {
+          "brier": 0.002,
+          "log_loss": 0.004
+        },
         "holdout_rows": 220,
+        "minimum_effect_in_both_years": false,
         "not_independent_of_other_cohorts": true,
         "signed_residual": {
           "archive_entry_prices_verified": false,
@@ -132,7 +149,24 @@
       "projected_margin:close_lt3": {
         "betting_policy_change_enabled": false,
         "development_rows": 789,
+        "effect_size_by_year": {
+          "holdout_2025": {
+            "brier_gain": -0.0011731992396885327,
+            "log_loss_gain": -0.0021160353721484393,
+            "passes_minimum_effect": false
+          },
+          "validation_2024": {
+            "brier_gain": 0.0017049948651589597,
+            "log_loss_gain": 0.00399351651314328,
+            "passes_minimum_effect": false
+          }
+        },
+        "effect_size_thresholds": {
+          "brier": 0.002,
+          "log_loss": 0.004
+        },
         "holdout_rows": 402,
+        "minimum_effect_in_both_years": false,
         "not_independent_of_other_cohorts": true,
         "signed_residual": {
           "archive_entry_prices_verified": false,
@@ -231,7 +265,24 @@
       "projected_margin:large_ge7": {
         "betting_policy_change_enabled": false,
         "development_rows": 195,
+        "effect_size_by_year": {
+          "holdout_2025": {
+            "brier_gain": 0.0006580170286344389,
+            "log_loss_gain": 0.0018184784538022303,
+            "passes_minimum_effect": false
+          },
+          "validation_2024": {
+            "brier_gain": -0.003774711327192315,
+            "log_loss_gain": -0.007530316605540932,
+            "passes_minimum_effect": false
+          }
+        },
+        "effect_size_thresholds": {
+          "brier": 0.002,
+          "log_loss": 0.004
+        },
         "holdout_rows": 150,
+        "minimum_effect_in_both_years": false,
         "not_independent_of_other_cohorts": true,
         "signed_residual": {
           "archive_entry_prices_verified": false,
@@ -330,7 +381,24 @@
       "projected_margin:moderate_3_to7": {
         "betting_policy_change_enabled": false,
         "development_rows": 453,
+        "effect_size_by_year": {
+          "holdout_2025": {
+            "brier_gain": 0.0001799255566775071,
+            "log_loss_gain": 0.00043175273594686647,
+            "passes_minimum_effect": false
+          },
+          "validation_2024": {
+            "brier_gain": -0.0006749967511196775,
+            "log_loss_gain": -0.001422088364122498,
+            "passes_minimum_effect": false
+          }
+        },
+        "effect_size_thresholds": {
+          "brier": 0.002,
+          "log_loss": 0.004
+        },
         "holdout_rows": 264,
+        "minimum_effect_in_both_years": false,
         "not_independent_of_other_cohorts": true,
         "signed_residual": {
           "archive_entry_prices_verified": false,
@@ -429,7 +497,24 @@
       "side:away": {
         "betting_policy_change_enabled": false,
         "development_rows": 441,
+        "effect_size_by_year": {
+          "holdout_2025": {
+            "brier_gain": 0.00042956761434356783,
+            "log_loss_gain": 0.001163252219189781,
+            "passes_minimum_effect": false
+          },
+          "validation_2024": {
+            "brier_gain": 0.00039829539183455775,
+            "log_loss_gain": 0.0009063609368485936,
+            "passes_minimum_effect": false
+          }
+        },
+        "effect_size_thresholds": {
+          "brier": 0.002,
+          "log_loss": 0.004
+        },
         "holdout_rows": 208,
+        "minimum_effect_in_both_years": false,
         "not_independent_of_other_cohorts": true,
         "signed_residual": {
           "archive_entry_prices_verified": false,
@@ -528,7 +613,24 @@
       "side:home": {
         "betting_policy_change_enabled": false,
         "development_rows": 517,
+        "effect_size_by_year": {
+          "holdout_2025": {
+            "brier_gain": -0.0001434726552720922,
+            "log_loss_gain": -7.236414209599307e-05,
+            "passes_minimum_effect": false
+          },
+          "validation_2024": {
+            "brier_gain": -0.0005642917059414387,
+            "log_loss_gain": -0.0007128509254133997,
+            "passes_minimum_effect": false
+          }
+        },
+        "effect_size_thresholds": {
+          "brier": 0.002,
+          "log_loss": 0.004
+        },
         "holdout_rows": 336,
+        "minimum_effect_in_both_years": false,
         "not_independent_of_other_cohorts": true,
         "signed_residual": {
           "archive_entry_prices_verified": false,
@@ -627,7 +729,24 @@
       "side:over": {
         "betting_policy_change_enabled": false,
         "development_rows": 239,
+        "effect_size_by_year": {
+          "holdout_2025": {
+            "brier_gain": -0.006337208333162592,
+            "log_loss_gain": -0.012943109674306896,
+            "passes_minimum_effect": false
+          },
+          "validation_2024": {
+            "brier_gain": -0.0056025712106735626,
+            "log_loss_gain": -0.01133785423771727,
+            "passes_minimum_effect": false
+          }
+        },
+        "effect_size_thresholds": {
+          "brier": 0.002,
+          "log_loss": 0.004
+        },
         "holdout_rows": 187,
+        "minimum_effect_in_both_years": false,
         "not_independent_of_other_cohorts": true,
         "signed_residual": {
           "archive_entry_prices_verified": false,
@@ -726,7 +845,24 @@
       "side:under": {
         "betting_policy_change_enabled": false,
         "development_rows": 240,
+        "effect_size_by_year": {
+          "holdout_2025": {
+            "brier_gain": -0.0005074848009126165,
+            "log_loss_gain": -0.0010147814226704188,
+            "passes_minimum_effect": false
+          },
+          "validation_2024": {
+            "brier_gain": -0.000860566684692754,
+            "log_loss_gain": -0.0017206559373010855,
+            "passes_minimum_effect": false
+          }
+        },
+        "effect_size_thresholds": {
+          "brier": 0.002,
+          "log_loss": 0.004
+        },
         "holdout_rows": 85,
+        "minimum_effect_in_both_years": false,
         "not_independent_of_other_cohorts": true,
         "signed_residual": {
           "archive_entry_prices_verified": false,
@@ -831,7 +967,24 @@
       "spread:underdog": {
         "betting_policy_change_enabled": false,
         "development_rows": 380,
+        "effect_size_by_year": {
+          "holdout_2025": {
+            "brier_gain": 0.0,
+            "log_loss_gain": 0.0,
+            "passes_minimum_effect": false
+          },
+          "validation_2024": {
+            "brier_gain": 0.0,
+            "log_loss_gain": 0.0,
+            "passes_minimum_effect": false
+          }
+        },
+        "effect_size_thresholds": {
+          "brier": 0.002,
+          "log_loss": 0.004
+        },
         "holdout_rows": 198,
+        "minimum_effect_in_both_years": false,
         "not_independent_of_other_cohorts": true,
         "signed_residual": {
           "archive_entry_prices_verified": false,
@@ -930,7 +1083,24 @@
       "week:early": {
         "betting_policy_change_enabled": false,
         "development_rows": 192,
+        "effect_size_by_year": {
+          "holdout_2025": {
+            "brier_gain": 0.00046460641046322526,
+            "log_loss_gain": 0.0017516253598302,
+            "passes_minimum_effect": false
+          },
+          "validation_2024": {
+            "brier_gain": -0.0073005829211945095,
+            "log_loss_gain": -0.017097219868105307,
+            "passes_minimum_effect": false
+          }
+        },
+        "effect_size_thresholds": {
+          "brier": 0.002,
+          "log_loss": 0.004
+        },
         "holdout_rows": 192,
+        "minimum_effect_in_both_years": false,
         "not_independent_of_other_cohorts": true,
         "signed_residual": {
           "archive_entry_prices_verified": false,
@@ -1029,7 +1199,24 @@
       "week:late": {
         "betting_policy_change_enabled": false,
         "development_rows": 549,
+        "effect_size_by_year": {
+          "holdout_2025": {
+            "brier_gain": -0.0023605003376707956,
+            "log_loss_gain": -0.004623788175201482,
+            "passes_minimum_effect": false
+          },
+          "validation_2024": {
+            "brier_gain": -0.0031774237302793773,
+            "log_loss_gain": -0.005107503014562975,
+            "passes_minimum_effect": false
+          }
+        },
+        "effect_size_thresholds": {
+          "brier": 0.002,
+          "log_loss": 0.004
+        },
         "holdout_rows": 282,
+        "minimum_effect_in_both_years": false,
         "not_independent_of_other_cohorts": true,
         "signed_residual": {
           "archive_entry_prices_verified": false,
@@ -1128,7 +1315,24 @@
       "week:middle": {
         "betting_policy_change_enabled": false,
         "development_rows": 696,
+        "effect_size_by_year": {
+          "holdout_2025": {
+            "brier_gain": 0.0,
+            "log_loss_gain": 0.0,
+            "passes_minimum_effect": false
+          },
+          "validation_2024": {
+            "brier_gain": 0.0,
+            "log_loss_gain": 0.0,
+            "passes_minimum_effect": false
+          }
+        },
+        "effect_size_thresholds": {
+          "brier": 0.002,
+          "log_loss": 0.004
+        },
         "holdout_rows": 342,
+        "minimum_effect_in_both_years": false,
         "not_independent_of_other_cohorts": true,
         "signed_residual": {
           "archive_entry_prices_verified": false,
