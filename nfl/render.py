@@ -336,7 +336,8 @@ def render_html(
     if state != "PRODUCTION":
         status = (
             f"{status} · {state} evidence mode · "
-            "WATCH = validated-research watchlist only · not production staking · never an executed bet"
+            "WATCH = validated-research watchlist only · "
+            "not production staking · never an executed bet"
         )
 
     css = "\n".join(
