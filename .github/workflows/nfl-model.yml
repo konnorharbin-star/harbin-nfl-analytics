@@ -75,6 +75,7 @@ on:
       - "nfl/model_card.py"
       - "nfl/monitoring.py"
       - "nfl/render.py"
+      - "nfl/reporting.py"
       - "nfl/publication.py"
       - "nfl/publication_integrity.py"
       - "nfl/publication_watchdog.py"
