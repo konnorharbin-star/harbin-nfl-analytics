@@ -229,6 +229,18 @@ jobs:
             outputs/forward_edge_graded.csv
             docs/forward_edge_validation.json
             docs/forward_edge_graded.csv
+            reports/forward_market_benchmarks.json
+            reports/forward_market_benchmark_forecasts.csv
+            reports/forward_market_benchmark_policies.csv
+            reports/forward_market_benchmark_weeks.csv
+            outputs/forward_market_benchmarks.json
+            outputs/forward_market_benchmark_forecasts.csv
+            outputs/forward_market_benchmark_policies.csv
+            outputs/forward_market_benchmark_weeks.csv
+            docs/forward_market_benchmarks.json
+            docs/forward_market_benchmark_forecasts.csv
+            docs/forward_market_benchmark_policies.csv
+            docs/forward_market_benchmark_weeks.csv
           )
           for f in "${FORWARD_EDGE_GRADED[@]}"; do
             # On the first run the grader may have just created these files
