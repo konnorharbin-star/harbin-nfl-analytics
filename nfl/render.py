@@ -128,10 +128,22 @@ def _signal(
         if action != "BET" or stake_units <= 0:
             return ""
         raw = row.get("production_signal", row.get("quant_signal"))
-    else:
-        raw = row.get("quant_signal", row.get("production_signal", "PASS"))
+        value = str(raw or "PASS").upper()
+        return "" if value == "PASS" else value
+
+    raw = row.get("quant_signal", row.get("production_signal", "PASS"))
     value = str(raw or "PASS").upper()
-    return "" if value == "PASS" else value
+    if value != "PASS":
+        return value
+
+    # PAPER/RESEARCH boards should not look empty when the independent model
+    # identifies a material discrepancy that is still blocked by production
+    # evidence gates. Surface only BET/STRONG raw research candidates as WATCH;
+    # LEAN stays quiet, and unresolved starting-QB state remains hidden.
+    research = str(row.get("research_signal") or "PASS").upper()
+    if research in {"BET", "STRONG"} and row.get("qb_certainty_veto") is not True:
+        return "WATCH"
+    return ""
 
 
 def _expiry_text(row: dict[str, object] | None) -> str:
@@ -311,7 +323,7 @@ def render_html(
         else "Projection-only · no verified live lines"
     )
     if state != "PRODUCTION":
-        status = f"{status} · {state} evidence mode · not production staking"
+        status = (\n            f"{status} · {state} evidence mode · WATCH = raw model candidate · "\n            "not production staking"\n        )
 
     css = "\n".join(
         [
@@ -337,7 +349,7 @@ def render_html(
             ".badge{font-size:8px;font-weight:800;border-radius:4px;padding:3px 5px;",
             "margin-left:4px}.strong{background:#5fc468;color:#0c2c12}",
             ".bet{background:#1f462a;color:#63c76d}",
-            ".lean{background:#483b1e;color:#e3b549}.expired{background:#34383d;color:#b0b4b8}",
+            ".lean,.watch{background:#483b1e;color:#e3b549}.expired{background:#34383d;color:#b0b4b8}",
             ".expiry{font-size:8px;color:#777c81;margin-left:4px}.market-expired{color:#777c81}",
             ".market-expired .expiry{color:#d6a44b}.nav{text-align:center;padding:14px}",
             ".nav button{background:#202328;border:1px solid #373b40;color:#eee;",
