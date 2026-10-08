@@ -193,18 +193,18 @@ def summarize_risk_attribution(
                 "covered_games": known.height,
                 "missing_games": games.height - known.height,
                 "risk_present": _segment(
-                    known.filter(pl.col(column) == True), target
+                    known.filter(pl.col(column)), target
                 ),
                 "risk_absent": _segment(
-                    known.filter(pl.col(column) == False), target
+                    known.filter(~pl.col(column)), target
                 ),
                 "by_season": {
                     str(season): {
                         "risk_present": _segment(
-                            subset.filter(pl.col(column) == True), target
+                            subset.filter(pl.col(column)), target
                         ),
                         "risk_absent": _segment(
-                            subset.filter(pl.col(column) == False), target
+                            subset.filter(~pl.col(column)), target
                         ),
                     }
                     for (season,), subset in known.group_by("season")
