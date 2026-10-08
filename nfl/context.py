@@ -458,13 +458,13 @@ def build_current_context(
         injury_feed_status = str(
             injury_feed_state.get("status") or "UNKNOWN"
         ).upper()
+        # League-wide freshness does NOT prove either team's injury coverage.
+        # A current injury report for Team A cannot certify Team B as healthy.
         home_injury_status = str(
-            home_injury.get("injury_freshness_status")
-            or injury_feed_status
+            home_injury.get("injury_freshness_status") or "UNKNOWN"
         ).upper()
         away_injury_status = str(
-            away_injury.get("injury_freshness_status")
-            or injury_feed_status
+            away_injury.get("injury_freshness_status") or "UNKNOWN"
         ).upper()
         home_personnel_status = str(
             home_personnel.get("personnel_freshness_status") or "UNKNOWN"
@@ -536,6 +536,8 @@ def build_current_context(
                 "injury_feed_age_days": injury_feed_state.get("latest_age_days"),
                 "home_injury_freshness_status": home_injury_status,
                 "away_injury_freshness_status": away_injury_status,
+                "home_injury_source_available": bool(home_injury),
+                "away_injury_source_available": bool(away_injury),
                 "home_depth_freshness_status": home_personnel.get(
                     "depth_freshness_status"
                 ),
