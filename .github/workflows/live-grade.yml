@@ -11,6 +11,9 @@ on:
       - "nfl/grading.py"
       - "nfl/forward_edge_validation.py"
       - "grade_forward_edge.py"
+      - "nfl/market_benchmarks.py"
+      - "run_forward_market_benchmarks.py"
+      - "tests/test_market_benchmarks.py"
       - "tests/test_forward_edge_validation.py"
       - "nfl/grading_audit.py"
       - "nfl/release_gate.py"
@@ -31,6 +34,9 @@ on:
       - "tests/test_forward_edge_validation.py"
       - "grade_live.py"
       - "grade_recent_form_forward.py"
+      - "nfl/market_benchmarks.py"
+      - "run_forward_market_benchmarks.py"
+      - "tests/test_market_benchmarks.py"
       - ".github/workflows/live-grade.yml"
   schedule:
     - cron: "37 10,16,22 * * *"
@@ -77,7 +83,8 @@ jobs:
             tests/test_audit_parity.py \
             tests/test_monitoring_release.py \
             tests/test_recent_form_forward.py \
-            tests/test_forward_edge_validation.py
+            tests/test_forward_edge_validation.py \
+            tests/test_market_benchmarks.py
 
       - name: Grade completed paper/shadow bets
         run: python grade_live.py
@@ -87,6 +94,9 @@ jobs:
 
       - name: Grade first-snapshot NFL market-relative research
         run: python grade_forward_edge.py
+
+      - name: Benchmark frozen 2026 NFL model against market-only alternatives
+        run: python run_forward_market_benchmarks.py
 
       - name: Commit live evidence
         if: github.event_name != 'pull_request'
@@ -108,7 +118,19 @@ jobs:
             outputs/forward_edge_validation.json \
             outputs/forward_edge_graded.csv \
             docs/forward_edge_validation.json \
-            docs/forward_edge_graded.csv; do
+            docs/forward_edge_graded.csv \
+            reports/forward_market_benchmarks.json \
+            reports/forward_market_benchmark_forecasts.csv \
+            reports/forward_market_benchmark_policies.csv \
+            reports/forward_market_benchmark_weeks.csv \
+            outputs/forward_market_benchmarks.json \
+            outputs/forward_market_benchmark_forecasts.csv \
+            outputs/forward_market_benchmark_policies.csv \
+            outputs/forward_market_benchmark_weeks.csv \
+            docs/forward_market_benchmarks.json \
+            docs/forward_market_benchmark_forecasts.csv \
+            docs/forward_market_benchmark_policies.csv \
+            docs/forward_market_benchmark_weeks.csv; do
             [ -f "$f" ] && git add "$f" || true
           done
           if ! git diff --cached --quiet; then
