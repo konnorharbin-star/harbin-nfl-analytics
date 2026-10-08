@@ -243,3 +243,51 @@ def test_espn_historical_writer_is_serialized_after_free_evidence() -> None:
     assert '"nfl/espn_historical.py"' in free
     assert '"run_espn_verified_market_backtest.py"' in free
     assert '"Free ESPN Historical Market Backtest"' in model
+
+def test_model_does_not_stage_new_or_tracked_grader_owned_forward_reports(
+    tmp_path: Path,
+) -> None:
+    """Mirror the published workflow's actual cleanup, including first-run files."""
+    workflow = (WORKFLOW_DIR / "nfl-model.yml").read_text(encoding="utf-8")
+    marker = 'for f in "${FORWARD_EDGE_GRADED[@]}"; do'
+    assert marker in workflow
+    loop = workflow.split(marker, 1)[1].split("          done", 1)[0]
+    cleanup = (
+        'FORWARD_EDGE_GRADED=(reports/forward_edge_validation.json)\n'
+        + marker + loop + "          done\n"
+    )
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init", "-b", "main")
+    _configure_repo(repo)
+    (repo / "outputs").mkdir()
+    (repo / "reports").mkdir()
+    generated = repo / "outputs" / "current_model.json"
+    grader = repo / "reports" / "forward_edge_validation.json"
+    generated.write_text('{"run":1}\n', encoding="utf-8")
+    _git(repo, "add", "outputs/current_model.json")
+    _git(repo, "commit", "-m", "source")
+
+    # Previously absent from HEAD, but accidentally staged by git add outputs
+    # history reports docs. Unstage rather than restoring an unknown pathspec.
+    grader.write_text('{"graded":0}\n', encoding="utf-8")
+    generated.write_text('{"run":2}\n', encoding="utf-8")
+    _git(repo, "add", "outputs/current_model.json", "reports/forward_edge_validation.json")
+    _run(["bash", "-e", "-c", cleanup], cwd=repo)
+    staged = _git(repo, "diff", "--cached", "--name-only").stdout.splitlines()
+    assert staged == ["outputs/current_model.json"]
+    assert grader.read_text(encoding="utf-8") == '{"graded":0}\n'
+
+    # On subsequent runs the grading file IS tracked and must be restored to
+    # HEAD while still allowing unrelated model/PNG artifacts to commit.
+    _git(repo, "commit", "-m", "model refresh")
+    _git(repo, "add", "reports/forward_edge_validation.json")
+    _git(repo, "commit", "-m", "grader refresh")
+    grader.write_text('{"graded":1}\n', encoding="utf-8")
+    generated.write_text('{"run":3}\n', encoding="utf-8")
+    _git(repo, "add", "outputs/current_model.json", "reports/forward_edge_validation.json")
+    _run(["bash", "-e", "-c", cleanup], cwd=repo)
+    staged = _git(repo, "diff", "--cached", "--name-only").stdout.splitlines()
+    assert staged == ["outputs/current_model.json"]
+    assert grader.read_text(encoding="utf-8") == '{"graded":0}\n'
