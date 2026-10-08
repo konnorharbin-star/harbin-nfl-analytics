@@ -77,8 +77,11 @@ on:
       - "nfl/render.py"
       - "nfl/publication.py"
       - "nfl/publication_integrity.py"
+      - "nfl/publication_watchdog.py"
       - "scripts/verify_remote_publication.py"
+      - "scripts/check_publication_watchdog.py"
       - "tests/test_publication_integrity.py"
+      - "tests/test_publication_watchdog.py"
       - "nfl/reporting.py"
       - "scripts/push_generated_state.sh"
       - "scripts/should_pregame_refresh.py"
@@ -107,6 +110,7 @@ on:
       - "tests/test_schedule_market.py"
       - ".github/workflows/nfl-model.yml"
       - ".github/workflows/nfl-pregame-refresh.yml"
+      - ".github/workflows/nfl-publication-watchdog.yml"
   push:
     branches: [main]
     paths-ignore: ["outputs/**", "history/**", "reports/**", "docs/**"]
