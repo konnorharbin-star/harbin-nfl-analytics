@@ -156,3 +156,22 @@ def test_fixed_cohorts_fail_closed_without_side_data() -> None:
         _synthetic_bets(), validation_season=2024, holdout_season=2025
     )
     assert report["status"] == "MISSING_PREDECLARED_FEATURES"
+
+
+def test_pregame_margin_cohorts_including_favorite_large_margin() -> None:
+    frame = _synthetic_bets().with_columns(
+        pl.lit("home").alias("side"),
+        pl.lit(-7.5).alias("line"),
+        pl.lit(8.0).alias("projected_home_margin"),
+    )
+    result = fixed_cohort_calibration(
+        frame, validation_season=2024, holdout_season=2025
+    )
+    assert result["projected_margin_cohorts"] == "PREGAME_PROJECTIONS_JOINED"
+    assert result["cohorts"]["projected_margin:large_ge7"]["status"] == (
+        "DESCRIPTIVE_RESEARCH_ONLY"
+    )
+    assert result["cohorts"]["moneyline:favorite_large_margin"]["status"] == (
+        "DESCRIPTIVE_RESEARCH_ONLY"
+    )
+    assert result["betting_policy_change_enabled"] is False
