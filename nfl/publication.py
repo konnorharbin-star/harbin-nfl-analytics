@@ -644,7 +644,7 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
 
     empty_header = (
         "season,week,game_id,quant_market,quant_side,quant_signal,"
-        "portfolio_action,portfolio_stake_units\\n"
+        "portfolio_action,portfolio_stake_units\n"
     )
     if columns:
         card.write_csv(portfolio_path)
