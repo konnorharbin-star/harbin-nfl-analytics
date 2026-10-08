@@ -1,17 +1,17 @@
 {
   "alerts": [
-    "18 market rows have high model-vs-consensus disagreement",
+    "17 market rows have high model-vs-consensus disagreement",
     "fewer than two markets clear regime-specific edge reliability"
   ],
   "data_integrity_status": "OK",
   "decision_diagnostics": {
     "enforced": false,
-    "high_disagreement_rows": 18,
+    "high_disagreement_rows": 17,
     "movement_coverage": 1.0,
     "research_execution_actions": {
-      "BET_NOW": 10,
-      "PASS": 17,
-      "WAIT": 18
+      "BET_NOW": 11,
+      "PASS": 18,
+      "WAIT": 16
     },
     "status": "READY"
   },
