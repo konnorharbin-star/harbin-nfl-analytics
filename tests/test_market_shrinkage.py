@@ -3,6 +3,7 @@ from __future__ import annotations
 import polars as pl
 
 from nfl.market_shrinkage import (
+    calibration_buckets,
     evaluate_market_edge_shrinkage,
     fit_alpha,
     shrink_probability,
@@ -81,3 +82,28 @@ def test_shrinkage_improves_overconfident_holdout_probabilities() -> None:
         assert shrunk["log_loss"] < raw["log_loss"]
         assert candidate["probability_validated"] is True
         assert candidate["status"] == "MARKET_ONLY_PREFERRED"
+
+
+def test_fixed_calibration_buckets_report_historical_overconfidence() -> None:
+    frame = pl.DataFrame(
+        {
+            "result": ["win", "loss", "win", "push"],
+            "model_probability": [0.90, 0.90, 0.90, 0.90],
+            "no_vig_probability": [0.60, 0.60, 0.60, 0.60],
+        }
+    )
+    buckets = calibration_buckets(frame)
+    bucket = buckets["0.6-0.7"]
+    assert bucket["rows"] == 3
+    assert abs(bucket["observed_win_rate"] - 2 / 3) < 1e-12
+    assert bucket["raw_brier"] > bucket["market_brier"]
+    assert buckets["0.4-0.5"]["status"] == "EMPTY"
+
+
+def test_calibration_report_keeps_holdout_descriptive_only() -> None:
+    report = evaluate_market_edge_shrinkage(_synthetic_bets())
+    for market in ("moneyline", "spread", "total"):
+        diagnostics = report["markets"][market]["calibration_diagnostics"]
+        assert diagnostics["holdout_2025"]["0.6-0.7"]["status"] == "DESCRIPTIVE_ONLY"
+        assert diagnostics["holdout_2025"]["0.6-0.7"]["rows"] == 200
+        assert report["markets"][market]["canonical_change_enabled"] is False
