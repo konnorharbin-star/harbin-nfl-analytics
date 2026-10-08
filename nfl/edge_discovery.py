@@ -10,9 +10,9 @@ from __future__ import annotations
 import json
 import math
 from collections import Counter
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Mapping
 
 import polars as pl
 
@@ -108,7 +108,9 @@ def _market_policy(market: str, policy: Mapping[str, object] | None) -> bool:
     return allowed
 
 
-def _rate(row: Mapping[str, object], ref: datetime, limits: Mapping[str, object]) -> tuple[bool, str]:
+def _rate(
+    row: Mapping[str, object], ref: datetime, limits: Mapping[str, object]
+) -> tuple[bool, str]:
     # Delegate timestamp/book/age checks to existing canonical execution code.
     return validate_execution_row(row, limits=limits, now=ref)
 
@@ -352,14 +354,21 @@ def enrich_edge_discovery(
         "source_provenance": {
             "regime": "NFL fixed 2024 validation and untouched 2025 holdout",
             "shrinkage": "NFL chronological model-to-market log-odds shrinkage; research only",
-            "backtest": "ESPN archive provider-labeled opening/close; NOT independently timestamped actionable entry",
+            "backtest": (
+                "ESPN archive provider-labeled opening/close; "
+                "NOT independently timestamped actionable entry"
+            ),
         },
         "notes": [
-            "Ranked from the single best observed market candidate per game and market, not exhaustive same-game alternative sides.",
-            "Raw EV/probability edge may be grossly optimistic; an archive market-only alpha=0 removes modeled edge.",
+            "Ranked from the single best observed market candidate per game and market, "
+            "not exhaustive same-game alternative sides.",
+            "Raw EV/probability edge may be grossly optimistic; an archive "
+            "market-only alpha=0 removes modeled edge.",
             "No historic archive price is a verified contemporaneous executable entry.",
-            "Research prioritization is not a bet recommendation; all existing policy and veto decisions are preserved.",
-            "Even SUPPORTED_RESEARCH would require independent forward evidence and release gates before production use.",
+            "Research prioritization is not a bet recommendation; "
+            "all existing policy and veto decisions are preserved.",
+            "Even SUPPORTED_RESEARCH would require independent forward evidence "
+            "and release gates before production use.",
         ],
     }
     return enriched, report
@@ -387,9 +396,16 @@ def write_edge_discovery(
         )
         exports = {
             "edge_priority.csv": sorted_rows,
-            "edge_supported.csv": [r for r in sorted_rows if r.get("edge_discovery_tier") == EVIDENCE_SUPPORTED],
-            "edge_watchlist.csv": [r for r in sorted_rows if r.get("edge_discovery_tier") == RAW_WATCH],
-            "edge_exclusions.csv": [r for r in sorted_rows if r.get("edge_discovery_tier") not in {EVIDENCE_SUPPORTED, RAW_WATCH}],
+            "edge_supported.csv": [
+                r for r in sorted_rows if r.get("edge_discovery_tier") == EVIDENCE_SUPPORTED
+            ],
+            "edge_watchlist.csv": [
+                r for r in sorted_rows if r.get("edge_discovery_tier") == RAW_WATCH
+            ],
+            "edge_exclusions.csv": [
+                r for r in sorted_rows
+                if r.get("edge_discovery_tier") not in {EVIDENCE_SUPPORTED, RAW_WATCH}
+            ],
         }
         import csv
 
