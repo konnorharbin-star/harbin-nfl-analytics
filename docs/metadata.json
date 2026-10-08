@@ -1,6 +1,6 @@
 {
   "current_context": {
-    "as_of": "2026-10-08T00:21:16.790107+00:00",
+    "as_of": "2026-10-08T00:30:25.395838+00:00",
     "components": {
       "injuries_personnel": 0.0,
       "quarterback": 0.8,
@@ -11,7 +11,7 @@
     "depth_feed_available": true,
     "expected_qb_identity_coverage": 1.0,
     "expected_qb_state": {
-      "as_of": "2026-10-08T00:21:16.790107+00:00",
+      "as_of": "2026-10-08T00:30:25.395838+00:00",
       "decision_ready_team_coverage": 0.9,
       "decision_ready_teams": 27,
       "identified_teams": 30,
@@ -120,7 +120,7 @@
     "status": "READY"
   },
   "edge_discovery": {
-    "as_of": "2026-10-08T00:21:38.476536+00:00",
+    "as_of": "2026-10-08T00:30:42.129387+00:00",
     "categories": {
       "EVIDENCE_OR_CONTEXT_BLOCKED": 45,
       "NO_POSITIVE_RAW_EDGE": 0,
@@ -156,7 +156,50 @@
     "status": "RESEARCH_ONLY",
     "validated_support_rows": 0
   },
-  "generated_at": "2026-10-08T00:21:38.476536+00:00",
+  "edge_timing": {
+    "actions": {
+      "BET_NOW_RESEARCH": 0,
+      "PASS": 45,
+      "WAIT_MONITOR": 0
+    },
+    "as_of": "2026-10-08T00:30:42.129387+00:00",
+    "league": "NFL",
+    "limits": {
+      "lookback_hours": 12,
+      "material_implied_break_even_move_pp": 1.0,
+      "material_line_points": 0.5,
+      "minimum_observation_gap_minutes": 10,
+      "minimum_same_line_EV_cushion": 0.01,
+      "minimum_same_line_probability_cushion": 0.02
+    },
+    "not_official_closing_line": true,
+    "notes": [
+      "A prior snapshot is a capture timestamp, not verified original book publish time.",
+      "Prices are matched only within the same game, market, side and canonical book.",
+      "No bet-to spread or total is inferred by carrying probability across lines.",
+      "Mixed adverse/favorable spread and odds moves are unscored.",
+      "An absent prior quote never establishes a BET_NOW timing advantage.",
+      "NFL holdout alpha=0 and unreliable regime markets fail closed.",
+      "Forward validation is required; observed price movement is not economic value."
+    ],
+    "observed_movements": {
+      "IMPROVED": 5,
+      "MIXED_LINE_PRICE": 0,
+      "NO_HISTORY": 0,
+      "STABLE": 40,
+      "WORSENED": 0
+    },
+    "observed_quote_not_guaranteed_fill": true,
+    "policy_and_stake_unchanged": true,
+    "production_stake_authorized": false,
+    "qualified_research_signals": 0,
+    "rows": 45,
+    "same_book_prior_coverage": 1.0,
+    "schema_version": 1,
+    "status": "RESEARCH_ONLY",
+    "validated_timing_strategy": false
+  },
+  "generated_at": "2026-10-08T00:30:42.129387+00:00",
   "market_coverage": {
     "games": 15,
     "moneyline": 15,
@@ -2745,7 +2788,7 @@
       "action_network_diagnostic": {
         "attempts": [
           {
-            "collector_observed_at": "2026-10-08T00:21:25.582970+00:00",
+            "collector_observed_at": "2026-10-08T00:30:33.240008+00:00",
             "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
             "games_with_markets": 15,
             "parsed_rows": 312,
@@ -2897,7 +2940,7 @@
                     "value"
                   ],
                   "last_update": null,
-                  "odds": -107,
+                  "odds": -108,
                   "side": "under",
                   "timestamp": null,
                   "updated_at": null,
@@ -2909,7 +2952,7 @@
             "team_matches": 15
           }
         ],
-        "collector_observed_at": "2026-10-08T00:21:25.582970+00:00",
+        "collector_observed_at": "2026-10-08T00:30:33.240008+00:00",
         "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
         "games_with_markets": 15,
         "parsed_rows": 312,
@@ -3061,7 +3104,7 @@
                 "value"
               ],
               "last_update": null,
-              "odds": -107,
+              "odds": -108,
               "side": "under",
               "timestamp": null,
               "updated_at": null,
