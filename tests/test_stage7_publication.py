@@ -5,10 +5,13 @@ import json
 import polars as pl
 
 from nfl.publication import (
+    _write_cards,
     build_publication_snapshot,
     validate_publication_files,
     write_publication_bundle,
 )
+from nfl.publication_integrity import validate_publication_manifest
+from nfl.reporting import write_canonical_report
 
 
 def _current() -> pl.DataFrame:
@@ -391,3 +394,68 @@ def test_publication_uses_portfolio_research_signal_when_quant_is_pass(
     assert "injury feed pending/stale" in suggestions
     assert recommendations.count("\n") == 1
     assert "<td data-role=\"signal\">BET</td>" in quant_html
+
+
+def test_final_canonical_report_rewrite_rebuilds_manifest_before_publication(
+    tmp_path, monkeypatch
+) -> None:
+    """The second model JSON write adds bundle metadata and must be rehashed."""
+    monkeypatch.chdir(tmp_path)
+    for name in ("outputs", "docs", "reports", "history"):
+        (tmp_path / name).mkdir()
+    prior = _report("unused.html", "unused.png")
+    current = _current()
+    payload = write_canonical_report(
+        current,
+        meta=prior["meta"],
+        portfolio=prior["portfolio"],
+        monitoring=prior["monitoring"],
+        release_gate=prior["release_gate"],
+        health=prior["health"],
+        evidence=prior["evidence"],
+        model_card=prior["model_card"],
+    )
+    saved = json.loads((tmp_path / "outputs/current_model.json").read_text())
+    manifest = json.loads((tmp_path / "outputs/publication_manifest.json").read_text())
+    assert saved == payload
+    assert "bundle" in saved["publication"]
+    assert saved["publication"]["bundle"]["manifest"] == (
+        "outputs/publication_manifest.json"
+    )
+    assert manifest["run_tag"] == saved["publication"]["run_tag"]
+    assert validate_publication_manifest(
+        output_dir=tmp_path / "outputs", docs_dir=tmp_path / "docs"
+    )["status"] == "PASS"
+    assert validate_publication_files(
+        output_dir=tmp_path / "outputs", docs_dir=tmp_path / "docs"
+    )["status"] == "PASS"
+
+
+def test_empty_slate_overwrites_old_suggestions_with_header_only_csv(tmp_path) -> None:
+    outputs = tmp_path / "outputs"
+    docs = tmp_path / "docs"
+    outputs.mkdir()
+    docs.mkdir()
+    for name in ("portfolio_card.csv", "suggested_bets.csv", "quant_recommendations.csv"):
+        (outputs / name).write_text("OLD WEEK BET\n")
+    _write_cards(_current().head(0), output_dir=outputs, docs_dir=docs)
+    for name in ("portfolio_card.csv", "suggested_bets.csv", "quant_recommendations.csv"):
+        value = (outputs / name).read_text()
+        assert "OLD WEEK BET" not in value
+        assert value.startswith("season,week,game_id")
+        assert len(value.strip().splitlines()) == 1
+    assert "No current executable model suggestions." in (
+        outputs / "quant_card.html"
+    ).read_text()
+
+
+def test_schema_free_empty_slate_still_writes_nonempty_safe_headers(tmp_path) -> None:
+    outputs = tmp_path / "outputs"
+    docs = tmp_path / "docs"
+    outputs.mkdir()
+    docs.mkdir()
+    _write_cards(pl.DataFrame(), output_dir=outputs, docs_dir=docs)
+    for name in ("portfolio_card.csv", "suggested_bets.csv", "quant_recommendations.csv"):
+        csv = (outputs / name).read_text()
+        assert csv.startswith("season,week,game_id")
+        assert csv.endswith("\n")

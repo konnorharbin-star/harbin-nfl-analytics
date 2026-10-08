@@ -14,6 +14,10 @@ from zoneinfo import ZoneInfo
 import polars as pl
 
 from .policy import load_policy
+from .publication_integrity import (
+    validate_publication_manifest,
+    write_publication_manifest,
+)
 
 PUBLICATION_SCHEMA_VERSION = 1
 
@@ -631,15 +635,21 @@ def _card_columns(current: pl.DataFrame) -> list[str]:
 
 def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> None:
     columns = _card_columns(current)
-    card = current.select(columns) if columns and not current.is_empty() else pl.DataFrame()
+    # Preserve the schema for zero-row slates, so CSV exports are header-only
+    # instead of empty (or, worse, a leftover prior-week file).
+    card = current.select(columns) if columns else pl.DataFrame()
     portfolio_path = output_dir / "portfolio_card.csv"
     recommendation_path = output_dir / "quant_recommendations.csv"
     suggestions_path = output_dir / "suggested_bets.csv"
 
+    empty_header = (
+        "season,week,game_id,quant_market,quant_side,quant_signal,"
+        "portfolio_action,portfolio_stake_units\n"
+    )
     if columns:
         card.write_csv(portfolio_path)
     else:
-        portfolio_path.write_text("")
+        portfolio_path.write_text(empty_header, encoding="utf-8")
 
     suggestions = card.head(0)
     signal_column = next(
@@ -685,8 +695,8 @@ def _write_cards(current: pl.DataFrame, *, output_dir: Path, docs_dir: Path) -> 
         suggestions.write_csv(suggestions_path)
         recommendations.write_csv(recommendation_path)
     else:
-        suggestions_path.write_text("")
-        recommendation_path.write_text("")
+        suggestions_path.write_text(empty_header, encoding="utf-8")
+        recommendation_path.write_text(empty_header, encoding="utf-8")
 
     rows: list[str] = []
     for row in suggestions.to_dicts():
@@ -995,6 +1005,15 @@ def validate_publication_files(
         )
     )
 
+    manifest = validate_publication_manifest(output_dir=outputs, docs_dir=docs)
+    checks.append(
+        _check(
+            "full_run_manifest_and_all_png_pages",
+            manifest["status"] == "PASS",
+            str(manifest.get("reason", "manifest unavailable")),
+        )
+    )
+
     errors = [
         check
         for check in checks
@@ -1148,7 +1167,8 @@ def write_publication_bundle(
         "- [Game-level QB/injury/OL/rest/travel risk register](context_risk_register.csv)\n"
         "- [Run report](RUN_REPORT.md)\n"
         "- [Model card](MODEL_CARD.md)\n"
-        "- [Publication validation](publication_validation.json)\n\n"
+        "- [Publication validation](publication_validation.json)\n"
+        "- [Current-run file fingerprint manifest](publication_manifest.json)\n\n"
         "The fresh and stable PNGs contain the same run; only the fresh filename "
         "is intended to defeat cached image previews.\n"
     )
@@ -1163,6 +1183,9 @@ def write_publication_bundle(
 
     _write_cards(current, output_dir=outputs, docs_dir=docs)
     _append_trend(snapshot, trend_path)
+    # Cryptographically reconcile every current-run PNG page, research/picks CSV,
+    # README timestamp and public copies BEFORE declaring a successful publish.
+    write_publication_manifest(output_dir=outputs, docs_dir=docs)
 
     validation = validate_publication_files(output_dir=outputs, docs_dir=docs)
     for target in (
@@ -1186,5 +1209,6 @@ def write_publication_bundle(
         "public_audit": str(docs / "audit.html"),
         "public_quant": str(docs / "quant.html"),
         "validation": str(outputs / "publication_validation.json"),
+        "manifest": str(outputs / "publication_manifest.json"),
         "trend_history": str(trend_path),
     }
