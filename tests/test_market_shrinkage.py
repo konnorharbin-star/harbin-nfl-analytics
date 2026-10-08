@@ -7,6 +7,8 @@ from nfl.market_shrinkage import (
     evaluate_market_edge_shrinkage,
     fit_alpha,
     shrink_probability,
+    signed_residual_probability,
+    signed_residual_research,
 )
 
 
@@ -107,3 +109,27 @@ def test_calibration_report_keeps_holdout_descriptive_only() -> None:
         assert diagnostics["holdout_2025"]["0.6-0.7"]["status"] == "DESCRIPTIVE_ONLY"
         assert diagnostics["holdout_2025"]["0.6-0.7"]["rows"] == 200
         assert report["markets"][market]["canonical_change_enabled"] is False
+
+
+def test_signed_residual_research_does_not_use_holdout_for_fitting() -> None:
+    bets = _synthetic_bets()
+    first = signed_residual_research(
+        bets.filter(pl.col("season") < 2024),
+        bets.filter(pl.col("season") == 2024),
+        bets.filter(pl.col("season") == 2025),
+    )
+    changed = _synthetic_bets(holdout_win_rate=0.20)
+    second = signed_residual_research(
+        changed.filter(pl.col("season") < 2024),
+        changed.filter(pl.col("season") == 2024),
+        changed.filter(pl.col("season") == 2025),
+    )
+    assert first["selected_alpha"] == second["selected_alpha"]
+    assert first["canonical_market_probability_change_enabled"] is False
+    assert first["betting_policy_change_enabled"] is False
+
+
+def test_signed_residual_probability_can_reverse_direction() -> None:
+    assert signed_residual_probability(0.8, 0.5, -0.25) < 0.5
+    assert abs(signed_residual_probability(0.8, 0.5, 0) - 0.5) < 1e-12
+    assert abs(signed_residual_probability(0.8, 0.5, 1) - 0.8) < 1e-12
