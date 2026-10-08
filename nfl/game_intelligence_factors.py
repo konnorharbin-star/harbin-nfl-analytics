@@ -10,9 +10,9 @@ import math
 import polars as pl
 
 from .contracts import DataContractError, require_columns
+from .recent_form import RECENT_PBP_METRICS
 
 KEYS = ("season", "week", "game_id")
-from .recent_form import RECENT_PBP_METRICS
 
 PREGAME_FEATURES = tuple(
     f"recent_{metric}_{target}_signal"
