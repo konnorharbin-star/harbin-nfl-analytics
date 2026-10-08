@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 import json
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 import polars as pl
 import pytest
@@ -316,3 +317,15 @@ def test_empty_ledger_outputs_and_research_policy_unchanged(tmp_path):
         (tmp_path / "reports" / "forward_edge_validation.json").read_text()
     )
     assert payload["staking_authorized"] is False
+
+def test_grading_follows_completed_main_model_run_and_reads_latest_commit():
+    workflow = (
+        Path(__file__).resolve().parents[1]
+        / ".github/workflows/live-grade.yml"
+    ).read_text(encoding="utf-8")
+    assert 'workflows: ["NFL Model + Operations"]' in workflow
+    assert "types: [completed]" in workflow
+    assert "github.event.workflow_run.conclusion == 'success'" in workflow
+    assert "github.event.workflow_run.head_branch == 'main'" in workflow
+    assert "ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref }}" in workflow
+    assert "run: python grade_forward_edge.py" in workflow
