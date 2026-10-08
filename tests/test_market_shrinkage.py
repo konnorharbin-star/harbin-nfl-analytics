@@ -175,3 +175,20 @@ def test_pregame_margin_cohorts_including_favorite_large_margin() -> None:
         "DESCRIPTIVE_RESEARCH_ONLY"
     )
     assert result["betting_policy_change_enabled"] is False
+
+
+def test_small_cohort_gain_is_not_mislabeled_material() -> None:
+    frame = _synthetic_bets().with_columns(
+        pl.lit("away").alias("side"),
+        pl.lit(7.5).alias("line"),
+        pl.lit(8.0).alias("projected_home_margin"),
+    )
+    report = fixed_cohort_calibration(
+        frame, validation_season=2024, holdout_season=2025
+    )
+    cohort = report["cohorts"]["side:away"]
+    assert cohort["minimum_effect_in_both_years"] is False
+    assert cohort["effect_size_thresholds"] == {
+        "brier": 0.002, "log_loss": 0.004
+    }
+    assert cohort["betting_policy_change_enabled"] is False

@@ -509,8 +509,40 @@ def fixed_cohort_calibration(
         research = signed_residual_research(
             development, validation, holdout, minimum_rows=min_development
         )
+        # Screening threshold is descriptive, not a statistical discovery or
+        # an operational promotion rule. Both untouched years must clear it.
+        effect_by_year: dict[str, object] = {}
+        for year_key in ("validation_2024", "holdout_2025"):
+            year_data = research.get(year_key, {})
+            adjusted = year_data.get("research_adjustment", {})
+            baseline = year_data.get("sportsbook_no_vig", {})
+            brier_gain = (
+                float(baseline["brier"]) - float(adjusted["brier"])
+                if baseline.get("brier") is not None
+                and adjusted.get("brier") is not None else None
+            )
+            log_loss_gain = (
+                float(baseline["log_loss"]) - float(adjusted["log_loss"])
+                if baseline.get("log_loss") is not None
+                and adjusted.get("log_loss") is not None else None
+            )
+            effect_by_year[year_key] = {
+                "brier_gain": brier_gain,
+                "log_loss_gain": log_loss_gain,
+                "passes_minimum_effect": (
+                    brier_gain is not None and brier_gain >= 0.002
+                    and log_loss_gain is not None and log_loss_gain >= 0.004
+                ),
+            }
+        material = all(
+            bool(year["passes_minimum_effect"])
+            for year in effect_by_year.values()
+        )
         output[label] = {
             "status": "DESCRIPTIVE_RESEARCH_ONLY",
+            "minimum_effect_in_both_years": material,
+            "effect_size_thresholds": {"brier": 0.002, "log_loss": 0.004},
+            "effect_size_by_year": effect_by_year,
             "development_rows": development.height,
             "validation_rows": validation.height,
             "holdout_rows": holdout.height,
