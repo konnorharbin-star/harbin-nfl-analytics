@@ -1138,6 +1138,8 @@ def write_publication_bundle(
         "- [Research timing report](edge_timing_report.json)\n"
         "- [Historical edge failure diagnosis](historical_edge_failure.json)\n"
         "- [Historical edge cohort audit table](historical_edge_segments.csv)\n"
+        "- [2026 prospective market-vs-model validation](forward_edge_validation.json)\n"
+        "- [Frozen prospective game-market grades](forward_edge_graded.csv)\n"
         "- [Run report](RUN_REPORT.md)\n"
         "- [Model card](MODEL_CARD.md)\n"
         "- [Publication validation](publication_validation.json)\n\n"
