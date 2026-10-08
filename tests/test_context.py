@@ -495,3 +495,43 @@ def test_context_veto_does_not_block_when_rest_is_not_adverse() -> None:
     assert row["context_veto"] is False
     assert row["research_signal"] == "BET"
     assert row["research_stake_units"] == 0.15
+
+
+def test_fresh_league_injury_feed_does_not_certify_missing_away_team() -> None:
+    """An observed injury report for BUF cannot mark missing NE injuries healthy."""
+    only_buf = _injuries().filter(pl.col("team") == "BUF")
+    context, meta = build_current_context(
+        _target(roof="dome"),
+        season=2026, week=4,
+        injuries=only_buf,
+        depth_charts=_depth(),
+        rosters=_rosters(),
+        as_of=AS_OF,
+    )
+    row = context.row(0, named=True)
+    assert meta["injury_feed_fresh"] is True
+    assert row["home_injury_freshness_status"] == "FRESH"
+    assert row["away_injury_freshness_status"] == "UNKNOWN"
+    assert row["home_injury_source_available"] is True
+    assert row["away_injury_source_available"] is False
+    assert row["context_injuries_personnel_fresh"] is False
+    assert "NE injury state unknown" in row["context_freshness_reason"]
+
+
+def test_explicit_official_inactive_overrides_full_practice_report() -> None:
+    altered = _injuries().with_columns(
+        pl.when(pl.col("team") == "BUF")
+        .then(pl.lit("Inactive"))
+        .otherwise(pl.col("report_status"))
+        .alias("report_status"),
+        pl.when(pl.col("team") == "BUF")
+        .then(pl.lit("Full Participation"))
+        .otherwise(pl.col("practice_status"))
+        .alias("practice_status"),
+    )
+    # Use the 9/30 row, ignoring the 10/02 post-as-of update.
+    normalized = normalize_injuries(
+        altered, season=2026, week=4, as_of=AS_OF
+    )
+    buf = normalized.filter(pl.col("team") == "BUF").row(0, named=True)
+    assert buf["severity"] == 1.0
