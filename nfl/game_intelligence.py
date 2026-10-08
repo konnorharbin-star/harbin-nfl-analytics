@@ -67,14 +67,11 @@ def summarize_game_intelligence(games: pl.DataFrame) -> dict[str, object]:
         "total": summary(games),
         "by_season": {
             str(season): summary(group)
-            for season, group in games.partition_by("season", as_dict=True)
-            for season in [season[0]]
+            for (season,), group in games.group_by("season")
         },
         "by_season_week": [
             {"season": int(season), "week": int(week), **summary(group)}
-            for (season, week), group in games.partition_by(
-                ["season", "week"], as_dict=True
-            ).items()
+            for (season, week), group in games.group_by(["season", "week"])
         ],
         "pregame_model_modified": False,
         "staking_authorized": False,
