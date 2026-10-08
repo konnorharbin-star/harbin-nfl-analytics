@@ -69,10 +69,13 @@ def _quote_rows(
                 continue
             point = None
         else:
-            if (
-                line_a is None or line_b is None or
-                not all(math.isfinite(float(x)) for x in (line_a, line_b))
-            ):
+            try:
+                valid_lines = all(
+                    math.isfinite(float(x)) for x in (line_a, line_b)
+                )
+            except (ValueError, TypeError, OverflowError):
+                valid_lines = False
+            if not valid_lines:
                 excluded["invalid_point_pair"] += 1
                 continue
             if market.market_type == "spread":
