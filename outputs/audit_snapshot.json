@@ -36,7 +36,7 @@
     "verified_quote_rows": 359,
     "warnings": []
   },
-  "generated_at": "2026-10-08T20:24:23.894456+00:00",
+  "generated_at": "2026-10-08T20:27:50.401241+00:00",
   "health": {
     "data_quality": {
       "candidate_rows": 45,
@@ -112,7 +112,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-08T20:24:21.804950+00:00",
+    "model_generated_at": "2026-10-08T20:27:47.705315+00:00",
     "prediction_games": 15,
     "prediction_rows": 45,
     "season": 2026,
@@ -138,9 +138,9 @@
     ],
     "drift_details": {
       "margin": {
-        "live_mean": -0.6415292359522642,
+        "live_mean": -0.6415292359525051,
         "live_n": 45,
-        "live_std": 2.7182077084195657,
+        "live_std": 2.718207708419573,
         "mean_z": 0.6305,
         "reference_mean": 1.9658449964734308,
         "reference_n": 1087,
@@ -149,9 +149,9 @@
         "std_ratio": 0.6573
       },
       "total": {
-        "live_mean": 45.994506483947376,
+        "live_mean": 45.994506483947596,
         "live_n": 45,
-        "live_std": 3.1646865111712286,
+        "live_std": 3.1646865111712272,
         "mean_z": 0.3874,
         "reference_mean": 44.633972765590514,
         "reference_n": 1087,
@@ -163,7 +163,7 @@
     "live_readiness_score": 79.9,
     "recent_readiness_delta": 0.0,
     "scores": {
-      "calibration": 89.07670124431355,
+      "calibration": 89.07670124431358,
       "context": 65.0,
       "distribution_stability": 80.7,
       "freshness": 100.0,
@@ -392,29 +392,29 @@
       "candidate_pass": false,
       "holdout_baseline": {
         "games": 272,
-        "home_win_brier": 0.22995807657360534,
+        "home_win_brier": 0.22995807657360515,
         "margin_50_coverage": 0.5110294117647058,
         "margin_80_coverage": 0.7830882352941176,
-        "margin_nll": 3.9948617498156644,
+        "margin_nll": 3.9948617498156627,
         "total_50_coverage": 0.5147058823529411,
         "total_80_coverage": 0.8051470588235294,
-        "total_nll": 4.019776337747561
+        "total_nll": 4.019776337747562
       },
       "holdout_candidate": {
         "games": 272,
-        "home_win_brier": 0.23011821765823376,
+        "home_win_brier": 0.23011821765823362,
         "margin_50_coverage": 0.4889705882352941,
         "margin_80_coverage": 0.7757352941176471,
-        "margin_nll": 3.99727086779415,
+        "margin_nll": 3.9972708677941493,
         "total_50_coverage": 0.5,
         "total_80_coverage": 0.7830882352941176,
-        "total_nll": 4.024862314722081
+        "total_nll": 4.024862314722082
       },
       "holdout_games": 272,
       "holdout_season": 2025,
       "margin_candidate_pass": false,
       "margin_df": 20.0,
-      "margin_nll_improvement": -0.002409117978485753,
+      "margin_nll_improvement": -0.0024091179784866412,
       "margin_scale": 1.0,
       "margin_strength": 0.0,
       "total_candidate_pass": false,
@@ -429,21 +429,21 @@
     "conditional_uncertainty_enabled": false,
     "holdout_games": 272,
     "holdout_season": 2025,
-    "home_win_brier": 0.22871501280256112,
-    "home_win_ece": 0.05982942561488687,
-    "home_win_log_loss": 0.647506482524082,
+    "home_win_brier": 0.2287150128025609,
+    "home_win_ece": 0.05982942561488695,
+    "home_win_log_loss": 0.6475064825240814,
     "margin_50_coverage": 0.5110294117647058,
     "margin_80_coverage": 0.7830882352941176,
     "margin_conditional_enabled": false,
     "margin_conditional_strength": 0.0,
     "margin_df": 1000000.0,
-    "margin_nll": 3.9948617498156644,
-    "margin_nll_improvement": -0.002409117978485753,
+    "margin_nll": 3.9948617498156627,
+    "margin_nll_improvement": -0.0024091179784866412,
     "margin_scale": 1.0,
     "mid_confidence_actual_rate": 0.5897435897435898,
     "mid_confidence_games": 39,
-    "mid_confidence_gap": 0.01250323046627122,
-    "mid_confidence_mean_probability": 0.602246820209861,
+    "mid_confidence_gap": 0.012503230466270998,
+    "mid_confidence_mean_probability": 0.6022468202098608,
     "model_family": "gaussian+logistic_moneyline",
     "moneyline_logistic_enabled": true,
     "reliability_ready": true,
@@ -453,37 +453,37 @@
     "total_conditional_enabled": false,
     "total_conditional_strength": 0.0,
     "total_df": 1000000.0,
-    "total_nll": 4.019776337747561,
+    "total_nll": 4.019776337747562,
     "total_nll_improvement": -0.005085976974520179,
     "total_scale": 1.0,
     "training_games": 1151,
     "validation_season": 2024,
     "win_holdout": {
       "alpha": 0.0,
-      "brier_improvement": 0.0012430637710442172,
+      "brier_improvement": 0.001243063771044245,
       "candidate_pass": true,
       "gaussian": {
-        "brier": 0.22995807657360534,
-        "ece": 0.07547415207839268,
+        "brier": 0.22995807657360515,
+        "ece": 0.07547415207839255,
         "games": 271,
-        "log_loss": 0.6500275662457817,
+        "log_loss": 0.6500275662457812,
         "mid_confidence_actual_rate": 0.6341463414634146,
         "mid_confidence_games": 41,
-        "mid_confidence_gap": 0.03204560925968225,
-        "mid_confidence_mean_probability": 0.6021007322037324
+        "mid_confidence_gap": 0.03204560925968236,
+        "mid_confidence_mean_probability": 0.6021007322037323
       },
       "holdout_games": 272,
       "holdout_season": 2025,
-      "log_loss_improvement": 0.0025210837216996795,
+      "log_loss_improvement": 0.0025210837216997906,
       "logistic": {
-        "brier": 0.22871501280256112,
-        "ece": 0.05982942561488687,
+        "brier": 0.2287150128025609,
+        "ece": 0.05982942561488695,
         "games": 271,
-        "log_loss": 0.647506482524082,
+        "log_loss": 0.6475064825240814,
         "mid_confidence_actual_rate": 0.5897435897435898,
         "mid_confidence_games": 39,
-        "mid_confidence_gap": 0.01250323046627122,
-        "mid_confidence_mean_probability": 0.602246820209861
+        "mid_confidence_gap": 0.012503230466270998,
+        "mid_confidence_mean_probability": 0.6022468202098608
       },
       "training_games": 813,
       "validation_games": 272,
@@ -629,11 +629,11 @@
         "passed": true,
         "requirement": "validated chronological probability reliability clears Brier/ECE, 58%-62% confidence-band, and margin/total interval guardrails",
         "value": {
-          "brier": 0.22871501280256112,
-          "ece": 0.05982942561488687,
+          "brier": 0.2287150128025609,
+          "ece": 0.05982942561488695,
           "margin_80_coverage": 0.7830882352941176,
           "mid_confidence_games": 39,
-          "mid_confidence_gap": 0.01250323046627122,
+          "mid_confidence_gap": 0.012503230466270998,
           "model_family": "gaussian+logistic_moneyline",
           "total_80_coverage": 0.8051470588235294,
           "validated_reliability_ready": true
@@ -702,8 +702,8 @@
           "status": "ESTABLISHED SAMPLE",
           "verified_clv_coverage": 0.7965686274509803,
           "verified_roi_ci_95": [
-            -0.13941287036900316,
-            -0.01478351579808362
+            -0.140712970410555,
+            -0.01940558583125046
           ]
         }
       },
@@ -783,18 +783,6 @@
   "schema_version": 1,
   "status": "FAIL",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 80.7,
-      "generated_at": "2026-10-08T02:47:32.046913+00:00",
-      "live_readiness_score": 79.8,
-      "model_generated_at": "2026-10-08T02:47:29.556065+00:00",
-      "publication_status": "FAIL",
-      "release_state": "RESEARCH",
-      "season": 2026,
-      "week": 5
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -922,6 +910,18 @@
       "generated_at": "2026-10-08T20:20:01.800619+00:00",
       "live_readiness_score": 79.9,
       "model_generated_at": "2026-10-08T20:19:59.174549+00:00",
+      "publication_status": "FAIL",
+      "release_state": "RESEARCH",
+      "season": 2026,
+      "week": 5
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 80.7,
+      "generated_at": "2026-10-08T20:24:23.894456+00:00",
+      "live_readiness_score": 79.9,
+      "model_generated_at": "2026-10-08T20:24:21.804950+00:00",
       "publication_status": "FAIL",
       "release_state": "RESEARCH",
       "season": 2026,
