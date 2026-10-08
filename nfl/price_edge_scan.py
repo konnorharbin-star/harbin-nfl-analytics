@@ -9,10 +9,10 @@ from __future__ import annotations
 import json
 import math
 from collections import defaultdict
-from statistics import median
+from collections.abc import Sequence
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Sequence
+from statistics import median
 
 from .book_identity import canonical_book_identity
 from .espn_market import ESPNTwoWayMarket
