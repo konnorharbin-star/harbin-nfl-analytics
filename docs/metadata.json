@@ -1,6 +1,6 @@
 {
   "current_context": {
-    "as_of": "2026-10-08T00:55:39.598839+00:00",
+    "as_of": "2026-10-08T00:59:44.151775+00:00",
     "components": {
       "injuries_personnel": 0.0,
       "quarterback": 0.8,
@@ -11,7 +11,7 @@
     "depth_feed_available": true,
     "expected_qb_identity_coverage": 1.0,
     "expected_qb_state": {
-      "as_of": "2026-10-08T00:55:39.598839+00:00",
+      "as_of": "2026-10-08T00:59:44.151775+00:00",
       "decision_ready_team_coverage": 0.9,
       "decision_ready_teams": 27,
       "identified_teams": 30,
@@ -120,7 +120,7 @@
     "status": "READY"
   },
   "edge_discovery": {
-    "as_of": "2026-10-08T00:56:21.484555+00:00",
+    "as_of": "2026-10-08T01:00:29.884210+00:00",
     "categories": {
       "EVIDENCE_OR_CONTEXT_BLOCKED": 45,
       "NO_POSITIVE_RAW_EDGE": 0,
@@ -162,7 +162,7 @@
       "PASS": 45,
       "WAIT_MONITOR": 0
     },
-    "as_of": "2026-10-08T00:56:21.484555+00:00",
+    "as_of": "2026-10-08T01:00:29.884210+00:00",
     "league": "NFL",
     "limits": {
       "lookback_hours": 12,
@@ -200,10 +200,10 @@
     "validated_timing_strategy": false
   },
   "forward_edge_capture": {
-    "appended_rows": 45,
+    "appended_rows": 0,
     "bets_authorized": false,
     "capture_status_counts": {
-      "VALID_POINT_IN_TIME_RESEARCH_QUOTE": 45
+      "previously_frozen": 45
     },
     "historical_backfill_allowed": false,
     "research_only": true,
@@ -211,7 +211,7 @@
     "status": "APPEND_ONLY_FIRST_SNAPSHOT",
     "total_rows": 45
   },
-  "generated_at": "2026-10-08T00:56:21.484555+00:00",
+  "generated_at": "2026-10-08T01:00:29.884210+00:00",
   "market_coverage": {
     "games": 15,
     "moneyline": 15,
@@ -2800,7 +2800,7 @@
       "action_network_diagnostic": {
         "attempts": [
           {
-            "collector_observed_at": "2026-10-08T00:55:48.044609+00:00",
+            "collector_observed_at": "2026-10-08T00:59:53.964768+00:00",
             "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
             "games_with_markets": 15,
             "parsed_rows": 312,
@@ -2964,7 +2964,7 @@
             "team_matches": 15
           }
         ],
-        "collector_observed_at": "2026-10-08T00:55:48.044609+00:00",
+        "collector_observed_at": "2026-10-08T00:59:53.964768+00:00",
         "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
         "games_with_markets": 15,
         "parsed_rows": 312,
