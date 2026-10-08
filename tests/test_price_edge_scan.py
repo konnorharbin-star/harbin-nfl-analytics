@@ -148,3 +148,54 @@ def test_publish_report_without_bankroll_execution(tmp_path):
     assert target.exists()
     assert result["summary"]["theoretical_arbitrage_observations"] == 0
     assert result["model_win_probability_used"] is False
+
+
+
+def test_leave_one_book_out_consensus_research_not_false_proven_edge():
+    # Three other books agree, while the fourth has a better home price.
+    markets = [
+        market("Book A",odds_a=125,odds_b=-155),
+        market("Book B",odds_a=-125,odds_b=105),
+        market("Book C",odds_a=-125,odds_b=105),
+        market("Book D",odds_a=-125,odds_b=105),
+    ]
+    report = scan(markets)
+    watch = report["disagreement_watchlist"]
+    assert watch
+    best = next(x for x in watch if x["book"]=="Book A" and x["side"]=="home")
+    assert best["market_based_theoretical_ev"]>0.10
+    assert best["other_books"]==3
+    assert best["reference_excludes_candidate_book"] is True
+    assert best["model_win_probability_used"] is False
+    assert best["true_edge_proven"] is False
+    assert "NOT_AN_EXECUTABLE_BET" in best["human_action"]
+
+
+def test_one_or_two_books_cannot_be_market_fair_price():
+    markets = [
+        market("Book A",odds_a=125,odds_b=-155),
+        market("Book B",odds_a=-125,odds_b=105),
+    ]
+    assert scan(markets)["disagreement_watchlist"]==[]
+
+
+def test_high_disagreement_reference_fails_closed():
+    markets = [
+        market("Book A",odds_a=125,odds_b=-155),
+        market("Book B",odds_a=-125,odds_b=105),
+        market("Book C",odds_a=-150,odds_b=125),
+        market("Book D",odds_a=-110,odds_b=-110),
+    ]
+    assert not [x for x in scan(markets)["disagreement_watchlist"]
+                if x["book"]=="Book A"]
+
+
+def test_reference_excludes_candidate_and_never_uses_paid_or_stale():
+    rows = [
+        market("Book A",odds_a=125,odds_b=-155),
+        market("Book B",odds_a=-125,odds_b=105),
+        market("Book C",odds_a=-125,odds_b=105,
+               captured=NOW-timedelta(minutes=11)),
+        market("Book D",odds_a=-125,odds_b=105,provider="odds_api"),
+    ]
+    assert scan(rows)["disagreement_watchlist"]==[]
