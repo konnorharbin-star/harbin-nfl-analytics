@@ -17,7 +17,6 @@ from nfl.forward_edge_validation import (
     write_forward_validation,
 )
 
-
 NOW = datetime(2026, 10, 7, 18, tzinfo=UTC)
 KICKOFF = NOW + timedelta(days=4)
 
