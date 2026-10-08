@@ -9,6 +9,7 @@ from pathlib import Path
 import polars as pl
 
 from .publication import validate_publication_files, write_publication_bundle
+from .publication_integrity import write_publication_manifest
 from .render import write_weekly_publication
 
 
@@ -108,6 +109,10 @@ def write_canonical_report(
     docs_latest = Path("docs/latest.json")
     docs_latest.parent.mkdir(parents=True, exist_ok=True)
     docs_latest.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str))
+    # write_publication_bundle() validated a provisional JSON without its final
+    # publication.bundle metadata. Re-fingerprint the EXACT final bytes now,
+    # after both canonical and public JSON copies are atomically reconciled.
+    write_publication_manifest()
     validation = validate_publication_files()
     for path in ("outputs/publication_validation.json", "docs/publication_validation.json"):
         Path(path).write_text(json.dumps(validation, indent=2, sort_keys=True, default=str))
