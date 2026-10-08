@@ -21,6 +21,133 @@
   "markets": {
     "moneyline": {
       "alpha": 0.0,
+      "calibration_diagnostics": {
+        "holdout_2025": {
+          "0.0-0.4": {
+            "market_brier": 0.1903236827471467,
+            "market_calibration_error": -0.0257497414769833,
+            "market_mean_probability": 0.26271179698455516,
+            "observed_win_rate": 0.28846153846153844,
+            "raw_brier": 0.2118427947050757,
+            "raw_brier_minus_market": 0.021519111957928994,
+            "raw_calibration_error": 0.09059064273273869,
+            "raw_mean_probability": 0.37905218119427714,
+            "rows": 156,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.4-0.5": {
+            "market_brier": 0.24136030239002482,
+            "market_calibration_error": 0.012429010320704554,
+            "market_mean_probability": 0.4410004388921331,
+            "observed_win_rate": 0.42857142857142855,
+            "raw_brier": 0.25349453417119844,
+            "raw_brier_minus_market": 0.012134231781173621,
+            "raw_calibration_error": 0.0947283529290279,
+            "raw_mean_probability": 0.5232997815004564,
+            "rows": 63,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.5-0.6": {
+            "market_brier": 0.23861024511401036,
+            "market_calibration_error": -0.04159314435039883,
+            "market_mean_probability": 0.5509994482421937,
+            "observed_win_rate": 0.5925925925925926,
+            "raw_brier": 0.2517116188129517,
+            "raw_brier_minus_market": 0.013101373698941321,
+            "raw_calibration_error": 0.009639095923808357,
+            "raw_mean_probability": 0.602231688516401,
+            "rows": 27,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.6-0.7": {
+            "market_brier": 0.26754527628926383,
+            "market_calibration_error": 0.17150494090131368,
+            "market_mean_probability": 0.6420931761954314,
+            "observed_win_rate": 0.47058823529411764,
+            "raw_brier": 0.29279893355276115,
+            "raw_brier_minus_market": 0.02525365726349732,
+            "raw_calibration_error": 0.21147337969389024,
+            "raw_mean_probability": 0.6820616149880079,
+            "rows": 17,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.7-1.0": {
+            "market_brier": 0.2003400686178023,
+            "market_calibration_error": -0.0065946597127609224,
+            "market_mean_probability": 0.7434053402872391,
+            "observed_win_rate": 0.75,
+            "raw_brier": 0.19436975122016695,
+            "raw_brier_minus_market": -0.005970317397635344,
+            "raw_calibration_error": 0.021188811005689326,
+            "raw_mean_probability": 0.7711888110056893,
+            "rows": 8,
+            "status": "DESCRIPTIVE_ONLY"
+          }
+        },
+        "method": "fixed no-vig probability bins; descriptive only",
+        "validation_2024": {
+          "0.0-0.4": {
+            "market_brier": 0.17744973442993114,
+            "market_calibration_error": 0.0669613185999073,
+            "market_mean_probability": 0.28681947462827606,
+            "observed_win_rate": 0.2198581560283688,
+            "raw_brier": 0.2110396987070721,
+            "raw_brier_minus_market": 0.03358996427714095,
+            "raw_calibration_error": 0.17348240153717853,
+            "raw_mean_probability": 0.39334055756554737,
+            "rows": 141,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.4-0.5": {
+            "market_brier": 0.23821640162422247,
+            "market_calibration_error": 0.022497407117838892,
+            "market_mean_probability": 0.4418522458275163,
+            "observed_win_rate": 0.41935483870967744,
+            "raw_brier": 0.25661208453183504,
+            "raw_brier_minus_market": 0.018395682907612565,
+            "raw_calibration_error": 0.1079954068849298,
+            "raw_mean_probability": 0.5273502455946072,
+            "rows": 62,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.5-0.6": {
+            "market_brier": 0.23900738508608652,
+            "market_calibration_error": -0.08062475305881811,
+            "market_mean_probability": 0.5557388833048181,
+            "observed_win_rate": 0.6363636363636364,
+            "raw_brier": 0.23976462708340765,
+            "raw_brier_minus_market": 0.0007572419973211342,
+            "raw_calibration_error": -0.020625506865614793,
+            "raw_mean_probability": 0.6157381294980215,
+            "rows": 33,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.6-0.7": {
+            "market_brier": 0.19781958625449872,
+            "market_calibration_error": -0.11837691002533315,
+            "market_mean_probability": 0.6416230899746668,
+            "observed_win_rate": 0.76,
+            "raw_brier": 0.19080013383460617,
+            "raw_brier_minus_market": -0.007019452419892547,
+            "raw_calibration_error": -0.08531836926050747,
+            "raw_mean_probability": 0.6746816307394926,
+            "rows": 25,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.7-1.0": {
+            "market_brier": 0.16558159009486093,
+            "market_calibration_error": -0.07819517061543163,
+            "market_mean_probability": 0.7399866475663867,
+            "observed_win_rate": 0.8181818181818182,
+            "raw_brier": 0.1550555418587227,
+            "raw_brier_minus_market": -0.01052604823613823,
+            "raw_calibration_error": -0.053303485483320194,
+            "raw_mean_probability": 0.7648783326984979,
+            "rows": 11,
+            "status": "DESCRIPTIVE_ONLY"
+          }
+        }
+      },
       "canonical_change_enabled": false,
       "development_grid": {
         "0.00": {
@@ -164,6 +291,85 @@
     },
     "spread": {
       "alpha": 0.0,
+      "calibration_diagnostics": {
+        "holdout_2025": {
+          "0.0-0.4": {
+            "rows": 0,
+            "status": "EMPTY"
+          },
+          "0.4-0.5": {
+            "market_brier": 0.24884436163939938,
+            "market_calibration_error": 0.053013805952991114,
+            "market_mean_probability": 0.4863471392863246,
+            "observed_win_rate": 0.43333333333333335,
+            "raw_brier": 0.2748563723099303,
+            "raw_brier_minus_market": 0.02601201067053094,
+            "raw_calibration_error": 0.1453675894704766,
+            "raw_mean_probability": 0.5787009228038099,
+            "rows": 120,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.5-0.6": {
+            "market_brier": 0.2501766613287228,
+            "market_calibration_error": 0.03130936447715021,
+            "market_mean_probability": 0.5081305565301303,
+            "observed_win_rate": 0.4768211920529801,
+            "raw_brier": 0.2625743984929052,
+            "raw_brier_minus_market": 0.01239773716418241,
+            "raw_calibration_error": 0.11723956984499298,
+            "raw_mean_probability": 0.5940607618979731,
+            "rows": 151,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.6-0.7": {
+            "rows": 0,
+            "status": "EMPTY"
+          },
+          "0.7-1.0": {
+            "rows": 0,
+            "status": "EMPTY"
+          }
+        },
+        "method": "fixed no-vig probability bins; descriptive only",
+        "validation_2024": {
+          "0.0-0.4": {
+            "rows": 0,
+            "status": "EMPTY"
+          },
+          "0.4-0.5": {
+            "market_brier": 0.25122113266828966,
+            "market_calibration_error": -0.0711352023041621,
+            "market_mean_probability": 0.48920962528204487,
+            "observed_win_rate": 0.5603448275862069,
+            "raw_brier": 0.24679615036121835,
+            "raw_brier_minus_market": -0.004424982307071307,
+            "raw_calibration_error": 0.01773797567872781,
+            "raw_mean_probability": 0.5780828032649347,
+            "rows": 116,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.5-0.6": {
+            "market_brier": 0.2509579052090017,
+            "market_calibration_error": 0.03117915080841995,
+            "market_mean_probability": 0.5048633613347357,
+            "observed_win_rate": 0.47368421052631576,
+            "raw_brier": 0.27066202659346184,
+            "raw_brier_minus_market": 0.01970412138446015,
+            "raw_calibration_error": 0.11537448662800942,
+            "raw_mean_probability": 0.5890586971543252,
+            "rows": 152,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.6-0.7": {
+            "rows": 0,
+            "status": "EMPTY"
+          },
+          "0.7-1.0": {
+            "rows": 0,
+            "status": "EMPTY"
+          }
+        }
+      },
       "canonical_change_enabled": false,
       "development_grid": {
         "0.00": {
@@ -307,6 +513,85 @@
     },
     "total": {
       "alpha": 0.0,
+      "calibration_diagnostics": {
+        "holdout_2025": {
+          "0.0-0.4": {
+            "rows": 0,
+            "status": "EMPTY"
+          },
+          "0.4-0.5": {
+            "market_brier": 0.25105861572277005,
+            "market_calibration_error": -0.046579078275366635,
+            "market_mean_probability": 0.490006287578292,
+            "observed_win_rate": 0.5365853658536586,
+            "raw_brier": 0.2492700517099718,
+            "raw_brier_minus_market": -0.001788564012798255,
+            "raw_calibration_error": 0.02926778495308618,
+            "raw_mean_probability": 0.5658531508067448,
+            "rows": 123,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.5-0.6": {
+            "market_brier": 0.24986660605228722,
+            "market_calibration_error": 0.030198222029452326,
+            "market_mean_probability": 0.5067082891435464,
+            "observed_win_rate": 0.47651006711409394,
+            "raw_brier": 0.2587814826533894,
+            "raw_brier_minus_market": 0.008914876601102184,
+            "raw_calibration_error": 0.09875998222942373,
+            "raw_mean_probability": 0.5752700493435177,
+            "rows": 149,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.6-0.7": {
+            "rows": 0,
+            "status": "EMPTY"
+          },
+          "0.7-1.0": {
+            "rows": 0,
+            "status": "EMPTY"
+          }
+        },
+        "method": "fixed no-vig probability bins; descriptive only",
+        "validation_2024": {
+          "0.0-0.4": {
+            "rows": 0,
+            "status": "EMPTY"
+          },
+          "0.4-0.5": {
+            "market_brier": 0.24973462923875725,
+            "market_calibration_error": 0.06091372146339294,
+            "market_mean_probability": 0.49424705479672626,
+            "observed_win_rate": 0.43333333333333335,
+            "raw_brier": 0.26826879875820686,
+            "raw_brier_minus_market": 0.01853416951944961,
+            "raw_calibration_error": 0.13824241801976836,
+            "raw_mean_probability": 0.5715757513531017,
+            "rows": 90,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.5-0.6": {
+            "market_brier": 0.2498019822397987,
+            "market_calibration_error": -0.01713854623701542,
+            "market_mean_probability": 0.502414526388683,
+            "observed_win_rate": 0.5195530726256983,
+            "raw_brier": 0.2503501585366032,
+            "raw_brier_minus_market": 0.000548176296804509,
+            "raw_calibration_error": 0.051626863558911086,
+            "raw_mean_probability": 0.5711799361846094,
+            "rows": 179,
+            "status": "DESCRIPTIVE_ONLY"
+          },
+          "0.6-0.7": {
+            "rows": 0,
+            "status": "EMPTY"
+          },
+          "0.7-1.0": {
+            "rows": 0,
+            "status": "EMPTY"
+          }
+        }
+      },
       "canonical_change_enabled": false,
       "development_grid": {
         "0.00": {
