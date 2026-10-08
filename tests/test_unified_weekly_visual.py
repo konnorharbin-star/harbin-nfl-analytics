@@ -31,7 +31,7 @@ def test_screenshot_style_consistent_across_two_png_pages_and_html(tmp_path: Pat
     assert result["rows_per_page"] == 14
     assert len(result["png_pages"]) == 2
     assert len(result["cache_safe_png_pages"]) == 2
-    assert result["presentation"] == "unified_nfl_weekly_picks_screenshot_v1"
+    assert result["presentation"] == "cfb_style_weekly_picks_v3_cache_safe"
     for path in result["png_pages"] + result["cache_safe_png_pages"]:
         with Image.open(path) as image:
             assert image.size == (1320, 690)
