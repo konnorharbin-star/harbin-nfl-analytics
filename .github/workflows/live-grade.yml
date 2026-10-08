@@ -6,6 +6,9 @@ on:
     branches: [main]
     paths:
       - "nfl/grading.py"
+      - "nfl/forward_edge_validation.py"
+      - "grade_forward_edge.py"
+      - "tests/test_forward_edge_validation.py"
       - "nfl/grading_audit.py"
       - "nfl/release_gate.py"
       - "grade_live.py"
@@ -20,6 +23,9 @@ on:
       - "nfl/grading.py"
       - "nfl/grading_audit.py"
       - "nfl/recent_form_forward.py"
+      - "nfl/forward_edge_validation.py"
+      - "grade_forward_edge.py"
+      - "tests/test_forward_edge_validation.py"
       - "grade_live.py"
       - "grade_recent_form_forward.py"
       - ".github/workflows/live-grade.yml"
@@ -57,13 +63,17 @@ jobs:
             tests/test_operational_parity.py \
             tests/test_audit_parity.py \
             tests/test_monitoring_release.py \
-            tests/test_recent_form_forward.py
+            tests/test_recent_form_forward.py \
+            tests/test_forward_edge_validation.py
 
       - name: Grade completed paper/shadow bets
         run: python grade_live.py
 
       - name: Grade prospective recent-form totals shadow
         run: python grade_recent_form_forward.py
+
+      - name: Grade first-snapshot NFL market-relative research
+        run: python grade_forward_edge.py
 
       - name: Commit live evidence
         if: github.event_name != 'pull_request'
@@ -79,7 +89,13 @@ jobs:
             docs/live_performance.json \
             reports/recent_form_forward.json \
             reports/recent_form_forward_graded.csv \
-            docs/recent_form_forward.json; do
+            docs/recent_form_forward.json \
+            reports/forward_edge_validation.json \
+            reports/forward_edge_graded.csv \
+            outputs/forward_edge_validation.json \
+            outputs/forward_edge_graded.csv \
+            docs/forward_edge_validation.json \
+            docs/forward_edge_graded.csv; do
             [ -f "$f" ] && git add "$f" || true
           done
           if ! git diff --cached --quiet; then
