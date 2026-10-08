@@ -84,7 +84,8 @@ def capture(source: bytes, existing: list[dict], now: datetime) -> tuple[list[di
             "home_team": r.get("home_team", ""),
         })
         seen.add((game, fingerprint))
-    return existing + new_rows, {"input_games": len(incoming), "appended": len(new_rows), "rejected": rejected}
+    report = {"input_games": len(incoming), "appended": len(new_rows), "rejected": rejected}
+    return existing + new_rows, report
 
 
 def run(source_path: Path, output_path: Path) -> dict:
