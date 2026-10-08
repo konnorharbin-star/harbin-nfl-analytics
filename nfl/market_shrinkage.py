@@ -475,6 +475,20 @@ def fixed_cohort_calibration(
         "week:middle": (pl.col("week") >= 5) & (pl.col("week") <= 12),
         "week:late": pl.col("week") >= 13,
     }
+    has_pregame_margin = "projected_home_margin" in frame.columns
+    if has_pregame_margin:
+        # NFL-native margin environments, based ONLY on frozen pregame scores.
+        magnitude = pl.col("projected_home_margin").abs()
+        candidates.update({
+            "projected_margin:close_lt3": magnitude < 3,
+            "projected_margin:moderate_3_to7": (magnitude >= 3) & (magnitude < 7),
+            "projected_margin:large_ge7": magnitude >= 7,
+            "moneyline:favorite_large_margin": (
+                (pl.col("market_type") == "moneyline")
+                & (pl.col("no_vig_probability") > 0.5)
+                & (magnitude >= 7)
+            ),
+        })
     output: dict[str, object] = {}
     for label, condition in candidates.items():
         cohort = frame.filter(condition.fill_null(False))
@@ -507,7 +521,10 @@ def fixed_cohort_calibration(
     return {
         "status": "RESEARCH_ONLY",
         "dimensions": "fixed side / quoted role / season phase",
-        "projected_margin_cohorts": "UNAVAILABLE_IN_FREE_MARKET_BETS",
+        "projected_margin_cohorts": (
+            "PREGAME_PROJECTIONS_JOINED" if has_pregame_margin
+            else "UNAVAILABLE_IN_FREE_MARKET_BETS"
+        ),
         "multiple_testing": "overlapping descriptive cohorts; no promotion",
         "cohorts": output,
         "betting_policy_change_enabled": False,
