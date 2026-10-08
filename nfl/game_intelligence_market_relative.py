@@ -5,8 +5,6 @@ timestamp-verified sportsbook close or executable entry odds.
 """
 from __future__ import annotations
 
-import math
-
 import polars as pl
 
 from .contracts import DataContractError, require_columns
