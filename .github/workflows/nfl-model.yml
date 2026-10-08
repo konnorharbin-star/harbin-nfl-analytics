@@ -165,6 +165,9 @@ jobs:
           [ -n "${{ inputs.week }}" ] && ARGS="$ARGS --week ${{ inputs.week }}"
           python harbin_nfl_model.py $ARGS
 
+      - name: Compare market-relative challenger with historical diagnostic benchmark
+        run: python -m nfl.market_residual_challenger
+
       - name: Validate public publication bundle
         run: python validate_publication.py
 
