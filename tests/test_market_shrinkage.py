@@ -3,6 +3,7 @@ from __future__ import annotations
 import polars as pl
 
 from nfl.market_shrinkage import (
+    archived_cohort_economics,
     calibration_buckets,
     evaluate_market_edge_shrinkage,
     fit_alpha,
@@ -192,3 +193,35 @@ def test_small_cohort_gain_is_not_mislabeled_material() -> None:
         "brier": 0.002, "log_loss": 0.004
     }
     assert cohort["betting_policy_change_enabled"] is False
+
+
+def test_archived_economic_evidence_cannot_authorize_bets() -> None:
+    frame = pl.DataFrame({
+        "result": ["win", "loss", "push"],
+        "net_units": [0.91, -1.0, 0.0],
+        "entry_price_verified": [False, False, False],
+        "clv_proxy": [None, None, None],
+    })
+    evidence = archived_cohort_economics(frame)
+    assert evidence["bets"] == 3
+    assert evidence["verified_entry_prices"] == 0
+    assert evidence["clv_proxy_samples"] == 0
+    assert evidence["execution_clv_verified"] is False
+    assert evidence["staking_authorized"] is False
+
+
+def test_fixed_cohorts_include_separate_validation_economics() -> None:
+    frame = _synthetic_bets().with_columns(
+        pl.lit("away").alias("side"),
+        pl.lit(7.5).alias("line"),
+        pl.lit(8.0).alias("projected_home_margin"),
+        pl.lit(False).alias("entry_price_verified"),
+    )
+    report = fixed_cohort_calibration(
+        frame, validation_season=2024, holdout_season=2025
+    )
+    cohort = report["cohorts"]["side:away"]
+    evidence = cohort["archived_economic_evidence"]
+    assert evidence["validation_2024"]["bets"] == 600
+    assert evidence["holdout_2025"]["bets"] == 600
+    assert cohort["economic_evidence_eligible_for_staking"] is False
