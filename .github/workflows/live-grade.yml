@@ -2,6 +2,9 @@ name: NFL Live Shadow Grading
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["NFL Model + Operations"]
+    types: [completed]
   pull_request:
     branches: [main]
     paths:
@@ -44,6 +47,12 @@ concurrency:
 
 jobs:
   grade:
+    # workflow_run fires after a GITHUB_TOKEN-published model commit even when
+    # the separate push event cannot trigger another GitHub Actions workflow.
+    if: >-
+      github.event_name != 'workflow_run'
+      || (github.event.workflow_run.conclusion == 'success'
+          && github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -51,6 +60,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # The latest generated ledger is committed after the model started,
+          # so do not grade the original workflow_run head SHA.
+          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
