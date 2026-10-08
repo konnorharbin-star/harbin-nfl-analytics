@@ -364,7 +364,8 @@ def test_weekly_publication_labels_shadow_as_non_production(tmp_path) -> None:
     html = (tmp_path / "nfl_week_4.html").read_text()
     assert "SHADOW evidence mode" in html
     assert "not production staking" in html
-    assert '<span class="badge bet">BET</span>' in html
+    # SHADOW/RESEARCH pages never promote unvalidated raw bets.
+    assert '<span class="badge bet">BET</span>' not in html
     assert "BET/SHADOW" not in html
     assert result["board_games"] == 1
     assert (tmp_path / "nfl_week_4_page1.png").exists()
