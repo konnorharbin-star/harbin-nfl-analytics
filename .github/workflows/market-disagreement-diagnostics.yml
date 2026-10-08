@@ -1,0 +1,35 @@
+name: NFL Market Disagreement Diagnostics
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/market_disagreement_diagnostics.py"
+      - "run_market_disagreement_diagnostics.py"
+      - "tests/test_market_disagreement_diagnostics.py"
+      - ".github/workflows/market-disagreement-diagnostics.yml"
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test cohort safety
+        run: python -m pytest -q tests/test_market_disagreement_diagnostics.py
+      - name: Audit archived market disagreements
+        run: python run_market_disagreement_diagnostics.py
+      - name: Publish research artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-market-disagreement-diagnostics
+          path: reports/market_disagreement_diagnostics.json
+          if-no-files-found: warn
