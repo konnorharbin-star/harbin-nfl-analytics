@@ -15,8 +15,8 @@ from .current import run_current_projection, unplayed_regular_games
 from .data import NFLDataClient
 from .data_integrity import assess_data_integrity
 from .decision_intelligence import attach_decision_intelligence
-from .edge_discovery import enrich_edge_discovery, write_edge_discovery
 from .decision_ledger import append_portfolio_decisions
+from .edge_discovery import enrich_edge_discovery, write_edge_discovery
 from .free_market_backtest import build_archive_projection_dataset
 from .health import write_health
 from .line_history import append_market_snapshots, load_market_snapshots
