@@ -17,6 +17,7 @@ from .data_integrity import assess_data_integrity
 from .decision_intelligence import attach_decision_intelligence
 from .decision_ledger import append_portfolio_decisions
 from .edge_discovery import enrich_edge_discovery, write_edge_discovery
+from .edge_timing import enrich_edge_timing, write_edge_timing
 from .free_market_backtest import build_archive_projection_dataset
 from .health import write_health
 from .line_history import append_market_snapshots, load_market_snapshots
@@ -328,6 +329,7 @@ def run_operational_pipeline(
     # later timestamp so quotes collected during this run are not falsely classified
     # as future-dated merely because network collection happened after run start.
     decision_at = datetime.now(UTC)
+    snapshots = pl.DataFrame()
     try:
         snapshots = load_market_snapshots()
         candidates, decision_intelligence = attach_decision_intelligence(
@@ -432,6 +434,11 @@ def run_operational_pipeline(
     )
     meta["edge_discovery"] = discovery_report
     write_edge_discovery(allocated, discovery_report)
+    allocated, timing_report = enrich_edge_timing(
+        allocated, snapshots, policy=policy, as_of=decision_at
+    )
+    meta["edge_timing"] = timing_report
+    write_edge_timing(allocated, timing_report)
     line_capture = (
         append_market_snapshots(markets, targets) if capture_lines else {"status": "disabled"}
     )
