@@ -616,6 +616,15 @@ def _card_columns(current: pl.DataFrame) -> list[str]:
         "quant_probability",
         "quant_edge",
         "quant_ev",
+        "alternate_research_side",
+        "alternate_research_line",
+        "alternate_research_odds",
+        "alternate_research_book",
+        "alternate_research_probability",
+        "alternate_research_no_vig_probability",
+        "alternate_research_raw_ev",
+        "alternate_research_raw_edge",
+        "alternate_research_only",
         "market_book_count",
         "quant_quote_at",
         "quote_age_minutes",
@@ -1148,6 +1157,7 @@ def write_publication_bundle(
         "- [Current model suggestions](suggested_bets.csv)\n"
         "- [Portfolio-allocated recommendations](quant_recommendations.csv)\n"
         "- [Research edge priority audit](edge_priority.csv)\n"
+        "- [Both-side diagnostics in portfolio card](portfolio_card.csv)\n"
         "- [Holdout-supported research edges (if any)](edge_supported.csv)\n"
         "- [Edge discovery evidence and blockers](edge_discovery_report.json)\n"
         "- [Research watchlist](edge_watchlist.csv)\n"

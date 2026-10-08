@@ -139,12 +139,42 @@ def build_market_intelligence(
         list[tuple[MarketComparison, ESPNTwoWayMarket]],
     ] = {}
     verified_books_by_game: dict[str, set[str]] = {}
+    # Retain both outcomes for independent research auditing. The canonical
+    # bet selection still uses its original best-EV quote per book.
+    all_sides: dict[
+        tuple[str, str], list[tuple[MarketComparison, ESPNTwoWayMarket]]
+    ] = {}
     for market in markets:
         game = projected.get(market.game_id)
         if game is None:
             continue
         chosen = _pair_best(distribution, game, market)
-        grouped.setdefault((market.game_id, market.market_type), []).append((chosen, market))
+        key = (market.game_id, market.market_type)
+        grouped.setdefault(key, []).append((chosen, market))
+        first = MarketQuote(
+            market_type=market.market_type,
+            side=market.first_side,
+            line=market.first_line,
+            american_odds=market.first_american_odds,
+            book=market.book,
+            captured_at=market.captured_at,
+        )
+        second = MarketQuote(
+            market_type=market.market_type,
+            side=market.second_side,
+            line=market.second_line,
+            american_odds=market.second_american_odds,
+            book=market.book,
+            captured_at=market.captured_at,
+        )
+        for comparison in compare_two_way_market(
+            distribution,
+            projected_home_margin=float(game["baseline_home_margin"]),
+            projected_total=float(game["baseline_total"]),
+            first=first,
+            second=second,
+        ):
+            all_sides.setdefault(key, []).append((comparison, market))
         if not is_research_only_market(market):
             verified_books_by_game.setdefault(market.game_id, set()).add(_book_key(market))
 
@@ -214,6 +244,28 @@ def build_market_intelligence(
                 peer_markets,
                 config=decision_config,
             )
+        # Identify the best *other side* across independently sane observed
+        # quotes. This is a diagnostic comparison, never an alternative
+        # actionable signal or a way around production policy.
+        opposite_offers = [
+            (comparison, offer)
+            for comparison, offer in all_sides.get((game_id, _market_type), [])
+            if comparison.side != chosen.side
+            and not is_research_only_market(offer)
+            and bool(quote_sanity(offer, peer_markets, config=decision_config)["ok"])
+        ]
+        opposite = (
+            max(
+                opposite_offers,
+                key=lambda item: (
+                    item[0].expected_value_per_unit,
+                    item[0].probability_edge,
+                    item[0].american_odds,
+                ),
+            )
+            if opposite_offers
+            else None
+        )
         research_signal = signal_from_policy(
             chosen.expected_value_per_unit,
             chosen.probability_edge,
@@ -346,6 +398,25 @@ def build_market_intelligence(
             "quant_market_probability": chosen.no_vig_probability,
             "quant_ev": chosen.expected_value_per_unit,
             "quant_edge": chosen.probability_edge,
+            "alternate_research_side": opposite[0].side if opposite else None,
+            "alternate_research_line": opposite[0].line if opposite else None,
+            "alternate_research_odds": (
+                opposite[0].american_odds if opposite else None
+            ),
+            "alternate_research_book": opposite[1].book if opposite else None,
+            "alternate_research_probability": (
+                opposite[0].model_probability if opposite else None
+            ),
+            "alternate_research_no_vig_probability": (
+                opposite[0].no_vig_probability if opposite else None
+            ),
+            "alternate_research_raw_ev": (
+                opposite[0].expected_value_per_unit if opposite else None
+            ),
+            "alternate_research_raw_edge": (
+                opposite[0].probability_edge if opposite else None
+            ),
+            "alternate_research_only": True,
             "market_book_count": len(verified_books),
             "market_books": ";".join(verified_books),
             "market_provider": source_market.provider,
