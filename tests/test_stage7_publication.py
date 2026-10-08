@@ -4,6 +4,9 @@ import json
 
 import polars as pl
 
+from nfl.publication_integrity import validate_publication_manifest
+from nfl.reporting import write_canonical_report
+
 from nfl.publication import (
     build_publication_snapshot,
     validate_publication_files,
@@ -391,3 +394,38 @@ def test_publication_uses_portfolio_research_signal_when_quant_is_pass(
     assert "injury feed pending/stale" in suggestions
     assert recommendations.count("\n") == 1
     assert "<td data-role=\"signal\">BET</td>" in quant_html
+
+
+def test_final_canonical_report_rewrite_rebuilds_manifest_before_publication(
+    tmp_path, monkeypatch
+) -> None:
+    """The second model JSON write adds bundle metadata and must be rehashed."""
+    monkeypatch.chdir(tmp_path)
+    for name in ("outputs", "docs", "reports", "history"):
+        (tmp_path / name).mkdir()
+    prior = _report("unused.html", "unused.png")
+    current = _current()
+    payload = write_canonical_report(
+        current,
+        meta=prior["meta"],
+        portfolio=prior["portfolio"],
+        monitoring=prior["monitoring"],
+        release_gate=prior["release_gate"],
+        health=prior["health"],
+        evidence=prior["evidence"],
+        model_card=prior["model_card"],
+    )
+    saved = json.loads((tmp_path / "outputs/current_model.json").read_text())
+    manifest = json.loads((tmp_path / "outputs/publication_manifest.json").read_text())
+    assert saved == payload
+    assert "bundle" in saved["publication"]
+    assert saved["publication"]["bundle"]["manifest"] == (
+        "outputs/publication_manifest.json"
+    )
+    assert manifest["run_tag"] == saved["publication"]["run_tag"]
+    assert validate_publication_manifest(
+        output_dir=tmp_path / "outputs", docs_dir=tmp_path / "docs"
+    )["status"] == "PASS"
+    assert validate_publication_files(
+        output_dir=tmp_path / "outputs", docs_dir=tmp_path / "docs"
+    )["status"] == "PASS"
