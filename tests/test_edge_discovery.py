@@ -14,6 +14,7 @@ from nfl.edge_discovery import (
     NO_RAW_EDGE,
     classify_research_edge,
     enrich_edge_discovery,
+    forward_research_triage,
     write_edge_discovery,
 )
 from nfl.policy import DEFAULT_POLICY
@@ -263,3 +264,35 @@ def test_empty_frame_writes_all_five_files(tmp_path):
     assert tagged.is_empty()
     assert report["categories"][EVIDENCE_SUPPORTED] == 0
     assert (tmp_path / "out" / "edge_priority.csv").read_text().startswith("season,")
+
+
+def test_forward_triage_preserves_evidence_blockers_and_never_stakes():
+    row = candidate()
+    row.update(tag(row, evidence(alpha=0.0, market_status="UNRELIABLE",
+                                  incremental=False)))
+    triage = forward_research_triage(row)
+    assert triage["triage_status"] == "EVIDENCE_BLOCKED"
+    assert "HOLDOUT_SELECTS_MARKET_ONLY" in triage["evidence_blockers"]
+    assert triage["staking_authorized_by_triage"] is False
+    assert triage["raw_model_ev"] > 0
+
+
+def test_forward_triage_export_is_reproducible_and_has_header(tmp_path):
+    regime, shrink, archive = evidence(alpha=0.0, market_status="UNRELIABLE",
+                                       incremental=False)
+    for name, data in (("r.json", regime), ("s.json", shrink), ("a.json", archive)):
+        (tmp_path / name).write_text(json.dumps(data))
+    ranked, report = enrich_edge_discovery(
+        pl.DataFrame([candidate()]), policy=DEFAULT_POLICY, as_of=NOW,
+        regime_path=tmp_path / "r.json",
+        shrinkage_path=tmp_path / "s.json",
+        archive_path=tmp_path / "a.json",
+    )
+    write_edge_discovery(ranked, report, output_dir=tmp_path / "out",
+                         docs_dir=tmp_path / "docs")
+    path = tmp_path / "out" / "edge_forward_triage.csv"
+    assert path.read_bytes() == (tmp_path / "docs" / path.name).read_bytes()
+    with path.open() as handle:
+        rows = list(csv.DictReader(handle))
+    assert rows[0]["triage_status"] == "EVIDENCE_BLOCKED"
+    assert rows[0]["staking_authorized_by_triage"] == "False"
