@@ -5,6 +5,7 @@ import polars as pl
 from nfl.market_shrinkage import (
     archived_cohort_economics,
     calibration_buckets,
+    economic_cohort_shortlist,
     evaluate_market_edge_shrinkage,
     fit_alpha,
     fixed_cohort_calibration,
@@ -225,3 +226,27 @@ def test_fixed_cohorts_include_separate_validation_economics() -> None:
     assert evidence["validation_2024"]["bets"] == 600
     assert evidence["holdout_2025"]["bets"] == 600
     assert cohort["economic_evidence_eligible_for_staking"] is False
+
+
+def test_economic_shortlist_fails_closed_on_missing_evidence() -> None:
+    report = economic_cohort_shortlist({"cohorts": {
+        "side:away": {"status": "DESCRIPTIVE_RESEARCH_ONLY"}
+    }})
+    assert report["candidates"][0]["status"] == "MISSING_ECONOMIC_EVIDENCE"
+    assert report["staking_authorized"] is False
+
+
+def test_economic_shortlist_disallows_unverified_positive_archives() -> None:
+    sample = {
+        "bets": 100,
+        "roi": 0.12,
+        "approximate_roi_interval_95": [0.01, 0.22],
+        "verified_entry_prices": 0,
+    }
+    result = economic_cohort_shortlist({"cohorts": {
+        "side:away": {"archived_economic_evidence": {
+            "validation_2024": sample, "holdout_2025": sample
+        }}
+    }})
+    assert result["candidates"][0]["status"] == "POSITIVE_ARCHIVE_UNVERIFIED_PRICES"
+    assert result["candidates"][0]["staking_authorized"] is False
