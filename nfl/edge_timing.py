@@ -17,9 +17,9 @@ from pathlib import Path
 import polars as pl
 
 from .book_identity import canonical_book_identity
+from .edge_discovery import EVIDENCE_SUPPORTED
 from .execution_market import validate_execution_row
 from .market import american_implied_probability
-from .edge_discovery import EVIDENCE_SUPPORTED
 
 SCHEMA_VERSION = 1
 ACTIONS = ("BET_NOW_RESEARCH", "WAIT_MONITOR", "PASS")
