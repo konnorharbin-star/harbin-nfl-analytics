@@ -30,7 +30,7 @@
   "live_readiness_score": 79.9,
   "meaning": "operational health; not a profitability or staking signal",
   "monitor_alerts": [
-    "17 market rows have high model-vs-consensus disagreement",
+    "16 market rows have high model-vs-consensus disagreement",
     "fewer than two markets clear regime-specific edge reliability"
   ],
   "production_eligible": false,
