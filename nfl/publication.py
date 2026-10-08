@@ -171,12 +171,14 @@ def build_publication_snapshot(
     policy = load_policy()
 
     checks: list[dict[str, object]] = []
-    expected_market_rows = int(data_quality.get("market_rows", current.height) or 0)
+    # current has one candidate per game/market; market_rows counts upstream
+    # sportsbook quotes (many books per candidate), not published selections.
+    expected_candidate_rows = int(data_quality.get("candidate_rows", current.height) or 0)
     checks.append(
         _check(
-            "market_row_count",
-            current.height == expected_market_rows,
-            f"predictions={current.height} metadata={expected_market_rows}",
+            "candidate_row_count",
+            current.height == expected_candidate_rows,
+            f"predictions={current.height} metadata={expected_candidate_rows}",
         )
     )
     game_count = current.get_column("game_id").n_unique() if "game_id" in current.columns else 0
