@@ -11,6 +11,11 @@ from .context import (
     apply_context_freshness_veto,
     build_current_context,
 )
+from .context_intelligence import (
+    append_first_context_snapshots,
+    build_context_intelligence,
+    write_context_intelligence,
+)
 from .current import run_current_projection, unplayed_regular_games
 from .data import NFLDataClient
 from .data_integrity import assess_data_integrity
@@ -440,6 +445,20 @@ def run_operational_pipeline(
     )
     meta["edge_timing"] = timing_report
     write_edge_timing(allocated, timing_report)
+    # NFL-native context forensics use exactly the context *already attached*
+    # to each final allocated candidate. They cannot create new betting signals,
+    # change the independent fair-score projection, or change any stake.
+    game_context, context_audit = build_context_intelligence(
+        allocated, as_of=decision_at, source_meta=context
+    )
+    if persist_decisions:
+        context_audit["forward_capture"] = append_first_context_snapshots(
+            game_context, as_of=decision_at
+        )
+    else:
+        context_audit["forward_capture"] = {"status": "disabled"}
+    meta["context_intelligence"] = context_audit
+    write_context_intelligence(game_context, context_audit)
     # All first game/market candidates, including PASS, are frozen before
     # kickoff. This independent research cohort never changes allocation.
     if persist_decisions:
