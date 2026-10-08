@@ -1,0 +1,155 @@
+{
+  "2025_is_pristine_holdout": false,
+  "alpha_grid": [
+    -0.5,
+    -0.475,
+    -0.45,
+    -0.425,
+    -0.4,
+    -0.375,
+    -0.35,
+    -0.325,
+    -0.3,
+    -0.275,
+    -0.25,
+    -0.225,
+    -0.2,
+    -0.175,
+    -0.15,
+    -0.125,
+    -0.1,
+    -0.075,
+    -0.05,
+    -0.025,
+    0.0,
+    0.025,
+    0.05,
+    0.075,
+    0.1,
+    0.125,
+    0.15,
+    0.175,
+    0.2,
+    0.225,
+    0.25,
+    0.275,
+    0.3,
+    0.325,
+    0.35,
+    0.375,
+    0.4,
+    0.425,
+    0.45,
+    0.475,
+    0.5
+  ],
+  "automatic_betting_enabled": false,
+  "betting_policy_change_enabled": false,
+  "by_market": {
+    "moneyline": {
+      "2024_development_rows": 272,
+      "2025_diagnostic_rows": 271,
+      "2025_market_only": {
+        "brier": 0.21536389,
+        "hypothetical_archive_roi": null,
+        "hypothetical_archived_bets_over_3pct": 0,
+        "log_loss": 0.61890043,
+        "rows": 271
+      },
+      "2025_raw_model": {
+        "brier": 0.23016991,
+        "hypothetical_archive_roi": -0.05843021,
+        "hypothetical_archived_bets_over_3pct": 190,
+        "log_loss": 0.65069961,
+        "rows": 271
+      },
+      "2025_residual_candidate": {
+        "brier": 0.21533195,
+        "hypothetical_archive_roi": null,
+        "hypothetical_archived_bets_over_3pct": 0,
+        "log_loss": 0.6186528,
+        "rows": 271
+      },
+      "alpha_selected_on_2024": -0.2,
+      "deployment_authorized": false,
+      "market_minus_candidate_brier": 3.194e-05,
+      "market_minus_candidate_log_loss": 0.00024763,
+      "positive_archived_model_edge_proven": false,
+      "status": "HISTORICAL_DIAGNOSTIC_NOT_PRODUCTION_VALIDATED"
+    },
+    "spread": {
+      "2024_development_rows": 263,
+      "2025_diagnostic_rows": 269,
+      "2025_market_only": {
+        "brier": 0.25137716,
+        "hypothetical_archive_roi": null,
+        "hypothetical_archived_bets_over_3pct": 0,
+        "log_loss": 0.69590836,
+        "rows": 269
+      },
+      "2025_raw_model": {
+        "brier": 0.26409215,
+        "hypothetical_archive_roi": -0.10421799,
+        "hypothetical_archived_bets_over_3pct": 176,
+        "log_loss": 0.72317738,
+        "rows": 269
+      },
+      "2025_residual_candidate": {
+        "brier": 0.25122181,
+        "hypothetical_archive_roi": null,
+        "hypothetical_archived_bets_over_3pct": 0,
+        "log_loss": 0.69559947,
+        "rows": 269
+      },
+      "alpha_selected_on_2024": -0.05,
+      "deployment_authorized": false,
+      "market_minus_candidate_brier": 0.00015535,
+      "market_minus_candidate_log_loss": 0.00030889,
+      "positive_archived_model_edge_proven": false,
+      "status": "HISTORICAL_DIAGNOSTIC_NOT_PRODUCTION_VALIDATED"
+    },
+    "total": {
+      "2024_development_rows": 272,
+      "2025_diagnostic_rows": 272,
+      "2025_market_only": {
+        "brier": 0.24981032,
+        "hypothetical_archive_roi": null,
+        "hypothetical_archived_bets_over_3pct": 0,
+        "log_loss": 0.69276372,
+        "rows": 272
+      },
+      "2025_raw_model": {
+        "brier": 0.25823281,
+        "hypothetical_archive_roi": -0.10878041,
+        "hypothetical_archived_bets_over_3pct": 172,
+        "log_loss": 0.71009191,
+        "rows": 272
+      },
+      "2025_residual_candidate": {
+        "brier": 0.24981032,
+        "hypothetical_archive_roi": null,
+        "hypothetical_archived_bets_over_3pct": 0,
+        "log_loss": 0.69276372,
+        "rows": 272
+      },
+      "alpha_selected_on_2024": 0.0,
+      "deployment_authorized": false,
+      "market_minus_candidate_brier": 0.0,
+      "market_minus_candidate_log_loss": 0.0,
+      "positive_archived_model_edge_proven": false,
+      "status": "HISTORICAL_DIAGNOSTIC_NOT_PRODUCTION_VALIDATED"
+    }
+  },
+  "candidate_design": "penalized logit residual against no-vig market",
+  "development_only_alpha_selection": true,
+  "diagnostic_period": "2025 already-inspected non-pristine archive",
+  "independently_timestamped_entry_prices_verified": false,
+  "input_diagnostics": {
+    "excluded_missing_invalid_or_push": 13,
+    "usable_nonpush_archive_rows": 1619
+  },
+  "limitations": "Both seasons have been examined in prior model research and the archive entry timestamps are unverified. Comparisons cannot establish a tradable edge or justify changed betting rules. Even lower Brier or log loss than a market-only benchmark does not establish profitable EV.",
+  "paid_sources_used": false,
+  "schema_version": 1,
+  "training_period": "2024 archived provider-labeled prices"
+}
