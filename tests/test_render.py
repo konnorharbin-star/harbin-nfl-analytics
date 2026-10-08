@@ -23,6 +23,16 @@ def _current() -> pl.DataFrame:
         "execution_ready": True,
         "recommendation_status": "ACTIVE",
         "recommendation_valid_until": "2026-10-04T16:00:00+00:00",
+        "edge_discovery_tier": "SUPPORTED_RESEARCH",
+        "edge_shrunk_ev": 0.04,
+        "regime_reliability_ready": True,
+        "probability_reliability_ready": True,
+        "context_injuries_personnel_fresh": True,
+        "qb_context_ready": True,
+        "qb_certainty_veto": False,
+        "context_freshness_veto": False,
+        "probability_reliability_veto": False,
+        "context_veto": False,
     }
     return pl.DataFrame(
         [
@@ -103,7 +113,7 @@ def test_weekly_publication_marks_strong_research_candidates_as_watch(
     assert '<span class="badge strong">STRONG</span>' not in document
     assert '<span class="badge bet">BET</span>' not in document
     assert '<span class="badge lean">LEAN</span>' not in document
-    assert "WATCH = raw model candidate" in document
+    assert "WATCH = validated-research watchlist only" in document
 
 
 def test_weekly_publication_hides_watch_with_qb_uncertainty(tmp_path) -> None:
@@ -140,9 +150,10 @@ def test_weekly_publication_shows_evidence_gated_signal(tmp_path) -> None:
         output_dir=tmp_path,
     )
     document = (tmp_path / "nfl_week_4.html").read_text()
-    assert '<span class="badge strong">STRONG</span>' in document
-    assert '<span class="badge bet">BET</span>' in document
-    assert '<span class="badge lean">LEAN</span>' in document
+    assert document.count('<span class="badge watch">WATCH</span>') == 2
+    assert '<span class="badge strong">STRONG</span>' not in document
+    assert '<span class="badge bet">BET</span>' not in document
+    assert '<span class="badge lean">LEAN</span>' not in document
 
 
 
@@ -246,3 +257,22 @@ def test_weekly_publication_matches_cfb_picks_layout(tmp_path) -> None:
     assert (tmp_path / "latest.png").read_bytes() == (
         tmp_path / "nfl_week_4_page1.png"
     ).read_bytes()
+
+
+def test_high_raw_edge_never_displays_watch_when_holdout_prefers_market(tmp_path) -> None:
+    current = _current().with_columns(
+        pl.lit(-0.04).alias("edge_shrunk_ev"),
+        pl.lit("EVIDENCE_OR_CONTEXT_BLOCKED").alias("edge_discovery_tier"),
+        pl.lit(False).alias("regime_reliability_ready"),
+        pl.lit(False).alias("context_injuries_personnel_fresh"),
+        pl.lit("STRONG").alias("research_signal"),
+        pl.lit("BET").alias("quant_signal"),
+    )
+    write_weekly_publication(
+        current, week=4, updated_at="2026-10-02T16:41:28+00:00",
+        release_state="RESEARCH", output_dir=tmp_path,
+    )
+    document = (tmp_path / "nfl_week_4.html").read_text()
+    assert '<span class="badge watch">WATCH</span>' not in document
+    assert '<span class="badge bet">BET</span>' not in document
+    assert '<span class="badge strong">STRONG</span>' not in document

@@ -535,3 +535,57 @@ def test_explicit_official_inactive_overrides_full_practice_report() -> None:
     )
     buf = normalized.filter(pl.col("team") == "BUF").row(0, named=True)
     assert buf["severity"] == 1.0
+
+
+def test_injury_report_falls_back_to_populated_source_timestamp_column() -> None:
+    current = pl.DataFrame([
+        {"season": 2026, "week": 5, "team": "DAL", "gsis_id": "p1",
+         "position": "QB", "full_name": "Player One", "report_status": "Out",
+         "date_modified": None, "reported_at": "2026-10-07T18:00:00Z"},
+        {"season": 2026, "week": 5, "team": "TB", "gsis_id": "p2",
+         "position": "WR", "full_name": "Player Two", "report_status": "Questionable",
+         "date_modified": None, "reported_at": "2026-10-07T18:00:00Z"},
+    ])
+    stamp = datetime(2026, 10, 8, 12, tzinfo=UTC)
+    feed = injury_feed_freshness(current, season=2026, week=5, as_of=stamp)
+    normalized = normalize_injuries(current, season=2026, week=5, as_of=stamp)
+    assert feed["status"] == "FRESH"
+    assert normalized.get_column("reported_at").null_count() == 0
+
+
+def test_injury_week_cannot_be_fresh_with_only_one_timestamped_player() -> None:
+    current = pl.DataFrame([
+        {"season": 2026, "week": 5, "team": "DAL", "gsis_id": "p1",
+         "position": "QB", "full_name": "Player One",
+         "date_modified": "2026-10-07T18:00:00Z"},
+        {"season": 2026, "week": 5, "team": "TB", "gsis_id": "p2",
+         "position": "WR", "full_name": "Player Two",
+         "date_modified": None},
+    ])
+    feed = injury_feed_freshness(
+        current, season=2026, week=5,
+        as_of=datetime(2026, 10, 8, 12, tzinfo=UTC),
+    )
+    assert feed["status"] == "UNKNOWN"
+    assert feed["timestamped_current_week_rows"] == 1
+    assert feed["timestamp_coverage"] == 0.5
+
+
+def test_naive_or_date_only_injury_time_never_certifies_freshness() -> None:
+    current = pl.DataFrame([
+        {"season": 2026, "week": 5, "team": "TB",
+         "gsis_id": "p1", "position": "QB", "full_name": "Player",
+         "date_modified": "2026-10-08"}
+    ])
+    feed = injury_feed_freshness(
+        current, season=2026, week=5,
+        as_of=datetime(2026, 10, 8, 20, tzinfo=UTC),
+    )
+    assert feed["status"] == "UNKNOWN"
+    current = current.with_columns(
+        pl.lit("2026-10-08T14:00:00").alias("date_modified")
+    )
+    assert injury_feed_freshness(
+        current, season=2026, week=5,
+        as_of=datetime(2026, 10, 8, 20, tzinfo=UTC),
+    )["status"] == "UNKNOWN"
