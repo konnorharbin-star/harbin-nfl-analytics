@@ -8,6 +8,7 @@ from pathlib import Path
 
 import polars as pl
 
+from .actionable_board import write_actionable_board
 from .publication import validate_publication_files, write_publication_bundle
 from .publication_integrity import write_publication_manifest
 from .render import write_weekly_publication
@@ -109,6 +110,7 @@ def write_canonical_report(
             encoding="utf-8",
         )
 
+    write_actionable_board(current)
     bundle = write_publication_bundle(current, payload)
     publication["bundle"] = bundle
     payload["publication"] = publication
