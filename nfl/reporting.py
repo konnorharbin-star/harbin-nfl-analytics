@@ -110,7 +110,34 @@ def write_canonical_report(
             encoding="utf-8",
         )
 
-    write_actionable_board(current)
+    manual_board = write_actionable_board(current)
+    # Publish the research-only quality assessment alongside the raw predictions.
+    # Its status is not an execution endpoint and can never submit a wager.
+    public_board_csv = Path("docs/manual_review.csv")
+    manual_board.write_csv(public_board_csv)
+    review_rows = manual_board.to_dicts()
+    manual_review = {
+        "generated_at": payload["generated_at"],
+        "league": "NFL",
+        "release_state": payload["release_state"],
+        "automatic_betting_enabled": False,
+        "research_only": True,
+        "review_candidates": sum(
+            row["betting_action"] == "REVIEW_ONLY" for row in review_rows
+        ),
+        "blocked_or_unverified": sum(
+            row["betting_action"] != "REVIEW_ONLY" for row in review_rows
+        ),
+        "rules": (
+            "Never rank positive raw EV as an actionable bet when starting-QB, "
+            "injury freshness, historical regime or holdout-shrunk EV fail. "
+            "REVIEW_ONLY does not authorize a wager."
+        ),
+        "candidates": review_rows,
+    }
+    Path("docs/manual_review.json").write_text(
+        json.dumps(manual_review, indent=2, sort_keys=True, default=str)
+    )
     bundle = write_publication_bundle(current, payload)
     publication["bundle"] = bundle
     payload["publication"] = publication
