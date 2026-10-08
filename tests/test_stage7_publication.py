@@ -437,7 +437,7 @@ def test_empty_slate_overwrites_old_suggestions_with_header_only_csv(tmp_path) -
     outputs.mkdir()
     docs.mkdir()
     for name in ("portfolio_card.csv", "suggested_bets.csv", "quant_recommendations.csv"):
-        (outputs / name).write_text("OLD WEEK BET\\n")
+        (outputs / name).write_text("OLD WEEK BET\n")
     _write_cards(_current().head(0), output_dir=outputs, docs_dir=docs)
     for name in ("portfolio_card.csv", "suggested_bets.csv", "quant_recommendations.csv"):
         value = (outputs / name).read_text()
@@ -458,4 +458,4 @@ def test_schema_free_empty_slate_still_writes_nonempty_safe_headers(tmp_path) ->
     for name in ("portfolio_card.csv", "suggested_bets.csv", "quant_recommendations.csv"):
         csv = (outputs / name).read_text()
         assert csv.startswith("season,week,game_id")
-        assert csv.endswith("\\n")
+        assert csv.endswith("\n")
