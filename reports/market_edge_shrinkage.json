@@ -31,8 +31,47 @@
         "validation_rows": 15
       },
       "moneyline:underdog": {
+        "archived_economic_evidence": {
+          "holdout_2025": {
+            "approximate_roi_interval_95": [
+              -0.23502530320392154,
+              0.1574357946732365
+            ],
+            "bets": 220,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -8.534845938375353,
+            "positive_roi_lower_bound": false,
+            "roi": -0.03879475426534251,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          },
+          "validation_2024": {
+            "approximate_roi_interval_95": [
+              -0.39417304385544344,
+              -0.02571488066302302
+            ],
+            "bets": 203,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -42.61862433862434,
+            "positive_roi_lower_bound": false,
+            "roi": -0.20994396225923323,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          }
+        },
         "betting_policy_change_enabled": false,
         "development_rows": 382,
+        "economic_evidence_eligible_for_staking": false,
         "effect_size_by_year": {
           "holdout_2025": {
             "brier_gain": -0.000870125408120509,
@@ -147,8 +186,47 @@
         "validation_rows": 203
       },
       "projected_margin:close_lt3": {
+        "archived_economic_evidence": {
+          "holdout_2025": {
+            "approximate_roi_interval_95": [
+              -0.15010983324320462,
+              0.05585970995295361
+            ],
+            "bets": 402,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -18.944274781340454,
+            "positive_roi_lower_bound": false,
+            "roi": -0.047125061645125504,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          },
+          "validation_2024": {
+            "approximate_roi_interval_95": [
+              -0.26219248379596455,
+              -0.06649578475205098
+            ],
+            "bets": 408,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -67.05240678379516,
+            "positive_roi_lower_bound": false,
+            "roi": -0.16434413427400776,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          }
+        },
         "betting_policy_change_enabled": false,
         "development_rows": 789,
+        "economic_evidence_eligible_for_staking": false,
         "effect_size_by_year": {
           "holdout_2025": {
             "brier_gain": -0.0011731992396885327,
@@ -263,8 +341,47 @@
         "validation_rows": 408
       },
       "projected_margin:large_ge7": {
+        "archived_economic_evidence": {
+          "holdout_2025": {
+            "approximate_roi_interval_95": [
+              -0.30613502569913176,
+              0.09408101778324537
+            ],
+            "bets": 150,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -15.904050593691476,
+            "positive_roi_lower_bound": false,
+            "roi": -0.10602700395794318,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          },
+          "validation_2024": {
+            "approximate_roi_interval_95": [
+              -0.18900088323118963,
+              0.2452917302685566
+            ],
+            "bets": 102,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": 2.870833198905716,
+            "positive_roi_lower_bound": false,
+            "roi": 0.02814542351868349,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          }
+        },
         "betting_policy_change_enabled": false,
         "development_rows": 195,
+        "economic_evidence_eligible_for_staking": false,
         "effect_size_by_year": {
           "holdout_2025": {
             "brier_gain": 0.0006580170286344389,
@@ -379,8 +496,47 @@
         "validation_rows": 102
       },
       "projected_margin:moderate_3_to7": {
+        "archived_economic_evidence": {
+          "holdout_2025": {
+            "approximate_roi_interval_95": [
+              -0.21760988894458214,
+              0.05477809211710302
+            ],
+            "bets": 264,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -21.493797181227244,
+            "positive_roi_lower_bound": false,
+            "roi": -0.08141589841373956,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          },
+          "validation_2024": {
+            "approximate_roi_interval_95": [
+              -0.09561489265895572,
+              0.14462216923205162
+            ],
+            "bets": 306,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": 7.498113315683671,
+            "positive_roi_lower_bound": false,
+            "roi": 0.024503638286547946,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          }
+        },
         "betting_policy_change_enabled": false,
         "development_rows": 453,
+        "economic_evidence_eligible_for_staking": false,
         "effect_size_by_year": {
           "holdout_2025": {
             "brier_gain": 0.0001799255566775071,
@@ -407,7 +563,7 @@
           "development_grid": {
             "+0.00": {
               "brier": 0.23638181198443234,
-              "log_loss": 0.6646312323691305,
+              "log_loss": 0.6646312323691304,
               "rows": 442
             },
             "+0.10": {
@@ -495,8 +651,47 @@
         "validation_rows": 306
       },
       "side:away": {
+        "archived_economic_evidence": {
+          "holdout_2025": {
+            "approximate_roi_interval_95": [
+              -0.28148610147821174,
+              0.07641804569075697
+            ],
+            "bets": 208,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -21.327077801895292,
+            "positive_roi_lower_bound": false,
+            "roi": -0.10253402789372737,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          },
+          "validation_2024": {
+            "approximate_roi_interval_95": [
+              -0.21110449885363874,
+              0.09339495446375036
+            ],
+            "bets": 239,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -14.06629055459166,
+            "positive_roi_lower_bound": false,
+            "roi": -0.058854772194944185,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          }
+        },
         "betting_policy_change_enabled": false,
         "development_rows": 441,
+        "economic_evidence_eligible_for_staking": false,
         "effect_size_by_year": {
           "holdout_2025": {
             "brier_gain": 0.00042956761434356783,
@@ -611,8 +806,47 @@
         "validation_rows": 239
       },
       "side:home": {
+        "archived_economic_evidence": {
+          "holdout_2025": {
+            "approximate_roi_interval_95": [
+              -0.1930909391176746,
+              0.041930325599575324
+            ],
+            "bets": 336,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -25.39498307104068,
+            "positive_roi_lower_bound": false,
+            "roi": -0.07558030675904964,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          },
+          "validation_2024": {
+            "approximate_roi_interval_95": [
+              -0.19761829297466627,
+              0.028878212157930197
+            ],
+            "bets": 305,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -25.732862324552254,
+            "positive_roi_lower_bound": false,
+            "roi": -0.08437004040836804,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          }
+        },
         "betting_policy_change_enabled": false,
         "development_rows": 517,
+        "economic_evidence_eligible_for_staking": false,
         "effect_size_by_year": {
           "holdout_2025": {
             "brier_gain": -0.0001434726552720922,
@@ -727,8 +961,47 @@
         "validation_rows": 305
       },
       "side:over": {
+        "archived_economic_evidence": {
+          "holdout_2025": {
+            "approximate_roi_interval_95": [
+              -0.1456003745627592,
+              0.12908797671407263
+            ],
+            "bets": 187,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -1.5439091988521962,
+            "positive_roi_lower_bound": false,
+            "roi": -0.008256198924343296,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          },
+          "validation_2024": {
+            "approximate_roi_interval_95": [
+              -0.15270330231873308,
+              0.17787991479421578
+            ],
+            "bets": 127,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": 1.5987148921931529,
+            "positive_roi_lower_bound": false,
+            "roi": 0.012588306237741362,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          }
+        },
         "betting_policy_change_enabled": false,
         "development_rows": 239,
+        "economic_evidence_eligible_for_staking": false,
         "effect_size_by_year": {
           "holdout_2025": {
             "brier_gain": -0.006337208333162592,
@@ -843,8 +1116,47 @@
         "validation_rows": 127
       },
       "side:under": {
+        "archived_economic_evidence": {
+          "holdout_2025": {
+            "approximate_roi_interval_95": [
+              -0.3003871312575043,
+              0.1103600139758335
+            ],
+            "bets": 85,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -8.07615248447101,
+            "positive_roi_lower_bound": false,
+            "roi": -0.09501355864083541,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          },
+          "validation_2024": {
+            "approximate_roi_interval_95": [
+              -0.2822268615777538,
+              0.027288623201822543
+            ],
+            "bets": 145,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -18.483022282255018,
+            "positive_roi_lower_bound": false,
+            "roi": -0.12746911918796563,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          }
+        },
         "betting_policy_change_enabled": false,
         "development_rows": 240,
+        "economic_evidence_eligible_for_staking": false,
         "effect_size_by_year": {
           "holdout_2025": {
             "brier_gain": -0.0005074848009126165,
@@ -965,8 +1277,47 @@
         "validation_rows": 73
       },
       "spread:underdog": {
+        "archived_economic_evidence": {
+          "holdout_2025": {
+            "approximate_roi_interval_95": [
+              -0.20876637943052878,
+              0.05824819167022459
+            ],
+            "bets": 198,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -14.901300588270116,
+            "positive_roi_lower_bound": false,
+            "roi": -0.0752590938801521,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          },
+          "validation_2024": {
+            "approximate_roi_interval_95": [
+              -0.19991306004152676,
+              0.06586092578234491
+            ],
+            "bets": 199,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -13.338187358788595,
+            "positive_roi_lower_bound": false,
+            "roi": -0.06702606712959093,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          }
+        },
         "betting_policy_change_enabled": false,
         "development_rows": 380,
+        "economic_evidence_eligible_for_staking": false,
         "effect_size_by_year": {
           "holdout_2025": {
             "brier_gain": 0.0,
@@ -1081,8 +1432,47 @@
         "validation_rows": 199
       },
       "week:early": {
+        "archived_economic_evidence": {
+          "holdout_2025": {
+            "approximate_roi_interval_95": [
+              -0.33941532397004326,
+              -0.05121543135610884
+            ],
+            "bets": 192,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -37.5005525113106,
+            "positive_roi_lower_bound": false,
+            "roi": -0.19531537766307605,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          },
+          "validation_2024": {
+            "approximate_roi_interval_95": [
+              -0.07637000240455193,
+              0.24064098805237982
+            ],
+            "bets": 192,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": 15.77001462219148,
+            "positive_roi_lower_bound": false,
+            "roi": 0.08213549282391396,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          }
+        },
         "betting_policy_change_enabled": false,
         "development_rows": 192,
+        "economic_evidence_eligible_for_staking": false,
         "effect_size_by_year": {
           "holdout_2025": {
             "brier_gain": 0.00046460641046322526,
@@ -1197,8 +1587,47 @@
         "validation_rows": 192
       },
       "week:late": {
+        "archived_economic_evidence": {
+          "holdout_2025": {
+            "approximate_roi_interval_95": [
+              -0.16370943109504524,
+              0.10333308697879269
+            ],
+            "bets": 282,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -8.51306452039161,
+            "positive_roi_lower_bound": false,
+            "roi": -0.030188172058126277,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          },
+          "validation_2024": {
+            "approximate_roi_interval_95": [
+              -0.19651971050883962,
+              0.03108911995587621
+            ],
+            "bets": 279,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -23.077567382138398,
+            "positive_roi_lower_bound": false,
+            "roi": -0.0827152952764817,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          }
+        },
         "betting_policy_change_enabled": false,
         "development_rows": 549,
+        "economic_evidence_eligible_for_staking": false,
         "effect_size_by_year": {
           "holdout_2025": {
             "brier_gain": -0.0023605003376707956,
@@ -1313,8 +1742,47 @@
         "validation_rows": 279
       },
       "week:middle": {
+        "archived_economic_evidence": {
+          "holdout_2025": {
+            "approximate_roi_interval_95": [
+              -0.15109999220010237,
+              0.09069937509743012
+            ],
+            "bets": 342,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -10.328505524556956,
+            "positive_roi_lower_bound": false,
+            "roi": -0.030200308551336128,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          },
+          "validation_2024": {
+            "approximate_roi_interval_95": [
+              -0.25555136646080046,
+              -0.03068577852041024
+            ],
+            "bets": 345,
+            "clv_proxy_samples": 0,
+            "execution_clv_verified": false,
+            "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+            "mean_clv_proxy": null,
+            "net_units": -49.37590750925885,
+            "positive_roi_lower_bound": false,
+            "roi": -0.14311857249060536,
+            "staking_authorized": false,
+            "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+            "verified_entry_fraction": 0.0,
+            "verified_entry_prices": 0
+          }
+        },
         "betting_policy_change_enabled": false,
         "development_rows": 696,
+        "economic_evidence_eligible_for_staking": false,
         "effect_size_by_year": {
           "holdout_2025": {
             "brier_gain": 0.0,
