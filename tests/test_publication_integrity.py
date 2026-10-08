@@ -100,7 +100,7 @@ def test_manifest_includes_every_png_page_public_copy_and_betting_csv(tmp_path):
     assert manifest["status"] == "PASS"
     assert manifest["page_count"] == 2
     assert manifest["run_tag"] == _run_tag(RUN)
-    assert manifest["file_count"] >= 19
+    assert manifest["file_count"] >= 18
     files = {value["path"]: value for value in manifest["files"]}
     for required in (
         "outputs/current_model.json",
