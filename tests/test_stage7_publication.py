@@ -459,3 +459,38 @@ def test_schema_free_empty_slate_still_writes_nonempty_safe_headers(tmp_path) ->
         csv = (outputs / name).read_text()
         assert csv.startswith("season,week,game_id")
         assert csv.endswith("\n")
+
+def test_publication_count_reconciles_candidates_not_multibook_quotes(tmp_path) -> None:
+    """Three candidates may legitimately derive from many raw sportsbook quotes."""
+    html_path = tmp_path / "week.html"
+    png_path = tmp_path / "week.png"
+    html_path.write_text("ok")
+    png_path.write_bytes(b"png")
+    report = _report(str(html_path), str(png_path))
+    report["meta"]["data_quality"]["candidate_rows"] = 3
+    report["meta"]["data_quality"]["market_rows"] = 21
+
+    snapshot = build_publication_snapshot(_current(), report)
+    reconciliation = snapshot["reconciliation"]
+    row_check = next(
+        item for item in reconciliation["checks"] if item["name"] == "candidate_row_count"
+    )
+    assert row_check["passed"] is True
+    assert reconciliation["status"] == "PASS"
+
+
+def test_publication_count_rejects_mismatched_candidate_rows(tmp_path) -> None:
+    html_path = tmp_path / "week.html"
+    png_path = tmp_path / "week.png"
+    html_path.write_text("ok")
+    png_path.write_bytes(b"png")
+    report = _report(str(html_path), str(png_path))
+    report["meta"]["data_quality"]["candidate_rows"] = 2
+    report["meta"]["data_quality"]["market_rows"] = 21
+
+    snapshot = build_publication_snapshot(_current(), report)
+    assert snapshot["reconciliation"]["status"] == "FAIL"
+    assert any(
+        item["name"] == "candidate_row_count"
+        for item in snapshot["reconciliation"]["errors"]
+    )
