@@ -15,6 +15,162 @@
   "archive_entry_prices_verified": false,
   "betting_policy_change_enabled": false,
   "canonical_market_probability_change_enabled": false,
+  "economic_cohort_shortlist": {
+    "candidates": [
+      {
+        "cohort": "moneyline:favorite",
+        "staking_authorized": false,
+        "status": "MISSING_ECONOMIC_EVIDENCE"
+      },
+      {
+        "cohort": "moneyline:favorite_large_margin",
+        "staking_authorized": false,
+        "status": "MISSING_ECONOMIC_EVIDENCE"
+      },
+      {
+        "cohort": "moneyline:underdog",
+        "holdout_bets": 220,
+        "holdout_roi": -0.03879475426534251,
+        "positive_approximate_lower_bounds": false,
+        "staking_authorized": false,
+        "status": "NOT_REPLICATED_POSITIVE_ROI",
+        "validation_bets": 203,
+        "validation_roi": -0.20994396225923323,
+        "verified_entry_prices_both_years": false
+      },
+      {
+        "cohort": "projected_margin:close_lt3",
+        "holdout_bets": 402,
+        "holdout_roi": -0.047125061645125504,
+        "positive_approximate_lower_bounds": false,
+        "staking_authorized": false,
+        "status": "NOT_REPLICATED_POSITIVE_ROI",
+        "validation_bets": 408,
+        "validation_roi": -0.16434413427400776,
+        "verified_entry_prices_both_years": false
+      },
+      {
+        "cohort": "projected_margin:large_ge7",
+        "holdout_bets": 150,
+        "holdout_roi": -0.10602700395794318,
+        "positive_approximate_lower_bounds": false,
+        "staking_authorized": false,
+        "status": "NOT_REPLICATED_POSITIVE_ROI",
+        "validation_bets": 102,
+        "validation_roi": 0.02814542351868349,
+        "verified_entry_prices_both_years": false
+      },
+      {
+        "cohort": "projected_margin:moderate_3_to7",
+        "holdout_bets": 264,
+        "holdout_roi": -0.08141589841373956,
+        "positive_approximate_lower_bounds": false,
+        "staking_authorized": false,
+        "status": "NOT_REPLICATED_POSITIVE_ROI",
+        "validation_bets": 306,
+        "validation_roi": 0.024503638286547946,
+        "verified_entry_prices_both_years": false
+      },
+      {
+        "cohort": "side:away",
+        "holdout_bets": 208,
+        "holdout_roi": -0.10253402789372737,
+        "positive_approximate_lower_bounds": false,
+        "staking_authorized": false,
+        "status": "NOT_REPLICATED_POSITIVE_ROI",
+        "validation_bets": 239,
+        "validation_roi": -0.058854772194944185,
+        "verified_entry_prices_both_years": false
+      },
+      {
+        "cohort": "side:home",
+        "holdout_bets": 336,
+        "holdout_roi": -0.07558030675904964,
+        "positive_approximate_lower_bounds": false,
+        "staking_authorized": false,
+        "status": "NOT_REPLICATED_POSITIVE_ROI",
+        "validation_bets": 305,
+        "validation_roi": -0.08437004040836804,
+        "verified_entry_prices_both_years": false
+      },
+      {
+        "cohort": "side:over",
+        "holdout_bets": 187,
+        "holdout_roi": -0.008256198924343296,
+        "positive_approximate_lower_bounds": false,
+        "staking_authorized": false,
+        "status": "NOT_REPLICATED_POSITIVE_ROI",
+        "validation_bets": 127,
+        "validation_roi": 0.012588306237741362,
+        "verified_entry_prices_both_years": false
+      },
+      {
+        "cohort": "side:under",
+        "holdout_bets": 85,
+        "holdout_roi": -0.09501355864083541,
+        "positive_approximate_lower_bounds": false,
+        "staking_authorized": false,
+        "status": "NOT_REPLICATED_POSITIVE_ROI",
+        "validation_bets": 145,
+        "validation_roi": -0.12746911918796563,
+        "verified_entry_prices_both_years": false
+      },
+      {
+        "cohort": "spread:favorite",
+        "staking_authorized": false,
+        "status": "MISSING_ECONOMIC_EVIDENCE"
+      },
+      {
+        "cohort": "spread:underdog",
+        "holdout_bets": 198,
+        "holdout_roi": -0.0752590938801521,
+        "positive_approximate_lower_bounds": false,
+        "staking_authorized": false,
+        "status": "NOT_REPLICATED_POSITIVE_ROI",
+        "validation_bets": 199,
+        "validation_roi": -0.06702606712959093,
+        "verified_entry_prices_both_years": false
+      },
+      {
+        "cohort": "week:early",
+        "holdout_bets": 192,
+        "holdout_roi": -0.19531537766307605,
+        "positive_approximate_lower_bounds": false,
+        "staking_authorized": false,
+        "status": "NOT_REPLICATED_POSITIVE_ROI",
+        "validation_bets": 192,
+        "validation_roi": 0.08213549282391396,
+        "verified_entry_prices_both_years": false
+      },
+      {
+        "cohort": "week:late",
+        "holdout_bets": 282,
+        "holdout_roi": -0.030188172058126277,
+        "positive_approximate_lower_bounds": false,
+        "staking_authorized": false,
+        "status": "NOT_REPLICATED_POSITIVE_ROI",
+        "validation_bets": 279,
+        "validation_roi": -0.0827152952764817,
+        "verified_entry_prices_both_years": false
+      },
+      {
+        "cohort": "week:middle",
+        "holdout_bets": 342,
+        "holdout_roi": -0.030200308551336128,
+        "positive_approximate_lower_bounds": false,
+        "staking_authorized": false,
+        "status": "NOT_REPLICATED_POSITIVE_ROI",
+        "validation_bets": 345,
+        "validation_roi": -0.14311857249060536,
+        "verified_entry_prices_both_years": false
+      }
+    ],
+    "multiple_testing_adjusted": false,
+    "price_provenance_required_for_forward_review": true,
+    "selection_basis": "fixed cohorts; no search for optimal ROI threshold",
+    "staking_authorized": false,
+    "status": "RESEARCH_ONLY"
+  },
   "fixed_cohort_research": {
     "betting_policy_change_enabled": false,
     "cohorts": {
@@ -563,7 +719,7 @@
           "development_grid": {
             "+0.00": {
               "brier": 0.23638181198443234,
-              "log_loss": 0.6646312323691304,
+              "log_loss": 0.6646312323691305,
               "rows": 442
             },
             "+0.10": {
