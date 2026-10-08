@@ -6,6 +6,7 @@ from nfl.market_shrinkage import (
     calibration_buckets,
     evaluate_market_edge_shrinkage,
     fit_alpha,
+    fixed_cohort_calibration,
     shrink_probability,
     signed_residual_probability,
     signed_residual_research,
@@ -133,3 +134,25 @@ def test_signed_residual_probability_can_reverse_direction() -> None:
     assert signed_residual_probability(0.8, 0.5, -0.25) < 0.5
     assert abs(signed_residual_probability(0.8, 0.5, 0) - 0.5) < 1e-12
     assert abs(signed_residual_probability(0.8, 0.5, 1) - 0.8) < 1e-12
+
+
+def test_fixed_cohorts_are_reported_and_never_authorize_bets() -> None:
+    frame = _synthetic_bets().with_columns(
+        pl.lit("home").alias("side"),
+        pl.lit(-3.5).alias("line"),
+    )
+    report = fixed_cohort_calibration(
+        frame, validation_season=2024, holdout_season=2025
+    )
+    home = report["cohorts"]["side:home"]
+    assert home["status"] == "DESCRIPTIVE_RESEARCH_ONLY"
+    assert home["signed_residual"]["status"] == "RESEARCH_ONLY"
+    assert report["betting_policy_change_enabled"] is False
+    assert report["projected_margin_cohorts"] == "UNAVAILABLE_IN_FREE_MARKET_BETS"
+
+
+def test_fixed_cohorts_fail_closed_without_side_data() -> None:
+    report = fixed_cohort_calibration(
+        _synthetic_bets(), validation_season=2024, holdout_season=2025
+    )
+    assert report["status"] == "MISSING_PREDECLARED_FEATURES"
