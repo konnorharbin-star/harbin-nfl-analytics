@@ -18,7 +18,6 @@ import numpy as np
 import polars as pl
 
 from .contracts import DataContractError, require_columns
-from .market_shrinkage import shrink_probability
 
 SCHEMA_VERSION = 1
 MARKETS = ("moneyline", "spread", "total")
@@ -290,7 +289,9 @@ def _summary(
         "decided_rows": len(decided),
         "mean_model_probability": model,
         "observed_win_rate": actual,
-        "model_calibration_gap": model - actual if model is not None and actual is not None else None,
+        "model_calibration_gap": (
+            model - actual if model is not None and actual is not None else None
+        ),
         "mean_no_vig_probability": market_p,
         "realized_minus_market_probability": realized_edge,
         "mean_raw_probability_edge": predicted_edge,
@@ -522,13 +523,16 @@ def build_historical_edge_failure_report(
         },
         "limitations": [
             "Not a point-in-time executable-entry backtest; not certified closing-line value.",
-            "Prior candidate choice selected highest raw EV in a game/market; selection bias exists.",
+            "Prior candidate choice selected highest raw EV in a game/market; "
+            "selection bias exists.",
             "All subgroup views are descriptive; no search for best-looking winning regime.",
             "2025 was already inspected in previous research; require new prospective validation.",
             "Cannot determine whether bad odds, misspecified fair scores, injury context or "
             "unmodeled pushes specifically caused a given loss from these archive rows alone.",
-            "Multiple groups share games; group comparisons are correlated and lack multiplicity correction.",
-            "Positive subgroup returns never bypass reliability, quote provenance or release gates.",
+            "Multiple groups share games; comparisons are correlated and lack "
+            "multiplicity correction.",
+            "Positive subgroup returns never bypass reliability, quote provenance "
+            "or release gates.",
         ],
     }
     return report
