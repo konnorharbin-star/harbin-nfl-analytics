@@ -228,7 +228,9 @@ def _prepare(
             errors[issue] += 1
         decided += row.get("observation_status") == "GRADED_PROBABILITY"
         settled += str(row.get("observation_status")).startswith("GRADED_")
-    meta["duplicate_keys"] = sum(v for k, v in errors.items() if k == "DUPLICATE_OR_EMPTY_GAME_MARKET")
+    meta["duplicate_keys"] = sum(
+        v for k, v in errors.items() if k == "DUPLICATE_OR_EMPTY_GAME_MARKET"
+    )
     meta["integrity_errors"] = dict(sorted(errors.items()))
     meta["included_rows"] = len(rows)
     source_ok = (
