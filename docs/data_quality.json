@@ -8,7 +8,7 @@
   "extra_projection_games": [],
   "future_verified_quote_rows": 0,
   "games_without_candidate_rows": [],
-  "market_rows": 360,
+  "market_rows": 358,
   "market_source_errors": [],
   "meaning": "current-run structural and chronological data integrity; missing values are never fabricated",
   "missing_data_count": 0,
@@ -23,6 +23,6 @@
   "status": "OK",
   "target_games": 15,
   "unmatched_market_rows": 0,
-  "verified_quote_rows": 360,
+  "verified_quote_rows": 358,
   "warnings": []
 }

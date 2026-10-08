@@ -1,6 +1,6 @@
 {
   "context_intelligence": {
-    "as_of": "2026-10-08T14:34:10.171653+00:00",
+    "as_of": "2026-10-08T17:55:03.979864+00:00",
     "betting_authorized": false,
     "blocked_games": 15,
     "blocker_counts": {
@@ -56,7 +56,7 @@
     "weather_venue_ready_games": 12
   },
   "current_context": {
-    "as_of": "2026-10-08T14:33:52.494805+00:00",
+    "as_of": "2026-10-08T17:54:42.445455+00:00",
     "components": {
       "injuries_personnel": 0.0,
       "quarterback": 0.8,
@@ -67,7 +67,7 @@
     "depth_feed_available": true,
     "expected_qb_identity_coverage": 1.0,
     "expected_qb_state": {
-      "as_of": "2026-10-08T14:33:52.494805+00:00",
+      "as_of": "2026-10-08T17:54:42.445455+00:00",
       "decision_ready_team_coverage": 0.9,
       "decision_ready_teams": 27,
       "identified_teams": 30,
@@ -139,7 +139,7 @@
     "extra_projection_games": [],
     "future_verified_quote_rows": 0,
     "games_without_candidate_rows": [],
-    "market_rows": 360,
+    "market_rows": 358,
     "market_source_errors": [],
     "meaning": "current-run structural and chronological data integrity; missing values are never fabricated",
     "missing_data_count": 0,
@@ -154,7 +154,7 @@
     "status": "OK",
     "target_games": 15,
     "unmatched_market_rows": 0,
-    "verified_quote_rows": 360,
+    "verified_quote_rows": 358,
     "warnings": []
   },
   "decision_intelligence": {
@@ -164,19 +164,19 @@
       "PASS": 45,
       "WAIT": 0
     },
-    "high_disagreement_rows": 17,
+    "high_disagreement_rows": 18,
     "meaning": "shadow execution timing and model/market diagnostics; market prices remain downstream of the independent fair-score projection",
     "movement_coverage": 1.0,
     "research_execution_actions": {
-      "BET_NOW": 11,
+      "BET_NOW": 10,
       "PASS": 17,
-      "WAIT": 17
+      "WAIT": 18
     },
     "rows": 45,
     "status": "READY"
   },
   "edge_discovery": {
-    "as_of": "2026-10-08T14:34:10.171653+00:00",
+    "as_of": "2026-10-08T17:55:03.979864+00:00",
     "categories": {
       "EVIDENCE_OR_CONTEXT_BLOCKED": 45,
       "NO_POSITIVE_RAW_EDGE": 0,
@@ -218,7 +218,7 @@
       "PASS": 45,
       "WAIT_MONITOR": 0
     },
-    "as_of": "2026-10-08T14:34:10.171653+00:00",
+    "as_of": "2026-10-08T17:55:03.979864+00:00",
     "league": "NFL",
     "limits": {
       "lookback_hours": 12,
@@ -239,18 +239,18 @@
       "Forward validation is required; observed price movement is not economic value."
     ],
     "observed_movements": {
-      "IMPROVED": 9,
-      "MIXED_LINE_PRICE": 1,
-      "NO_HISTORY": 1,
-      "STABLE": 33,
-      "WORSENED": 1
+      "IMPROVED": 7,
+      "MIXED_LINE_PRICE": 2,
+      "NO_HISTORY": 0,
+      "STABLE": 36,
+      "WORSENED": 0
     },
     "observed_quote_not_guaranteed_fill": true,
     "policy_and_stake_unchanged": true,
     "production_stake_authorized": false,
     "qualified_research_signals": 0,
     "rows": 45,
-    "same_book_prior_coverage": 0.9777777777777777,
+    "same_book_prior_coverage": 1.0,
     "schema_version": 1,
     "status": "RESEARCH_ONLY",
     "validated_timing_strategy": false
@@ -267,7 +267,7 @@
     "status": "APPEND_ONLY_FIRST_SNAPSHOT",
     "total_rows": 45
   },
-  "generated_at": "2026-10-08T14:34:10.171653+00:00",
+  "generated_at": "2026-10-08T17:55:03.979864+00:00",
   "market_coverage": {
     "games": 15,
     "moneyline": 15,
@@ -280,7 +280,7 @@
     "consensus_verified_rows": 45,
     "distinct_books": 7,
     "games": 15,
-    "high_disagreement_rows": 17,
+    "high_disagreement_rows": 18,
     "high_dispersion_rows": 24,
     "market_source": "canonical current NFL market aggregation",
     "moneyline": 15,
@@ -2856,10 +2856,10 @@
       "action_network_diagnostic": {
         "attempts": [
           {
-            "collector_observed_at": "2026-10-08T14:34:01.206492+00:00",
+            "collector_observed_at": "2026-10-08T17:54:51.401768+00:00",
             "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
             "games_with_markets": 15,
-            "parsed_rows": 315,
+            "parsed_rows": 313,
             "payload_games": 15,
             "provider_timestamp_available": false,
             "sample": {
@@ -2945,7 +2945,7 @@
                     "value"
                   ],
                   "last_update": null,
-                  "odds": 360,
+                  "odds": 380,
                   "side": "away",
                   "timestamp": null,
                   "updated_at": null,
@@ -2977,11 +2977,11 @@
                     "value"
                   ],
                   "last_update": null,
-                  "odds": -112,
+                  "odds": -110,
                   "side": "away",
                   "timestamp": null,
                   "updated_at": null,
-                  "value": 8.5
+                  "value": 9
                 },
                 "total": {
                   "book_id": 15,
@@ -3008,7 +3008,7 @@
                     "value"
                   ],
                   "last_update": null,
-                  "odds": -110,
+                  "odds": -111,
                   "side": "under",
                   "timestamp": null,
                   "updated_at": null,
@@ -3020,10 +3020,10 @@
             "team_matches": 15
           }
         ],
-        "collector_observed_at": "2026-10-08T14:34:01.206492+00:00",
+        "collector_observed_at": "2026-10-08T17:54:51.401768+00:00",
         "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
         "games_with_markets": 15,
-        "parsed_rows": 315,
+        "parsed_rows": 313,
         "payload_games": 15,
         "provider_timestamp_available": false,
         "sample": {
@@ -3109,7 +3109,7 @@
                 "value"
               ],
               "last_update": null,
-              "odds": 360,
+              "odds": 380,
               "side": "away",
               "timestamp": null,
               "updated_at": null,
@@ -3141,11 +3141,11 @@
                 "value"
               ],
               "last_update": null,
-              "odds": -112,
+              "odds": -110,
               "side": "away",
               "timestamp": null,
               "updated_at": null,
-              "value": 8.5
+              "value": 9
             },
             "total": {
               "book_id": 15,
@@ -3172,7 +3172,7 @@
                 "value"
               ],
               "last_update": null,
-              "odds": -110,
+              "odds": -111,
               "side": "under",
               "timestamp": null,
               "updated_at": null,
@@ -3185,7 +3185,7 @@
       },
       "action_network_enabled": true,
       "action_network_games": 15,
-      "action_network_rows": 315,
+      "action_network_rows": 313,
       "action_network_timestamp_policy": "provider update timestamp when supplied; otherwise UTC collector observation time at response receipt",
       "books": 7,
       "execution_note": "nflverse schedule fallback has no sportsbook identity or quote-update timestamp and is research-only",
@@ -3205,7 +3205,7 @@
       ],
       "status": "READY",
       "verified_games_with_any_market": 15,
-      "verified_rows": 360,
+      "verified_rows": 358,
       "verified_sources": [
         "action_network",
         "espn"
