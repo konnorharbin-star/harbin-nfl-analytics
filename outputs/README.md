@@ -1,12 +1,12 @@
 # Latest NFL model output
 
 **Season / Week:** 2026 / 5  
-**Updated:** Oct 7, 2026 · 9:23 PM CT  
+**Updated:** Oct 7, 2026 · 9:28 PM CT  
 **Release state:** RESEARCH  
 
 ## Fresh PNGs for mobile
-- [Fresh page 1 — cache-safe](nfl_week_5_run_20261007_212353_CT_page1.png)
-- [Fresh page 2 — cache-safe](nfl_week_5_run_20261007_212353_CT_page2.png)
+- [Fresh page 1 — cache-safe](nfl_week_5_run_20261007_212844_CT_page1.png)
+- [Fresh page 2 — cache-safe](nfl_week_5_run_20261007_212844_CT_page2.png)
 
 These filenames change on every run so GitHub/mobile cannot reuse an old image preview. Use these links when checking the latest model.
 
@@ -19,6 +19,7 @@ These filenames change on every run so GitHub/mobile cannot reuse an old image p
 - [Current model suggestions](suggested_bets.csv)
 - [Portfolio-allocated recommendations](quant_recommendations.csv)
 - [Research edge priority audit](edge_priority.csv)
+- [Both-side diagnostics in portfolio card](portfolio_card.csv)
 - [Holdout-supported research edges (if any)](edge_supported.csv)
 - [Edge discovery evidence and blockers](edge_discovery_report.json)
 - [Research watchlist](edge_watchlist.csv)
