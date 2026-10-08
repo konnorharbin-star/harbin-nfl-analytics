@@ -233,9 +233,26 @@ def classify_research_edge(
         tier = NO_QUOTE
     elif not reasons:
         tier = EVIDENCE_SUPPORTED
-    elif (regime_status != "RELIABLE"
-          or validated_alpha is None or validated_alpha <= 0
-          or (shrunk_ev is not None and shrunk_ev <= 0)):
+    elif (
+        regime_status != "RELIABLE"
+        or str(row.get("regime_reliability_status") or "") != "RELIABLE"
+        or not _bool(row.get("regime_reliability_ready"))
+        or not _bool(row.get("probability_reliability_ready"))
+        or _bool(row.get("probability_reliability_veto"))
+        or not _market_policy(market, policy)
+        or archive_status != "ARCHIVED_PROVIDER_OPEN_CLOSE_NOT_TIMESTAMP_VERIFIED"
+        or (upper is not None and upper < 0)
+        or validated_alpha is None
+        or validated_alpha <= 0
+        or shrunk_ev is None
+        or shrunk_ev <= 0
+        or _bool(row.get("context_freshness_veto"))
+        or not _bool(row.get("context_injuries_personnel_fresh"))
+        or _bool(row.get("qb_certainty_veto"))
+        or _bool(row.get("context_veto"))
+        or _bool(row.get("market_dispersion_high"))
+        or str(row.get("market_disagreement_severity") or "").upper() == "HIGH"
+    ):
         tier = BLOCKED
     else:
         tier = RAW_WATCH
