@@ -314,7 +314,7 @@ def build_context_intelligence(
             if key:
                 grouped.setdefault(key, []).append(row)
     results = []
-    for key, market_rows in sorted(grouped.items()):
+    for _key, market_rows in sorted(grouped.items()):
         selected = market_rows[0]
         consistent = all(
             _signature(item) == _signature(selected) for item in market_rows
