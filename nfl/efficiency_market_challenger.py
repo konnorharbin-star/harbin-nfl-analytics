@@ -57,19 +57,18 @@ def evaluate_efficiency_market(frame: pl.DataFrame) -> dict[str, object]:
             baseline = test[base].to_numpy().astype(float)
             market_est = test[market].to_numpy().astype(float)
             candidate = baseline + BLEND * model.predict(test)
-            def mae(prediction: np.ndarray) -> float:
-                return float(np.mean(np.abs(prediction - actual)))
-            def rmse(prediction: np.ndarray) -> float:
-                return float(np.sqrt(np.mean((prediction - actual) ** 2)))
-            baseline_mae, challenger_mae, market_mae = (
-                mae(baseline), mae(candidate), mae(market_est)
-            )
+            baseline_mae, challenger_mae, market_mae = [
+                float(np.mean(np.abs(prediction - actual)))
+                for prediction in (baseline, candidate, market_est)
+            ]
+            baseline_rmse = float(np.sqrt(np.mean((baseline - actual) ** 2)))
+            challenger_rmse = float(np.sqrt(np.mean((candidate - actual) ** 2)))
             folds.append({
                 "season": season, "status": "HISTORICAL_ARCHIVE_RESEARCH",
                 "train_games": train.height, "test_games": test.height,
                 "baseline_mae": baseline_mae, "challenger_mae": challenger_mae,
                 "archive_market_mae": market_mae,
-                "baseline_rmse": rmse(baseline), "challenger_rmse": rmse(candidate),
+                "baseline_rmse": baseline_rmse, "challenger_rmse": challenger_rmse,
                 "beats_baseline": challenger_mae < baseline_mae,
                 "beats_archive_market": challenger_mae < market_mae,
             })
