@@ -78,5 +78,8 @@ def summarize_game_intelligence(games: pl.DataFrame) -> dict[str, object]:
         ],
         "pregame_model_modified": False,
         "staking_authorized": False,
-        "warning": "Outcomes grade frozen pregame estimates; do not use residuals as future-game features.",
+        "warning": (
+            "Outcomes grade frozen pregame estimates; do not use residuals "
+            "as future-game features."
+        ),
     }
