@@ -131,19 +131,30 @@ def _signal(
         value = str(raw or "PASS").upper()
         return "" if value == "PASS" else value
 
-    raw = row.get("quant_signal", row.get("production_signal", "PASS"))
-    value = str(raw or "PASS").upper()
-    if value != "PASS":
-        return value
-
-    # PAPER/RESEARCH boards should not look empty when the independent model
-    # identifies a material discrepancy that is still blocked by production
-    # evidence gates. Surface only BET/STRONG raw research candidates as WATCH;
-    # LEAN stays quiet, and unresolved starting-QB state remains hidden.
-    research = str(row.get("research_signal") or "PASS").upper()
-    if research in {"BET", "STRONG"} and row.get("qb_certainty_veto") is not True:
-        return "WATCH"
-    return ""
+    # RESEARCH/PAPER never advertises STRONG/BET from raw unvalidated
+    # probabilities. A WATCH badge requires ALL positive research checks,
+    # including a positive shrinkage-adjusted EV after untouched holdout.
+    # Absence of evidence is not evidence that the market is wrong.
+    signal = str(
+        row.get("research_signal") or row.get("quant_signal") or "PASS"
+    ).upper()
+    if signal not in {"BET", "STRONG"}:
+        return ""
+    shrunk = _number(row.get("edge_shrunk_ev"))
+    if not (
+        row.get("edge_discovery_tier") == "SUPPORTED_RESEARCH"
+        and row.get("regime_reliability_ready") is True
+        and row.get("probability_reliability_ready") is True
+        and row.get("context_injuries_personnel_fresh") is True
+        and row.get("qb_context_ready") is True
+        and row.get("qb_certainty_veto") is not True
+        and row.get("context_freshness_veto") is not True
+        and row.get("probability_reliability_veto") is not True
+        and row.get("context_veto") is not True
+        and shrunk is not None and shrunk > 0
+    ):
+        return ""
+    return "WATCH"
 
 
 def _expiry_text(row: dict[str, object] | None) -> str:
@@ -325,7 +336,7 @@ def render_html(
     if state != "PRODUCTION":
         status = (
             f"{status} · {state} evidence mode · "
-            "WATCH = raw model candidate · not production staking"
+            "WATCH = validated-research watchlist only · never an executed bet"
         )
 
     css = "\n".join(
