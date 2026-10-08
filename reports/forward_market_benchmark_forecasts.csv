@@ -1,0 +1,17 @@
+cohort,market,season,week,predictor,frozen,eligible_quotes,settled,decided,pushes,brier,log_loss,ece_10,market_minus_predictor_brier,market_minus_predictor_log_loss,paired_brier_ci95,paired_log_loss_ci95,ci_supported
+all,,,,market_only,45,45,0,0,0,,,,,,,,False
+all,,,,market_plus_25pct_model,45,45,0,0,0,,,,,,,,False
+all,,,,market_plus_50pct_model,45,45,0,0,0,,,,,,,,False
+all,,,,raw_model,45,45,0,0,0,,,,,,,,False
+market,moneyline,,,market_only,15,15,0,0,0,,,,,,,,False
+market,moneyline,,,market_plus_25pct_model,15,15,0,0,0,,,,,,,,False
+market,moneyline,,,market_plus_50pct_model,15,15,0,0,0,,,,,,,,False
+market,moneyline,,,raw_model,15,15,0,0,0,,,,,,,,False
+market,spread,,,market_only,15,15,0,0,0,,,,,,,,False
+market,spread,,,market_plus_25pct_model,15,15,0,0,0,,,,,,,,False
+market,spread,,,market_plus_50pct_model,15,15,0,0,0,,,,,,,,False
+market,spread,,,raw_model,15,15,0,0,0,,,,,,,,False
+market,total,,,market_only,15,15,0,0,0,,,,,,,,False
+market,total,,,market_plus_25pct_model,15,15,0,0,0,,,,,,,,False
+market,total,,,market_plus_50pct_model,15,15,0,0,0,,,,,,,,False
+market,total,,,raw_model,15,15,0,0,0,,,,,,,,False
