@@ -8,7 +8,9 @@ bookmaker order or bankroll operation is implemented here.
 from __future__ import annotations
 
 import math
+
 import polars as pl
+
 from .contracts import require_columns
 
 COLUMNS = (
