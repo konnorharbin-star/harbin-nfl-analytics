@@ -433,6 +433,87 @@ def _strictly_better(
     )
 
 
+
+def fixed_cohort_calibration(
+    frame: pl.DataFrame,
+    *,
+    validation_season: int,
+    holdout_season: int,
+    min_development: int = 100,
+    min_evaluation: int = 30,
+) -> dict[str, object]:
+    """Predeclared one-dimensional NFL cohorts, never optimized on holdout.
+
+    This audit requires no new features beyond recorded pregame quote data.
+    Its cohorts overlap, are not independent bets, and cannot authorize staking.
+    Missing context/margin projections are explicitly not imputed.
+    """
+    required = {"side", "no_vig_probability", "line", "week"}
+    if not required.issubset(frame.columns):
+        return {"status": "MISSING_PREDECLARED_FEATURES",
+                "missing": sorted(required - set(frame.columns))}
+    candidates: dict[str, pl.Expr] = {
+        "side:home": pl.col("side") == "home",
+        "side:away": pl.col("side") == "away",
+        "side:over": pl.col("side") == "over",
+        "side:under": pl.col("side") == "under",
+        "moneyline:favorite": (
+            (pl.col("market_type") == "moneyline")
+            & (pl.col("no_vig_probability") > 0.5)
+        ),
+        "moneyline:underdog": (
+            (pl.col("market_type") == "moneyline")
+            & (pl.col("no_vig_probability") < 0.5)
+        ),
+        "spread:favorite": (
+            (pl.col("market_type") == "spread") & (pl.col("line") < 0)
+        ),
+        "spread:underdog": (
+            (pl.col("market_type") == "spread") & (pl.col("line") > 0)
+        ),
+        "week:early": pl.col("week") <= 4,
+        "week:middle": (pl.col("week") >= 5) & (pl.col("week") <= 12),
+        "week:late": pl.col("week") >= 13,
+    }
+    output: dict[str, object] = {}
+    for label, condition in candidates.items():
+        cohort = frame.filter(condition.fill_null(False))
+        development = cohort.filter(pl.col("season") < validation_season)
+        validation = cohort.filter(pl.col("season") == validation_season)
+        holdout = cohort.filter(pl.col("season") == holdout_season)
+        if development.height < min_development or (
+            validation.height < min_evaluation
+            or holdout.height < min_evaluation
+        ):
+            output[label] = {
+                "status": "INSUFFICIENT_PREDECLARED_SAMPLE",
+                "development_rows": development.height,
+                "validation_rows": validation.height,
+                "holdout_rows": holdout.height,
+            }
+            continue
+        research = signed_residual_research(
+            development, validation, holdout, minimum_rows=min_development
+        )
+        output[label] = {
+            "status": "DESCRIPTIVE_RESEARCH_ONLY",
+            "development_rows": development.height,
+            "validation_rows": validation.height,
+            "holdout_rows": holdout.height,
+            "signed_residual": research,
+            "not_independent_of_other_cohorts": True,
+            "betting_policy_change_enabled": False,
+        }
+    return {
+        "status": "RESEARCH_ONLY",
+        "dimensions": "fixed side / quoted role / season phase",
+        "projected_margin_cohorts": "UNAVAILABLE_IN_FREE_MARKET_BETS",
+        "multiple_testing": "overlapping descriptive cohorts; no promotion",
+        "cohorts": output,
+        "betting_policy_change_enabled": False,
+    }
+
+
 def evaluate_market_edge_shrinkage(
     bets: pl.DataFrame,
     *,
@@ -570,6 +651,12 @@ def evaluate_market_edge_shrinkage(
         "validated_shrinkage_markets": validated_markets,
         "incremental_model_value_markets": incremental_markets,
         "markets": markets,
+        "fixed_cohort_research": fixed_cohort_calibration(
+            bets,
+            validation_season=validation_season,
+            holdout_season=holdout_season,
+            min_development=minimum_development_rows,
+        ),
         "canonical_market_probability_change_enabled": False,
         "betting_policy_change_enabled": False,
         "forward_shrinkage_shadow_recommended": False,
