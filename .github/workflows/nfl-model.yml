@@ -230,8 +230,18 @@ jobs:
             docs/forward_edge_validation.json
             docs/forward_edge_graded.csv
           )
-          git reset -- "${FORWARD_EDGE_GRADED[@]}"
-          git restore -- "${FORWARD_EDGE_GRADED[@]}"
+          for f in "${FORWARD_EDGE_GRADED[@]}"; do
+            # On the first run the grader may have just created these files
+            # on main, while this job checked out a parent commit where they
+            # did not exist. git restore then fails with an unknown pathspec.
+            if git cat-file -e "HEAD:$f" 2>/dev/null; then
+              git reset -- "$f"
+              git restore -- "$f"
+            else
+              # Safe for newly staged but previously untracked grader output.
+              git rm --cached -q --ignore-unmatch "$f"
+            fi
+          done
 
           if ! git diff --cached --quiet; then
             git commit -m "model: automated NFL operational refresh"
