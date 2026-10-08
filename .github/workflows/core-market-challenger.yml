@@ -1,0 +1,35 @@
+name: NFL Core Market Challenger
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/core_market_challenger.py"
+      - "run_core_market_challenger.py"
+      - "tests/test_core_market_challenger.py"
+      - ".github/workflows/core-market-challenger.yml"
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Guard chronology and source keys
+        run: python -m pytest -q tests/test_core_market_challenger.py
+      - name: Evaluate fixed NFL fair-score challenger
+        run: python run_core_market_challenger.py
+      - name: Publish challenger report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-core-market-challenger
+          path: reports/core_market_challenger.json
+          if-no-files-found: warn
