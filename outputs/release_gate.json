@@ -56,7 +56,7 @@
       "name": "context_coverage",
       "passed": false,
       "requirement": ">=90% current injury/rest/weather/travel context coverage",
-      "value": 0.65
+      "value": 0.5333
     },
     {
       "detail": "",
@@ -64,11 +64,11 @@
       "passed": true,
       "requirement": "validated chronological probability reliability clears Brier/ECE, 58%-62% confidence-band, and margin/total interval guardrails",
       "value": {
-        "brier": 0.2287150128025609,
-        "ece": 0.05982942561488695,
+        "brier": 0.22871501280256112,
+        "ece": 0.05982942561488687,
         "margin_80_coverage": 0.7830882352941176,
         "mid_confidence_games": 39,
-        "mid_confidence_gap": 0.012503230466270998,
+        "mid_confidence_gap": 0.01250323046627122,
         "model_family": "gaussian+logistic_moneyline",
         "total_80_coverage": 0.8051470588235294,
         "validated_reliability_ready": true
@@ -96,7 +96,7 @@
       "name": "live_monitoring",
       "passed": false,
       "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
-      "value": 87.6
+      "value": 85.2
     },
     {
       "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -137,8 +137,8 @@
         "status": "ESTABLISHED SAMPLE",
         "verified_clv_coverage": 0.7965686274509803,
         "verified_roi_ci_95": [
-          -0.14174630887497117,
-          -0.01974012913523289
+          -0.13925593449272022,
+          -0.018899826239512172
         ]
       }
     },
