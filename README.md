@@ -1,3 +1,7 @@
+## Manual-only NFL evidence review
+
+The [research review CSV](docs/manual_review.csv) and [review JSON](docs/manual_review.json) distinguish raw simulated EV from **conservative, historically supported edge**. Blocked picks stay PASS even if their raw EV is enormous. Read the [edge-gate repair guide](docs/NFL_EDGE_BLOCKER_REPAIR.md) for remaining injury, quarterback and model-validation blockers. The system never places wagers and uses free infrastructure only.
+
 # Harbin NFL Analytics
 
 Leakage-safe NFL projection, probability, market-analysis, backtesting, context, risk-management, grading, monitoring, publication, and release-control platform.
