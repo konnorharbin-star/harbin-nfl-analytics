@@ -8,8 +8,8 @@ from __future__ import annotations
 
 import json
 import math
-from statistics import median
 from collections import defaultdict
+from statistics import median
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Sequence
