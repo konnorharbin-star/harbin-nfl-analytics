@@ -30,6 +30,8 @@ from .line_history import append_market_snapshots, load_market_snapshots
 from .market_intel import build_market_intelligence
 from .model_card import write_model_card
 from .monitoring import write_live_monitoring
+from .pregame import kickoff_iso_map
+from .price_edge_scan import write_price_edge_report
 from .policy import load_policy
 from .portfolio import apply_portfolio_controls
 from .pro_market import collect_current_markets
@@ -255,6 +257,19 @@ def run_operational_pipeline(
         week=target_week,
     )
 
+    # Independent free bookmaker-price scout. No football-model probability,
+    # recommended stake, execution call, or paid market feed is involved.
+    kickoff_times = {
+        game_id: datetime.fromisoformat(time)
+        for game_id, time in kickoff_iso_map(targets).items()
+        if time
+    }
+    price_edge_research = write_price_edge_report(
+        markets,
+        kickoffs=kickoff_times,
+        as_of=datetime.now(UTC),
+    )
+
     historical = build_archive_projection_dataset(
         schedules,
         start_season=history_start,
@@ -410,6 +425,7 @@ def run_operational_pipeline(
             "total": market_meta.get("total", 0),
         },
         "market_intelligence": market_meta,
+        "price_edge_research": price_edge_research["summary"],
         "decision_intelligence": decision_intelligence,
         "probability": probability,
         "current_context": context,
