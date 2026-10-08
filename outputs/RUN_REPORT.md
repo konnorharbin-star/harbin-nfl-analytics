@@ -1,9 +1,9 @@
 # Harbin NFL Run Report
 
 **Season / Week:** 2026 / 5  
-**Publication status:** FAIL  
+**Publication status:** WARN  
 **Release state:** RESEARCH  
-**Reconciliation:** FAIL  
+**Reconciliation:** PASS  
 
 ## Probability validation
 - Home-win Brier: **0.2287**.

@@ -18,7 +18,7 @@
     "extra_projection_games": [],
     "future_verified_quote_rows": 0,
     "games_without_candidate_rows": [],
-    "market_rows": 358,
+    "market_rows": 357,
     "market_source_errors": [],
     "meaning": "current-run structural and chronological data integrity; missing values are never fabricated",
     "missing_data_count": 0,
@@ -33,10 +33,10 @@
     "status": "OK",
     "target_games": 15,
     "unmatched_market_rows": 0,
-    "verified_quote_rows": 358,
+    "verified_quote_rows": 357,
     "warnings": []
   },
-  "generated_at": "2026-10-08T22:26:45.787898+00:00",
+  "generated_at": "2026-10-08T22:55:07.239135+00:00",
   "health": {
     "data_quality": {
       "candidate_rows": 45,
@@ -48,7 +48,7 @@
       "extra_projection_games": [],
       "future_verified_quote_rows": 0,
       "games_without_candidate_rows": [],
-      "market_rows": 358,
+      "market_rows": 357,
       "market_source_errors": [],
       "meaning": "current-run structural and chronological data integrity; missing values are never fabricated",
       "missing_data_count": 0,
@@ -63,7 +63,7 @@
       "status": "OK",
       "target_games": 15,
       "unmatched_market_rows": 0,
-      "verified_quote_rows": 358,
+      "verified_quote_rows": 357,
       "warnings": []
     },
     "live_readiness_score": 79.9,
@@ -112,7 +112,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-08T22:26:43.021503+00:00",
+    "model_generated_at": "2026-10-08T22:55:04.613249+00:00",
     "prediction_games": 15,
     "prediction_rows": 45,
     "season": 2026,
@@ -493,9 +493,9 @@
   "reconciliation": {
     "checks": [
       {
-        "detail": "predictions=45 metadata=358",
-        "name": "market_row_count",
-        "passed": false,
+        "detail": "predictions=45 metadata=45",
+        "name": "candidate_row_count",
+        "passed": true,
         "severity": "ERROR"
       },
       {
@@ -553,15 +553,8 @@
         "severity": "ERROR"
       }
     ],
-    "errors": [
-      {
-        "detail": "predictions=45 metadata=358",
-        "name": "market_row_count",
-        "passed": false,
-        "severity": "ERROR"
-      }
-    ],
-    "status": "FAIL"
+    "errors": [],
+    "status": "PASS"
   },
   "release": {
     "blockers": [
@@ -702,8 +695,8 @@
           "status": "ESTABLISHED SAMPLE",
           "verified_clv_coverage": 0.7965686274509803,
           "verified_roi_ci_95": [
-            -0.1415041130667899,
-            -0.01912408370959761
+            -0.1438318427892961,
+            -0.022872995907444293
           ]
         }
       },
@@ -781,20 +774,8 @@
     "state": "RESEARCH"
   },
   "schema_version": 1,
-  "status": "FAIL",
+  "status": "WARN",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 80.7,
-      "generated_at": "2026-10-08T17:55:06.478042+00:00",
-      "live_readiness_score": 79.9,
-      "model_generated_at": "2026-10-08T17:55:03.979864+00:00",
-      "publication_status": "FAIL",
-      "release_state": "RESEARCH",
-      "season": 2026,
-      "week": 5
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -922,6 +903,18 @@
       "generated_at": "2026-10-08T22:22:42.274420+00:00",
       "live_readiness_score": 79.9,
       "model_generated_at": "2026-10-08T22:22:39.646001+00:00",
+      "publication_status": "FAIL",
+      "release_state": "RESEARCH",
+      "season": 2026,
+      "week": 5
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 80.7,
+      "generated_at": "2026-10-08T22:26:45.787898+00:00",
+      "live_readiness_score": 79.9,
+      "model_generated_at": "2026-10-08T22:26:43.021503+00:00",
       "publication_status": "FAIL",
       "release_state": "RESEARCH",
       "season": 2026,

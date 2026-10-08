@@ -4,7 +4,7 @@
     "PASS": 45,
     "WAIT_MONITOR": 0
   },
-  "as_of": "2026-10-08T22:26:43.021503+00:00",
+  "as_of": "2026-10-08T22:55:04.613249+00:00",
   "league": "NFL",
   "limits": {
     "lookback_hours": 12,
@@ -25,8 +25,8 @@
     "Forward validation is required; observed price movement is not economic value."
   ],
   "observed_movements": {
-    "IMPROVED": 7,
-    "MIXED_LINE_PRICE": 0,
+    "IMPROVED": 6,
+    "MIXED_LINE_PRICE": 1,
     "NO_HISTORY": 0,
     "STABLE": 38,
     "WORSENED": 0
