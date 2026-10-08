@@ -746,5 +746,8 @@ def write_weekly_publication(
         "release_state": release_state.upper(),
         "presentation": "unified_nfl_weekly_picks_screenshot_v1",
         "rows_per_page": 14,
-        "columns": ["matchup", "projected_score", "win_probability", "moneyline", "spread", "total"],
+        "columns": [
+            "matchup", "projected_score", "win_probability",
+            "moneyline", "spread", "total",
+        ],
     }
