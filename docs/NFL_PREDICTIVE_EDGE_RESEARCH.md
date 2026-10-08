@@ -27,6 +27,12 @@ The `nfl.price_edge_scan` inspects **already-collected** public ESPN and Action 
 
 Published same-run scout: `docs/price_edge_research.json`, including the number of zero-match scans and excluded reasons.
 
+### Cross-book consensus disagreements (independent price-based challenger)
+
+In addition to cross-book theoretical arbitrage, the scout calculates a **leave-one-book-out** no-vig consensus from at least **three other named sportsbooks** quoting the exact same market line within a five-minute capture synchronization window. It rejects consensus references that disagree with each other by more than **2.5 percentage points**, and surfaces hypothetical market-implied EV above **5%** at a candidate sportsbook.
+
+This is a **candidate for manual investigation, not a proven value bet**. Removing each target sportsbook from its own reference guards against self-confirmation, but the other books may share correlated prices, the public captures may be delayed, bookmaker limits can vary, and a three-book median is not necessarily a sharp true probability. These data cannot alone certify an edge. Scan results include a separate `disagreement_watchlist`; an empty list means the price data did not support any candidate. Current NFL prediction probabilities are never used in this market-price reference.
+
 ## Operational constraints
 
 No paid data, authentication, browser accounts, wagering automation, wallet, order endpoint, deposits, transfers, placing orders or betting subscription. GitHub Actions/Python and free public data only.
