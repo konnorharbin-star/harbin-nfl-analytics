@@ -5,6 +5,7 @@ import json
 import polars as pl
 
 from nfl.publication import (
+    _write_cards,
     build_publication_snapshot,
     validate_publication_files,
     write_publication_bundle,
@@ -428,3 +429,33 @@ def test_final_canonical_report_rewrite_rebuilds_manifest_before_publication(
     assert validate_publication_files(
         output_dir=tmp_path / "outputs", docs_dir=tmp_path / "docs"
     )["status"] == "PASS"
+
+
+def test_empty_slate_overwrites_old_suggestions_with_header_only_csv(tmp_path) -> None:
+    outputs = tmp_path / "outputs"
+    docs = tmp_path / "docs"
+    outputs.mkdir()
+    docs.mkdir()
+    for name in ("portfolio_card.csv", "suggested_bets.csv", "quant_recommendations.csv"):
+        (outputs / name).write_text("OLD WEEK BET\\n")
+    _write_cards(_current().head(0), output_dir=outputs, docs_dir=docs)
+    for name in ("portfolio_card.csv", "suggested_bets.csv", "quant_recommendations.csv"):
+        value = (outputs / name).read_text()
+        assert "OLD WEEK BET" not in value
+        assert value.startswith("season,week,game_id")
+        assert len(value.strip().splitlines()) == 1
+    assert "No current executable model suggestions." in (
+        outputs / "quant_card.html"
+    ).read_text()
+
+
+def test_schema_free_empty_slate_still_writes_nonempty_safe_headers(tmp_path) -> None:
+    outputs = tmp_path / "outputs"
+    docs = tmp_path / "docs"
+    outputs.mkdir()
+    docs.mkdir()
+    _write_cards(pl.DataFrame(), output_dir=outputs, docs_dir=docs)
+    for name in ("portfolio_card.csv", "suggested_bets.csv", "quant_recommendations.csv"):
+        csv = (outputs / name).read_text()
+        assert csv.startswith("season,week,game_id")
+        assert csv.endswith("\\n")
