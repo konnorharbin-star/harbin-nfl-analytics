@@ -11,7 +11,7 @@
     "action_network_diagnostic": {
       "attempts": [
         {
-          "collector_observed_at": "2026-10-07T20:38:18.192250+00:00",
+          "collector_observed_at": "2026-10-08T01:01:07.633595+00:00",
           "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
           "games_with_markets": 15,
           "parsed_rows": 312,
@@ -132,7 +132,7 @@
                   "value"
                 ],
                 "last_update": null,
-                "odds": -108,
+                "odds": -109,
                 "side": "away",
                 "timestamp": null,
                 "updated_at": null,
@@ -175,7 +175,7 @@
           "team_matches": 15
         }
       ],
-      "collector_observed_at": "2026-10-07T20:38:18.192250+00:00",
+      "collector_observed_at": "2026-10-08T01:01:07.633595+00:00",
       "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
       "games_with_markets": 15,
       "parsed_rows": 312,
@@ -296,7 +296,7 @@
               "value"
             ],
             "last_update": null,
-            "odds": -108,
+            "odds": -109,
             "side": "away",
             "timestamp": null,
             "updated_at": null,
@@ -367,6 +367,6 @@
     ]
   },
   "status": "READY",
-  "total_rows": 14897,
+  "total_rows": 15254,
   "week": 5
 }
