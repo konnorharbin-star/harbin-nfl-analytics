@@ -5,8 +5,8 @@ import polars as pl
 from nfl.market_shrinkage import (
     calibration_buckets,
     evaluate_market_edge_shrinkage,
-    fixed_cohort_calibration,
     fit_alpha,
+    fixed_cohort_calibration,
     shrink_probability,
     signed_residual_probability,
     signed_residual_research,
