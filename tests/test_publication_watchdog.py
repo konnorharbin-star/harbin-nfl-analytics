@@ -128,7 +128,7 @@ def test_watchdog_workflow_is_read_only_and_does_not_cancel_main_model():
         / ".github/workflows/nfl-publication-watchdog.yml"
     ).read_text(encoding="utf-8")
     assert "contents: read" in workflow
-    assert "scripts/check_publication_watchdog.py" in workflow
+    assert "python -m scripts.check_publication_watchdog" in workflow
     assert "ref: main" in workflow
     assert "nfl-published-board-watchdog-" in workflow
     assert "uses: ./.github/workflows/nfl-model.yml" not in workflow
