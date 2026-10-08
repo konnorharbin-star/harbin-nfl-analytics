@@ -10,7 +10,7 @@ import csv
 import json
 import math
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 
@@ -18,7 +18,7 @@ def timestamp(value):
     dt = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
     if dt.tzinfo is None:
         raise ValueError("timezone required")
-    return dt.astimezone(timezone.utc)
+    return dt.astimezone(UTC)
 
 
 def number(value):
@@ -116,7 +116,7 @@ def read_csv(path):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--forecasts", required=True, help="Frozen, truly pregame model forecast CSV")
+    parser.add_argument("--forecasts", required=True, help="Frozen pregame forecast CSV")
     parser.add_argument("--finals", default="outputs/forward_edge_graded.csv")
     parser.add_argument("--output", default="reports/nfl_score_accuracy_diagnostic.json")
     args = parser.parse_args()
