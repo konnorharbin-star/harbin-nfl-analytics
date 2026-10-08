@@ -105,7 +105,7 @@ def write_canonical_report(
     else:
         csv_target.write_text(
             "season,week,game_id,home_team,away_team,quant_market,"
-            "quant_side,quant_signal\\n",
+            "quant_side,quant_signal\n",
             encoding="utf-8",
         )
 
