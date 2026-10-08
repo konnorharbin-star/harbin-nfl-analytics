@@ -83,7 +83,7 @@ def test_weekly_board_breaks_display_tie_toward_projected_winner() -> None:
     assert row["home_score"] == row["away_score"] + 1
 
 
-def test_weekly_publication_hides_unvalidated_research_signal(
+def test_weekly_publication_marks_strong_research_candidates_as_watch(
     tmp_path,
 ) -> None:
     current = _current().with_columns(
@@ -99,9 +99,27 @@ def test_weekly_publication_hides_unvalidated_research_signal(
         output_dir=tmp_path,
     )
     document = (tmp_path / "nfl_week_4.html").read_text()
+    assert document.count('<span class="badge watch">WATCH</span>') == 2
     assert '<span class="badge strong">STRONG</span>' not in document
     assert '<span class="badge bet">BET</span>' not in document
     assert '<span class="badge lean">LEAN</span>' not in document
+    assert "WATCH = raw model candidate" in document
+
+
+def test_weekly_publication_hides_watch_with_qb_uncertainty(tmp_path) -> None:
+    current = _current().with_columns(
+        pl.lit(True).alias("qb_certainty_veto"),
+        pl.lit("PASS").alias("quant_signal"),
+    )
+    write_weekly_publication(
+        current,
+        week=4,
+        updated_at="2026-10-02T16:41:28+00:00",
+        release_state="PAPER",
+        output_dir=tmp_path,
+    )
+    document = (tmp_path / "nfl_week_4.html").read_text()
+    assert '<span class="badge watch">WATCH</span>' not in document
 
 
 def test_weekly_publication_shows_evidence_gated_signal(tmp_path) -> None:
