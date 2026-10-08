@@ -54,6 +54,7 @@ on:
       - "nfl/decision_intelligence.py"
       - "nfl/edge_discovery.py"
       - "nfl/edge_timing.py"
+      - "nfl/forward_edge_validation.py"
       - "nfl/weather.py"
       - "nfl/pro_market.py"
       - "nfl/schedule_market.py"
@@ -83,6 +84,7 @@ on:
       - "tests/test_decision_intelligence.py"
       - "tests/test_edge_discovery.py"
       - "tests/test_edge_timing.py"
+      - "tests/test_forward_edge_validation.py"
       - "tests/test_operational_parity.py"
       - "tests/test_probability.py"
       - "tests/test_probability_runtime.py"
@@ -217,6 +219,19 @@ jobs:
           )
           git reset -- "${LIVE_LINE_STATE[@]}"
           git restore -- "${LIVE_LINE_STATE[@]}"
+
+          # The forward-edge grader owns these result files, never the live model.
+          # It must not race model publication/rebase on the same generated state.
+          FORWARD_EDGE_GRADED=(
+            reports/forward_edge_validation.json
+            reports/forward_edge_graded.csv
+            outputs/forward_edge_validation.json
+            outputs/forward_edge_graded.csv
+            docs/forward_edge_validation.json
+            docs/forward_edge_graded.csv
+          )
+          git reset -- "${FORWARD_EDGE_GRADED[@]}"
+          git restore -- "${FORWARD_EDGE_GRADED[@]}"
 
           if ! git diff --cached --quiet; then
             git commit -m "model: automated NFL operational refresh"
