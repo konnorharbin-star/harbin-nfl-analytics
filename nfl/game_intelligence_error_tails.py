@@ -5,8 +5,6 @@ No thresholds are optimized on outcomes, and no betting decisions are changed.
 """
 from __future__ import annotations
 
-import math
-
 import polars as pl
 
 from .contracts import DataContractError, require_columns
