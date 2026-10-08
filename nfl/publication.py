@@ -1111,6 +1111,14 @@ def write_publication_bundle(
         shutil.copyfile(first_png, latest_png)
     shutil.copyfile(latest_png, docs / "latest.png")
 
+    # Every public PNG page uses the exact same screenshot-style weekly renderer.
+    # Mirror both stable and cache-safe images, not just page one.
+    for raw_path in png_pages:
+        page_path = Path(str(raw_path))
+        if not page_path.exists() or page_path.stat().st_size <= 0:
+            raise RuntimeError(f"weekly NFL PNG page missing: {page_path}")
+        shutil.copyfile(page_path, docs / page_path.name)
+
     cache_safe_pages = publication.get("cache_safe_png_pages", [])
     if not isinstance(cache_safe_pages, list) or not cache_safe_pages:
         raise RuntimeError("cache-safe weekly NFL PNG publication is missing")
@@ -1120,6 +1128,10 @@ def write_publication_bundle(
             raise RuntimeError(
                 f"cache-safe weekly NFL PNG is missing or empty: {cache_safe_path}"
             )
+
+    for raw_path in cache_safe_pages:
+        page_path = Path(str(raw_path))
+        shutil.copyfile(page_path, docs / page_path.name)
 
     fresh_links = "\n".join(
         f"- [Fresh page {index} — cache-safe]({Path(str(path)).name})"
