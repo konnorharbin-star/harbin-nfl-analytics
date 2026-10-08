@@ -14,6 +14,7 @@ EXPECTED_WRITERS = {
     "forward-ledger-health.yml",
     "forward-shadow-summary.yml",
     "free-market-backtest.yml",
+    "game-intelligence.yml",
     "historical-edge-diagnostics.yml",
     "line-capture.yml",
     "live-grade.yml",
