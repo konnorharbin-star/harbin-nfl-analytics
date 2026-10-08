@@ -44,7 +44,7 @@
   "live_readiness_score": 79.9,
   "meaning": "operational/model-monitoring score; not a profitability guarantee",
   "scores": {
-    "calibration": 89.07670124431355,
+    "calibration": 89.07670124431354,
     "context": 65.0,
     "distribution_stability": 80.7,
     "freshness": 100.0,
