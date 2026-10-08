@@ -434,6 +434,66 @@ def _strictly_better(
 
 
 
+
+def archived_cohort_economics(frame: pl.DataFrame) -> dict[str, object]:
+    """Descriptive per-bet economic outcomes with explicit quote provenance.
+
+    Archives have no verified entry timestamps. A positive point estimate
+    or approximate interval is never proof of executable betting value.
+    """
+    outcomes: list[float] = []
+    clv: list[float] = []
+    verified = 0
+    for row in frame.iter_rows(named=True):
+        if str(row.get("result") or "").lower() not in {"win", "loss", "push"}:
+            continue
+        try:
+            net = float(row["net_units"])
+        except (TypeError, ValueError):
+            continue
+        if not math.isfinite(net):
+            continue
+        outcomes.append(net)
+        if row.get("entry_price_verified") is True:
+            verified += 1
+        value = row.get("clv_proxy")
+        try:
+            clv_value = float(value)
+        except (TypeError, ValueError):
+            continue
+        if math.isfinite(clv_value):
+            clv.append(clv_value)
+    n = len(outcomes)
+    if not n:
+        return {"status": "NO_GRADED_OUTCOMES", "bets": 0}
+    values = np.asarray(outcomes, dtype=float)
+    average = float(values.mean())
+    standard_error = (
+        float(values.std(ddof=1) / math.sqrt(n)) if n > 1 else None
+    )
+    return {
+        "status": "ARCHIVED_PRICE_RESEARCH_ONLY",
+        "bets": n,
+        "net_units": float(values.sum()),
+        "roi": average,
+        "approximate_roi_interval_95": (
+            [average - 1.96 * standard_error, average + 1.96 * standard_error]
+            if standard_error is not None else None
+        ),
+        "interval_method": "normal approximation; exploratory, not multiple-testing adjusted",
+        "positive_roi_lower_bound": (
+            average - 1.96 * standard_error > 0
+            if standard_error is not None else False
+        ),
+        "verified_entry_prices": verified,
+        "verified_entry_fraction": verified / n,
+        "clv_proxy_samples": len(clv),
+        "mean_clv_proxy": float(np.mean(clv)) if clv else None,
+        "execution_clv_verified": False,
+        "staking_authorized": False,
+    }
+
+
 def fixed_cohort_calibration(
     frame: pl.DataFrame,
     *,
@@ -540,6 +600,11 @@ def fixed_cohort_calibration(
         )
         output[label] = {
             "status": "DESCRIPTIVE_RESEARCH_ONLY",
+            "archived_economic_evidence": {
+                "validation_2024": archived_cohort_economics(validation),
+                "holdout_2025": archived_cohort_economics(holdout),
+            },
+            "economic_evidence_eligible_for_staking": False,
             "minimum_effect_in_both_years": material,
             "effect_size_thresholds": {"brier": 0.002, "log_loss": 0.004},
             "effect_size_by_year": effect_by_year,
