@@ -1,0 +1,37 @@
+name: NFL Intelligence Challenger Historical Evaluation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/game_intelligence_challenger.py"
+      - "run_game_intelligence_challenger.py"
+      - "tests/test_game_intelligence_challenger.py"
+      - ".github/workflows/game-intelligence-challenger.yml"
+
+jobs:
+  historical-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Integrity tests
+        run: python -m pytest -q tests/test_game_intelligence_challenger.py
+      - name: Evaluate historical chronological folds
+        run: |
+          python run_game_intelligence_challenger.py
+          cat reports/game_intelligence_challenger.json
+      - name: Publish report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-intelligence-challenger-historical
+          path: reports/game_intelligence_challenger.json
+          if-no-files-found: warn
