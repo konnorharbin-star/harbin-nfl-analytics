@@ -4,7 +4,7 @@
     "PASS": 45,
     "WAIT_MONITOR": 0
   },
-  "as_of": "2026-10-08T03:41:31.626352+00:00",
+  "as_of": "2026-10-08T14:24:00.342756+00:00",
   "league": "NFL",
   "limits": {
     "lookback_hours": 12,
@@ -25,18 +25,18 @@
     "Forward validation is required; observed price movement is not economic value."
   ],
   "observed_movements": {
-    "IMPROVED": 1,
-    "MIXED_LINE_PRICE": 0,
-    "NO_HISTORY": 0,
-    "STABLE": 44,
-    "WORSENED": 0
+    "IMPROVED": 9,
+    "MIXED_LINE_PRICE": 1,
+    "NO_HISTORY": 1,
+    "STABLE": 33,
+    "WORSENED": 1
   },
   "observed_quote_not_guaranteed_fill": true,
   "policy_and_stake_unchanged": true,
   "production_stake_authorized": false,
   "qualified_research_signals": 0,
   "rows": 45,
-  "same_book_prior_coverage": 1.0,
+  "same_book_prior_coverage": 0.9777777777777777,
   "schema_version": 1,
   "status": "RESEARCH_ONLY",
   "validated_timing_strategy": false

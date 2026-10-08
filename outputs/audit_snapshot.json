@@ -18,7 +18,7 @@
     "extra_projection_games": [],
     "future_verified_quote_rows": 0,
     "games_without_candidate_rows": [],
-    "market_rows": 358,
+    "market_rows": 360,
     "market_source_errors": [],
     "meaning": "current-run structural and chronological data integrity; missing values are never fabricated",
     "missing_data_count": 0,
@@ -33,10 +33,10 @@
     "status": "OK",
     "target_games": 15,
     "unmatched_market_rows": 0,
-    "verified_quote_rows": 358,
+    "verified_quote_rows": 360,
     "warnings": []
   },
-  "generated_at": "2026-10-08T03:41:33.612459+00:00",
+  "generated_at": "2026-10-08T14:24:02.490148+00:00",
   "health": {
     "data_quality": {
       "candidate_rows": 45,
@@ -48,7 +48,7 @@
       "extra_projection_games": [],
       "future_verified_quote_rows": 0,
       "games_without_candidate_rows": [],
-      "market_rows": 358,
+      "market_rows": 360,
       "market_source_errors": [],
       "meaning": "current-run structural and chronological data integrity; missing values are never fabricated",
       "missing_data_count": 0,
@@ -63,13 +63,13 @@
       "status": "OK",
       "target_games": 15,
       "unmatched_market_rows": 0,
-      "verified_quote_rows": 358,
+      "verified_quote_rows": 360,
       "warnings": []
     },
-    "live_readiness_score": 79.8,
+    "live_readiness_score": 79.9,
     "meaning": "operational health; not a profitability or staking signal",
     "monitor_alerts": [
-      "16 market rows have high model-vs-consensus disagreement",
+      "17 market rows have high model-vs-consensus disagreement",
       "fewer than two markets clear regime-specific edge reliability"
     ],
     "production_eligible": false,
@@ -112,7 +112,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-08T03:41:31.626352+00:00",
+    "model_generated_at": "2026-10-08T14:24:00.342756+00:00",
     "prediction_games": 15,
     "prediction_rows": 45,
     "season": 2026,
@@ -133,7 +133,7 @@
   "meaning": "NFL publication/audit snapshot. Readiness, model error, historical evidence, and forward evidence remain separate; none guarantees future profitability.",
   "monitoring": {
     "alerts": [
-      "16 market rows have high model-vs-consensus disagreement",
+      "17 market rows have high model-vs-consensus disagreement",
       "fewer than two markets clear regime-specific edge reliability"
     ],
     "drift_details": {
@@ -160,8 +160,8 @@
         "std_ratio": 0.9012
       }
     },
-    "live_readiness_score": 79.8,
-    "recent_readiness_delta": 0.0,
+    "live_readiness_score": 79.9,
+    "recent_readiness_delta": 0.10000000000000853,
     "scores": {
       "calibration": 89.07670124431355,
       "context": 65.0,
@@ -169,7 +169,7 @@
       "freshness": 100.0,
       "market_coverage": 100.0,
       "multi_book": 100.0,
-      "output_completeness": 91.9634703196347,
+      "output_completeness": 92.45053272450534,
       "regime_reliability": 0.0
     },
     "status": "WARN"
@@ -493,7 +493,7 @@
   "reconciliation": {
     "checks": [
       {
-        "detail": "predictions=45 metadata=358",
+        "detail": "predictions=45 metadata=360",
         "name": "market_row_count",
         "passed": false,
         "severity": "ERROR"
@@ -555,7 +555,7 @@
     ],
     "errors": [
       {
-        "detail": "predictions=45 metadata=358",
+        "detail": "predictions=45 metadata=360",
         "name": "market_row_count",
         "passed": false,
         "severity": "ERROR"
@@ -607,7 +607,7 @@
         "requirement": ">=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
         "value": {
           "feed": {
-            "current_week_rows": 19,
+            "current_week_rows": 222,
             "latest_age_days": null,
             "latest_reported_at": null,
             "reason": "current-week injury rows lack a timestamp column",
@@ -702,8 +702,8 @@
           "status": "ESTABLISHED SAMPLE",
           "verified_clv_coverage": 0.7965686274509803,
           "verified_roi_ci_95": [
-            -0.14003061191413296,
-            -0.01980356589675978
+            -0.1387280230911184,
+            -0.01950565734885394
           ]
         }
       },
@@ -783,18 +783,6 @@
   "schema_version": 1,
   "status": "FAIL",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 80.7,
-      "generated_at": "2026-10-08T02:28:46.921912+00:00",
-      "live_readiness_score": 79.8,
-      "model_generated_at": "2026-10-08T02:28:44.512833+00:00",
-      "publication_status": "FAIL",
-      "release_state": "RESEARCH",
-      "season": 2026,
-      "week": 5
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -926,10 +914,22 @@
       "release_state": "RESEARCH",
       "season": 2026,
       "week": 5
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 80.7,
+      "generated_at": "2026-10-08T03:41:33.612459+00:00",
+      "live_readiness_score": 79.8,
+      "model_generated_at": "2026-10-08T03:41:31.626352+00:00",
+      "publication_status": "FAIL",
+      "release_state": "RESEARCH",
+      "season": 2026,
+      "week": 5
     }
   ],
   "warnings": [
-    "16 market rows have high model-vs-consensus disagreement",
+    "17 market rows have high model-vs-consensus disagreement",
     "fewer than two markets clear regime-specific edge reliability",
     "quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state",
     "injury_personnel_freshness: >=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",

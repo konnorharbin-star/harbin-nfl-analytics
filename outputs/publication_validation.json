@@ -55,7 +55,7 @@
       "severity": "ERROR"
     },
     {
-      "detail": "docs=79.8 snapshot=79.8",
+      "detail": "docs=79.9 snapshot=79.9",
       "name": "monitor_copy",
       "passed": true,
       "severity": "ERROR"
@@ -97,7 +97,7 @@
       "severity": "ERROR"
     },
     {
-      "detail": "outputs/nfl_week_5_run_20261007_224131_CT_page1.png exists and is non-empty",
+      "detail": "outputs/nfl_week_5_run_20261008_092400_CT_page1.png exists and is non-empty",
       "name": "cache_safe_page1_present",
       "passed": true,
       "severity": "ERROR"

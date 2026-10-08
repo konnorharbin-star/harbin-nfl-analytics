@@ -42,7 +42,7 @@
       "requirement": ">=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
       "value": {
         "feed": {
-          "current_week_rows": 19,
+          "current_week_rows": 222,
           "latest_age_days": null,
           "latest_reported_at": null,
           "reason": "current-week injury rows lack a timestamp column",
@@ -137,8 +137,8 @@
         "status": "ESTABLISHED SAMPLE",
         "verified_clv_coverage": 0.7965686274509803,
         "verified_roi_ci_95": [
-          -0.14003061191413296,
-          -0.01980356589675978
+          -0.1387280230911184,
+          -0.01950565734885394
         ]
       }
     },
