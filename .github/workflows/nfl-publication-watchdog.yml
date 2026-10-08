@@ -32,5 +32,5 @@ jobs:
           python-version: "3.12"
       - name: Verify complete remote board and pre-kickoff refresh age
         run: |
-          python scripts/check_publication_watchdog.py \
+          python -m scripts.check_publication_watchdog \
             --github-summary "$GITHUB_STEP_SUMMARY"
