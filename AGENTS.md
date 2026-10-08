@@ -32,3 +32,10 @@
 - Do not create a new numbered modeling/research stage unless the user explicitly asks to reopen model development.
 - Evidence refreshes, forward grading, release-state transitions, bug fixes, and broken-source repairs do not count as new model stages.
 - Do not weaken historical, policy, CLV, entry-integrity, or forward-sample release gates to force PAPER -> SHADOW -> PRODUCTION.
+
+## Owner operating requirements — 2026-10-08
+- **Never place bets automatically.** The platform may research, rank, notify, display, and grade suggested bets, but cannot submit orders, make deposits, connect wagering accounts for execution, or auto-fund or auto-stake anything. Human placement is always outside this software.
+- **Remain free to operate.** Use open-source libraries, public/free legally accessible data and standard included GitHub resources. Do not add a paid odds API, paid database, paid hosting, new subscription, or a service with metered charges. If a free tool has quotas, fail closed or reduce collection frequency rather than incurring costs.
+- Model `stake_units` or `approved_units` fields, if retained for research, are internal estimates only and never instructions to a sportsbook. A change in model release state does not authorize order execution.
+- Recommendations are informational, not evidence of proven profitability. No unvalidated raw EV signal may be promoted to a confirmed market edge without point-in-time and out-of-sample evidence.
+- These operating requirements apply to every future sport, workflow, dashboard, integration and AI coding agent working in the project.
