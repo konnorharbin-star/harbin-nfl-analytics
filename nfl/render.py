@@ -745,4 +745,9 @@ def write_weekly_publication(
         "run_tag": run_tag,
         "release_state": release_state.upper(),
         "presentation": "cfb_style_weekly_picks_v3_cache_safe",
+        "rows_per_page": 14,
+        "columns": [
+            "matchup", "projected_score", "win_probability",
+            "moneyline", "spread", "total",
+        ],
     }
