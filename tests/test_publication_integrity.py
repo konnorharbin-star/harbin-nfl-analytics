@@ -60,7 +60,7 @@ def _publication(tmp_path: Path, *, pages: int = 2) -> tuple[Path, Path]:
     (docs / "audit_snapshot.json").write_text('{"status":"RESEARCH"}')
     readme = [
         "# Latest NFL model output",
-        f"**Season / Week:** 2026 / 5",
+        "**Season / Week:** 2026 / 5",
         f"**Updated:** {_display(RUN)}",
         "**Release state:** RESEARCH",
         *[f"- [Stable page]({Path(x).name})" for x in stable],
