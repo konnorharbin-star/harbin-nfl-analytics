@@ -133,7 +133,7 @@ def test_publication_fails_on_partial_or_stale_public_state(tmp_path, stale_path
     outputs, docs = _publication(tmp_path)
     write_publication_manifest(output_dir=outputs, docs_dir=docs)
     (tmp_path / stale_path).write_bytes(b"stale content")
-    _is_fail(outputs, docs, "stale" if "page2" in stale_path else "")
+    _is_fail(outputs, docs, "invalid image signature" if "page2" in stale_path else "")
 
 
 def test_stale_second_cache_safe_png_cannot_pass_page1_only_check(tmp_path):
