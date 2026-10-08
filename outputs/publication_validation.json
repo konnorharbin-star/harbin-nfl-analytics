@@ -97,7 +97,7 @@
       "severity": "ERROR"
     },
     {
-      "detail": "outputs/nfl_week_5_run_20261007_203940_CT_page1.png exists and is non-empty",
+      "detail": "outputs/nfl_week_5_run_20261007_210532_CT_page1.png exists and is non-empty",
       "name": "cache_safe_page1_present",
       "passed": true,
       "severity": "ERROR"
@@ -123,6 +123,12 @@
     {
       "detail": "docs/audit.html exists",
       "name": "public_audit_present",
+      "passed": true,
+      "severity": "ERROR"
+    },
+    {
+      "detail": "all canonical files and every PNG page match this run",
+      "name": "full_run_manifest_and_all_png_pages",
       "passed": true,
       "severity": "ERROR"
     }

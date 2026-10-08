@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-10-08T01:39:40.783093+00:00",
+  "as_of": "2026-10-08T02:05:32.289780+00:00",
   "betting_authorized": false,
   "blocked_games": 15,
   "blocker_counts": {
@@ -21,11 +21,13 @@
     "WEATHER_OR_VENUE_CONTEXT_UNKNOWN": 3
   },
   "forward_capture": {
-    "appended": 15,
+    "appended": 0,
     "historical_backfill": false,
     "official_score_or_stake_changed": false,
     "research_only": true,
-    "skipped": {},
+    "skipped": {
+      "previously_frozen": 15
+    },
     "status": "APPEND_ONLY_FIRST_PREGAME_CONTEXT",
     "total": 15
   },

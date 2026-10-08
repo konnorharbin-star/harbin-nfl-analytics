@@ -1,6 +1,6 @@
 {
   "context_intelligence": {
-    "as_of": "2026-10-08T01:39:40.783093+00:00",
+    "as_of": "2026-10-08T02:05:32.289780+00:00",
     "betting_authorized": false,
     "blocked_games": 15,
     "blocker_counts": {
@@ -22,11 +22,13 @@
       "WEATHER_OR_VENUE_CONTEXT_UNKNOWN": 3
     },
     "forward_capture": {
-      "appended": 15,
+      "appended": 0,
       "historical_backfill": false,
       "official_score_or_stake_changed": false,
       "research_only": true,
-      "skipped": {},
+      "skipped": {
+        "previously_frozen": 15
+      },
       "status": "APPEND_ONLY_FIRST_PREGAME_CONTEXT",
       "total": 15
     },
@@ -54,7 +56,7 @@
     "weather_venue_ready_games": 12
   },
   "current_context": {
-    "as_of": "2026-10-08T01:39:15.845255+00:00",
+    "as_of": "2026-10-08T02:05:07.609785+00:00",
     "components": {
       "injuries_personnel": 0.0,
       "quarterback": 0.8,
@@ -65,7 +67,7 @@
     "depth_feed_available": true,
     "expected_qb_identity_coverage": 1.0,
     "expected_qb_state": {
-      "as_of": "2026-10-08T01:39:15.845255+00:00",
+      "as_of": "2026-10-08T02:05:07.609785+00:00",
       "decision_ready_team_coverage": 0.9,
       "decision_ready_teams": 27,
       "identified_teams": 30,
@@ -174,7 +176,7 @@
     "status": "READY"
   },
   "edge_discovery": {
-    "as_of": "2026-10-08T01:39:40.783093+00:00",
+    "as_of": "2026-10-08T02:05:32.289780+00:00",
     "categories": {
       "EVIDENCE_OR_CONTEXT_BLOCKED": 45,
       "NO_POSITIVE_RAW_EDGE": 0,
@@ -216,7 +218,7 @@
       "PASS": 45,
       "WAIT_MONITOR": 0
     },
-    "as_of": "2026-10-08T01:39:40.783093+00:00",
+    "as_of": "2026-10-08T02:05:32.289780+00:00",
     "league": "NFL",
     "limits": {
       "lookback_hours": 12,
@@ -265,7 +267,7 @@
     "status": "APPEND_ONLY_FIRST_SNAPSHOT",
     "total_rows": 45
   },
-  "generated_at": "2026-10-08T01:39:40.783093+00:00",
+  "generated_at": "2026-10-08T02:05:32.289780+00:00",
   "market_coverage": {
     "games": 15,
     "moneyline": 15,
@@ -2854,7 +2856,7 @@
       "action_network_diagnostic": {
         "attempts": [
           {
-            "collector_observed_at": "2026-10-08T01:39:27.776470+00:00",
+            "collector_observed_at": "2026-10-08T02:05:19.822736+00:00",
             "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
             "games_with_markets": 15,
             "parsed_rows": 313,
@@ -3006,7 +3008,7 @@
                     "value"
                   ],
                   "last_update": null,
-                  "odds": -108,
+                  "odds": -109,
                   "side": "under",
                   "timestamp": null,
                   "updated_at": null,
@@ -3018,7 +3020,7 @@
             "team_matches": 15
           }
         ],
-        "collector_observed_at": "2026-10-08T01:39:27.776470+00:00",
+        "collector_observed_at": "2026-10-08T02:05:19.822736+00:00",
         "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
         "games_with_markets": 15,
         "parsed_rows": 313,
@@ -3170,7 +3172,7 @@
                 "value"
               ],
               "last_update": null,
-              "odds": -108,
+              "odds": -109,
               "side": "under",
               "timestamp": null,
               "updated_at": null,
