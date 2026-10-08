@@ -374,6 +374,71 @@ def enrich_edge_discovery(
     return enriched, report
 
 
+
+def forward_research_triage(row: Mapping[str, object]) -> dict[str, object]:
+    """Explain what must change before a 2026 quote can be researched further.
+
+    Watch status is observational, NEVER a recommendation or stake approval.
+    """
+    blockers = [
+        value for value in str(row.get("edge_discovery_reason") or "").split(";")
+        if value and value != "FULL_RESEARCH_EVIDENCE_GATES_PASSED_NOT_PRODUCTION_APPROVED"
+    ]
+    evidence_codes = {
+        "NFL_REGIME_MARKET_NOT_RELIABLE", "CANDIDATE_REGIME_NOT_SUPPORTED",
+        "PROBABILITY_RELIABILITY_BLOCKED", "NO_VERIFIED_INCREMENTAL_MODEL_VALUE",
+        "HOLDOUT_SELECTS_MARKET_ONLY", "NO_FROZEN_VALIDATED_SHRINKAGE",
+        "NO_POSITIVE_SHRUNK_EV", "NEGATIVE_ARCHIVED_MARKET_CI",
+        "MISSING_ARCHIVE_EVIDENCE", "PRODUCTION_MARKET_DISABLED",
+    }
+    context_codes = {
+        "CURRENT_INJURY_CONTEXT_NOT_FRESH", "QB_UNCERTAINTY",
+        "OTHER_CONTEXT_VETO",
+    }
+    quote_codes = {"HIGH_MARKET_DISAGREEMENT", "NO_VERIFIED_FRESH_QUOTE"}
+    evidence = sorted(set(blockers) & evidence_codes)
+    context = sorted(set(blockers) & context_codes)
+    quote = sorted(set(blockers) & quote_codes)
+    raw_ev = _number(row.get("quant_ev"))
+    stake = _number(row.get("portfolio_stake_units"))
+    return {
+        "season": row.get("season"),
+        "week": row.get("week"),
+        "game_id": row.get("game_id"),
+        "away_team": row.get("away_team"),
+        "home_team": row.get("home_team"),
+        "kickoff": row.get("kickoff"),
+        "market": row.get("quant_market"),
+        "side": row.get("quant_side"),
+        "book": row.get("quant_book"),
+        "price": row.get("quant_price"),
+        "odds": row.get("quant_odds"),
+        "quote_at": row.get("quant_quote_at"),
+        "raw_model_ev": raw_ev,
+        "research_shrunk_ev": _number(row.get("edge_shrunk_ev")),
+        "quote_status": row.get("edge_observed_quote_status"),
+        "triage_status": (
+            "NO_POSITIVE_RAW_DISCREPANCY" if raw_ev is None or raw_ev <= 0
+            else "EVIDENCE_BLOCKED" if evidence
+            else "CONTEXT_OR_PRICE_BLOCKED" if context or quote
+            else "RESEARCH_REVIEW_ONLY"
+        ),
+        "evidence_blockers": ";".join(evidence),
+        "context_blockers": ";".join(context),
+        "quote_blockers": ";".join(quote),
+        "all_blockers": ";".join(blockers),
+        "production_stake_units": stake,
+        "staking_authorized_by_triage": False,
+    }
+
+FORWARD_TRIAGE_COLUMNS = (
+    "season", "week", "game_id", "away_team", "home_team", "kickoff",
+    "market", "side", "book", "price", "odds", "quote_at", "raw_model_ev",
+    "research_shrunk_ev", "quote_status", "triage_status", "evidence_blockers",
+    "context_blockers", "quote_blockers", "all_blockers",
+    "production_stake_units", "staking_authorized_by_triage",
+)
+
 def write_edge_discovery(
     frame: pl.DataFrame,
     report: Mapping[str, object],
@@ -411,12 +476,21 @@ def write_edge_discovery(
 
         columns = list(BOARD_COLUMNS)
         columns.insert(columns.index("edge_stake_authorized"), "edge_quote_reason")
+        exports["edge_forward_triage.csv"] = [
+            forward_research_triage(row) for row in sorted_rows
+        ]
         for name, data in exports.items():
+            selected_columns = (
+                FORWARD_TRIAGE_COLUMNS if name == "edge_forward_triage.csv"
+                else columns
+            )
             with (directory / name).open("w", newline="") as handle:
-                writer = csv.DictWriter(handle, fieldnames=columns, extrasaction="ignore")
+                writer = csv.DictWriter(
+                    handle, fieldnames=selected_columns, extrasaction="ignore"
+                )
                 writer.writeheader()
                 for row in data:
-                    writer.writerow({k: row.get(k) for k in columns})
+                    writer.writerow({k: row.get(k) for k in selected_columns})
         (directory / "edge_discovery_report.json").write_text(
             json.dumps(dict(report), indent=2, sort_keys=True)
         )
