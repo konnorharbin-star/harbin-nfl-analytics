@@ -2,6 +2,7 @@ from datetime import date
 
 import polars as pl
 
+from nfl.data import canonical_team_code
 from nfl.ratings import (
     VALIDATED_PRIOR_SEASON_WEIGHT,
     FairScoreModel,
@@ -120,3 +121,39 @@ def test_default_prior_weight_is_applied_to_prior_team_rows() -> None:
 
     assert model.training_rows == 6
     assert abs(model.training_weight - expected_weight) < 1e-12
+
+
+
+def test_franchise_relocation_aliases_are_canonical() -> None:
+    assert canonical_team_code("OAK") == "LV"
+    assert canonical_team_code("SD") == "LAC"
+    assert canonical_team_code("STL") == "LA"
+    assert canonical_team_code("KC") == "KC"
+
+
+def test_raiders_relocation_keeps_prior_season_rating_history() -> None:
+    schedules = pl.DataFrame(
+        {
+            "season": [2019, 2019, 2020],
+            "week": [16, 17, 1],
+            "game_id": ["2019-a", "2019-b", "2020-target"],
+            "game_type": ["REG", "REG", "REG"],
+            "gameday": [
+                date(2019, 12, 22),
+                date(2019, 12, 29),
+                date(2020, 9, 13),
+            ],
+            "away_team": ["KC", "OAK", "KC"],
+            "home_team": ["OAK", "KC", "LV"],
+            "away_score": [24, 21, None],
+            "home_score": [27, 28, None],
+        }
+    )
+
+    model = fit_pregame_fair_score(schedules, 2020, 1, ridge=4.0)
+    projection = model.project("LV", "KC")
+
+    assert "LV" in model.teams
+    assert "OAK" not in model.teams
+    assert projection.home_points >= 0
+    assert projection.away_points >= 0

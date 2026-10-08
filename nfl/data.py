@@ -25,6 +25,19 @@ from .contracts import (
     require_unique,
 )
 
+FRANCHISE_TEAM_ALIASES = {
+    "OAK": "LV",
+    "SD": "LAC",
+    "STL": "LA",
+}
+
+
+def canonical_team_code(team: object) -> str:
+    """Map historical relocation codes onto the current franchise identifier."""
+
+    code = str(team or "").strip().upper()
+    return FRANCHISE_TEAM_ALIASES.get(code, code)
+
 
 def _normalize_depth_chart_schema(frame: pl.DataFrame) -> pl.DataFrame:
     """Map legacy and modern nflverse depth charts onto one temporal contract.
@@ -267,8 +280,12 @@ def schedule_to_team_games(schedules: pl.DataFrame) -> pl.DataFrame:
     home = games.select(
         common
         + [
-            pl.col("home_team").alias("team"),
-            pl.col("away_team").alias("opponent"),
+            pl.col("home_team")
+            .map_elements(canonical_team_code, return_dtype=pl.String)
+            .alias("team"),
+            pl.col("away_team")
+            .map_elements(canonical_team_code, return_dtype=pl.String)
+            .alias("opponent"),
             pl.col("home_score").cast(pl.Float64).alias("points_for"),
             pl.col("away_score").cast(pl.Float64).alias("points_against"),
             pl.lit(True).alias("is_home"),
@@ -277,8 +294,12 @@ def schedule_to_team_games(schedules: pl.DataFrame) -> pl.DataFrame:
     away = games.select(
         common
         + [
-            pl.col("away_team").alias("team"),
-            pl.col("home_team").alias("opponent"),
+            pl.col("away_team")
+            .map_elements(canonical_team_code, return_dtype=pl.String)
+            .alias("team"),
+            pl.col("home_team")
+            .map_elements(canonical_team_code, return_dtype=pl.String)
+            .alias("opponent"),
             pl.col("away_score").cast(pl.Float64).alias("points_for"),
             pl.col("home_score").cast(pl.Float64).alias("points_against"),
             pl.lit(False).alias("is_home"),
