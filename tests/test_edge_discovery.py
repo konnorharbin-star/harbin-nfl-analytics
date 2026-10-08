@@ -12,7 +12,6 @@ from nfl.edge_discovery import (
     EVIDENCE_SUPPORTED,
     NO_QUOTE,
     NO_RAW_EDGE,
-    RAW_WATCH,
     classify_research_edge,
     enrich_edge_discovery,
     write_edge_discovery,
