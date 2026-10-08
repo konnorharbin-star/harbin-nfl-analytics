@@ -94,6 +94,87 @@ def shrink_probability(
     return _sigmoid(market_logit + alpha * (model_logit - market_logit))
 
 
+
+SIGNED_ALPHA_GRID = (-0.5, -0.25, -0.1, 0.0, 0.1, 0.25, 0.5, 0.75, 1.0)
+
+
+def signed_residual_probability(
+    model_probability: float,
+    no_vig_probability: float,
+    alpha: float,
+) -> float:
+    """Research-only signed model-minus-market log-odds adjustment.
+
+    Negative alpha tests whether the raw NFL model disagreement is directionally
+    reversed. The result is NEVER an execution probability or a released bet.
+    """
+    if not -1.0 <= alpha <= 1.0:
+        raise ValueError("signed research alpha must be in [-1, 1]")
+    return _sigmoid(
+        _logit(no_vig_probability)
+        + alpha * (_logit(model_probability) - _logit(no_vig_probability))
+    )
+
+
+def signed_residual_research(
+    development: pl.DataFrame,
+    validation: pl.DataFrame,
+    holdout: pl.DataFrame,
+    *,
+    minimum_rows: int = 100,
+) -> dict[str, object]:
+    """Fit the signed adjustment only before 2024; report both later years untouched."""
+    grid: dict[str, object] = {}
+    options: list[tuple[float, float, float]] = []
+    for alpha in SIGNED_ALPHA_GRID:
+        actual, raw, market, _ = _probability_arrays(development, alpha=0)
+        corrected = np.asarray([
+            signed_residual_probability(model, price, alpha)
+            for model, price in zip(raw, market, strict=True)
+        ])
+        metrics = _loss_metrics(actual, corrected)
+        grid[f"{alpha:+.2f}"] = metrics.to_dict()
+        if metrics.rows >= minimum_rows and metrics.log_loss is not None:
+            options.append((metrics.log_loss, metrics.brier, alpha))
+    if not options:
+        return {"status": "INSUFFICIENT_DEVELOPMENT", "development_grid": grid,
+                "betting_policy_change_enabled": False}
+    selected = min(options)[2]
+
+    def score(frame: pl.DataFrame) -> dict[str, object]:
+        actual, raw, market, _ = _probability_arrays(frame, alpha=0)
+        corrected = np.asarray([
+            signed_residual_probability(model, price, selected)
+            for model, price in zip(raw, market, strict=True)
+        ])
+        return {
+            "research_adjustment": _loss_metrics(actual, corrected).to_dict(),
+            "sportsbook_no_vig": _loss_metrics(actual, market).to_dict(),
+            "raw_model": _loss_metrics(actual, raw).to_dict(),
+        }
+
+    validation_metrics = score(validation)
+    holdout_metrics = score(holdout)
+    return {
+        "status": "RESEARCH_ONLY",
+        "selected_alpha": selected,
+        "selection": "pre-2024 development log loss only",
+        "negative_alpha_means": "raw model disagreement direction reversed",
+        "development_grid": grid,
+        "validation_2024": validation_metrics,
+        "holdout_2025": holdout_metrics,
+        "improves_both_years_vs_market": (
+            _strictly_better(validation_metrics["research_adjustment"],
+                             validation_metrics["sportsbook_no_vig"])
+            and _strictly_better(holdout_metrics["research_adjustment"],
+                                 holdout_metrics["sportsbook_no_vig"])
+        ),
+        "betting_policy_change_enabled": False,
+        "canonical_market_probability_change_enabled": False,
+        "archive_entry_prices_verified": False,
+    }
+
+
 def _binary_outcome(value: object) -> float | None:
     result = str(value or "").strip().lower()
     if result == "win":
@@ -439,6 +520,10 @@ def evaluate_market_edge_shrinkage(
             "development_grid": development_grid,
             "validation_probability": validation_probability,
             "holdout_probability": holdout_probability,
+            "signed_residual_research": signed_residual_research(
+                development, validation, holdout,
+                minimum_rows=minimum_development_rows,
+            ),
             "calibration_diagnostics": {
                 "method": "fixed no-vig probability bins; descriptive only",
                 "validation_2024": calibration_buckets(validation),
