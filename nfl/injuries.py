@@ -16,6 +16,32 @@ import polars as pl
 from .contracts import DataContractError, require_columns
 
 MAX_INJURY_REPORT_AGE_DAYS = 7.0
+MIN_INJURY_REPORT_TIMESTAMP_COVERAGE = 0.95
+REPORT_TIMESTAMP_ALIASES = (
+    "date_modified", "reported_at", "report_datetime", "updated_at",
+    "last_updated", "timestamp", "report_date", "date",
+)
+
+
+def _source_report_timestamp(value: object) -> datetime | None:
+    """Only a source-origin, timezone-aware report time proves freshness.
+
+    Date-only strings and naive timestamps cannot establish an as-of time.
+    A collector's own retrieval timestamp is not an injury-report timestamp.
+    """
+    if isinstance(value, datetime):
+        stamp = value
+    elif isinstance(value, str) and ("T" in value or " " in value):
+        try:
+            stamp = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+        except ValueError:
+            return None
+    else:
+        return None
+    if stamp.tzinfo is None:
+        return None
+    return stamp.astimezone(UTC)
+
 
 
 def _column(frame: pl.DataFrame, *names: str) -> str | None:
@@ -141,25 +167,30 @@ def _admissible_rows(
     week: int,
     cutoff: datetime,
 ) -> tuple[list[dict[str, object]], str | None]:
-    modified_column = _column(
-        frame,
-        "date_modified",
-        "updated_at",
-        "timestamp",
-        "date",
-    )
     filtered = frame.filter(
         (pl.col("season") == season)
         & (pl.col("week").cast(pl.Int64, strict=False) <= week)
     )
+    available = [_column(frame, field) for field in REPORT_TIMESTAMP_ALIASES]
+    candidates = [name for name in available if name is not None]
+    source_rows = filtered.to_dicts()
+
+    # Some feed versions include an all-null legacy date_modified column
+    # alongside a populated reported_at field. Select source-provenance time
+    # with greatest coverage, never a synthetic fetch timestamp.
+    modified_column = (
+        max(candidates, key=lambda name: sum(
+            _source_report_timestamp(item.get(name)) is not None
+            for item in source_rows if int(item.get("week") or 0) == week
+        ))
+        if candidates else None
+    )
     rows: list[dict[str, object]] = []
-    for source in filtered.iter_rows(named=True):
-        modified: datetime | None = None
-        if modified_column and source.get(modified_column) not in {None, ""}:
-            try:
-                modified = _as_utc(str(source[modified_column]))
-            except ValueError:
-                modified = None
+    for source in source_rows:
+        modified = (
+            _source_report_timestamp(source.get(modified_column))
+            if modified_column else None
+        )
         if modified is not None and modified > cutoff:
             continue
         item = dict(source)
@@ -228,8 +259,23 @@ def injury_feed_freshness(
             "latest_age_days": None,
             "reason": "current-week injury timestamps are missing or invalid",
         }
+    coverage = len(stamps) / len(current)
     latest = max(stamps)
     age_days = max(0.0, (cutoff - latest).total_seconds() / 86400.0)
+    # One timestamped player cannot certify hundreds of undated rows.
+    if coverage < MIN_INJURY_REPORT_TIMESTAMP_COVERAGE:
+        return {
+            "status": "UNKNOWN",
+            "current_week_rows": len(current),
+            "timestamped_current_week_rows": len(stamps),
+            "timestamp_coverage": round(coverage, 4),
+            "latest_reported_at": latest.isoformat(),
+            "latest_age_days": round(age_days, 4),
+            "reason": (
+                f"only {len(stamps)}/{len(current)} current-week injury "
+                "rows have source-origin report timestamps"
+            ),
+        }
     status = "FRESH" if age_days <= MAX_INJURY_REPORT_AGE_DAYS else "STALE"
     return {
         "status": status,
