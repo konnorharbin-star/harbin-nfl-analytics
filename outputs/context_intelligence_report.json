@@ -1,0 +1,54 @@
+{
+  "as_of": "2026-10-08T01:39:40.783093+00:00",
+  "betting_authorized": false,
+  "blocked_games": 15,
+  "blocker_counts": {
+    "AWAY_INJURY_REPORT_UNVERIFIED": 15,
+    "HOME_INJURY_REPORT_UNVERIFIED": 15,
+    "INJURY_FEED_UNTIMED_OR_STALE": 15,
+    "QB_IDENTITY_OR_STARTER_CERTAINTY_UNRESOLVED": 3
+  },
+  "current_context_status": "PARTIAL",
+  "cutoffs_are_descriptive_not_optimized": true,
+  "flag_counts": {
+    "AWAY_LONG_TRAVEL": 3,
+    "AWAY_QB_CHANGE_UNREPRICED": 2,
+    "AWAY_SHORT_REST": 1,
+    "AWAY_TIMEZONE_SHIFT": 3,
+    "HOME_QB_CHANGE_UNREPRICED": 1,
+    "HOME_SHORT_REST": 3,
+    "PERSONNEL_RISK_SCORES_NOT_CURRENT": 15,
+    "WEATHER_OR_VENUE_CONTEXT_UNKNOWN": 3
+  },
+  "forward_capture": {
+    "appended": 15,
+    "historical_backfill": false,
+    "official_score_or_stake_changed": false,
+    "research_only": true,
+    "skipped": {},
+    "status": "APPEND_ONLY_FIRST_PREGAME_CONTEXT",
+    "total": 15
+  },
+  "fresh_personnel_games": 0,
+  "games": 15,
+  "historical_context_backfill_allowed": false,
+  "limitations": [
+    "No QB replacement effect, OL continuity coefficient, pass-rush or opponent-matchup strength was learned or applied from current feeds.",
+    "Absent team-specific injuries cannot be inferred healthy from a league-wide fresh timestamp or another team's injury report.",
+    "Missing injury-feed timestamps remain unknown and cannot be treated as up-to-date sportsbook execution evidence.",
+    "Rest and travel proxies do not establish causal spread/total value.",
+    "Each first pregame context snapshot must be frozen before kickoff; game outcomes are never read during feature extraction.",
+    "Weather availability is descriptive; no unsupported weather adjustment changes the official score."
+  ],
+  "market_candidate_rows": 45,
+  "new_moneyline_spread_total_adjustment_enabled": false,
+  "portfolio_and_fair_scores_unchanged": true,
+  "qb_ready_games": 12,
+  "ready_research_games": 0,
+  "rest_travel_ready_games": 15,
+  "season": 2026,
+  "source_injury_feed_status": "UNKNOWN",
+  "spec": "nfl_context_forensics_first_snapshot_v1",
+  "status": "CONTEXT_PROVENANCE_BLOCKED",
+  "weather_venue_ready_games": 12
+}

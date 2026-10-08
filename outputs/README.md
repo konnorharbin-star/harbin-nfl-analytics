@@ -1,12 +1,12 @@
 # Latest NFL model output
 
 **Season / Week:** 2026 / 5  
-**Updated:** Oct 7, 2026 · 8:13 PM CT  
+**Updated:** Oct 7, 2026 · 8:39 PM CT  
 **Release state:** RESEARCH  
 
 ## Fresh PNGs for mobile
-- [Fresh page 1 — cache-safe](nfl_week_5_run_20261007_201343_CT_page1.png)
-- [Fresh page 2 — cache-safe](nfl_week_5_run_20261007_201343_CT_page2.png)
+- [Fresh page 1 — cache-safe](nfl_week_5_run_20261007_203940_CT_page1.png)
+- [Fresh page 2 — cache-safe](nfl_week_5_run_20261007_203940_CT_page2.png)
 
 These filenames change on every run so GitHub/mobile cannot reuse an old image preview. Use these links when checking the latest model.
 
@@ -34,6 +34,8 @@ These filenames change on every run so GitHub/mobile cannot reuse an old image p
 - [Market and blended forecast comparisons](forward_market_benchmark_forecasts.csv)
 - [Fixed paper-rule and no-bet comparisons](forward_market_benchmark_policies.csv)
 - [Kickoff-week market benchmark trajectory](forward_market_benchmark_weeks.csv)
+- [NFL context source audit](context_intelligence_report.json)
+- [Game-level QB/injury/OL/rest/travel risk register](context_risk_register.csv)
 - [Run report](RUN_REPORT.md)
 - [Model card](MODEL_CARD.md)
 - [Publication validation](publication_validation.json)
