@@ -18,6 +18,7 @@ from .decision_intelligence import attach_decision_intelligence
 from .decision_ledger import append_portfolio_decisions
 from .edge_discovery import enrich_edge_discovery, write_edge_discovery
 from .edge_timing import enrich_edge_timing, write_edge_timing
+from .forward_edge_validation import append_forward_candidates
 from .free_market_backtest import build_archive_projection_dataset
 from .health import write_health
 from .line_history import append_market_snapshots, load_market_snapshots
@@ -439,6 +440,14 @@ def run_operational_pipeline(
     )
     meta["edge_timing"] = timing_report
     write_edge_timing(allocated, timing_report)
+    # All first game/market candidates, including PASS, are frozen before
+    # kickoff. This independent research cohort never changes allocation.
+    if persist_decisions:
+        meta["forward_edge_capture"] = append_forward_candidates(
+            allocated, captured_at=decision_at
+        )
+    else:
+        meta["forward_edge_capture"] = {"status": "disabled"}
     line_capture = (
         append_market_snapshots(markets, targets) if capture_lines else {"status": "disabled"}
     )
