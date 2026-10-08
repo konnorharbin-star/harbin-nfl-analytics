@@ -98,8 +98,16 @@ def write_canonical_report(
 
     csv_target = Path(output_csv)
     csv_target.parent.mkdir(parents=True, exist_ok=True)
-    if not current.is_empty():
+    if current.columns:
+        # Even a zero-game slate must replace any old predictions with a
+        # header-only current file, not keep last week's apparent picks.
         current.write_csv(csv_target)
+    else:
+        csv_target.write_text(
+            "season,week,game_id,home_team,away_team,quant_market,"
+            "quant_side,quant_signal\\n",
+            encoding="utf-8",
+        )
 
     bundle = write_publication_bundle(current, payload)
     publication["bundle"] = bundle
