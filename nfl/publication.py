@@ -288,15 +288,6 @@ def build_publication_snapshot(
         )
         trend_delta = readiness - baseline
 
-    manifest = validate_publication_manifest(output_dir=outputs, docs_dir=docs)
-    checks.append(
-        _check(
-            "full_run_manifest_and_all_png_pages",
-            manifest["status"] == "PASS",
-            str(manifest.get("reason", "manifest unavailable")),
-        )
-    )
-
     errors = [
         check
         for check in checks
@@ -1005,6 +996,15 @@ def validate_publication_files(
             "public_audit_present",
             (docs / "audit.html").exists(),
             "docs/audit.html exists",
+        )
+    )
+
+    manifest = validate_publication_manifest(output_dir=outputs, docs_dir=docs)
+    checks.append(
+        _check(
+            "full_run_manifest_and_all_png_pages",
+            manifest["status"] == "PASS",
+            str(manifest.get("reason", "manifest unavailable")),
         )
     )
 
