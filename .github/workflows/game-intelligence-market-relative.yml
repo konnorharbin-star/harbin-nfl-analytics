@@ -1,0 +1,37 @@
+name: NFL Market Relative Forecast Audit
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "nfl/game_intelligence_market_relative.py"
+      - "run_game_intelligence_market_relative.py"
+      - "tests/test_game_intelligence_market_relative.py"
+      - ".github/workflows/game-intelligence-market-relative.yml"
+
+jobs:
+  historical-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: python -m pip install -e ".[dev]"
+      - name: Test comparison integrity
+        run: python -m pytest -q tests/test_game_intelligence_market_relative.py
+      - name: Compare model to archived sportsbook benchmarks
+        run: python run_game_intelligence_market_relative.py
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-market-relative-forecast-audit
+          path: |
+            reports/game_intelligence_market_relative.json
+            reports/game_intelligence_market_relative.csv
+          if-no-files-found: warn
