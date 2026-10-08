@@ -1,0 +1,37 @@
+{
+  "as_of": "2026-10-08T00:21:38.476536+00:00",
+  "categories": {
+    "EVIDENCE_OR_CONTEXT_BLOCKED": 45,
+    "NO_POSITIVE_RAW_EDGE": 0,
+    "NO_VERIFIED_PRICE": 0,
+    "RAW_PRICE_DISAGREEMENT": 0,
+    "SUPPORTED_RESEARCH": 0
+  },
+  "independent_nfl_holdout_required": true,
+  "league": "NFL",
+  "notes": [
+    "Ranked from the single best observed market candidate per game and market, not exhaustive same-game alternative sides.",
+    "Raw EV/probability edge may be grossly optimistic; an archive market-only alpha=0 removes modeled edge.",
+    "No historic archive price is a verified contemporaneous executable entry.",
+    "Research prioritization is not a bet recommendation; all existing policy and veto decisions are preserved.",
+    "Even SUPPORTED_RESEARCH would require independent forward evidence and release gates before production use."
+  ],
+  "positive_raw_model_discrepancies": 45,
+  "production_staking_changed": false,
+  "release_gate_unmodified": true,
+  "rows": 45,
+  "schema_version": 1,
+  "source_provenance": {
+    "backtest": "ESPN archive provider-labeled opening/close; NOT independently timestamped actionable entry",
+    "regime": "NFL fixed 2024 validation and untouched 2025 holdout",
+    "shrinkage": "NFL chronological model-to-market log-odds shrinkage; research only"
+  },
+  "source_status": {
+    "archived_market_backtest": "LOADED",
+    "market_shrinkage": "LOADED",
+    "regime_reliability": "LOADED"
+  },
+  "staking_authorized_by_edge_board": false,
+  "status": "RESEARCH_ONLY",
+  "validated_support_rows": 0
+}
