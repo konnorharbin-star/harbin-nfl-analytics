@@ -11,7 +11,7 @@
     "action_network_diagnostic": {
       "attempts": [
         {
-          "collector_observed_at": "2026-10-08T07:25:23.539526+00:00",
+          "collector_observed_at": "2026-10-08T15:37:31.898232+00:00",
           "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
           "games_with_markets": 15,
           "parsed_rows": 314,
@@ -100,7 +100,7 @@
                   "value"
                 ],
                 "last_update": null,
-                "odds": 355,
+                "odds": 360,
                 "side": "away",
                 "timestamp": null,
                 "updated_at": null,
@@ -163,11 +163,11 @@
                   "value"
                 ],
                 "last_update": null,
-                "odds": -111,
+                "odds": -110,
                 "side": "under",
                 "timestamp": null,
                 "updated_at": null,
-                "value": 48
+                "value": 48.5
               }
             }
           },
@@ -175,7 +175,7 @@
           "team_matches": 15
         }
       ],
-      "collector_observed_at": "2026-10-08T07:25:23.539526+00:00",
+      "collector_observed_at": "2026-10-08T15:37:31.898232+00:00",
       "endpoint": "https://api.actionnetwork.com/web/v2/scoreboard/nfl",
       "games_with_markets": 15,
       "parsed_rows": 314,
@@ -264,7 +264,7 @@
               "value"
             ],
             "last_update": null,
-            "odds": 355,
+            "odds": 360,
             "side": "away",
             "timestamp": null,
             "updated_at": null,
@@ -327,11 +327,11 @@
               "value"
             ],
             "last_update": null,
-            "odds": -111,
+            "odds": -110,
             "side": "under",
             "timestamp": null,
             "updated_at": null,
-            "value": 48
+            "value": 48.5
           }
         }
       },
@@ -367,6 +367,6 @@
     ]
   },
   "status": "READY",
-  "total_rows": 15613,
+  "total_rows": 15972,
   "week": 5
 }
