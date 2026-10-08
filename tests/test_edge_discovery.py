@@ -18,7 +18,6 @@ from nfl.edge_discovery import (
 )
 from nfl.policy import DEFAULT_POLICY
 
-
 NOW = datetime(2026, 10, 7, 18, tzinfo=UTC)
 
 
@@ -223,7 +222,7 @@ def test_enrichment_retains_the_existing_signals_and_portfolio_stakes(tmp_path):
 
 def test_exports_are_deterministic_and_empty_supported_file_has_header(tmp_path):
     proofs = evidence(alpha=0.0, market_status="UNRELIABLE", incremental=False)
-    for name, data in zip(("r.json", "s.json", "a.json"), proofs):
+    for name, data in zip(("r.json", "s.json", "a.json"), proofs, strict=True):
         (tmp_path / name).write_text(json.dumps(data))
     ranked, report = enrich_edge_discovery(
         pl.DataFrame([candidate(), candidate(game_id="g2", quant_edge=-0.1, quant_ev=-0.1)]),
