@@ -8,7 +8,7 @@ import argparse
 import csv
 import json
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
 
@@ -55,8 +55,8 @@ def audit(records):
         "notes": [
             "This audit checks evidence readiness only; it does not score forecasts.",
             "Market-side probabilities are not independent game-level win predictions.",
-            "A proper score-accuracy comparison requires point-in-time margin/total forecasts joined to verified final scores.",
-            "Do not backfill a newer model's predictions and label them historical pregame forecasts."
+            "Accuracy requires frozen margin/total forecasts and verified final scores.",
+            "Do not relabel retroactive predictions as historical pregame forecasts."
         ]
     }
 
@@ -68,7 +68,8 @@ def main():
     args = parser.parse_args()
     data = audit(rows(args.input))
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.output).write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    content = json.dumps(data, indent=2, sort_keys=True) + "\n"
+    Path(args.output).write_text(content, encoding="utf-8")
     print(json.dumps(data, indent=2, sort_keys=True))
 
 
