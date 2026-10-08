@@ -628,6 +628,74 @@ def fixed_cohort_calibration(
     }
 
 
+
+def economic_cohort_shortlist(cohort_report: dict[str, object]) -> dict[str, object]:
+    """Prioritize frozen NFL cohorts without ever certifying executable edges."""
+    cohorts = cohort_report.get("cohorts", {})
+    if not isinstance(cohorts, dict):
+        return {"status": "MISSING_COHORTS", "candidates": []}
+    candidates: list[dict[str, object]] = []
+    for name, record in sorted(cohorts.items()):
+        if not isinstance(record, dict):
+            continue
+        evidence = record.get("archived_economic_evidence")
+        if not isinstance(evidence, dict):
+            candidates.append({
+                "cohort": name,
+                "status": "MISSING_ECONOMIC_EVIDENCE",
+                "staking_authorized": False,
+            })
+            continue
+        validation = evidence.get("validation_2024", {})
+        holdout = evidence.get("holdout_2025", {})
+        if not isinstance(validation, dict) or not isinstance(holdout, dict):
+            continue
+        valid_rows = min(int(validation.get("bets", 0)), int(holdout.get("bets", 0)))
+        returns = [validation.get("roi"), holdout.get("roi")]
+        profitable = all(isinstance(r, (float, int)) and r > 0 for r in returns)
+        lower_bounds = [
+            value.get("approximate_roi_interval_95")
+            for value in (validation, holdout)
+        ]
+        positive_bounds = all(
+            isinstance(b, list) and len(b) == 2 and b[0] is not None
+            and float(b[0]) > 0 for b in lower_bounds
+        )
+        verified = all(
+            int(value.get("verified_entry_prices", 0)) >= 30
+            for value in (validation, holdout)
+        )
+        if valid_rows < 30:
+            status = "INSUFFICIENT_ECONOMIC_SAMPLE"
+        elif not profitable:
+            status = "NOT_REPLICATED_POSITIVE_ROI"
+        elif not positive_bounds:
+            status = "UNCERTAIN_POSITIVE_ARCHIVED_ROI"
+        elif not verified:
+            status = "POSITIVE_ARCHIVE_UNVERIFIED_PRICES"
+        else:
+            status = "FORWARD_SHADOW_REVIEW_ONLY"
+        candidates.append({
+            "cohort": name,
+            "status": status,
+            "validation_bets": validation.get("bets"),
+            "holdout_bets": holdout.get("bets"),
+            "validation_roi": returns[0],
+            "holdout_roi": returns[1],
+            "positive_approximate_lower_bounds": positive_bounds,
+            "verified_entry_prices_both_years": verified,
+            "staking_authorized": False,
+        })
+    return {
+        "status": "RESEARCH_ONLY",
+        "selection_basis": "fixed cohorts; no search for optimal ROI threshold",
+        "price_provenance_required_for_forward_review": True,
+        "multiple_testing_adjusted": False,
+        "staking_authorized": False,
+        "candidates": candidates,
+    }
+
+
 def evaluate_market_edge_shrinkage(
     bets: pl.DataFrame,
     *,
@@ -754,6 +822,12 @@ def evaluate_market_edge_shrinkage(
     else:
         research_conclusion = "PARTIAL_INCREMENTAL_MODEL_VALUE"
 
+    cohort_report = fixed_cohort_calibration(
+        bets,
+        validation_season=validation_season,
+        holdout_season=holdout_season,
+        min_development=minimum_development_rows,
+    )
     return {
         "version": 1,
         "status": "RESEARCH_ONLY",
@@ -765,12 +839,8 @@ def evaluate_market_edge_shrinkage(
         "validated_shrinkage_markets": validated_markets,
         "incremental_model_value_markets": incremental_markets,
         "markets": markets,
-        "fixed_cohort_research": fixed_cohort_calibration(
-            bets,
-            validation_season=validation_season,
-            holdout_season=holdout_season,
-            min_development=minimum_development_rows,
-        ),
+        "fixed_cohort_research": cohort_report,
+        "economic_cohort_shortlist": economic_cohort_shortlist(cohort_report),
         "canonical_market_probability_change_enabled": False,
         "betting_policy_change_enabled": False,
         "forward_shrinkage_shadow_recommended": False,
