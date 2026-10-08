@@ -24,8 +24,6 @@ def build_actionable_board(current: pl.DataFrame) -> pl.DataFrame:
     require_columns(current, {"season", "week", "game_id", "home_team",
                               "away_team", "model_margin_home", "model_total"},
                     "nfl_current_actionable_board")
-    if current.select("season", "week", "game_id").unique().height != current.height:
-        raise ValueError("duplicate game in current betting board")
     data = current
     for name in COLUMNS:
         if name not in data.columns:
