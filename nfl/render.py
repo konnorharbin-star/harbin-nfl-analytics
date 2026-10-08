@@ -744,7 +744,7 @@ def write_weekly_publication(
         "latest_png": str(latest_path),
         "run_tag": run_tag,
         "release_state": release_state.upper(),
-        "presentation": "unified_nfl_weekly_picks_screenshot_v1",
+        "presentation": "cfb_style_weekly_picks_v3_cache_safe",
         "rows_per_page": 14,
         "columns": [
             "matchup", "projected_score", "win_probability",
