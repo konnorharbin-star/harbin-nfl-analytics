@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import math
+from statistics import median
 from collections import defaultdict
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -20,6 +21,9 @@ from .market import american_to_decimal
 MAX_QUOTE_AGE = timedelta(minutes=10)
 MAX_SYNCHRONIZATION_GAP = timedelta(minutes=5)
 MIN_THEORETICAL_MARGIN = 0.005
+MIN_CONSENSUS_OTHER_BOOKS = 3
+MIN_CONSENSUS_THEORETICAL_EV = 0.05
+MAX_CONSENSUS_DISPERSION = 0.025
 ALLOWED_FREE_PROVIDERS = frozenset({"espn", "action_network"})
 SIDES = {
     "moneyline": frozenset({"home", "away"}),
@@ -133,6 +137,7 @@ def scan_price_edges(
         groups[(q["game_id"], q["market"], q["line"])].append(q)
 
     opportunities = []
+    disagreement_watchlist = []
     examined = 0
     for (game, kind, line), observations in sorted(groups.items()):
         sides = sorted(SIDES[kind])
@@ -154,6 +159,67 @@ def scan_price_edges(
         if not first or not second:
             continue
         examined += 1
+
+        # Potential mispricing research: compare a sportsbook side ONLY to
+        # leave-one-book-out no-vig prices from at least three other books.
+        # This does NOT establish a true win probability or positive EV.
+        complete_books = {}
+        for quote in distinct.values():
+            complete_books.setdefault(quote["book_key"], {})[quote["side"]] = quote
+        complete_books = {
+            key: sides_by_book for key, sides_by_book in complete_books.items()
+            if set(sides_by_book) == set(sides)
+        }
+        for book, book_sides in complete_books.items():
+            for side in sides:
+                selected = book_sides[side]
+                contemporaneous = []
+                for other, other_sides in complete_books.items():
+                    if other == book:
+                        continue
+                    if (
+                        abs(selected["observed_at"] -
+                            other_sides[side]["observed_at"])
+                        > MAX_SYNCHRONIZATION_GAP
+                        or abs(selected["observed_at"] -
+                               other_sides[
+                                   next(x for x in sides if x != side)
+                               ]["observed_at"])
+                        > MAX_SYNCHRONIZATION_GAP
+                    ):
+                        continue
+                    counterpart = other_sides[next(x for x in sides if x != side)]
+                    raw_p = 1 / other_sides[side]["decimal"]
+                    raw_opposite = 1 / counterpart["decimal"]
+                    contemporaneous.append(raw_p / (raw_p + raw_opposite))
+                if len(contemporaneous) < MIN_CONSENSUS_OTHER_BOOKS:
+                    continue
+                estimated_probability = median(contemporaneous)
+                spread = max(contemporaneous) - min(contemporaneous)
+                if spread > MAX_CONSENSUS_DISPERSION:
+                    continue
+                theoretical_ev = estimated_probability * selected["decimal"] - 1
+                if theoretical_ev <= MIN_CONSENSUS_THEORETICAL_EV:
+                    continue
+                disagreement_watchlist.append({
+                    "game_id": game,
+                    "market": kind, "line": line,
+                    "side": side,
+                    "book": selected["book"],
+                    "american_odds": selected["price"],
+                    "snapshot_at": selected["observed_at"].isoformat(),
+                    "reference_excludes_candidate_book": True,
+                    "other_books": len(contemporaneous),
+                    "median_other_books_no_vig_probability":
+                        round(estimated_probability, 6),
+                    "reference_probability_range": round(spread, 6),
+                    "market_based_theoretical_ev": round(theoretical_ev, 6),
+                    "model_win_probability_used": False,
+                    "true_edge_proven": False,
+                    "source_quote_origin_time_verified": False,
+                    "human_action": "MANUAL_RESEARCH_ONLY_NOT_AN_EXECUTABLE_BET",
+                })
+
         eligible_pairs = []
         for a in first:
             for b in second:
@@ -185,6 +251,9 @@ def scan_price_edges(
         }
         opportunities.append(opportunity)
     opportunities.sort(key=lambda x: -x["theoretical_two_way_margin"])
+    disagreement_watchlist.sort(
+        key=lambda x: -x["market_based_theoretical_ev"]
+    )
     return {
         "schema_version": 1,
         "generated_at": stamp.isoformat(),
@@ -199,6 +268,7 @@ def scan_price_edges(
             "admissible_side_quotes": len(quotes),
             "matched_two_way_market_lines": examined,
             "theoretical_arbitrage_observations": len(opportunities),
+            "leave_one_book_out_consensus_disagreements": len(disagreement_watchlist),
             "excluded_snapshots": excluded,
         },
         "limits": (
@@ -209,6 +279,7 @@ def scan_price_edges(
             "Prices must be manually rechecked. No EV or future profitability inferred."
         ),
         "opportunities": opportunities,
+        "disagreement_watchlist": disagreement_watchlist,
     }
 
 def write_price_edge_report(
