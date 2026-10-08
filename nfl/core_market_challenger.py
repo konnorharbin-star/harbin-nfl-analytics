@@ -61,12 +61,11 @@ def compare_core_challenger(
                 & pl.col(market).is_finite()
             )
             n = observed.height
-            def mae(column: str) -> float | None:
-                return float(observed.select(
+            base_mae, alt_mae, market_mae = (
+                float(observed.select(
                     (pl.col(column) - pl.col(actual)).abs().mean()
                 ).item()) if n else None
-            base_mae, alt_mae, market_mae = (
-                mae(baseline), mae(challenger_col), mae(market)
+                for column in (baseline, challenger_col, market)
             )
             result[target] = {
                 "games": n,
