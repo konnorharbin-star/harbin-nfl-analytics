@@ -12,13 +12,12 @@ import polars as pl
 from .contracts import DataContractError, require_columns
 
 KEYS = ("season", "week", "game_id")
-PREGAME_FEATURES = (
-    "recent_epa_matchup_edge",
-    "recent_success_matchup_edge",
-    "recent_pass_epa_matchup_edge",
-    "recent_rush_epa_matchup_edge",
-    "recent_explosive_matchup_edge",
-    "recent_early_down_epa_matchup_edge",
+from .recent_form import RECENT_PBP_METRICS
+
+PREGAME_FEATURES = tuple(
+    f"recent_{metric}_{target}_signal"
+    for metric in RECENT_PBP_METRICS
+    for target in ("margin", "total")
 )
 # Snapshot field names are validated against the actual existing feature schema.
 FORBIDDEN = (
