@@ -14,6 +14,10 @@ from zoneinfo import ZoneInfo
 import polars as pl
 
 from .policy import load_policy
+from .publication_integrity import (
+    validate_publication_manifest,
+    write_publication_manifest,
+)
 
 PUBLICATION_SCHEMA_VERSION = 1
 
@@ -283,6 +287,15 @@ def build_publication_snapshot(
             else (ordered[middle - 1] + ordered[middle]) / 2.0
         )
         trend_delta = readiness - baseline
+
+    manifest = validate_publication_manifest(output_dir=outputs, docs_dir=docs)
+    checks.append(
+        _check(
+            "full_run_manifest_and_all_png_pages",
+            manifest["status"] == "PASS",
+            str(manifest.get("reason", "manifest unavailable")),
+        )
+    )
 
     errors = [
         check
@@ -1148,7 +1161,8 @@ def write_publication_bundle(
         "- [Game-level QB/injury/OL/rest/travel risk register](context_risk_register.csv)\n"
         "- [Run report](RUN_REPORT.md)\n"
         "- [Model card](MODEL_CARD.md)\n"
-        "- [Publication validation](publication_validation.json)\n\n"
+        "- [Publication validation](publication_validation.json)\n"
+        "- [Current-run file fingerprint manifest](publication_manifest.json)\n\n"
         "The fresh and stable PNGs contain the same run; only the fresh filename "
         "is intended to defeat cached image previews.\n"
     )
@@ -1163,6 +1177,9 @@ def write_publication_bundle(
 
     _write_cards(current, output_dir=outputs, docs_dir=docs)
     _append_trend(snapshot, trend_path)
+    # Cryptographically reconcile every current-run PNG page, research/picks CSV,
+    # README timestamp and public copies BEFORE declaring a successful publish.
+    write_publication_manifest(output_dir=outputs, docs_dir=docs)
 
     validation = validate_publication_files(output_dir=outputs, docs_dir=docs)
     for target in (
@@ -1186,5 +1203,6 @@ def write_publication_bundle(
         "public_audit": str(docs / "audit.html"),
         "public_quant": str(docs / "quant.html"),
         "validation": str(outputs / "publication_validation.json"),
+        "manifest": str(outputs / "publication_manifest.json"),
         "trend_history": str(trend_path),
     }
