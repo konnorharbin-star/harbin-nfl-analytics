@@ -16,7 +16,6 @@ from nfl.edge_timing import (
 from nfl.market import american_implied_probability, expected_value_per_unit
 from nfl.policy import DEFAULT_POLICY
 
-
 NOW = datetime(2026, 10, 7, 18, tzinfo=UTC)
 KICKOFF = (NOW + timedelta(days=4)).isoformat()
 
