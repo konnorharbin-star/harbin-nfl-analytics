@@ -18,7 +18,7 @@ print(shadow_metrics("frozen_predictions.csv"))
 
 Prediction comparison contract: `game_id,season,kickoff_at,forecast_at,base_margin,candidate_margin,actual_margin`. Each challenger forecast must be **generated and archived pregame** without retraining on outcomes from the evaluation period. Metrics are MAE and RMSE (pooled + by season). Better MAE on one sample does not authorize use in betting; maintain an untouched chronological holdout, evaluate probabilistic calibration and independently verified executable odds where available, test uncertainty, and retain a zero-weight release gate until validated.
 
-Known limitations: injury gap uses the largest unavailable player's talent minus the highest confirmed reserve talent, not a causal impact estimate, and the current unit rollups do not yet include scheme, snaps, lineup substitutions, full 11-on-11 starter validation, or exposure-adjusted depth. The evaluator checks forecast cutoff but cannot independently prove forecasts were genuinely archived pregame. Treat external immutable logs as the authority.
+Known limitations: only the QB unit calculates a confirmed QB1-out-to-named-starter rating gap, not a causal impact estimate. Other units return no injury replacement gap, and these research rollups do not yet model scheme, snaps, full starter coverage, or exposure-adjusted depth. The evaluator checks forecast cutoff but cannot independently prove forecasts were genuinely archived pregame. Treat external immutable logs as the authority.
 
 ## Phase 6 — independently sourced pregame replacement impact
 
