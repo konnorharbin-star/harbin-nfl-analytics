@@ -3,74 +3,74 @@
   "file_count": 16,
   "files": [
     {
-      "bytes": 31854,
+      "bytes": 31861,
       "path": "docs/audit_snapshot.json",
-      "sha256": "81a70f785a5e7ba263a6967eab8f8a6dd9bac47a1040c252da9ff83f0492cc58"
+      "sha256": "daecfdfaa1ce4c539ed3a9ad9ef78560f767b2436a6fc6d8d8df763761183186"
     },
     {
-      "bytes": 7030,
+      "bytes": 7029,
       "path": "docs/index.html",
-      "sha256": "0b10bb09a80ccd9634d0f82824b9c46721bb98670f2f235d498f4240f00cd482"
+      "sha256": "90e29fccbfbefd42588117e87d642984c13ec195f9b5bf670cf0e43c01423563"
     },
     {
-      "bytes": 168848,
+      "bytes": 168846,
       "path": "docs/latest.csv",
-      "sha256": "ed7fbffd75c963b7adee1125b4a7267378e6ab67142247a0cf16ff1e5c5f4a42"
+      "sha256": "53bcbb1888631b7860a2588ac077bd318e4aa2265c9cab5ef0c6ed478e1c291e"
     },
     {
-      "bytes": 746243,
+      "bytes": 746276,
       "path": "docs/latest.json",
-      "sha256": "74292d9889da905493af2a5b107e41f5621d027772c940f4e36c7c3d25efb478"
+      "sha256": "71f568dcc9537f08702dda0c4acf2fa02cc8fe0ac735595cf642f23851321dc9"
     },
     {
-      "bytes": 78136,
+      "bytes": 78437,
       "path": "docs/latest.png",
-      "sha256": "5a70a2ebe11eb23db8515df616ab72f28f08e858e09fbbc9859f34353af06985"
+      "sha256": "506672d3f6295f8952086f36f4e02d9200bd6ca86144c2b8c479e82e5e1b5fe7"
     },
     {
-      "bytes": 8878,
+      "bytes": 8862,
       "path": "docs/quant.html",
-      "sha256": "346db6d6204926965d311f7426133d9348ece4a76157d373ec2274d89ba4343b"
+      "sha256": "661da7ff1231842952234a57f99dd5906c51b50c574a79cc3d9d4ab5cad4b602"
     },
     {
-      "bytes": 2164,
+      "bytes": 2163,
       "path": "outputs/README.md",
-      "sha256": "b62973050b69002c235f7908b3ecec36c653bf0a374cbb7e6cc3456df80b0c13"
+      "sha256": "3b9383db697d4ba984b3efa49f2f54fa4e6307b44baca92c36c1814a961c6a75"
     },
     {
-      "bytes": 746243,
+      "bytes": 746276,
       "path": "outputs/current_model.json",
-      "sha256": "74292d9889da905493af2a5b107e41f5621d027772c940f4e36c7c3d25efb478"
+      "sha256": "71f568dcc9537f08702dda0c4acf2fa02cc8fe0ac735595cf642f23851321dc9"
     },
     {
-      "bytes": 168848,
+      "bytes": 168846,
       "path": "outputs/current_predictions.csv",
-      "sha256": "ed7fbffd75c963b7adee1125b4a7267378e6ab67142247a0cf16ff1e5c5f4a42"
+      "sha256": "53bcbb1888631b7860a2588ac077bd318e4aa2265c9cab5ef0c6ed478e1c291e"
     },
     {
-      "bytes": 78136,
+      "bytes": 78437,
       "path": "outputs/latest.png",
-      "sha256": "5a70a2ebe11eb23db8515df616ab72f28f08e858e09fbbc9859f34353af06985"
+      "sha256": "506672d3f6295f8952086f36f4e02d9200bd6ca86144c2b8c479e82e5e1b5fe7"
     },
     {
-      "bytes": 7030,
+      "bytes": 7029,
       "path": "outputs/nfl_week_5.html",
-      "sha256": "0b10bb09a80ccd9634d0f82824b9c46721bb98670f2f235d498f4240f00cd482"
+      "sha256": "90e29fccbfbefd42588117e87d642984c13ec195f9b5bf670cf0e43c01423563"
     },
     {
-      "bytes": 78136,
+      "bytes": 78437,
       "path": "outputs/nfl_week_5_page1.png",
-      "sha256": "5a70a2ebe11eb23db8515df616ab72f28f08e858e09fbbc9859f34353af06985"
+      "sha256": "506672d3f6295f8952086f36f4e02d9200bd6ca86144c2b8c479e82e5e1b5fe7"
     },
     {
-      "bytes": 78136,
-      "path": "outputs/nfl_week_5_run_20261009_122906_CT_page1.png",
-      "sha256": "5a70a2ebe11eb23db8515df616ab72f28f08e858e09fbbc9859f34353af06985"
+      "bytes": 78437,
+      "path": "outputs/nfl_week_5_run_20261009_132316_CT_page1.png",
+      "sha256": "506672d3f6295f8952086f36f4e02d9200bd6ca86144c2b8c479e82e5e1b5fe7"
     },
     {
-      "bytes": 8878,
+      "bytes": 8862,
       "path": "outputs/quant_card.html",
-      "sha256": "346db6d6204926965d311f7426133d9348ece4a76157d373ec2274d89ba4343b"
+      "sha256": "661da7ff1231842952234a57f99dd5906c51b50c574a79cc3d9d4ab5cad4b602"
     },
     {
       "bytes": 2198,
@@ -78,16 +78,16 @@
       "sha256": "ec89e649e4e96c1b00cc1e4f270c63a9d003f1e74b907e725650ae95c64a6d5d"
     },
     {
-      "bytes": 30817,
+      "bytes": 30618,
       "path": "outputs/suggested_bets.csv",
-      "sha256": "d738cf205830d56271576635196311028da862f660d545acc75457a2911819e3"
+      "sha256": "7a88fb50731c3304372bab15bb58b7ce0ac06e7b5a1c54a160cb5d94968a08b2"
     }
   ],
-  "generated_at": "2026-10-09T17:29:06.470852+00:00",
+  "generated_at": "2026-10-09T18:23:16.492308+00:00",
   "page_count": 1,
   "release_state": "RESEARCH",
-  "report_generated_at": "2026-10-09T17:29:07.817304+00:00",
-  "run_tag": "20261009_122906_CT",
+  "report_generated_at": "2026-10-09T18:23:19.082281+00:00",
+  "run_tag": "20261009_132316_CT",
   "schema_version": 1,
   "scope": "Exactly one canonical run: model, forecasts, suggestions, all PNG pages, live README and public docs; no claim of bet fills.",
   "season": 2026,
