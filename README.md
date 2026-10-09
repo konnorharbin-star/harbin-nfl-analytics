@@ -1,3 +1,7 @@
+## NFL player-prop probability shadow (unpriced)
+
+The [empirical player-prop over/under experiment](docs/NFL_PLAYER_PROP_PROBABILITY_RESEARCH.md) builds fixed hypothetical half-point probability curves from 2024 pregame forecasting errors, compares challenger and rolling baseline on 2025 diagnostic outcomes, and freezes first-seen 2026 curves. Read the [Brier/log-loss/calibration report](docs/player_prop_probability_shadow.json) and [research curves](docs/player_prop_probability_shadow.csv). These are **not bookmaker odds or tradeable betting edges**; player availability and market validation remain unproven.
+
 ## NFL player-stat forecasting challenger (free, research-only)
 
 The [chronological player-prop challenger](docs/NFL_PLAYER_PROP_CHALLENGER.md) generates pregame receptions, receiving-yard, rushing-yard and passing-yard mean forecasts using only prior games. It tests 2024-selected settings against a three-game baseline on 2025 history, then freezes first-seen 2026 predictions. The [published report](docs/player_prop_shadow.json), [forecast table](docs/player_prop_shadow.csv) and `history/player_prop_forward.csv` **do not price bets** because verified two-way player prop odds and calibrated threshold probabilities are still unavailable. Existing betting gates and no-wager requirements are unchanged.
