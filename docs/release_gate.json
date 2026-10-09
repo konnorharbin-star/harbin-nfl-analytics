@@ -31,7 +31,7 @@
       "passed": false,
       "requirement": ">=95% current games with identified, decision-ready expected starting-QB state",
       "value": {
-        "decision_ready_coverage": 0.7857,
+        "decision_ready_coverage": 0.6429,
         "identity_coverage": 1.0
       }
     },
@@ -56,7 +56,7 @@
       "name": "context_coverage",
       "passed": false,
       "requirement": ">=90% current injury/rest/weather/travel context coverage",
-      "value": 0.6607
+      "value": 0.625
     },
     {
       "detail": "",
@@ -64,11 +64,11 @@
       "passed": true,
       "requirement": "validated chronological probability reliability clears Brier/ECE, 58%-62% confidence-band, and margin/total interval guardrails",
       "value": {
-        "brier": 0.2287150128025609,
-        "ece": 0.05982942561488695,
+        "brier": 0.22871501280256112,
+        "ece": 0.05982942561488687,
         "margin_80_coverage": 0.7830882352941176,
         "mid_confidence_games": 39,
-        "mid_confidence_gap": 0.012503230466270998,
+        "mid_confidence_gap": 0.01250323046627122,
         "model_family": "gaussian+logistic_moneyline",
         "total_80_coverage": 0.8051470588235294,
         "validated_reliability_ready": true
@@ -96,7 +96,7 @@
       "name": "live_monitoring",
       "passed": false,
       "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
-      "value": 87.8
+      "value": 87.2
     },
     {
       "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -137,8 +137,8 @@
         "status": "ESTABLISHED SAMPLE",
         "verified_clv_coverage": 0.7965686274509803,
         "verified_roi_ci_95": [
-          -0.14389449039777885,
-          -0.018181947618216947
+          -0.1423639957921287,
+          -0.01895616171618068
         ]
       }
     },
@@ -160,7 +160,7 @@
       "passed": true,
       "requirement": "forward evidence comes from cap-constrained persisted portfolio decisions",
       "value": {
-        "graded_bets": 11,
+        "graded_bets": 12,
         "source": "portfolio_decisions_v1"
       }
     },
@@ -181,8 +181,8 @@
       "requirement": ">=90% of graded forward bets have a valid later pre-kickoff closing snapshot",
       "value": {
         "clv_coverage": 1.0,
-        "clv_samples": 11,
-        "graded_bets": 11
+        "clv_samples": 12,
+        "graded_bets": 12
       }
     },
     {
@@ -191,13 +191,13 @@
       "passed": false,
       "requirement": ">=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV, complete entry provenance, and >=90% CLV coverage",
       "value": {
-        "avg_clv": 0.04696969696969697,
+        "avg_clv": 0.08472222222222221,
         "clv_coverage": 1.0,
         "entry_quote_coverage": 1.0,
         "execution_ready_coverage": 1.0,
-        "graded_bets": 11,
+        "graded_bets": 12,
         "minimum_bets": 300,
-        "roi": 0.12330578512396695
+        "roi": 0.1887878787878788
       }
     }
   ],

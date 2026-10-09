@@ -27,7 +27,7 @@
     "verified_quote_rows": 334,
     "warnings": []
   },
-  "live_readiness_score": 80.0,
+  "live_readiness_score": 79.5,
   "meaning": "operational health; not a profitability or staking signal",
   "monitor_alerts": [
     "14 market rows have high model-vs-consensus disagreement",
@@ -57,5 +57,5 @@
     "rosters_weekly": "OK",
     "weather": "Open-Meteo"
   },
-  "status": "OK"
+  "status": "WARN"
 }

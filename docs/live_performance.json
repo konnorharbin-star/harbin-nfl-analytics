@@ -1,6 +1,6 @@
 {
-  "avg_clv": 0.04696969696969697,
-  "bets": 11,
+  "avg_clv": 0.08472222222222221,
+  "bets": 12,
   "by_book": {
     "BetMGM": {
       "avg_clv": 0.0,
@@ -69,26 +69,26 @@
       "wins": 3
     },
     "DraftKings": {
-      "avg_clv": 0.0,
-      "bets": 1,
+      "avg_clv": 0.25,
+      "bets": 2,
       "clv_coverage": 1.0,
-      "clv_samples": 1,
+      "clv_samples": 2,
       "entry_quote_coverage": 1.0,
-      "entry_quote_verified_bets": 1,
-      "execution_ready_bets": 1,
+      "entry_quote_verified_bets": 2,
+      "execution_ready_bets": 2,
       "execution_ready_coverage": 1.0,
       "losses": 1,
       "max_drawdown": 1.0,
-      "positive_clv_rate": 0.0,
+      "positive_clv_rate": 0.5,
       "pushes": 0,
-      "roi": -1.0,
+      "roi": -0.045454545454545414,
       "roi_ci_95": [
         null,
         null
       ],
-      "units": -1.0,
-      "win_rate": 0.0,
-      "wins": 0
+      "units": -0.09090909090909083,
+      "win_rate": 0.5,
+      "wins": 1
     },
     "FanDuel": {
       "avg_clv": 0.0,
@@ -137,26 +137,26 @@
   },
   "by_edge_bucket": {
     ">=6%": {
-      "avg_clv": 0.04696969696969697,
-      "bets": 11,
+      "avg_clv": 0.08472222222222221,
+      "bets": 12,
       "clv_coverage": 1.0,
-      "clv_samples": 11,
+      "clv_samples": 12,
       "entry_quote_coverage": 1.0,
-      "entry_quote_verified_bets": 11,
-      "execution_ready_bets": 11,
+      "entry_quote_verified_bets": 12,
+      "execution_ready_bets": 12,
       "execution_ready_coverage": 1.0,
       "losses": 5,
       "max_drawdown": 2.0,
-      "positive_clv_rate": 0.18181818181818182,
+      "positive_clv_rate": 0.25,
       "pushes": 0,
-      "roi": 0.12330578512396695,
+      "roi": 0.1887878787878788,
       "roi_ci_95": [
         null,
         null
       ],
-      "units": 1.3563636363636364,
-      "win_rate": 0.5454545454545454,
-      "wins": 6
+      "units": 2.2654545454545456,
+      "win_rate": 0.5833333333333334,
+      "wins": 7
     }
   },
   "by_market": {
@@ -183,26 +183,26 @@
       "wins": 1
     },
     "spread": {
-      "avg_clv": 0.08333333333333333,
-      "bets": 6,
+      "avg_clv": 0.14285714285714285,
+      "bets": 7,
       "clv_coverage": 1.0,
-      "clv_samples": 6,
+      "clv_samples": 7,
       "entry_quote_coverage": 1.0,
-      "entry_quote_verified_bets": 6,
-      "execution_ready_bets": 6,
+      "entry_quote_verified_bets": 7,
+      "execution_ready_bets": 7,
       "execution_ready_coverage": 1.0,
       "losses": 2,
       "max_drawdown": 2.0,
-      "positive_clv_rate": 0.16666666666666666,
+      "positive_clv_rate": 0.2857142857142857,
       "pushes": 0,
-      "roi": 0.2878787878787879,
+      "roi": 0.3766233766233767,
       "roi_ci_95": [
         null,
         null
       ],
-      "units": 1.7272727272727275,
-      "win_rate": 0.6666666666666666,
-      "wins": 4
+      "units": 2.6363636363636367,
+      "win_rate": 0.7142857142857143,
+      "wins": 5
     },
     "total": {
       "avg_clv": 0.0,
@@ -229,26 +229,26 @@
   },
   "by_season": {
     "2026": {
-      "avg_clv": 0.04696969696969697,
-      "bets": 11,
+      "avg_clv": 0.08472222222222221,
+      "bets": 12,
       "clv_coverage": 1.0,
-      "clv_samples": 11,
+      "clv_samples": 12,
       "entry_quote_coverage": 1.0,
-      "entry_quote_verified_bets": 11,
-      "execution_ready_bets": 11,
+      "entry_quote_verified_bets": 12,
+      "execution_ready_bets": 12,
       "execution_ready_coverage": 1.0,
       "losses": 5,
       "max_drawdown": 2.0,
-      "positive_clv_rate": 0.18181818181818182,
+      "positive_clv_rate": 0.25,
       "pushes": 0,
-      "roi": 0.12330578512396695,
+      "roi": 0.1887878787878788,
       "roi_ci_95": [
         null,
         null
       ],
-      "units": 1.3563636363636364,
-      "win_rate": 0.5454545454545454,
-      "wins": 6
+      "units": 2.2654545454545456,
+      "win_rate": 0.5833333333333334,
+      "wins": 7
     }
   },
   "by_signal": {
@@ -297,36 +297,36 @@
       "wins": 0
     },
     "STRONG": {
-      "avg_clv": 0.0,
-      "bets": 3,
+      "avg_clv": 0.125,
+      "bets": 4,
       "clv_coverage": 1.0,
-      "clv_samples": 3,
+      "clv_samples": 4,
       "entry_quote_coverage": 1.0,
-      "entry_quote_verified_bets": 3,
-      "execution_ready_bets": 3,
+      "entry_quote_verified_bets": 4,
+      "execution_ready_bets": 4,
       "execution_ready_coverage": 1.0,
       "losses": 2,
       "max_drawdown": 2.0,
-      "positive_clv_rate": 0.0,
+      "positive_clv_rate": 0.25,
       "pushes": 0,
-      "roi": -0.3333333333333333,
+      "roi": -0.022727272727272707,
       "roi_ci_95": [
         null,
         null
       ],
-      "units": -1.0,
-      "win_rate": 0.3333333333333333,
-      "wins": 1
+      "units": -0.09090909090909083,
+      "win_rate": 0.5,
+      "wins": 2
     }
   },
   "clv_coverage": 1.0,
-  "clv_samples": 11,
+  "clv_samples": 12,
   "entry_quote_coverage": 1.0,
-  "entry_quote_verified_bets": 11,
+  "entry_quote_verified_bets": 12,
   "evidence_source": "portfolio_decisions_v1",
-  "execution_ready_bets": 11,
+  "execution_ready_bets": 12,
   "execution_ready_coverage": 1.0,
-  "graded_bets": 11,
+  "graded_bets": 12,
   "grading_audit": {
     "decisions": {
       "eligible_decisions": 321,
@@ -344,7 +344,7 @@
       "entry_quote_verified": true,
       "errors": 0,
       "execution_ready_verified": true,
-      "graded_bets": 11,
+      "graded_bets": 12,
       "issues": [],
       "portfolio_verified": true,
       "status": "PASS",
@@ -353,28 +353,28 @@
     "status": "PASS"
   },
   "overall": {
-    "avg_clv": 0.04696969696969697,
-    "bets": 11,
+    "avg_clv": 0.08472222222222221,
+    "bets": 12,
     "clv_coverage": 1.0,
-    "clv_samples": 11,
+    "clv_samples": 12,
     "entry_quote_coverage": 1.0,
-    "entry_quote_verified_bets": 11,
-    "execution_ready_bets": 11,
+    "entry_quote_verified_bets": 12,
+    "execution_ready_bets": 12,
     "execution_ready_coverage": 1.0,
     "losses": 5,
     "max_drawdown": 2.0,
-    "positive_clv_rate": 0.18181818181818182,
+    "positive_clv_rate": 0.25,
     "pushes": 0,
-    "roi": 0.12330578512396695,
+    "roi": 0.1887878787878788,
     "roi_ci_95": [
       null,
       null
     ],
-    "units": 1.3563636363636364,
-    "win_rate": 0.5454545454545454,
-    "wins": 6
+    "units": 2.2654545454545456,
+    "win_rate": 0.5833333333333334,
+    "wins": 7
   },
   "portfolio_verified": true,
-  "roi": 0.12330578512396695,
+  "roi": 0.1887878787878788,
   "status": "READY"
 }

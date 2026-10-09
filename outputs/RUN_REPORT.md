@@ -10,10 +10,10 @@
 - Margin / total 80% coverage: **78.31% / 80.51%**.
 
 ## Monitoring and execution
-- Live readiness: **80.0/100**.
+- Live readiness: **79.5/100**.
 - Portfolio mode: **PAPER**; proposed **0.00u**; approved **0.00u**.
 - Historical evidence: **2584 bets**, ROI **-7.84%**, CLV **—**.
-- Independent forward evidence: **11 bets**, ROI **12.33%**, CLV **4.70%**.
+- Independent forward evidence: **12 bets**, ROI **18.88%**, CLV **8.47%**.
 
 ## Current blockers
 - quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state
