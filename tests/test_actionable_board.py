@@ -110,3 +110,9 @@ def test_without_market_keeps_game_projection():
     assert entry["betting_action"] == "NO_VERIFIED_MARKET"
     assert entry["evidence_blockers"] == "no model market offer"
     assert entry["projected_winner"] == "DAL"
+
+
+def test_kickoff_passes_through_to_final_edge_decision_board():
+    game = _row(kickoff="2026-10-11T20:00:00+00:00")
+    board = build_actionable_board(pl.DataFrame([game]))
+    assert board["kickoff"].item() == game["kickoff"]
