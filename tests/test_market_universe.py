@@ -1,12 +1,13 @@
 """Independent research scanner covers all supported markets without fake odds."""
-from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 
 import pytest
 
 from nfl.espn_market import ESPNTwoWayMarket
 from nfl.market_universe import (
-    MARKET_CATALOG, evaluate_market_universe, from_game_markets,
+    MARKET_CATALOG,
+    evaluate_market_universe,
+    from_game_markets,
 )
 
 NOW = datetime(2026, 10, 8, 23, 0, tzinfo=UTC)
