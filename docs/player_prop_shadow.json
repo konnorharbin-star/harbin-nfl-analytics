@@ -1,0 +1,127 @@
+{
+  "2025_is_pristine_holdout": false,
+  "actual_sportsbook_edge_proven": false,
+  "automatic_betting_enabled": false,
+  "blocked_price_reason": "NO_VERIFIED_CURRENT_PLAYER_PROP_BOOK_ODDS",
+  "forward_ledger": {
+    "new_entries": 598,
+    "previous_entries": 0,
+    "total_entries": 598
+  },
+  "generated_at_utc": "2026-10-09T00:42:04.222205+00:00",
+  "historical_diagnostic": {
+    "auto_wagering_enabled": false,
+    "by_market": {
+      "passing_yards": {
+        "baseline_three_game_mae": 81.53167,
+        "baseline_three_game_rmse": 102.73351,
+        "beat_market_no_vig_probability": false,
+        "beat_simple_baseline_on_mae": false,
+        "challenger_mae": 81.53167,
+        "challenger_rmse": 102.73351,
+        "chosen_shrinkage": 0.0,
+        "chosen_window": 3,
+        "development_challenger_mae": 80.41604,
+        "development_rows": 532,
+        "diagnostic_rows": 521,
+        "status": "HISTORICAL_DIAGNOSTIC_ONLY",
+        "valid_sportsbook_edge_proven": false
+      },
+      "receiving_yards": {
+        "baseline_three_game_mae": 19.42317,
+        "baseline_three_game_rmse": 27.28388,
+        "beat_market_no_vig_probability": false,
+        "beat_simple_baseline_on_mae": true,
+        "challenger_mae": 18.56937,
+        "challenger_rmse": 25.90427,
+        "chosen_shrinkage": 0.0,
+        "chosen_window": 8,
+        "development_challenger_mae": 18.56865,
+        "development_rows": 3990,
+        "diagnostic_rows": 3996,
+        "status": "HISTORICAL_DIAGNOSTIC_ONLY",
+        "valid_sportsbook_edge_proven": false
+      },
+      "receptions": {
+        "baseline_three_game_mae": 1.46366,
+        "baseline_three_game_rmse": 1.96594,
+        "beat_market_no_vig_probability": false,
+        "beat_simple_baseline_on_mae": true,
+        "challenger_mae": 1.42893,
+        "challenger_rmse": 1.88554,
+        "chosen_shrinkage": 0.0,
+        "chosen_window": 8,
+        "development_challenger_mae": 1.4792,
+        "development_rows": 4024,
+        "diagnostic_rows": 4036,
+        "status": "HISTORICAL_DIAGNOSTIC_ONLY",
+        "valid_sportsbook_edge_proven": false
+      },
+      "rushing_yards": {
+        "baseline_three_game_mae": 16.69338,
+        "baseline_three_game_rmse": 26.29941,
+        "beat_market_no_vig_probability": false,
+        "beat_simple_baseline_on_mae": true,
+        "challenger_mae": 15.76814,
+        "challenger_rmse": 24.94947,
+        "chosen_shrinkage": 0.0,
+        "chosen_window": 8,
+        "development_challenger_mae": 16.63763,
+        "development_rows": 2148,
+        "diagnostic_rows": 2121,
+        "status": "HISTORICAL_DIAGNOSTIC_ONLY",
+        "valid_sportsbook_edge_proven": false
+      }
+    },
+    "development_choices": {
+      "passing_yards": [
+        3,
+        0.0
+      ],
+      "receiving_yards": [
+        8,
+        0.0
+      ],
+      "receptions": [
+        8,
+        0.0
+      ],
+      "rushing_yards": [
+        8,
+        0.0
+      ]
+    },
+    "development_season": 2024,
+    "diagnostic_season": 2025,
+    "no_market_price_data_used": true,
+    "no_prop_probability_claims": true,
+    "years_are_pristine_unseen_holdout": false
+  },
+  "input_diagnostics": {
+    "excluded_stat_rows": {
+      "invalid_player_team_or_position": 27623
+    },
+    "player_rows": 13496
+  },
+  "limitations": [
+    "Estimates are point forecasts only; no calibrated distribution or prop probabilities.",
+    "A player not listed at target kickoff may not participate; starting/active status is unknown.",
+    "2024 chooses hyperparameters. 2025 has been inspected in earlier football modeling: diagnostic, not untouched holdout.",
+    "Historical player source may receive revisions; prospective pregame forecasts are preserved first-seen.",
+    "Missing postgame player rows are graded zero, including inactive players; detailed DNP status is not verified.",
+    "No fair EV/price, market-beating result, CLV, wagering permission or tradeable edge can be inferred."
+  ],
+  "paid_sources_used": false,
+  "pregame_player_market_forecasts": 598,
+  "schema_version": 1,
+  "season": 2026,
+  "status": "RESEARCH_ONLY_UNPRICED_PLAYER_FORECASTS",
+  "unique_players": 264,
+  "unpriced_markets": [
+    "passing_yards",
+    "receiving_yards",
+    "receptions",
+    "rushing_yards"
+  ],
+  "week": 5
+}
