@@ -36,7 +36,7 @@
     "verified_quote_rows": 334,
     "warnings": []
   },
-  "generated_at": "2026-10-09T00:58:42.376687+00:00",
+  "generated_at": "2026-10-09T02:59:34.573692+00:00",
   "health": {
     "data_quality": {
       "candidate_rows": 42,
@@ -112,7 +112,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-09T00:58:39.826649+00:00",
+    "model_generated_at": "2026-10-09T02:59:32.111973+00:00",
     "prediction_games": 14,
     "prediction_rows": 42,
     "season": 2026,
@@ -161,7 +161,7 @@
       }
     },
     "live_readiness_score": 80.0,
-    "recent_readiness_delta": 0.09999999999999432,
+    "recent_readiness_delta": 0.0,
     "scores": {
       "calibration": 89.07670124431358,
       "context": 66.07142857142857,
@@ -695,8 +695,8 @@
           "status": "ESTABLISHED SAMPLE",
           "verified_clv_coverage": 0.7965686274509803,
           "verified_roi_ci_95": [
-            -0.14137102788313538,
-            -0.01926042229148465
+            -0.14389449039777885,
+            -0.018181947618216947
           ]
         }
       },
@@ -776,18 +776,6 @@
   "schema_version": 1,
   "status": "WARN",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 80.7,
-      "generated_at": "2026-10-08T20:44:46.187863+00:00",
-      "live_readiness_score": 79.9,
-      "model_generated_at": "2026-10-08T20:44:44.238244+00:00",
-      "publication_status": "FAIL",
-      "release_state": "RESEARCH",
-      "season": 2026,
-      "week": 5
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -915,6 +903,18 @@
       "generated_at": "2026-10-09T00:42:03.366592+00:00",
       "live_readiness_score": 80.0,
       "model_generated_at": "2026-10-09T00:42:00.941366+00:00",
+      "publication_status": "WARN",
+      "release_state": "RESEARCH",
+      "season": 2026,
+      "week": 5
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 80.3,
+      "generated_at": "2026-10-09T00:58:42.376687+00:00",
+      "live_readiness_score": 80.0,
+      "model_generated_at": "2026-10-09T00:58:39.826649+00:00",
       "publication_status": "WARN",
       "release_state": "RESEARCH",
       "season": 2026,

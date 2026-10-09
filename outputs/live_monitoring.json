@@ -9,9 +9,9 @@
     "high_disagreement_rows": 14,
     "movement_coverage": 1.0,
     "research_execution_actions": {
-      "BET_NOW": 11,
+      "BET_NOW": 12,
       "PASS": 17,
-      "WAIT": 14
+      "WAIT": 13
     },
     "status": "READY"
   },

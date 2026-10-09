@@ -151,8 +151,8 @@
   "diagnostic_is_pristine_holdout": false,
   "diagnostic_season": 2025,
   "frozen_forward": {
-    "existing_entries": 0,
-    "new_entries": 4186,
+    "existing_entries": 4186,
+    "new_entries": 0,
     "total_entries": 4186
   },
   "limitations": [
