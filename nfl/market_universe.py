@@ -114,7 +114,7 @@ def _is_offer_valid(item: dict[str, Any], now: datetime,
     start = aware(starts.get(game))
     if start is None or capture is None or origin is None:
         return None, "MISSING_KICKOFF_CAPTURE_OR_ORIGIN"
-    if not item.get("source_offer_timestamp_verified") is True:
+    if item.get("source_offer_timestamp_verified") is not True:
         return None, "UNVERIFIED_BOOK_QUOTE_ORIGIN"
     if (origin > capture + timedelta(minutes=2)
         or capture-origin > MAX_QUOTE_AGE or now-origin > MAX_QUOTE_AGE
