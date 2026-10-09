@@ -1,5 +1,5 @@
 """Release-gated edge ranks cannot turn stale prices or raw EV into bets."""
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 
 from scripts.final_edge_board import build, inspect
 
