@@ -42,7 +42,9 @@ def append_first_seen(rows: list[dict[str, Any]], *,
     if ledger.exists():
         with ledger.open(newline="", encoding="utf-8") as f:
             existing = list(csv.DictReader(f))
-    key = lambda x:(x["game_id"], x["player_id"], x["market"])
+    def key(row: dict[str, Any]) -> tuple[str, str, str]:
+        return (str(row["game_id"]), str(row["player_id"]), str(row["market"]))
+
     seen = {key(x) for x in existing}
     added = 0
     for row in rows:
@@ -125,11 +127,16 @@ def build_shadow_report(
         "blocked_price_reason":"NO_VERIFIED_CURRENT_PLAYER_PROP_BOOK_ODDS",
         "limitations":[
             "Estimates are point forecasts only; no calibrated distribution or prop probabilities.",
-            "A player not listed at target kickoff may not participate; starting/active status is unknown.",
-            "2024 chooses hyperparameters. 2025 has been inspected in earlier football modeling: diagnostic, not untouched holdout.",
-            "Historical player source may receive revisions; prospective pregame forecasts are preserved first-seen.",
-            "Missing postgame player rows are graded zero, including inactive players; detailed DNP status is not verified.",
-            "No fair EV/price, market-beating result, CLV, wagering permission or tradeable edge can be inferred.",
+            ("A player not listed at target kickoff may not participate; "
+             "starting/active status is unknown."),
+            ("2024 chooses hyperparameters. 2025 has been inspected in earlier "
+             "football modeling: diagnostic, not untouched holdout."),
+            ("Historical player source may receive revisions; prospective pregame "
+             "forecasts are preserved first-seen."),
+            ("Missing postgame player rows are graded zero, including inactive "
+             "players; detailed DNP status is not verified."),
+            ("No fair EV/price, market-beating result, CLV, wagering permission "
+             "or tradeable edge can be inferred."),
         ],
     }
     out_json.parent.mkdir(parents=True,exist_ok=True)
