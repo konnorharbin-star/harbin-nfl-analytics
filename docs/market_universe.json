@@ -2,9 +2,9 @@
   "automatic_betting_enabled": false,
   "current_price_execution_verified": false,
   "exclusions": {
-    "MISSING_KICKOFF_CAPTURE_OR_ORIGIN": 670
+    "MISSING_KICKOFF_CAPTURE_OR_ORIGIN": 668
   },
-  "generated_at_utc": "2026-10-09T18:23:07.536463+00:00",
+  "generated_at_utc": "2026-10-09T23:32:49.466120+00:00",
   "limitations": "A cross-book median is an imperfect correlated-price reference, not an independently validated probability. Never call its proxy EV a true edge. Push/tie handling and book-specific settlement rules may differ. No fabricated player props or period markets: unprovided prices are reported missing, never filled by guesses. Per-book source updates still may not certify executable prices.",
   "market_coverage": [
     {
@@ -17,7 +17,7 @@
       "coverage": "HAS_PRICES",
       "market": "spread",
       "period": "full_game",
-      "supplied_offer_count": 224
+      "supplied_offer_count": 222
     },
     {
       "coverage": "HAS_PRICES",
@@ -258,7 +258,7 @@
     "multi_book_two_way_markets": 0,
     "origin_valid_offers": 0,
     "research_price_discrepancies": 0,
-    "supplied_offers": 670
+    "supplied_offers": 668
   },
   "true_market_mispricing_proven": false
 }

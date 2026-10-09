@@ -1,0 +1,26 @@
+{
+  "approved_bets": 0,
+  "decision_counts": {
+    "NO_BET": 14
+  },
+  "disclaimer": "A research edge is not a proved profitable bet. Do not wager at an unverified or stale quote.",
+  "distinct_games": 14,
+  "evaluated_at": "2026-10-09T23:33:22.440122+00:00",
+  "method": "ONE_PER_GAME_CHRONOLOGICAL_CONSERVATIVE_RESEARCH_PRIORITY",
+  "no_model_or_stake_change": true,
+  "production_eligible": false,
+  "raw_market_candidates": 42,
+  "release_blockers": [
+    "quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state",
+    "injury_personnel_freshness: >=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
+    "context_coverage: >=90% current injury/rest/weather/travel context coverage",
+    "regime_edge_reliability: at least two markets clear fixed regime-specific probability and edge reliability on validation plus untouched holdout",
+    "live_monitoring: engineering readiness >=90/100; multi-book breadth gated separately",
+    "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
+    "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
+    "production_policy: frozen nested chronological policy is production-validated with at least two enabled markets"
+  ],
+  "release_state": "RESEARCH",
+  "sport": "nfl",
+  "version": 1
+}

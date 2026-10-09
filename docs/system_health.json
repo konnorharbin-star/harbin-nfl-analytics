@@ -9,7 +9,7 @@
     "extra_projection_games": [],
     "future_verified_quote_rows": 0,
     "games_without_candidate_rows": [],
-    "market_rows": 335,
+    "market_rows": 334,
     "market_source_errors": [],
     "meaning": "current-run structural and chronological data integrity; missing values are never fabricated",
     "missing_data_count": 0,
@@ -24,13 +24,13 @@
     "status": "OK",
     "target_games": 14,
     "unmatched_market_rows": 0,
-    "verified_quote_rows": 335,
+    "verified_quote_rows": 334,
     "warnings": []
   },
   "live_readiness_score": 79.5,
   "meaning": "operational health; not a profitability or staking signal",
   "monitor_alerts": [
-    "15 market rows have high model-vs-consensus disagreement",
+    "16 market rows have high model-vs-consensus disagreement",
     "fewer than two markets clear regime-specific edge reliability"
   ],
   "production_eligible": false,

@@ -27,7 +27,7 @@
 - live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV, complete entry provenance, and >=90% CLV coverage
 
 ## Operational alerts
-- 15 market rows have high model-vs-consensus disagreement
+- 16 market rows have high model-vs-consensus disagreement
 - fewer than two markets clear regime-specific edge reliability
 
 ## Interpretation
