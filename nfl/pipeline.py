@@ -28,6 +28,7 @@ from .free_market_backtest import build_archive_projection_dataset
 from .health import write_health
 from .line_history import append_market_snapshots, load_market_snapshots
 from .market_intel import build_market_intelligence
+from .market_universe import from_game_markets, write_market_universe
 from .model_card import write_model_card
 from .monitoring import write_live_monitoring
 from .policy import load_policy
@@ -269,6 +270,13 @@ def run_operational_pipeline(
         kickoffs=kickoff_times,
         as_of=datetime.now(UTC),
     )
+    # Scan *all* supplied quotes and report every market family not covered
+    # by our free upstream sources; no imaginary player props or bet execution.
+    market_universe = write_market_universe(
+        from_game_markets(markets),
+        kickoffs=kickoff_times,
+        as_of=datetime.now(UTC),
+    )
 
     historical = build_archive_projection_dataset(
         schedules,
@@ -426,6 +434,7 @@ def run_operational_pipeline(
         },
         "market_intelligence": market_meta,
         "price_edge_research": price_edge_research["summary"],
+        "market_universe_research": market_universe["summary"],
         "decision_intelligence": decision_intelligence,
         "probability": probability,
         "current_context": context,

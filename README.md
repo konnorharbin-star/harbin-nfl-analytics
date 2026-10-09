@@ -1,3 +1,7 @@
+## All-market NFL edge discovery (free, manual only)
+
+The [universal market research scanner](docs/NFL_ALL_MARKET_EDGE_LAB.md) audits full-game sides, alternative lines, halves, quarters, team totals and player props. It compares independent sportsbooks only when real, fresh, same-instrument two-sided quotes exist. `docs/market_universe.json` distinguishes **covered markets, unavailable free-source markets, rejected prices and research-only discrepancies**. Not a guarantee of an edge; no automatic bet execution or paid feeds.
+
 ## Manual-only NFL evidence review
 
 The [research review CSV](docs/manual_review.csv) and [review JSON](docs/manual_review.json) distinguish raw simulated EV from **conservative, historically supported edge**. Blocked picks stay PASS even if their raw EV is enormous. Read the [edge-gate repair guide](docs/NFL_EDGE_BLOCKER_REPAIR.md) for remaining injury, quarterback and model-validation blockers. The system never places wagers and uses free infrastructure only.
