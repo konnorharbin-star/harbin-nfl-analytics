@@ -179,13 +179,29 @@ def build(
         raise ValueError("Model output lacks required game identity fields")
     source = _optional_source(verified_lineups, capture_at=capture)
     evidence = []
-    games = set()
     excluded = Counter()
+    # Model boards may repeat a game for spread/total/moneyline markets.
+    # A repeated game is safe to collapse only if its QB identities agree.
+    games = {}
+    identity_fields = ["game_id", "season", "home_team", "away_team"]
+    identity_fields += (
+        ["kickoff", "home_expected_qb_id", "away_expected_qb_id"]
+        if sport == "nfl" else ["date"]
+    )
     for game in data:
         game_id = str(game["game_id"]).strip()
-        if not game_id or game_id in games:
-            raise ValueError("Duplicate or blank model game ID")
-        games.add(game_id)
+        if not game_id:
+            raise ValueError("Blank model game ID")
+        previous = games.get(game_id)
+        if previous is not None:
+            if any(previous.get(k, "") != game.get(k, "") for k in identity_fields):
+                raise ValueError("Conflicting duplicate game identity/QB")
+            excluded["duplicate_market_rows"] += 1
+            continue
+        games[game_id] = game
+
+    for game in games.values():
+        game_id = str(game["game_id"]).strip()
         kickoff = stamp(game["kickoff" if sport == "nfl" else "date"])
         if kickoff <= capture:
             excluded["already_kicked_off"] += 1
@@ -245,6 +261,7 @@ def build(
         "model_source_path": str(model_csv),
         "model_source_sha256": source_hash,
         "model_game_rows": len(data),
+        "unique_game_rows": len(games),
         "upcoming_games": len(evidence) // 2,
         "team_evidence_rows": len(evidence),
         "source_records_provided": bool(source),
