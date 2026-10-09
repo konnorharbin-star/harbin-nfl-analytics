@@ -10,6 +10,13 @@ from typing import Any
 
 from nfl.data import NFLDataClient
 from nfl.prop_challenger import diagnostic, forecast_week, source_frames
+from nfl.prop_probability import (
+    LEDGER_PATH as PROBABILITY_LEDGER,
+    OUT_PATH as PROBABILITY_CSV,
+    append_first_seen_curves,
+    build_probability_experiment,
+    write_probability_csv,
+)
 
 OUTPUT_JSON = Path("docs/player_prop_shadow.json")
 OUTPUT_CSV = Path("docs/player_prop_shadow.csv")
@@ -139,6 +146,43 @@ def build_shadow_report(
              "or tradeable edge can be inferred."),
         ],
     }
+    # Statistical player-prop probability experiment is isolated from the
+    # main model and from unpriced mean forecasts. An optional calibration
+    # failure must be explicit rather than reusing stale saved probabilities.
+    probability_json = out_json.parent / "player_prop_probability_shadow.json"
+    probability_csv = out_csv.parent / "player_prop_probability_shadow.csv"
+    try:
+        probability_report, curves = build_probability_experiment(
+            schedule, lines, options=options, season=season, week=week,
+            current_forecasts=forecasts,
+        )
+        write_probability_csv(curves, probability_csv)
+        probability_report["frozen_forward"] = append_first_seen_curves(
+            curves, observed_at=as_of, destination=PROBABILITY_LEDGER
+            if out_json == OUTPUT_JSON else out_json.parent / "probability_forward.csv",
+        )
+        probability_report["status"] = "SYNTHETIC_LINES_DIAGNOSTIC_RESEARCH"
+    except Exception as exc:
+        probability_report = {
+            "status": "BLOCKED_PROBABILITY_EXPERIMENT",
+            "generated_at_utc": as_of.astimezone(UTC).isoformat(),
+            "error": f"{type(exc).__name__}: {exc}",
+            "automatic_betting_enabled": False,
+            "calibrated_sportsbook_edge_proven": False,
+            "2026_forward_probability_rows": 0,
+        }
+        write_probability_csv([], probability_csv)
+    probability_json.write_text(
+        json.dumps(probability_report, indent=2, sort_keys=True,
+                   allow_nan=False) + "\n"
+    )
+    report["player_prop_probability_experiment"] = {
+        "status": probability_report["status"],
+        "forward_probability_rows": probability_report.get(
+            "2026_forward_probability_rows",0
+        ),
+        "calibrated_sportsbook_edge_proven": False,
+    }
     out_json.parent.mkdir(parents=True,exist_ok=True)
     out_json.write_text(json.dumps(report,indent=2,sort_keys=True,allow_nan=False)+"\n")
     return report
@@ -159,6 +203,14 @@ def main() -> int:
             as_of=datetime.now(UTC),
         )
     except Exception as exc:
+        probability_json = OUTPUT_JSON.parent / "player_prop_probability_shadow.json"
+        probability_json.write_text(json.dumps({
+            "status": "BLOCKED_PLAYER_STAT_SOURCE_OR_SCHEMA",
+            "generated_at_utc": datetime.now(UTC).isoformat(),
+            "automatic_betting_enabled": False,
+            "calibrated_sportsbook_edge_proven": False,
+        }, sort_keys=True, indent=2) + "\n")
+        write_probability_csv([], PROBABILITY_CSV)
         # Do not break the canonical NFL model when an optional, free
         # player-stat source is unavailable; replace any stale report with
         # an explicit failure, never silently re-use old forecasts.
