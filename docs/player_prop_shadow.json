@@ -8,7 +8,7 @@
     "previous_entries": 598,
     "total_entries": 598
   },
-  "generated_at_utc": "2026-10-09T03:51:57.711611+00:00",
+  "generated_at_utc": "2026-10-09T17:12:14.674387+00:00",
   "historical_diagnostic": {
     "auto_wagering_enabled": false,
     "by_market": {
@@ -99,9 +99,9 @@
   },
   "input_diagnostics": {
     "excluded_stat_rows": {
-      "invalid_player_team_or_position": 27623
+      "invalid_player_team_or_position": 27669
     },
-    "player_rows": 13496
+    "player_rows": 13518
   },
   "limitations": [
     "Estimates are point forecasts only; no calibrated distribution or prop probabilities.",
