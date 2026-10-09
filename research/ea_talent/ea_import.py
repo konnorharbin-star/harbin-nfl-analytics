@@ -3,6 +3,7 @@
 Never infer the snapshot publication time from file modification/download time.
 Require provenance metadata and explicit player-ID mappings; ambiguous joins fail.
 """
+
 from __future__ import annotations
 
 import csv
@@ -26,7 +27,9 @@ def _read(path, fields):
     with Path(path).open(newline="", encoding="utf-8-sig") as handle:
         reader = csv.DictReader(handle)
         if not fields.issubset(reader.fieldnames or []):
-            raise ValueError("Missing columns: " + ", ".join(sorted(fields - set(reader.fieldnames or []))))
+            raise ValueError(
+                "Missing columns: " + ", ".join(sorted(fields - set(reader.fieldnames or [])))
+            )
         return list(reader)
 
 
@@ -78,9 +81,13 @@ def normalize(raw_path, crosswalk_path, metadata_path, output_path, *, as_of, mi
         if not model_id or model_id in used_ids:
             raise ValueError("Missing or duplicated model player identity")
         used_ids.add(model_id)
-        row = {"player_id": model_id, "team": item["team"].strip(),
-               "position": item["position"].strip().upper(), "ovr": item["ovr"],
-               "snapshot_at": meta["snapshot_at"]}
+        row = {
+            "player_id": model_id,
+            "team": item["team"].strip(),
+            "position": item["position"].strip().upper(),
+            "ovr": item["ovr"],
+            "snapshot_at": meta["snapshot_at"],
+        }
         row.update({k: item.get(k, "") for k in passthrough if item.get(k, "") != ""})
         output.append(row)
     if ambiguous:
@@ -90,6 +97,7 @@ def normalize(raw_path, crosswalk_path, metadata_path, output_path, *, as_of, mi
         raise ValueError(f"Crosswalk coverage {coverage:.1%} below required {min_coverage:.1%}")
     # Reuse strict rating and position validation in the sibling adapter.
     from ea_player_talent import load_snapshot
+
     fields = ["player_id", "team", "position", "ovr", "snapshot_at"] + passthrough
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -104,12 +112,21 @@ def normalize(raw_path, crosswalk_path, metadata_path, output_path, *, as_of, mi
                 writer.writerow(item)
         # Contract validation and point-in-time guarantee before publication.
         from datetime import timedelta
-        load_snapshot(tmp, prediction_at=as_of, kickoff_at=(cutoff + timedelta(seconds=1)).isoformat())
+
+        load_snapshot(
+            tmp, prediction_at=as_of, kickoff_at=(cutoff + timedelta(seconds=1)).isoformat()
+        )
         tmp.replace(out)
     finally:
         if tmp.exists():
             tmp.unlink()
-    return {"raw_players": len(raw), "matched_players": len(output),
-            "unmatched_players": len(unmatched), "coverage": coverage,
-            "snapshot_at": meta["snapshot_at"], "raw_sha256": actual_hash,
-            "unmatched_ids": unmatched, "output": str(out)}
+    return {
+        "raw_players": len(raw),
+        "matched_players": len(output),
+        "unmatched_players": len(unmatched),
+        "coverage": coverage,
+        "snapshot_at": meta["snapshot_at"],
+        "raw_sha256": actual_hash,
+        "unmatched_ids": unmatched,
+        "output": str(out),
+    }

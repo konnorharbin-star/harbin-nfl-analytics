@@ -11,9 +11,15 @@ Metadata JSON requires: `source_url` (HTTPS), `snapshot_at` (the demonstrated pu
 Call:
 ```python
 from ea_import import normalize
-summary = normalize("raw_export.csv", "verified_crosswalk.csv", "provenance.json",
+
+summary = normalize(
+    "raw_export.csv",
+    "verified_crosswalk.csv",
+    "provenance.json",
     "data/ea_ratings/nfl_2026-10-08.csv",
-    as_of="2026-10-08T12:00:00-05:00", min_coverage=0.95)
+    as_of="2026-10-08T12:00:00-05:00",
+    min_coverage=0.95,
+)
 print(summary)
 ```
 Run from `research/ea_talent` or add that directory to `PYTHONPATH`. Coverage below the specified threshold fails; missing players are reported and **never inferred**. The output is immutable; duplicate, future, invalid, incomplete or ambiguous records fail. Normalize and validate before using `team_features`.

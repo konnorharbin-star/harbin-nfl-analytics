@@ -5,26 +5,50 @@ awr,spd,str,agi,cod,inj,available,depth_rank.
 snapshot_at must be an ISO-8601 timestamp with timezone.
 This loader uses only explicitly archived, dated records; it never fetches live ratings.
 """
+
 from __future__ import annotations
 
 import csv
+from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from collections import defaultdict
 
 UNITS = {
-    "QB": "QB", "RB": "SKILL", "FB": "SKILL", "WR": "SKILL", "TE": "SKILL",
-    "LT": "OL", "LG": "OL", "C": "OL", "RG": "OL", "RT": "OL", "OL": "OL",
-    "LE": "FRONT", "RE": "FRONT", "DT": "FRONT", "DE": "FRONT", "EDGE": "FRONT",
-    "LOLB": "FRONT", "MLB": "FRONT", "ROLB": "FRONT", "LB": "FRONT",
-    "CB": "SECONDARY", "FS": "SECONDARY", "SS": "SECONDARY", "S": "SECONDARY",
-    "K": "SPECIAL", "P": "SPECIAL",
+    "QB": "QB",
+    "RB": "SKILL",
+    "FB": "SKILL",
+    "WR": "SKILL",
+    "TE": "SKILL",
+    "LT": "OL",
+    "LG": "OL",
+    "C": "OL",
+    "RG": "OL",
+    "RT": "OL",
+    "OL": "OL",
+    "LE": "FRONT",
+    "RE": "FRONT",
+    "DT": "FRONT",
+    "DE": "FRONT",
+    "EDGE": "FRONT",
+    "LOLB": "FRONT",
+    "MLB": "FRONT",
+    "ROLB": "FRONT",
+    "LB": "FRONT",
+    "CB": "SECONDARY",
+    "FS": "SECONDARY",
+    "SS": "SECONDARY",
+    "S": "SECONDARY",
+    "K": "SPECIAL",
+    "P": "SPECIAL",
 }
 CAPS = {"QB": 1, "SKILL": 5, "OL": 5, "FRONT": 7, "SECONDARY": 5, "SPECIAL": 2}
 ATTRS = {
-    "QB": ("awr", "agi"), "SKILL": ("spd", "agi", "cod"),
-    "OL": ("str", "awr"), "FRONT": ("str", "spd", "awr"),
-    "SECONDARY": ("spd", "agi", "cod", "awr"), "SPECIAL": ("awr",),
+    "QB": ("awr", "agi"),
+    "SKILL": ("spd", "agi", "cod"),
+    "OL": ("str", "awr"),
+    "FRONT": ("str", "spd", "awr"),
+    "SECONDARY": ("spd", "agi", "cod", "awr"),
+    "SPECIAL": ("awr",),
 }
 
 
@@ -55,7 +79,9 @@ def load_snapshot(path: str | Path, *, prediction_at: str, kickoff_at: str) -> l
         reader = csv.DictReader(f)
         mandatory = {"player_id", "team", "position", "ovr", "snapshot_at"}
         if not mandatory.issubset(reader.fieldnames or []):
-            raise ValueError(f"Missing CSV columns: {sorted(mandatory - set(reader.fieldnames or []))}")
+            raise ValueError(
+                f"Missing CSV columns: {sorted(mandatory - set(reader.fieldnames or []))}"
+            )
         rows = list(reader)
     if not rows:
         raise ValueError("Empty ratings snapshot")
@@ -96,11 +122,17 @@ def team_features(rows: list[dict]) -> dict[str, dict[str, float | None]]:
             full = players[:cap]
             actual = active[:cap]
             # Do not impute a missing player or a missing lineup.
-            feats[f"{unit.lower()}_talent"] = round(sum(p["_talent"] for p in actual)/cap, 3) if len(actual) >= cap else None
-            feats[f"{unit.lower()}_full_talent"] = round(sum(p["_talent"] for p in full)/cap, 3) if len(full) >= cap else None
+            feats[f"{unit.lower()}_talent"] = (
+                round(sum(p["_talent"] for p in actual) / cap, 3) if len(actual) >= cap else None
+            )
+            feats[f"{unit.lower()}_full_talent"] = (
+                round(sum(p["_talent"] for p in full) / cap, 3) if len(full) >= cap else None
+            )
             feats[f"{unit.lower()}_availability_gap"] = (
-                round(feats[f"{unit.lower()}_full_talent"]-feats[f"{unit.lower()}_talent"], 3)
-                if feats[f"{unit.lower()}_talent"] is not None and feats[f"{unit.lower()}_full_talent"] is not None else None
+                round(feats[f"{unit.lower()}_full_talent"] - feats[f"{unit.lower()}_talent"], 3)
+                if feats[f"{unit.lower()}_talent"] is not None
+                and feats[f"{unit.lower()}_full_talent"] is not None
+                else None
             )
             feats[f"{unit.lower()}_covered"] = len(actual) >= cap
         output[team] = feats
@@ -112,9 +144,13 @@ def matchup_features(team_features_by_team: dict, home: str, away: str) -> dict:
     if home not in team_features_by_team or away not in team_features_by_team:
         raise KeyError("Both team ratings required")
     return {
-        f"{unit.lower()}_talent_diff": round(team_features_by_team[home][f"{unit.lower()}_talent"] -
-                                             team_features_by_team[away][f"{unit.lower()}_talent"], 3)
-        if team_features_by_team[home][f"{unit.lower()}_talent"] is not None and
-           team_features_by_team[away][f"{unit.lower()}_talent"] is not None else None
+        f"{unit.lower()}_talent_diff": round(
+            team_features_by_team[home][f"{unit.lower()}_talent"]
+            - team_features_by_team[away][f"{unit.lower()}_talent"],
+            3,
+        )
+        if team_features_by_team[home][f"{unit.lower()}_talent"] is not None
+        and team_features_by_team[away][f"{unit.lower()}_talent"] is not None
+        else None
         for unit in CAPS
     }

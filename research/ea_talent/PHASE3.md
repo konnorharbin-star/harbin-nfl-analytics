@@ -5,9 +5,13 @@ Both modules are research only. Neither imports or modifies the production model
 Example from `research/ea_talent`:
 ```python
 from ea_lineup_shadow import lineup_units, shadow_metrics
-units = lineup_units("ratings.csv", "verified_lineups.csv",
+
+units = lineup_units(
+    "ratings.csv",
+    "verified_lineups.csv",
     prediction_at="2026-09-01T12:00:00+00:00",
-    kickoff_at="2026-09-01T20:00:00+00:00")
+    kickoff_at="2026-09-01T20:00:00+00:00",
+)
 print(units)
 print(shadow_metrics("frozen_predictions.csv"))
 ```

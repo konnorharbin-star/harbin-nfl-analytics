@@ -2,17 +2,21 @@
 
 Does NOT learn point adjustments, modify picks or represent verified EA data.
 """
+
 import csv
 import math
 from collections import defaultdict
 from datetime import datetime
-from ea_player_talent import load_snapshot, _score, UNITS
+
+from ea_player_talent import load_snapshot
+
 
 def _dt(value):
     d = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if d.tzinfo is None or d.utcoffset() is None:
         raise ValueError("Timezone-aware timestamp required")
     return d
+
 
 def lineup_units(ratings_csv, lineup_csv, *, prediction_at, kickoff_at):
     """Require verified active starters + reserves; return missing rather than impute."""
@@ -47,9 +51,7 @@ def lineup_units(ratings_csv, lineup_csv, *, prediction_at, kickoff_at):
         out = roles["out"]
         # This is not a sportsbook point adjustment. QB one-for-one replacement
         # is only defined when one active starter and >=1 confirmed reserve.
-        replacement_gap = (
-            round(max(out) - max(reserves), 3) if out and reserves else None
-        )
+        replacement_gap = round(max(out) - max(reserves), 3) if out and reserves else None
         result[(team, unit)] = {
             "starter_count": len(starters),
             "reserve_count": len(reserves),
@@ -61,6 +63,7 @@ def lineup_units(ratings_csv, lineup_csv, *, prediction_at, kickoff_at):
         }
     return result
 
+
 def shadow_metrics(csv_path):
     """Compare precommitted base and challenger predicted margins, no price assumptions.
 
@@ -69,8 +72,15 @@ def shadow_metrics(csv_path):
     """
     with open(csv_path, newline="", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
-        required = {"game_id", "season", "kickoff_at", "forecast_at",
-                    "base_margin", "candidate_margin", "actual_margin"}
+        required = {
+            "game_id",
+            "season",
+            "kickoff_at",
+            "forecast_at",
+            "base_margin",
+            "candidate_margin",
+            "actual_margin",
+        }
         if not required.issubset(reader.fieldnames or []):
             raise ValueError("Shadow comparison missing fields")
         rows = list(reader)
@@ -89,13 +99,19 @@ def shadow_metrics(csv_path):
         if not all(math.isfinite(v) for v in nums):
             raise ValueError("Nonfinite margin")
         buckets[r["season"]].append(nums)
+
     def scores(records):
         n = len(records)
-        return {"games": n,
-                "base_mae": round(sum(abs(b-y) for b,c,y in records)/n, 5),
-                "candidate_mae": round(sum(abs(c-y) for b,c,y in records)/n, 5),
-                "base_rmse": round(math.sqrt(sum((b-y)**2 for b,c,y in records)/n), 5),
-                "candidate_rmse": round(math.sqrt(sum((c-y)**2 for b,c,y in records)/n), 5)}
-    return {"overall": scores([v for values in buckets.values() for v in values]),
-            "by_season": {year: scores(values) for year, values in sorted(buckets.items())},
-            "status": "RESEARCH_ONLY_NOT_PROMOTED"}
+        return {
+            "games": n,
+            "base_mae": round(sum(abs(b - y) for b, c, y in records) / n, 5),
+            "candidate_mae": round(sum(abs(c - y) for b, c, y in records) / n, 5),
+            "base_rmse": round(math.sqrt(sum((b - y) ** 2 for b, c, y in records) / n), 5),
+            "candidate_rmse": round(math.sqrt(sum((c - y) ** 2 for b, c, y in records) / n), 5),
+        }
+
+    return {
+        "overall": scores([v for values in buckets.values() for v in values]),
+        "by_season": {year: scores(values) for year, values in sorted(buckets.items())},
+        "status": "RESEARCH_ONLY_NOT_PROMOTED",
+    }

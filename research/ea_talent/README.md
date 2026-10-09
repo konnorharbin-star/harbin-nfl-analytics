@@ -10,9 +10,12 @@ Archive a legally obtained/exportable ratings snapshot as a CSV, e.g. `data/ea_r
 
 ```python
 from ea_player_talent import load_snapshot, team_features, matchup_features
-rows = load_snapshot("data/ea_ratings/2026-08-01.csv",
-                     prediction_at="2026-09-01T12:00:00-04:00",
-                     kickoff_at="2026-09-01T20:00:00-04:00")
+
+rows = load_snapshot(
+    "data/ea_ratings/2026-08-01.csv",
+    prediction_at="2026-09-01T12:00:00-04:00",
+    kickoff_at="2026-09-01T20:00:00-04:00",
+)
 scores = team_features(rows)
 home_minus_away = matchup_features(scores, "HOME_TEAM", "AWAY_TEAM")
 ```
