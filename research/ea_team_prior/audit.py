@@ -178,12 +178,19 @@ def audit(
     publication = date.fromisoformat(published_date)
     matched = []
     excluded = defaultdict(int)
+    missing_teams = defaultdict(int)
     for g in games:
         if g["kickoff"].date() <= publication:
             excluded["kickoff_before_or_on_publication_date"] += 1
             continue
+        if g["observed"].date() <= publication:
+            excluded["forecast_before_or_on_publication_date"] += 1
+            continue
         if g["home"] not in ratings or g["away"] not in ratings:
             excluded["missing_ea_team_rating"] += 1
+            for team in (g["home"], g["away"]):
+                if team not in ratings:
+                    missing_teams[team] += 1
             continue
         home, away = ratings[g["home"]], ratings[g["away"]]
         # Opponent-aware offensive/defensive EA units, *not scoreboard points*.
@@ -233,6 +240,7 @@ def audit(
         "matched_games": len(matched),
         "coverage": len(matched) / len(games) if games else 0,
         "exclusions": dict(excluded),
+        "missing_team_ids": dict(sorted(missing_teams.items())),
         "base_margin_mae": average(
             [abs(row["base_margin_error"]) for row in matched]
         ),
