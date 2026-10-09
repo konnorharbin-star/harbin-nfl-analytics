@@ -38,9 +38,7 @@ def _stat(raw: object) -> float | None:
         value = float(raw)
     except (ValueError, TypeError, OverflowError):
         return None
-    if not isfinite(value) or value < 0:
-        return None
-    return value
+    return value if isfinite(value) else None
 
 
 def source_frames(
@@ -81,6 +79,8 @@ def source_frames(
         completed = (
             _stat(game.get("home_score")) is not None
             and _stat(game.get("away_score")) is not None
+            and _stat(game.get("home_score")) >= 0
+            and _stat(game.get("away_score")) >= 0
         )
         item = {
             "game_id": gid, "season": season, "week": week,
