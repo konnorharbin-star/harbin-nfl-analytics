@@ -100,9 +100,12 @@ def load_snapshot(path: str | Path, *, prediction_at: str, kickoff_at: str) -> l
         r["position"] = position
         r["_unit"] = UNITS[position]
         r["_talent"] = _score(r, r["_unit"])
-        status = (r.get("available") or "1").strip().lower()
-        if status not in {"0", "1", "true", "false", "yes", "no"}:
-            raise ValueError("available must be a boolean")
+        # EA's INJ/durability attribute is not a medical availability report.
+        # Missing third-party lineup status must never be treated as healthy.
+        status = (r.get("available") or "").strip().lower()
+        if status and status not in {"0", "1", "true", "false", "yes", "no"}:
+            raise ValueError("available must be a boolean if supplied")
+        r["_availability_known"] = bool(status)
         r["_available"] = status in {"1", "true", "yes"}
     return rows
 
