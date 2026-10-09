@@ -137,6 +137,8 @@ def test_action_network_normalizes_independent_per_book_markets() -> None:
     )
 
     assert len(rows) == 6
+    assert all(row.source_quote_time_verified for row in rows)
+    assert all(row.source_quote_at is not None for row in rows)
     assert {row.book for row in rows} == {"DraftKings", "FanDuel"}
     assert {
         (row.book, row.market_type)
@@ -179,6 +181,8 @@ def test_action_network_can_use_explicit_collector_observation_time() -> None:
 
     assert len(rows) == 6
     assert {row.captured_at for row in rows} == {observed}
+    assert all(not row.source_quote_time_verified for row in rows)
+    assert all(row.source_quote_at is None for row in rows)
 
 
 def test_action_network_client_uses_free_scoreboard_and_target_week() -> None:
@@ -225,3 +229,32 @@ def test_current_aggregation_deduplicates_draftkings_identity_for_breadth() -> N
     assert meta["multi_book_games"] == 1
     assert meta["multi_book_coverage"] == 1.0
     assert meta["verified_sources"] == ["action_network", "espn"]
+
+
+def test_book_only_has_one_side_source_time_not_both():
+    data = _action_game()
+    # The paired moneyline may still be shown for non-execution research, but
+    # no source-origin timestamp is certified for both quoted sides.
+    away = data["markets"]["event"]["event"]["moneyline"][1]
+    away.pop("last_update")
+    rows = parse_action_network_game(
+        data, {("KC", "BUF"): "2026_04_BUF_KC"},
+        observed_at=datetime(2026, 10, 1, 12, 5, tzinfo=UTC),
+    )
+    moneyline = next(x for x in rows
+                     if x.book=="DraftKings" and x.market_type=="moneyline")
+    assert moneyline.source_quote_at is None
+    assert moneyline.source_quote_time_verified is False
+    assert all(x.source_quote_time_verified
+               for x in rows if x.market_type in ("spread","total"))
+
+
+def test_event_timestamp_does_not_certify_book_quote_origin():
+    data = _action_game(timestamp=None)
+    data["markets"]["event"]["event"]["last_update"] = "2026-10-01T12:00:00Z"
+    rows = parse_action_network_game(
+        data, {("KC", "BUF"): "2026_04_BUF_KC"},
+        observed_at=datetime(2026, 10, 1, 12, 5, tzinfo=UTC),
+    )
+    assert rows
+    assert all(not x.source_quote_time_verified for x in rows)
