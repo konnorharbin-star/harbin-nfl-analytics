@@ -1,0 +1,175 @@
+{
+  "2024_development_player_stat_rows": 10694,
+  "2025_diagnostic_player_stat_rows": 10674,
+  "2025_synthetic_threshold_diagnostic": {
+    "passing_yards": {
+      "brier_delta_challenger_minus_baseline": 0.0,
+      "challenger": {
+        "brier": 0.1817817,
+        "ece_10": 0.0403971,
+        "log_loss": 0.5485799,
+        "n": 3647
+      },
+      "distinct_weeks": 15,
+      "evaluated_synthetic_thresholds": 3647,
+      "fixed_threshold_grid": [
+        149.5,
+        174.5,
+        199.5,
+        224.5,
+        249.5,
+        274.5,
+        299.5
+      ],
+      "player_game_rows": 521,
+      "profitable_market_edge_proven": false,
+      "rolling_three_baseline": {
+        "brier": 0.1817817,
+        "ece_10": 0.0403971,
+        "log_loss": 0.5485799,
+        "n": 3647
+      },
+      "status": "HISTORICAL_SYNTHETIC_LINES_DIAGNOSTIC_ONLY",
+      "tested_vs_actual_bookmaker_odds": false,
+      "unique_games": 224,
+      "week_clustered_brier_delta_ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "receiving_yards": {
+      "brier_delta_challenger_minus_baseline": -0.0040606,
+      "challenger": {
+        "brier": 0.0826694,
+        "ece_10": 0.0159399,
+        "log_loss": 0.2699788,
+        "n": 27972
+      },
+      "distinct_weeks": 15,
+      "evaluated_synthetic_thresholds": 27972,
+      "fixed_threshold_grid": [
+        24.5,
+        39.5,
+        49.5,
+        64.5,
+        79.5,
+        99.5,
+        124.5
+      ],
+      "player_game_rows": 3996,
+      "profitable_market_edge_proven": false,
+      "rolling_three_baseline": {
+        "brier": 0.08673,
+        "ece_10": 0.0222434,
+        "log_loss": 0.2812143,
+        "n": 27972
+      },
+      "status": "HISTORICAL_SYNTHETIC_LINES_DIAGNOSTIC_ONLY",
+      "tested_vs_actual_bookmaker_odds": false,
+      "unique_games": 224,
+      "week_clustered_brier_delta_ci95": [
+        -0.0056209,
+        -0.0024471
+      ]
+    },
+    "receptions": {
+      "brier_delta_challenger_minus_baseline": -0.0033366,
+      "challenger": {
+        "brier": 0.1023001,
+        "ece_10": 0.0204305,
+        "log_loss": 0.3228427,
+        "n": 28252
+      },
+      "distinct_weeks": 15,
+      "evaluated_synthetic_thresholds": 28252,
+      "fixed_threshold_grid": [
+        1.5,
+        2.5,
+        3.5,
+        4.5,
+        5.5,
+        6.5,
+        7.5
+      ],
+      "player_game_rows": 4036,
+      "profitable_market_edge_proven": false,
+      "rolling_three_baseline": {
+        "brier": 0.1056367,
+        "ece_10": 0.0220327,
+        "log_loss": 0.3332991,
+        "n": 28252
+      },
+      "status": "HISTORICAL_SYNTHETIC_LINES_DIAGNOSTIC_ONLY",
+      "tested_vs_actual_bookmaker_odds": false,
+      "unique_games": 224,
+      "week_clustered_brier_delta_ci95": [
+        -0.0048145,
+        -0.0015993
+      ]
+    },
+    "rushing_yards": {
+      "brier_delta_challenger_minus_baseline": -0.0032428,
+      "challenger": {
+        "brier": 0.0757981,
+        "ece_10": 0.0084879,
+        "log_loss": 0.2463591,
+        "n": 14847
+      },
+      "distinct_weeks": 15,
+      "evaluated_synthetic_thresholds": 14847,
+      "fixed_threshold_grid": [
+        19.5,
+        34.5,
+        49.5,
+        64.5,
+        79.5,
+        99.5,
+        124.5
+      ],
+      "player_game_rows": 2121,
+      "profitable_market_edge_proven": false,
+      "rolling_three_baseline": {
+        "brier": 0.0790409,
+        "ece_10": 0.013223,
+        "log_loss": 0.2557003,
+        "n": 14847
+      },
+      "status": "HISTORICAL_SYNTHETIC_LINES_DIAGNOSTIC_ONLY",
+      "tested_vs_actual_bookmaker_odds": false,
+      "unique_games": 224,
+      "week_clustered_brier_delta_ci95": [
+        -0.0047446,
+        -0.0017302
+      ]
+    }
+  },
+  "2026_forward_probability_rows": 4186,
+  "2026_forward_unique_player_markets": 598,
+  "automatic_betting_enabled": false,
+  "calibrated_sportsbook_edge_proven": false,
+  "development_season": 2024,
+  "diagnostic_is_pristine_holdout": false,
+  "diagnostic_season": 2025,
+  "frozen_forward": {
+    "existing_entries": 0,
+    "new_entries": 4186,
+    "total_entries": 4186
+  },
+  "limitations": [
+    "Fixed hypothetical half-point thresholds, not bookmaker quotes.",
+    "2024 hyperparameters and residuals share development data; 2025 was previously inspected and is not a fresh untouched holdout.",
+    "Pre-game expected active-player status unknown; zero for missing stat rows.",
+    "Synthetic thresholds within one game/player are correlated, so threshold counts are not independent observations.",
+    "Empirical residuals can be miscalibrated by opponent, player usage, injury, roster role and changing team context.",
+    "Clipping/Beta smoothing do not prove prediction quality or profit."
+  ],
+  "market_odds_used": false,
+  "paid_sources_used": false,
+  "probabilities_calibrated_against_bookmakers": false,
+  "prospective_season": 2026,
+  "prospective_week": 5,
+  "schema_version": 1,
+  "spec_version": "prop_empirical_error_cdf_v1",
+  "status": "SYNTHETIC_LINES_DIAGNOSTIC_RESEARCH",
+  "synthetic_lines_are_offered_sportsbook_lines": false
+}

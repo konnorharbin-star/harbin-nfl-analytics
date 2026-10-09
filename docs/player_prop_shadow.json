@@ -4,11 +4,11 @@
   "automatic_betting_enabled": false,
   "blocked_price_reason": "NO_VERIFIED_CURRENT_PLAYER_PROP_BOOK_ODDS",
   "forward_ledger": {
-    "new_entries": 598,
-    "previous_entries": 0,
+    "new_entries": 0,
+    "previous_entries": 598,
     "total_entries": 598
   },
-  "generated_at_utc": "2026-10-09T00:42:04.222205+00:00",
+  "generated_at_utc": "2026-10-09T00:58:43.269304+00:00",
   "historical_diagnostic": {
     "auto_wagering_enabled": false,
     "by_market": {
@@ -112,6 +112,11 @@
     "No fair EV/price, market-beating result, CLV, wagering permission or tradeable edge can be inferred."
   ],
   "paid_sources_used": false,
+  "player_prop_probability_experiment": {
+    "calibrated_sportsbook_edge_proven": false,
+    "forward_probability_rows": 4186,
+    "status": "SYNTHETIC_LINES_DIAGNOSTIC_RESEARCH"
+  },
   "pregame_player_market_forecasts": 598,
   "schema_version": 1,
   "season": 2026,
