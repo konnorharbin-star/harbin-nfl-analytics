@@ -43,7 +43,7 @@ def normalize(raw_path, crosswalk_path, metadata_path, output_path, *, as_of, mi
     if not required.issubset(meta):
         raise ValueError("Incomplete immutable provenance metadata")
     snap, obtained = _time(meta["snapshot_at"]), _time(meta["obtained_at"])
-    if snap > cutoff or obtained < snap:
+    if snap > cutoff or obtained > cutoff or obtained < snap:
         raise ValueError("Future snapshot or inconsistent acquisition timestamps")
     if not meta["source_url"].startswith("https://") or not meta["license_note"].strip():
         raise ValueError("Unverified source reference or missing usage note")
