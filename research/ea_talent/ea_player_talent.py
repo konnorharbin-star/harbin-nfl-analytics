@@ -74,7 +74,7 @@ def load_snapshot(path: str | Path, *, prediction_at: str, kickoff_at: str) -> l
         r["position"] = position
         r["_unit"] = UNITS[position]
         r["_talent"] = _score(r, r["_unit"])
-        status = r.get("available", "1").strip().lower()
+        status = (r.get("available") or "1").strip().lower()
         if status not in {"0", "1", "true", "false", "yes", "no"}:
             raise ValueError("available must be a boolean")
         r["_available"] = status in {"1", "true", "yes"}
