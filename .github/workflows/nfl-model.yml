@@ -179,6 +179,26 @@ jobs:
       - name: Validate public publication bundle
         run: python validate_publication.py
 
+      - name: Build release-gated final edge decision board
+        shell: bash
+        run: |
+          python scripts/final_edge_board.py \
+            --sport nfl \
+            --source outputs/actionable_betting_board.csv \
+            --gate reports/release_gate.json \
+            --out-csv outputs/final_edge_board.csv \
+            --out-json outputs/final_edge_summary.json
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          s = json.load(open("outputs/final_edge_summary.json"))
+          print("## Final edge decision board")
+          print(f"- Ranked games: {s['distinct_games']}")
+          print(f"- Decision counts: {s['decision_counts']}")
+          print(f"- **Bet-ready:** {s['approved_bets']} (release-gated)")
+          print(f"- Global production release: {s['production_eligible']}")
+          print("- Stale quotes and unresolved sportsbook IDs are NOT executable bets.")
+          PY
+
       - name: Publish run summary
         shell: bash
         run: |
