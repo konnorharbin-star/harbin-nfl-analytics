@@ -30,10 +30,10 @@ def _sample(path: Path, sport: str = "nfl") -> Path:
         writer.writeheader()
         writer.writerow(dict(zip(names, [
             "g1", 2025, 5, "H", "A", 4, 44, -8, 40
-        ])))
+        ], strict=True)))
         writer.writerow(dict(zip(names, [
             "g2", 2025, 6, "H", "B", -7, 45, -7, 45
-        ])))
+        ], strict=True)))
     return path
 
 
