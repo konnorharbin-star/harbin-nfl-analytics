@@ -11,7 +11,7 @@
     "candidate_promotion_evidence_count": 0,
     "candidate_status": {
       "probability_home_win": {
-        "graded_games": 15,
+        "graded_games": 16,
         "ledger_capture_coverage": 1.0,
         "ledger_health_status": "PASS",
         "minimum_games": 128,
@@ -20,7 +20,7 @@
         "status": "ACCUMULATING_FORWARD_EVIDENCE"
       },
       "probability_total_distribution": {
-        "graded_games": 15,
+        "graded_games": 16,
         "ledger_capture_coverage": 1.0,
         "ledger_health_status": "PASS",
         "minimum_games": 128,
@@ -50,12 +50,12 @@
     "canonical_betting": {
       "clv_coverage": 1.0,
       "clv_integrity_passed": true,
-      "clv_samples": 11,
+      "clv_samples": 12,
       "entry_integrity_passed": true,
       "entry_quote_coverage": 1.0,
       "execution_ready_coverage": 1.0,
       "forward_betting_gate_passed": false,
-      "graded_bets": 11,
+      "graded_bets": 12,
       "minimum_bets": 300,
       "minimum_clv_coverage": 0.9,
       "status": "ACCUMULATING_FORWARD_EVIDENCE"
