@@ -88,16 +88,22 @@ def _candidate_available(
         if known and not bool(roster_row.get("active")):
             return False
     injury_row = injury.get(key)
-    if injury_row is not None and _number(injury_row.get("severity")) >= 0.95:
+    # Only a fresh, source-dated injury report can prove a QB is out.
+    # Stale reports are uncertainty, not proof a backup is starting.
+    if (
+        injury_row is not None
+        and str(injury_row.get("freshness_status") or "").upper() == "FRESH"
+        and _number(injury_row.get("severity")) >= 0.95
+    ):
         return False
     return True
 
 
 def _depth_age_days(row: dict[str, object], as_of: datetime) -> float | None:
     captured = _as_utc(row.get("depth_captured_at"))
-    if captured is None:
+    if captured is None or captured > as_of:
         return None
-    return max(0.0, (as_of - captured).total_seconds() / 86400.0)
+    return (as_of - captured).total_seconds() / 86400.0
 
 
 def _confidence_label(score: float) -> str:
@@ -182,6 +188,9 @@ def _select_team_qb(
             "expected_qb_player_key": None,
             "expected_qb_source": "unresolved",
             "expected_qb_depth_rank": None,
+            "expected_qb_depth_freshness": "MISSING",
+            "expected_qb_roster_freshness": "MISSING",
+            "expected_qb_injury_freshness": "NO_REPORT",
             "expected_qb_depth_age_days": None,
             "expected_qb_roster_status": None,
             "expected_qb_roster_active": None,
@@ -228,9 +237,31 @@ def _select_team_qb(
         if roster_row
         else None
     )
+    injury_freshness = (
+        str(injury_row.get("freshness_status") or "UNKNOWN").upper()
+        if injury_row
+        else "NO_REPORT"
+    )
+    roster_freshness = (
+        str(roster_row.get("roster_freshness_status") or "UNKNOWN").upper()
+        if roster_row
+        else "MISSING"
+    )
+    depth_freshness = (
+        str(depth_row.get("depth_freshness_status") or "").upper()
+        if depth_row
+        else "MISSING"
+    )
+    if depth_row and not depth_freshness:
+        depth_freshness = (
+            "FRESH" if depth_age is not None and depth_age <= 7.0 else "UNKNOWN"
+        )
+    if depth_row and _as_utc(depth_row.get("depth_captured_at")) is not None:
+        if _as_utc(depth_row.get("depth_captured_at")) > as_of:
+            depth_freshness = "FUTURE"
     severity = (
         _number(injury_row.get("severity"))
-        if injury_row
+        if injury_row and injury_freshness == "FRESH"
         else 0.0
     )
 
@@ -245,6 +276,14 @@ def _select_team_qb(
 
     if rank_one_ambiguity:
         confidence = min(confidence, 0.45)
+    # An active roster listing is not a confirmed starter assignment.
+    # Reject stale/unknown roster, depth and injury evidence for bet readiness.
+    if roster_freshness != "FRESH":
+        confidence = min(confidence, 0.55)
+    if source.startswith("depth_chart") and depth_freshness != "FRESH":
+        confidence = min(confidence, 0.55)
+    if injury_row and injury_freshness != "FRESH":
+        confidence = min(confidence, 0.55)
     if depth_row:
         if depth_age is None:
             confidence = min(confidence, 0.80)
@@ -278,6 +317,12 @@ def _select_team_qb(
         reasons.append(f"depth snapshot is {depth_age:.1f} days old")
     if rank_one_ambiguity:
         reasons.append("multiple QB1 depth-chart candidates")
+    if roster_freshness != "FRESH":
+        reasons.append(f"roster verification {roster_freshness.lower()}")
+    if source.startswith("depth_chart") and depth_freshness != "FRESH":
+        reasons.append(f"depth verification {depth_freshness.lower()}")
+    if injury_row and injury_freshness != "FRESH":
+        reasons.append(f"injury report {injury_freshness.lower()}")
     if confidence < 0.65:
         reasons.append("starter certainty below betting threshold")
 
@@ -288,6 +333,9 @@ def _select_team_qb(
         "expected_qb_player_key": key or None,
         "expected_qb_source": source,
         "expected_qb_depth_rank": depth_rank,
+        "expected_qb_depth_freshness": depth_freshness,
+        "expected_qb_roster_freshness": roster_freshness,
+        "expected_qb_injury_freshness": injury_freshness,
         "expected_qb_depth_age_days": (
             None if depth_age is None else round(depth_age, 4)
         ),
@@ -404,6 +452,9 @@ def attach_expected_qb_context(
         "expected_qb_name",
         "expected_qb_source",
         "expected_qb_depth_rank",
+        "expected_qb_depth_freshness",
+        "expected_qb_roster_freshness",
+        "expected_qb_injury_freshness",
         "expected_qb_depth_age_days",
         "expected_qb_roster_status",
         "expected_qb_roster_active",
