@@ -20,3 +20,5 @@ Every suggested match stays `UNREVIEWED`, including perfect names. Verify identi
 ## Feasibility
 
 The immediate next data dependency is a permission-compliant CSV/source feed from EA or a source whose license permits this use. Until available, tests run against local fixtures only. Phase 4's evidence gate must continue to report BLOCKED, with zero contribution to wager decisions. Official CFB team ratings are a separate optional *team-level* research prior and must not be misrepresented as player ratings.
+
+CI note: The research branch has separate style and unit-test checks. Production workflows are unchanged. Never enable a ratings-based scoring adjustment until the evidence gate passes.
