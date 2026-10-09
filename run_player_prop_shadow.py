@@ -10,9 +10,9 @@ from typing import Any
 
 from nfl.data import NFLDataClient
 from nfl.prop_challenger import diagnostic, forecast_week, source_frames
+from nfl.prop_probability import LEDGER_PATH as PROBABILITY_LEDGER
+from nfl.prop_probability import OUT_PATH as PROBABILITY_CSV
 from nfl.prop_probability import (
-    LEDGER_PATH as PROBABILITY_LEDGER,
-    OUT_PATH as PROBABILITY_CSV,
     append_first_seen_curves,
     build_probability_experiment,
     write_probability_csv,
