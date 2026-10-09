@@ -33,7 +33,7 @@ def inputs():
             if not completed:
                 continue
             for team in ("AAA","BBB"):
-                for i in range(16):
+                for i in range(23):
                     position="WR" if i < 9 else ("RB" if i < 13 else "QB")
                     if season==2025 and week==8 and i==0:
                         # Target-game absent player; pregame eligibility stays.
