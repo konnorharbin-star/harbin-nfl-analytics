@@ -44,6 +44,11 @@ on:
     branches: [main]
     paths:
       - "nfl/pipeline.py"
+      - "nfl/prop_challenger.py"
+      - "nfl/prop_probability.py"
+      - "run_player_prop_shadow.py"
+      - "tests/test_prop_challenger.py"
+      - "tests/test_prop_probability.py"
       - "nfl/context.py"
       - "nfl/injuries.py"
       - "nfl/personnel.py"
