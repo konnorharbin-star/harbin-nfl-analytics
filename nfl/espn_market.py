@@ -88,6 +88,10 @@ class ESPNTwoWayMarket:
     second_side: str
     second_line: float | None
     second_american_odds: int
+    # Strictly optional, source-origin book update time. Captured_at alone may
+    # be collector retrieval time, NOT evidence of sportsbook quote freshness.
+    source_quote_at: datetime | None = None
+    source_quote_time_verified: bool = False
 
     def to_dict(self) -> dict[str, object]:
         return asdict(self)

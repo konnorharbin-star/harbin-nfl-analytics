@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import os
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -149,6 +149,30 @@ def _row_timestamp(
     return None
 
 
+def _offer_origin_time(row: dict[str, object]) -> datetime | None:
+    # Only timestamps tied to the actual sportsbook-side quote are proof.
+    # Event/market update times and request capture times do not qualify.
+    for name in ("last_update", "updated_at", "timestamp"):
+        stamp = _timestamp(row.get(name))
+        if stamp is not None:
+            return stamp
+    return None
+
+
+def _paired_origin_time(
+    quote: dict[str, object], kind: str, first: str, second: str,
+) -> datetime | None:
+    stamps = quote.get("origin_stamps")
+    if not isinstance(stamps, dict):
+        return None
+    a, b = stamps.get(f"{kind}:{first}"), stamps.get(f"{kind}:{second}")
+    if not isinstance(a, datetime) or not isinstance(b, datetime):
+        return None
+    if abs(a - b) > timedelta(minutes=2):
+        return None
+    return max(a, b)
+
+
 def parse_action_network_game(
     game: dict[str, object],
     target_map: dict[tuple[str, str], str],
@@ -201,6 +225,7 @@ def parse_action_network_game(
                     {
                         "book": _book_name(book_id),
                         "timestamps": [],
+                        "origin_stamps": {},
                         "home_ml": None,
                         "away_ml": None,
                         "home_spread": None,
@@ -222,6 +247,16 @@ def parse_action_network_game(
                 side = str(row.get("side") or "").lower()
                 value = _number(row.get("value"))
                 odds = _american(row.get("odds"))
+                origin = _offer_origin_time(row)
+                if odds is not None and side in (
+                    ("home", "away") if kind != "total" else ("over", "under")
+                ):
+                    origin_stamps = book["origin_stamps"]
+                    if isinstance(origin_stamps, dict):
+                        # No prior source stamp survives a later undated side
+                        # update. Otherwise an updated price could inherit an
+                        # old, unrelated timestamp and create fake arbitrage.
+                        origin_stamps[f"{kind}:{side}"] = origin
                 if kind == "moneyline":
                     if side == "home":
                         book["home_ml"] = odds
@@ -269,6 +304,11 @@ def parse_action_network_game(
                     book=book_name,
                     source_event_id=source_event_id,
                     captured_at=captured_at,
+                    source_quote_at=_paired_origin_time(quote, "moneyline", "home", "away"),
+                    source_quote_time_verified=(
+                        _paired_origin_time(quote, "moneyline", "home", "away")
+                        is not None
+                    ),
                     first_side="home",
                     first_line=None,
                     first_american_odds=home_ml,
@@ -301,6 +341,11 @@ def parse_action_network_game(
                     book=book_name,
                     source_event_id=source_event_id,
                     captured_at=captured_at,
+                    source_quote_at=_paired_origin_time(quote, "spread", "home", "away"),
+                    source_quote_time_verified=(
+                        _paired_origin_time(quote, "spread", "home", "away")
+                        is not None
+                    ),
                     first_side="home",
                     first_line=float(home_spread),
                     first_american_odds=home_spread_odds,
@@ -329,6 +374,11 @@ def parse_action_network_game(
                     book=book_name,
                     source_event_id=source_event_id,
                     captured_at=captured_at,
+                    source_quote_at=_paired_origin_time(quote, "total", "over", "under"),
+                    source_quote_time_verified=(
+                        _paired_origin_time(quote, "total", "over", "under")
+                        is not None
+                    ),
                     first_side="over",
                     first_line=float(total_over),
                     first_american_odds=over_odds,

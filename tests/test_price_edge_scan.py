@@ -15,10 +15,12 @@ GAME = "2026_05_TB_DAL"
 def market(book, side_a="home", odds_a=110, odds_b=-105,
            market_type="moneyline", line_a=None, line_b=None,
            provider="action_network", captured=None, game=GAME):
+    stamp = captured or NOW - timedelta(minutes=2)
     return ESPNTwoWayMarket(
         game_id=game, market_type=market_type, provider=provider,
         book=book, source_event_id="upstream-game-123",
-        captured_at=captured or NOW - timedelta(minutes=2),
+        captured_at=stamp,
+        source_quote_at=stamp, source_quote_time_verified=True,
         first_side=side_a, first_line=line_a,
         first_american_odds=odds_a,
         second_side={
@@ -199,3 +201,40 @@ def test_reference_excludes_candidate_and_never_uses_paid_or_stale():
         market("Book D",odds_a=-125,odds_b=105,provider="odds_api"),
     ]
     assert scan(rows)["disagreement_watchlist"]==[]
+
+
+def test_collector_timestamp_without_real_quote_update_is_not_arbitrage():
+    pairs = [
+        replace(market("Book A", odds_a=120, odds_b=-150),
+                source_quote_at=None, source_quote_time_verified=False),
+        replace(market("Book B", odds_a=-150, odds_b=120),
+                source_quote_at=None, source_quote_time_verified=False),
+    ]
+    report = scan(pairs)
+    assert not report["opportunities"]
+    assert not report["disagreement_watchlist"]
+    assert report["summary"]["excluded_snapshots"][
+        "no_verified_book_offer_origin_time"
+    ] == 2
+
+
+def test_source_origin_must_be_fresh_not_just_collector_capture():
+    pair = [
+        replace(market("Book A", odds_a=120, odds_b=-150),
+                source_quote_at=NOW - timedelta(days=1)),
+        market("Book B", odds_a=-150, odds_b=120),
+    ]
+    report=scan(pair)
+    assert not report["opportunities"]
+    assert report["summary"]["excluded_snapshots"][
+        "expired_future_or_postkickoff"
+    ] == 1
+
+
+def test_fake_future_origin_does_not_make_book_quote_fresh():
+    pair = [
+        replace(market("Book A", odds_a=120, odds_b=-150),
+                source_quote_at=NOW+timedelta(minutes=1)),
+        market("Book B", odds_a=-150, odds_b=120),
+    ]
+    assert not scan(pair)["opportunities"]

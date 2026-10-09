@@ -20,7 +20,7 @@ Published diagnostic: `docs/market_residual_challenger.json` after a successful 
 ### 2. Can free current sports books disagree enough to show a mathematically attractive two-price opportunity?
 The `nfl.price_edge_scan` inspects **already-collected** public ESPN and Action Network two-way quotes, without fetching additional sources.
 
-- Require verified game ID, provider event ID, named book, exact opposing sides, exact same market point/line, named distinct canonical sportsbooks, timezone-aware quote captures, no future/postkickoff observations and no stale quotes older than 10 minutes.
+- Require verified game ID, provider event ID, named book, exact opposing sides, exact same market point/line, named distinct canonical sportsbooks, **source-origin per-side bookmaker update timestamps on BOTH complementary sides**, timezone-aware quote captures, no future/postkickoff observations and no stale source quotes older than 10 minutes. An identical collector download timestamp across books is never proof that these book odds were current. Quotes with only an ESPN capture time or Action Network collector fallback are excluded from evidence-qualified findings.
 - Compare captures from two different books only if within **five minutes**. Do not build a fictional middle from mismatched spreads or totals, attribute anonymous nflverse schedule prices to a book, accept paid-provider rows, or pair identical sportsbook aliases.
 - Only surface potential two-outcome arithmetic when `1/decimal_A + 1/decimal_B <= 0.995`, i.e. a **0.5 percentage-point theoretical buffer**. Reports show the quoted timestamps, point line, named books, inverse-decimal sum and theoretical payout.
 - **These are not independently certified simultaneous executable prices.** Public quote capture can lag the actual sportsbook, bets can move instantly, stake limits/settlement rules can differ, and an apparent arbitrage may be unfillable. It never tells the user to place a wager.
@@ -40,3 +40,25 @@ No paid data, authentication, browser accounts, wagering automation, wallet, ord
 **The combined system may truthfully say NO EDGE.** It must not invent a winner, inflate EV or report proof of profitability when quotes or independent holdout results are missing.
 
 Next work: accumulate **first-seen 2026** predictions with exact source timestamps, independently check final scores, evaluate model residuals and possible two-book market arbitrage out of sample, and add source-origin timestamps where the public data permits. A genuine positive, persistent edge can only be claimed with independent forward validation.
+
+
+## Source-provenance correction — 2026-10-08
+
+The first operational scanner found 10 numerical cross-book pairs and nine
+consensus disagreements, several implying wildly implausible 10–40% two-way
+returns. They were **not independently verified tradeable opportunities**:
+those book prices shared a synthetic request-capture timestamp because a free
+provider supplied no trustworthy source-origin quote update time.
+
+The scanner now **rejects all such pairs**. For Action Network, only each
+specific side quote's timezone-aware `last_update`, `updated_at` or
+`timestamp` counts. It must exist for both sides of the book's two-way
+snapshot and the two timestamps must agree within two minutes. An event-level
+update, market-level timestamp, or collector-observed time is not sufficient.
+ESPN records with no per-book quote-update time remain unverified.
+
+No measured sportsbook profit, risk-free arbitrage, or edge claim should be
+drawn from the original 10/9 observation counts. Historical reports or cached
+screenshots showing those values are superseded by the strict source-time
+verification requirement. Results may legitimately drop to **zero**, which is
+preferable to misleading apparent arbitrage.
