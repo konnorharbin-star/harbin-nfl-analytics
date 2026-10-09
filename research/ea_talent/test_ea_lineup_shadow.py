@@ -111,6 +111,26 @@ class Phase3Tests(unittest.TestCase):
         with self.assertRaises(ValueError):
             shadow_metrics(self.games)
 
+    def test_stale_assignment_blocks_gap(self):
+        s = self.lineup.read_text().replace(
+            "2026-09-01T10:00:00+00:00", "2026-08-20T10:00:00+00:00"
+        )
+        self.lineup.write_text(s)
+        qb = self.assess()
+        self.assertFalse(qb["qb_ready"])
+        self.assertIsNone(qb["unavailable_vs_reserve_gap"])
+        self.assertEqual(qb["qb_gap_reason"], "STALE_QB_ASSIGNMENT")
+
+    def test_named_third_string_starter_uses_his_rating(self):
+        s = self.lineup.read_text().replace(
+            "b,A,starter,2,", "b,A,reserve,2,"
+        ).replace("c,A,reserve,3,", "c,A,starter,3,")
+        self.lineup.write_text(s)
+        qb = self.assess()
+        self.assertTrue(qb["qb_ready"])
+        self.assertEqual(qb["qb_replacement_player_id"], "c")
+        self.assertEqual(qb["unavailable_vs_reserve_gap"], 25.0)
+
 
 if __name__ == "__main__":
     unittest.main()
