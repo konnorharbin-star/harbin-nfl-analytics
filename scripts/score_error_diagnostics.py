@@ -167,7 +167,8 @@ def report(rows: list[dict], *, sport: str, source_sha256: str) -> dict:
         "diagnostic_limits": [
             "These rows lack verified pregame forecast capture timestamps.",
             "Errors alone do not establish causal injuries, pace, play calling, or QB impacts.",
-            "Do not fit coefficients to this report or treat these metrics as forward betting performance.",
+            "Do not fit coefficients to this report or treat these metrics "
+            "as forward betting performance.",
             "Do not mix these games with duplicate forward snapshots or claim newly approved bets.",
         ],
         "production_model_adjustment_points": 0.0,
