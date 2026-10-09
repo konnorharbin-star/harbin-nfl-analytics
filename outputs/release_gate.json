@@ -31,7 +31,7 @@
       "passed": false,
       "requirement": ">=95% current games with identified, decision-ready expected starting-QB state",
       "value": {
-        "decision_ready_coverage": 0.8,
+        "decision_ready_coverage": 0.7857,
         "identity_coverage": 1.0
       }
     },
@@ -56,7 +56,7 @@
       "name": "context_coverage",
       "passed": false,
       "requirement": ">=90% current injury/rest/weather/travel context coverage",
-      "value": 0.65
+      "value": 0.6607
     },
     {
       "detail": "",
@@ -96,7 +96,7 @@
       "name": "live_monitoring",
       "passed": false,
       "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
-      "value": 87.6
+      "value": 87.8
     },
     {
       "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -137,8 +137,8 @@
         "status": "ESTABLISHED SAMPLE",
         "verified_clv_coverage": 0.7965686274509803,
         "verified_roi_ci_95": [
-          -0.14111600728697146,
-          -0.01823633756169843
+          -0.1434873852522534,
+          -0.01842608677428751
         ]
       }
     },

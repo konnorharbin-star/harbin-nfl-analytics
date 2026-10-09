@@ -1,5 +1,5 @@
 {
-  "candidate_rows": 45,
+  "candidate_rows": 42,
   "context_source_errors": [],
   "decision_intelligence_errors": [],
   "duplicate_game_count": 0,
@@ -8,21 +8,21 @@
   "extra_projection_games": [],
   "future_verified_quote_rows": 0,
   "games_without_candidate_rows": [],
-  "market_rows": 358,
+  "market_rows": 334,
   "market_source_errors": [],
   "meaning": "current-run structural and chronological data integrity; missing values are never fabricated",
   "missing_data_count": 0,
   "missing_projection_games": [],
   "post_kickoff_verified_quote_rows": 0,
-  "projection_games": 15,
+  "projection_games": 14,
   "recent_form_source_errors": [],
   "source_health": {
     "errors": [],
     "status": "OK"
   },
   "status": "OK",
-  "target_games": 15,
+  "target_games": 14,
   "unmatched_market_rows": 0,
-  "verified_quote_rows": 358,
+  "verified_quote_rows": 334,
   "warnings": []
 }

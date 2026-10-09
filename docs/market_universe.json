@@ -1,0 +1,264 @@
+{
+  "automatic_betting_enabled": false,
+  "current_price_execution_verified": false,
+  "exclusions": {
+    "MISSING_KICKOFF_CAPTURE_OR_ORIGIN": 668
+  },
+  "generated_at_utc": "2026-10-09T00:25:19.066393+00:00",
+  "limitations": "A cross-book median is an imperfect correlated-price reference, not an independently validated probability. Never call its proxy EV a true edge. Push/tie handling and book-specific settlement rules may differ. No fabricated player props or period markets: unprovided prices are reported missing, never filled by guesses. Per-book source updates still may not certify executable prices.",
+  "market_coverage": [
+    {
+      "coverage": "HAS_PRICES",
+      "market": "moneyline",
+      "period": "full_game",
+      "supplied_offer_count": 224
+    },
+    {
+      "coverage": "HAS_PRICES",
+      "market": "spread",
+      "period": "full_game",
+      "supplied_offer_count": 222
+    },
+    {
+      "coverage": "HAS_PRICES",
+      "market": "total",
+      "period": "full_game",
+      "supplied_offer_count": 222
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "team_total",
+      "period": "full_game",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "alt_spread",
+      "period": "full_game",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "alt_total",
+      "period": "full_game",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "moneyline",
+      "period": "first_half",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "spread",
+      "period": "first_half",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "total",
+      "period": "first_half",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "team_total",
+      "period": "first_half",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "moneyline",
+      "period": "second_half",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "spread",
+      "period": "second_half",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "total",
+      "period": "second_half",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "team_total",
+      "period": "second_half",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "moneyline",
+      "period": "first_quarter",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "spread",
+      "period": "first_quarter",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "total",
+      "period": "first_quarter",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "team_total",
+      "period": "first_quarter",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "moneyline",
+      "period": "second_quarter",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "spread",
+      "period": "second_quarter",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "total",
+      "period": "second_quarter",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "moneyline",
+      "period": "third_quarter",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "spread",
+      "period": "third_quarter",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "total",
+      "period": "third_quarter",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "moneyline",
+      "period": "fourth_quarter",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "spread",
+      "period": "fourth_quarter",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "total",
+      "period": "fourth_quarter",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "passing_yards",
+      "period": "player",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "passing_touchdowns",
+      "period": "player",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "passing_attempts",
+      "period": "player",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "pass_completions",
+      "period": "player",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "interceptions",
+      "period": "player",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "rushing_yards",
+      "period": "player",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "rushing_attempts",
+      "period": "player",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "receiving_yards",
+      "period": "player",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "receptions",
+      "period": "player",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "anytime_touchdown",
+      "period": "player",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "longest_reception",
+      "period": "player",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "longest_rush",
+      "period": "player",
+      "supplied_offer_count": 0
+    },
+    {
+      "coverage": "NO_FREE_SOURCE_OBSERVED",
+      "market": "field_goals_made",
+      "period": "player",
+      "supplied_offer_count": 0
+    }
+  ],
+  "mode": "ALL_MARKETS_PRICE_DISCOVERY_RESEARCH",
+  "paid_feeds_required": false,
+  "research_candidates": [],
+  "schema_version": 1,
+  "summary": {
+    "market_families_cataloged": 40,
+    "markets_without_supplied_source": 37,
+    "multi_book_two_way_markets": 0,
+    "origin_valid_offers": 0,
+    "research_price_discrepancies": 0,
+    "supplied_offers": 668
+  },
+  "true_market_mispricing_proven": false
+}
