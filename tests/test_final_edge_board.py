@@ -5,7 +5,6 @@ import pytest
 
 from scripts.final_edge_board import build, inspect
 
-
 NOW = datetime(2026, 10, 9, 23, 30, tzinfo=UTC)
 
 
