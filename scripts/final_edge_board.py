@@ -68,7 +68,8 @@ def inspect(row, sport, gate, as_of):
     if sport not in {"nfl", "cfb"}:
         raise ValueError("Unknown sport")
     nfl = sport == "nfl"
-    value = lambda n, c: row.get(n if nfl else c)
+    def value(n, c):
+        return row.get(n if nfl else c)
     kickoff_str = value("kickoff", "date")
     kickoff = timestamp(kickoff_str)
     quote_str = value("quant_quote_at", "quote_at")
