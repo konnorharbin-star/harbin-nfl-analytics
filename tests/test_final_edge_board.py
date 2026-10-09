@@ -1,6 +1,8 @@
 """Release-gated edge ranks cannot turn stale prices or raw EV into bets."""
 from datetime import UTC, datetime
 
+import pytest
+
 from scripts.final_edge_board import build, inspect
 
 
@@ -101,7 +103,5 @@ def test_game_started_and_unsupported_raw_edge_never_recommended():
 
 
 def test_release_authority_is_required():
-    import pytest
-
     with pytest.raises(ValueError, match="release authority"):
         build([nfl()], sport="nfl", gate={}, as_of=NOW)
