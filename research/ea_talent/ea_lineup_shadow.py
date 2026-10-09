@@ -93,7 +93,13 @@ def lineup_units(ratings_csv, lineup_csv, *, prediction_at, kickoff_at):
             raise ValueError("Ambiguous depth ranking for same position")
         ranks.add(rank_key)
         by_team_unit[(team, rated["_unit"])].append(
-            {"player": rated, "role": role, "rank": rank}
+            {
+                "player": rated,
+                "role": role,
+                "rank": rank,
+                # Do not treat an old starter report as a current confirmation.
+                "fresh": (cutoff - observed).total_seconds() <= 72 * 3600,
+            }
         )
 
     result = {}
@@ -127,6 +133,8 @@ def lineup_units(ratings_csv, lineup_csv, *, prediction_at, kickoff_at):
             selected = starters[0] if len(starters) == 1 else None
             if len(expected) != 1 or selected is None:
                 row_result["qb_gap_reason"] = "UNVERIFIED_EXPECTED_STARTER"
+            elif not expected[0]["fresh"] or not selected["fresh"]:
+                row_result["qb_gap_reason"] = "STALE_QB_ASSIGNMENT"
             elif expected[0]["role"] == "starter" and selected["rank"] == 1:
                 row_result.update(
                     qb_ready=True,
