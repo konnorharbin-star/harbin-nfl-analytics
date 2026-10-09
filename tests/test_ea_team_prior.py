@@ -1,7 +1,7 @@
 """Prevent team priors from being misread as prospective EA player evidence."""
 import csv
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -39,7 +39,7 @@ def test_prepublication_excluded_and_calibration_is_disabled():
     def game(kickoff):
         return {
             "game_id": "g1", "kickoff": datetime.fromisoformat(kickoff),
-            "observed": datetime(2026, 10, 6, tzinfo=timezone.utc),
+            "observed": datetime(2026, 10, 6, tzinfo=UTC),
             "home": "DAL", "away": "TB",
             "projected_margin": 3, "actual_margin": -8,
             "projected_total": 50, "actual_total": 40,
