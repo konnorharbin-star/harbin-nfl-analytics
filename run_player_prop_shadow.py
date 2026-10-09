@@ -235,6 +235,10 @@ def main() -> int:
         "forecast_rows":report["pregame_player_market_forecasts"],
         "ledger":report["forward_ledger"],
         "historical":report["historical_diagnostic"]["by_market"],
+        "probability_experiment": report["player_prop_probability_experiment"],
+        "synthetic_threshold_brier_diagnostic": json.loads(
+            (OUTPUT_JSON.parent / "player_prop_probability_shadow.json").read_text()
+        ).get("2025_synthetic_threshold_diagnostic", {}),
     },indent=2))
     return 0
 
