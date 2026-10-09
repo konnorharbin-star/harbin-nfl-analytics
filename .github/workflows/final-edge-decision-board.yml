@@ -1,0 +1,55 @@
+name: NFL Final Edge Decision Board
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "scripts/final_edge_board.py"
+      - "tests/test_final_edge_board.py"
+      - ".github/workflows/final-edge-decision-board.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  final-board:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependency
+        run: python -m pip install pytest
+      - name: Verify betting release gates and one-per-game selection
+        run: python -m pytest -q tests/test_final_edge_board.py
+      - name: Rank historical evidence against currently archived book prices
+        run: |
+          python scripts/final_edge_board.py \
+            --sport nfl \
+            --source outputs/actionable_betting_board.csv \
+            --gate reports/release_gate.json \
+            --out-csv outputs/final_edge_board.csv \
+            --out-json outputs/final_edge_summary.json
+      - name: Summary and exclusions
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          r=json.load(open("outputs/final_edge_summary.json"))
+          print("## NFL final edge decision board")
+          print(f"- Distinct games: {r['distinct_games']}")
+          print(f"- Decisions: {r['decision_counts']}")
+          print(f"- Independently approved bets: {r['approved_bets']}")
+          print(f"- Production eligible: {r['production_eligible']}")
+          print("- Historical research is not evidence of future profitability.")
+          print("- Recheck current sportsbook price and timestamp before any bet.")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nfl-final-edge-board
+          path: |
+            outputs/final_edge_board.csv
+            outputs/final_edge_summary.json
+          retention-days: 30
