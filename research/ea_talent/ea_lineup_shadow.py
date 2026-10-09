@@ -1,6 +1,9 @@
-"""Phase 3: independently verified pregame lineups and shadow-score evaluation.
+"""Point-in-time lineup replacement evidence, without betting-score conversion.
 
-Does NOT learn point adjustments, modify picks or represent verified EA data.
+A QB gap is the rating of the pregame depth-chart QB1 *ruled out* minus
+the rating of the confirmed replacement *who will start*. Unknown statuses
+are never interpreted as healthy. Injury durability attributes are not injury
+reports. All lineup evidence must be independently reviewed and source dated.
 """
 
 import csv
@@ -19,48 +22,132 @@ def _dt(value):
 
 
 def lineup_units(ratings_csv, lineup_csv, *, prediction_at, kickoff_at):
-    """Require verified active starters + reserves; return missing rather than impute."""
-    ratings = load_snapshot(ratings_csv, prediction_at=prediction_at, kickoff_at=kickoff_at)
-    lookup = {r["player_id"]: r for r in ratings}
-    with open(lineup_csv, newline="", encoding="utf-8-sig") as f:
-        reader = csv.DictReader(f)
-        required = {"player_id", "team", "role", "observed_at"}
+    """Return research-only QB replacement gaps or None when unverified.
+
+    Required lineup CSV:
+    player_id,team,role,depth_rank,observed_at,obtained_at,source_url,verified
+
+    The depth ranking is *pregame*; 'starter' denotes an explicitly verified
+    expected starting assignment, 'out' a confirmed unavailability designation.
+    The reported source is self-attested and must be checked independently.
+    """
+    ratings = load_snapshot(
+        ratings_csv,
+        prediction_at=prediction_at,
+        kickoff_at=kickoff_at,
+    )
+    by_player = {r["player_id"]: r for r in ratings}
+    with open(lineup_csv, newline="", encoding="utf-8-sig") as handle:
+        reader = csv.DictReader(handle)
+        required = {
+            "player_id",
+            "team",
+            "role",
+            "depth_rank",
+            "observed_at",
+            "obtained_at",
+            "source_url",
+            "verified",
+        }
         if not required.issubset(reader.fieldnames or []):
-            raise ValueError("Lineup missing required columns")
+            raise ValueError("Lineup missing verified source/role/depth columns")
         lines = list(reader)
+
     cutoff = _dt(prediction_at)
-    seen = set()
-    groups = defaultdict(lambda: {"starter": [], "reserve": [], "out": []})
-    for r in lines:
-        pid = r["player_id"]
-        if pid in seen or pid not in lookup:
+    kickoff = _dt(kickoff_at)
+    if cutoff >= kickoff:
+        raise ValueError("Prediction must precede kickoff")
+
+    by_team_unit = defaultdict(list)
+    keys = set()
+    ranks = set()
+    for row in lines:
+        player_id = (row["player_id"] or "").strip()
+        if player_id in keys or player_id not in by_player:
             raise ValueError("Duplicate or unmapped lineup player ID")
-        seen.add(pid)
-        if _dt(r["observed_at"]) > cutoff:
-            raise ValueError("Future lineup observation")
-        if r["team"] != lookup[pid]["team"]:
-            raise ValueError("Team mismatch")
-        role = r["role"].strip().lower()
-        if role not in ("starter", "reserve", "out"):
-            raise ValueError("Unverified role")
-        groups[(r["team"], lookup[pid]["_unit"])][role].append(lookup[pid]["_talent"])
+        keys.add(player_id)
+        rated = by_player[player_id]
+        team = (row["team"] or "").strip()
+        if team != rated["team"]:
+            raise ValueError("Team mismatch in lineup versus ratings crosswalk")
+        if (row["verified"] or "").strip().lower() != "true":
+            raise ValueError("Lineup record is not explicitly source-verified")
+        url = (row["source_url"] or "").strip()
+        if not url.startswith("https://"):
+            raise ValueError("Lineup record lacks HTTPS source provenance")
+        observed = _dt((row["observed_at"] or "").strip())
+        obtained = _dt((row["obtained_at"] or "").strip())
+        if observed > obtained or obtained > cutoff:
+            raise ValueError("Future/unobtained lineup information")
+        role = (row["role"] or "").strip().lower()
+        if role not in {"starter", "reserve", "out", "uncertain"}:
+            raise ValueError("Unrecognized lineup availability")
+        try:
+            rank = int(row["depth_rank"])
+        except (TypeError, ValueError) as error:
+            raise ValueError("Missing/invalid explicit depth rank") from error
+        if rank < 1 or str(rank) != (row["depth_rank"] or "").strip():
+            raise ValueError("Depth rank must be a positive whole number")
+        rank_key = (team, rated["position"], rank)
+        if rank_key in ranks:
+            raise ValueError("Ambiguous depth ranking for same position")
+        ranks.add(rank_key)
+        by_team_unit[(team, rated["_unit"])].append(
+            {"player": rated, "role": role, "rank": rank}
+        )
+
     result = {}
-    for (team, unit), roles in sorted(groups.items()):
-        starters = roles["starter"]
-        reserves = roles["reserve"]
-        out = roles["out"]
-        # This is not a sportsbook point adjustment. QB one-for-one replacement
-        # is only defined when one active starter and >=1 confirmed reserve.
-        replacement_gap = round(max(out) - max(reserves), 3) if out and reserves else None
-        result[(team, unit)] = {
+    for (team, unit), players in sorted(by_team_unit.items()):
+        starters = [p for p in players if p["role"] == "starter"]
+        reserves = [p for p in players if p["role"] == "reserve"]
+        absent = [p for p in players if p["role"] == "out"]
+        uncertain = [p for p in players if p["role"] == "uncertain"]
+        row_result = {
             "starter_count": len(starters),
             "reserve_count": len(reserves),
-            "out_count": len(out),
-            "starter_mean": round(sum(starters) / len(starters), 3) if starters else None,
-            "reserve_mean": round(sum(reserves) / len(reserves), 3) if reserves else None,
-            "unavailable_vs_reserve_gap": replacement_gap,
-            "qb_ready": unit == "QB" and len(starters) == 1 and len(reserves) >= 1,
+            "out_count": len(absent),
+            "uncertain_count": len(uncertain),
+            "starter_mean": (
+                round(sum(p["player"]["_talent"] for p in starters) / len(starters), 3)
+                if starters
+                else None
+            ),
+            "reserve_mean": (
+                round(sum(p["player"]["_talent"] for p in reserves) / len(reserves), 3)
+                if reserves
+                else None
+            ),
+            "unavailable_vs_reserve_gap": None,
+            "qb_ready": False,
+            "qb_replacement_player_id": None,
+            "qb_gap_reason": "NOT_QB_OR_UNVERIFIED",
         }
+        if unit == "QB":
+            expected = [p for p in players if p["rank"] == 1]
+            selected = starters[0] if len(starters) == 1 else None
+            if len(expected) != 1 or selected is None:
+                row_result["qb_gap_reason"] = "UNVERIFIED_EXPECTED_STARTER"
+            elif expected[0]["role"] == "starter" and selected["rank"] == 1:
+                row_result.update(
+                    qb_ready=True,
+                    unavailable_vs_reserve_gap=0.0,
+                    qb_replacement_player_id=selected["player"]["player_id"],
+                    qb_gap_reason="CONFIRMED_QB1_ACTIVE",
+                )
+            elif expected[0]["role"] == "out" and selected["rank"] > 1:
+                row_result.update(
+                    qb_ready=True,
+                    unavailable_vs_reserve_gap=round(
+                        expected[0]["player"]["_talent"]
+                        - selected["player"]["_talent"],
+                        3,
+                    ),
+                    qb_replacement_player_id=selected["player"]["player_id"],
+                    qb_gap_reason="CONFIRMED_QB1_OUT_REPLACEMENT",
+                )
+            else:
+                row_result["qb_gap_reason"] = "QB1_NOT_CONFIRMED_OUT_OR_ACTIVE"
+        result[(team, unit)] = row_result
     return result
 
 
