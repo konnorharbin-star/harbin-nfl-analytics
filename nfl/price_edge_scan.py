@@ -47,6 +47,10 @@ def _quote_rows(
     for market in quotes:
         kickoff = _stamp(kickoffs.get(market.game_id))
         captured = _stamp(market.captured_at)
+        origin = (
+            _stamp(market.source_quote_at)
+            if market.source_quote_time_verified else None
+        )
         book = canonical_book_identity(market.book)
         if market.provider not in ALLOWED_FREE_PROVIDERS:
             excluded["source_not_free_and_verified"] += 1
@@ -54,10 +58,19 @@ def _quote_rows(
         if market.market_type not in SIDES or not book or not market.source_event_id:
             excluded["unidentified_market"] += 1
             continue
+        # Public Action Network and ESPN may populate captured_at with the
+        # collector's request time. That does not prove these *book prices*
+        # were current. Both complementary sides need source-origin update time.
+        if origin is None:
+            excluded["no_verified_book_offer_origin_time"] += 1
+            continue
         if (
-            captured is None or kickoff is None or captured >= kickoff
+            captured is None or kickoff is None or origin >= kickoff
+            or captured >= kickoff or origin > as_of
             or captured > as_of or as_of >= kickoff
-            or as_of - captured > MAX_QUOTE_AGE
+            or origin > captured + timedelta(minutes=2)
+            or captured - origin > MAX_QUOTE_AGE
+            or as_of - origin > MAX_QUOTE_AGE
         ):
             excluded["expired_future_or_postkickoff"] += 1
             continue
@@ -116,8 +129,9 @@ def _quote_rows(
                 "source_event_id": market.source_event_id,
                 "price": price,
                 "decimal": decimal,
-                "observed_at": captured,
-                "quote_origin_time_verified": False,
+                "observed_at": origin,
+                "collector_captured_at": captured,
+                "quote_origin_time_verified": True,
             })
     return valid, dict(excluded)
 
@@ -216,7 +230,7 @@ def scan_price_edges(
                     "market_based_theoretical_ev": round(theoretical_ev, 6),
                     "model_win_probability_used": False,
                     "true_edge_proven": False,
-                    "source_quote_origin_time_verified": False,
+                    "source_quote_origin_time_verified": True,
                     "human_action": "MANUAL_RESEARCH_ONLY_NOT_AN_EXECUTABLE_BET",
                 })
 
@@ -243,7 +257,7 @@ def scan_price_edges(
             "inverse_decimal_odds_sum": round(implied, 8),
             "theoretical_two_way_margin": round(1-implied, 8),
             "theoretical_fixed_stake_yield": round(1/implied-1, 8),
-            "quote_origin_time_verified": False,
+            "quote_origin_time_verified": True,
             "prices_simultaneously_executable_verified": False,
             "actual_arbitrage_achieved": False,
             "human_action": "RECHECK_BOTH_BOOKS_MANUALLY_NOT_A_BET",
@@ -262,7 +276,8 @@ def scan_price_edges(
         "paid_api_enabled": False,
         "model_win_probability_used": False,
         "wager_execution_implemented": False,
-        "source_quote_origin_verified": False,
+        "source_quote_origin_verified": True,
+        "simultaneous_book_execution_verified": False,
         "summary": {
             "input_two_way_snapshots": len(markets),
             "admissible_side_quotes": len(quotes),
