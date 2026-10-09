@@ -1,3 +1,7 @@
+## NFL player-stat forecasting challenger (free, research-only)
+
+The [chronological player-prop challenger](docs/NFL_PLAYER_PROP_CHALLENGER.md) generates pregame receptions, receiving-yard, rushing-yard and passing-yard mean forecasts using only prior games. It tests 2024-selected settings against a three-game baseline on 2025 history, then freezes first-seen 2026 predictions. The [published report](docs/player_prop_shadow.json), [forecast table](docs/player_prop_shadow.csv) and `history/player_prop_forward.csv` **do not price bets** because verified two-way player prop odds and calibrated threshold probabilities are still unavailable. Existing betting gates and no-wager requirements are unchanged.
+
 ## All-market NFL edge discovery (free, manual only)
 
 The [universal market research scanner](docs/NFL_ALL_MARKET_EDGE_LAB.md) audits full-game sides, alternative lines, halves, quarters, team totals and player props. It compares independent sportsbooks only when real, fresh, same-instrument two-sided quotes exist. `docs/market_universe.json` distinguishes **covered markets, unavailable free-source markets, rejected prices and research-only discrepancies**. Not a guarantee of an edge; no automatic bet execution or paid feeds.
