@@ -3,7 +3,6 @@ import csv
 from pathlib import Path
 
 import pytest
-
 from research.qb_evidence.capture import build, choose_input
 
 
