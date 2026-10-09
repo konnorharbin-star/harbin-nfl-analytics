@@ -168,6 +168,9 @@ jobs:
       - name: Compare market-relative challenger with historical diagnostic benchmark
         run: python -m nfl.market_residual_challenger
 
+      - name: Grade free player-level predictions on chronology and freeze pregame shadow
+        run: python run_player_prop_shadow.py
+
       - name: Validate public publication bundle
         run: python validate_publication.py
 
