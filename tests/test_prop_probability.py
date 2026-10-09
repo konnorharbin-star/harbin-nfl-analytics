@@ -1,5 +1,5 @@
 """Synthetic-threshold player probabilities are prior-week research, never bets."""
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 
 import polars as pl
@@ -11,7 +11,6 @@ from nfl.prop_probability import (
     append_first_seen_curves,
     build_probability_experiment,
     evaluate_diagnostic,
-    fit_empirical_errors,
     over_probability,
     probability_rows,
 )
@@ -97,7 +96,7 @@ def test_empirical_probabilities_monotone_and_complementary():
 
 def test_one_year_development_and_separate_diagnostic_baseline():
     _,_,_,_,report,_=experiment()
-    for market,info in report["2025_synthetic_threshold_diagnostic"].items():
+    for _market,info in report["2025_synthetic_threshold_diagnostic"].items():
         assert info["status"]=="HISTORICAL_SYNTHETIC_LINES_DIAGNOSTIC_ONLY"
         assert info["evaluated_synthetic_thresholds"]>120
         assert info["challenger"]["n"]==info["rolling_three_baseline"]["n"]
