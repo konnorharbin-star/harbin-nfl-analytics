@@ -164,6 +164,6 @@ def test_rejects_stat_identity_mismatch_duplicate_players_and_bad_dates():
     try:
         source_frames(s,pl.concat([p,p.head(1)],how="vertical"))
     except ValueError as e:
-        assert "Duplicate player" in str(e)
+        assert "duplicate player stats" in str(e)
     else:
         raise AssertionError("duplicated game stats accepted")
