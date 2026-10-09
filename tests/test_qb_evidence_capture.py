@@ -3,8 +3,8 @@ import csv
 from pathlib import Path
 
 import pytest
-from research.qb_evidence.capture import build, choose_input
 
+from research.qb_evidence.capture import build, choose_input
 
 NOW = "2026-10-09T17:00:00+00:00"
 
