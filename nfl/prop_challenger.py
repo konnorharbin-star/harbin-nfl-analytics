@@ -241,6 +241,15 @@ def forecast_week(
     )
 
 
+def _score_samples(
+    samples: list[tuple[float, float, float]], idx: int
+) -> tuple[float, float]:
+    n = len(samples)
+    mae = sum(abs(record[idx] - record[2]) for record in samples) / n
+    rmse = sqrt(sum((record[idx] - record[2]) ** 2 for record in samples) / n)
+    return mae, rmse
+
+
 def diagnostic(
     games: list[dict[str, Any]], stats: list[dict[str, Any]],
     *, years: tuple[int, ...]=(2024,2025),
@@ -275,7 +284,7 @@ def diagnostic(
             squared=0.0
             abs_err=0.0
             n=0
-            for (s,week,pw,pk),predictions in cache.items():
+            for (s,_week,pw,pk),predictions in cache.items():
                 if (s,pw,pk)!=(years[0],w,k):
                     continue
                 for entry in predictions:
@@ -286,7 +295,9 @@ def diagnostic(
                     if target is None:
                         continue
                     diff=entry["challenger_mean"]-target
-                    squared+=diff*diff;abs_err+=abs(diff);n+=1
+                    squared += diff * diff
+                    abs_err += abs(diff)
+                    n += 1
             if n:
                 dev.append((abs_err/n,squared/n,w,k,n))
         if not dev:
@@ -296,7 +307,7 @@ def diagnostic(
         mae,mse,window,shrink,n=min(dev)
         chosen[market]=(window,shrink)
         samples=[]
-        for (s,week,pw,pk),predictions in cache.items():
+        for (s,_week,pw,pk),predictions in cache.items():
             if (s,pw,pk)!=(years[1],window,shrink):
                 continue
             for entry in predictions:
@@ -314,11 +325,8 @@ def diagnostic(
                 "chosen_window":window,"chosen_shrinkage":shrink,
             }
             continue
-        def score(idx: int) -> tuple[float,float]:
-            return (sum(abs(row[idx]-row[2]) for row in samples)/len(samples),
-                    sqrt(sum((row[idx]-row[2])**2 for row in samples)/len(samples)))
-        chal_mae,chal_rmse=score(0)
-        base_mae,base_rmse=score(1)
+        chal_mae, chal_rmse = _score_samples(samples, 0)
+        base_mae, base_rmse = _score_samples(samples, 1)
         metrics[market]={
             "status":"HISTORICAL_DIAGNOSTIC_ONLY",
             "development_rows":n,
