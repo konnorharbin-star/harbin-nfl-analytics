@@ -277,7 +277,7 @@ def build(
             "CFB output lacks named expected starter IDs.",
             "Independent source records are optional and currently not provided.",
             "No stable crosswalked EA individual player dataset is available.",
-            "Model output may predate artifact capture; its underlying source time is not reverified.",
+            "Model output may predate capture; original source time is unverified.",
             "Artifacts expire; retain hashes and exports for permanent research archiving.",
         ],
     }
