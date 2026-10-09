@@ -128,3 +128,22 @@ def test_no_fake_timezones(tmp_path: Path) -> None:
             _pred(tmp_path, "nfl"), sport="nfl",
             capture_at="2026-10-09T17:00:00",
         )
+
+
+def test_market_duplicates_collapse_only_when_qb_identity_matches(tmp_path: Path) -> None:
+    path = _pred(tmp_path, "nfl")
+    original = path.read_text().splitlines()
+    path.write_text("\n".join([*original, original[1]]) + "\n")
+    rows, summary = build(path, sport="nfl", capture_at=NOW)
+    assert summary["model_game_rows"] == 2
+    assert summary["unique_game_rows"] == 1
+    assert summary["excluded"]["duplicate_market_rows"] == 1
+    assert len(rows) == 2
+
+    path.write_text(path.read_text().replace(
+        "qb1,qb-away\n", "different,qb-away\n", 1
+    ))
+    with pytest.raises(ValueError, match="Conflicting duplicate"):
+        build(path, sport="nfl", capture_at=NOW)
+
+
