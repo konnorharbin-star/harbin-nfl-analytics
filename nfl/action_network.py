@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import os
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -168,7 +168,6 @@ def _paired_origin_time(
     a, b = stamps.get(f"{kind}:{first}"), stamps.get(f"{kind}:{second}")
     if not isinstance(a, datetime) or not isinstance(b, datetime):
         return None
-    from datetime import timedelta
     if abs(a - b) > timedelta(minutes=2):
         return None
     return max(a, b)
