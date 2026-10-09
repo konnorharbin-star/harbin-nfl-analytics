@@ -344,3 +344,23 @@ def evaluate_market_universe(
             "Per-book source updates still may not certify executable prices."
         ),
     }
+
+
+def write_market_universe(
+    offers: list[dict[str, Any]], *,
+    kickoffs: dict[str, datetime], as_of: datetime,
+    output: str = "docs/market_universe.json",
+) -> dict[str, Any]:
+    """Publish all covered and missing markets with no bet execution."""
+    import json
+    from pathlib import Path
+
+    report = evaluate_market_universe(
+        offers, kickoffs=kickoffs, as_of=as_of
+    )
+    destination = Path(output)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(
+        json.dumps(report, sort_keys=True, indent=2, allow_nan=False) + "\n"
+    )
+    return report
