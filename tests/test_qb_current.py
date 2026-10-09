@@ -74,6 +74,7 @@ def _rosters() -> pl.DataFrame:
                 "roster_status": "Active",
                 "active": True,
                 "status_known": True,
+                "roster_freshness_status": "FRESH",
             },
             {
                 "team": "BBB",
@@ -84,6 +85,7 @@ def _rosters() -> pl.DataFrame:
                 "roster_status": "Active",
                 "active": True,
                 "status_known": True,
+                "roster_freshness_status": "FRESH",
             },
         ]
     )
@@ -159,6 +161,7 @@ def test_out_qb1_selects_depth_replacement_but_blocks_betting() -> None:
                         "roster_status": "Active",
                         "active": True,
                         "status_known": True,
+                "roster_freshness_status": "FRESH",
                     }
                 ]
             ),
@@ -176,6 +179,7 @@ def test_out_qb1_selects_depth_replacement_but_blocks_betting() -> None:
                 "report_status": "Out",
                 "practice_status": "Did Not Participate",
                 "severity": 1.0,
+                "freshness_status": "FRESH",
             }
         ]
     )
@@ -242,3 +246,87 @@ def test_missing_expected_qb_columns_also_fail_closed() -> None:
     assert row["quant_signal"] == "PASS"
     assert row["research_signal"] == "PASS"
     assert row["stake_units"] == 0.0
+
+def test_stale_injury_out_cannot_prove_backup_started() -> None:
+    depth = pl.concat(
+        [
+            _depth(),
+            pl.DataFrame(
+                [
+                    {
+                        "team": "AAA",
+                        "player_key": "id:qb-aaa-2",
+                        "gsis_id": "qb-aaa-2",
+                        "player_name": "AAA Two",
+                        "position": "QB",
+                        "depth_rank": 2,
+                        "depth_week": None,
+                        "depth_captured_at": "2026-10-07T14:00:00+00:00",
+                    }
+                ]
+            ),
+        ],
+        how="vertical_relaxed",
+    )
+    injuries = pl.DataFrame(
+        [
+            {
+                "team": "AAA",
+                "player_key": "id:qb-aaa-1",
+                "position": "QB",
+                "severity": 1.0,
+                "freshness_status": "STALE",
+                "report_status": "Out",
+            }
+        ]
+    )
+    state, _ = build_expected_qb_state(
+        _targets(),
+        _projection(),
+        depth=depth,
+        rosters=_rosters(),
+        injuries=injuries,
+        as_of=AS_OF,
+    )
+    aaa = state.filter(pl.col("team") == "AAA").row(0, named=True)
+    assert aaa["expected_qb_id"] == "qb-aaa-1"
+    assert aaa["expected_qb_decision_ready"] is False
+    assert "injury report stale" in aaa["expected_qb_reason"]
+
+
+def test_stale_roster_or_depth_blocks_certainty() -> None:
+    rosters = _rosters().with_columns(
+        pl.when(pl.col("team") == "AAA")
+        .then(pl.lit("STALE"))
+        .otherwise(pl.col("roster_freshness_status"))
+        .alias("roster_freshness_status")
+    )
+    state, _ = build_expected_qb_state(
+        _targets(),
+        _projection(),
+        depth=_depth(),
+        rosters=rosters,
+        injuries=_injuries(),
+        as_of=AS_OF,
+    )
+    aaa = state.filter(pl.col("team") == "AAA").row(0, named=True)
+    assert not aaa["expected_qb_decision_ready"]
+    assert "roster verification stale" in aaa["expected_qb_reason"]
+
+    depth = _depth().with_columns(
+        pl.when(pl.col("team") == "AAA")
+        .then(pl.lit("STALE"))
+        .otherwise(pl.lit("FRESH"))
+        .alias("depth_freshness_status")
+    )
+    state, _ = build_expected_qb_state(
+        _targets(),
+        _projection(),
+        depth=depth,
+        rosters=_rosters(),
+        injuries=_injuries(),
+        as_of=AS_OF,
+    )
+    aaa = state.filter(pl.col("team") == "AAA").row(0, named=True)
+    assert not aaa["expected_qb_decision_ready"]
+    assert "depth verification stale" in aaa["expected_qb_reason"]
