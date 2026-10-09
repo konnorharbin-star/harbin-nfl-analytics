@@ -1,26 +1,26 @@
 {
   "canonical_probability_change_enabled": false,
-  "graded_games": 15,
+  "graded_games": 16,
   "home_win": {
-    "baseline_brier": 0.20773528781702616,
-    "baseline_ece": 0.32275069451280025,
-    "baseline_log_loss": 0.6040100456753648,
+    "baseline_brier": 0.21680531640482115,
+    "baseline_ece": 0.3397048148760317,
+    "baseline_log_loss": 0.6225996088817919,
     "brier_improvement": {
-      "lower": 0.0032226527275383762,
-      "point_improvement": 0.011626063890855938,
-      "probability_improvement": 0.9964,
-      "upper": 0.019639884461722185
+      "lower": 0.0038890035233097903,
+      "point_improvement": 0.011687922009224671,
+      "probability_improvement": 0.9974,
+      "upper": 0.01929857852900733
     },
     "log_loss_improvement": {
-      "lower": 0.006534996063476267,
-      "point_improvement": 0.024115324625076654,
-      "probability_improvement": 0.996,
-      "upper": 0.04061327676990038
+      "lower": 0.008101948490318074,
+      "point_improvement": 0.02423637514514458,
+      "probability_improvement": 0.9976,
+      "upper": 0.03970500243489654
     },
     "promotion_eligible": false,
-    "shadow_brier": 0.19610922392617022,
-    "shadow_ece": 0.3045939960683979,
-    "shadow_log_loss": 0.579894721050288,
+    "shadow_brier": 0.20511739439559645,
+    "shadow_ece": 0.32201317818002395,
+    "shadow_log_loss": 0.5983632337366473,
     "status": "SHADOW_INSUFFICIENT_SAMPLE"
   },
   "ledger_rows": 30,
@@ -28,20 +28,20 @@
   "margin_scale": 1.0,
   "meaning": "First-snapshot pre-kickoff 2026 evidence only. Stage 23 forms are frozen and are not retuned on 2026 outcomes. Canonical probabilities stay unchanged.",
   "minimum_games": 128,
-  "non_tied_games": 15,
+  "non_tied_games": 16,
   "promotion_eligible": false,
   "spec_version": "stage23_nested_probability_v1",
   "status": "READY",
   "total_distribution": {
-    "baseline_nll": 3.945803487612285,
+    "baseline_nll": 3.9379061951532432,
     "nll_improvement": {
-      "lower": -0.04651268035832388,
-      "point_improvement": 0.006120824583224138,
-      "probability_improvement": 0.6152,
-      "upper": 0.0487950335658896
+      "lower": -0.04220825354188686,
+      "point_improvement": 0.007973275900776983,
+      "probability_improvement": 0.659,
+      "upper": 0.04835364516493483
     },
     "promotion_eligible": false,
-    "shadow_nll": 3.93968266302906,
+    "shadow_nll": 3.929932919252466,
     "status": "SHADOW_INSUFFICIENT_SAMPLE"
   },
   "total_scale": 0.9,
