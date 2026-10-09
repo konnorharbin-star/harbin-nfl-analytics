@@ -146,10 +146,31 @@ def main() -> int:
         (a.season,a.week) if a.season and a.week
         else _week_from_latest(Path("docs/latest.csv"))
     )
-    report=build_shadow_report(
-        client=NFLDataClient(), season=season,week=week,
-        as_of=datetime.now(UTC),
-    )
+    try:
+        report=build_shadow_report(
+            client=NFLDataClient(), season=season,week=week,
+            as_of=datetime.now(UTC),
+        )
+    except Exception as exc:
+        # Do not break the canonical NFL model when an optional, free
+        # player-stat source is unavailable; replace any stale report with
+        # an explicit failure, never silently re-use old forecasts.
+        failure = {
+            "status":"BLOCKED_PLAYER_STAT_SOURCE_OR_SCHEMA",
+            "generated_at_utc":datetime.now(UTC).isoformat(),
+            "error":f"{type(exc).__name__}: {exc}",
+            "automatic_betting_enabled":False,
+            "paid_sources_used":False,
+            "actual_sportsbook_edge_proven":False,
+            "pregame_player_market_forecasts":0,
+        }
+        OUTPUT_JSON.parent.mkdir(parents=True,exist_ok=True)
+        OUTPUT_JSON.write_text(json.dumps(failure,indent=2,sort_keys=True)+"\n")
+        _write_csv(OUTPUT_CSV,[],(
+            "game_id","player_id","market","challenger_mean","recommendation"
+        ))
+        print(f"::warning::Player prop shadow blocked: {failure['error']}")
+        return 0
     print(json.dumps({
         "status":report["status"],
         "forecast_rows":report["pregame_player_market_forecasts"],
