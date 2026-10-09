@@ -14,7 +14,7 @@ import polars as pl
 from .contracts import require_columns
 
 COLUMNS = (
-    "season", "week", "game_id", "away_team", "home_team",
+    "season", "week", "game_id", "kickoff", "away_team", "home_team",
     "model_margin_home", "model_total", "quant_market", "quant_side",
     "quant_book", "quant_price", "quant_odds", "quant_probability",
     "quant_edge", "quant_ev", "quant_quote_at", "recommendation_status",
