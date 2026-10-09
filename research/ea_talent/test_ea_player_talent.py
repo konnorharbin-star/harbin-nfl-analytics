@@ -59,6 +59,34 @@ class EATalentTests(unittest.TestCase):
                 kickoff_at="2026-09-01T20:00:00+00:00",
             )
 
+    def test_missing_availability_does_not_mean_healthy(self):
+        rows = load_snapshot(
+            self.path,
+            prediction_at="2026-09-01T12:00:00+00:00",
+            kickoff_at="2026-09-01T20:00:00+00:00",
+        )
+        for row in rows:
+            row["_availability_known"] = False
+            row["_available"] = False
+        features = team_features(rows)
+        self.assertIsNone(features["HOME"]["qb_talent"])
+        self.assertIsNone(features["HOME"]["qb_availability_gap"])
+
+    def test_missing_status_in_snapshot_is_unknown(self):
+        path = Path(self.tmp.name) / "unknown.csv"
+        path.write_text(
+            "player_id,team,position,ovr,snapshot_at\n"
+            "qb-1,HOME,QB,90,2026-08-01T00:00:00+00:00\n"
+        )
+        rows = load_snapshot(
+            path,
+            prediction_at="2026-09-01T12:00:00+00:00",
+            kickoff_at="2026-09-01T20:00:00+00:00",
+        )
+        self.assertFalse(rows[0]["_availability_known"])
+        self.assertFalse(rows[0]["_available"])
+        self.assertIsNone(team_features(rows)["HOME"]["qb_talent"])
+
 
 if __name__ == "__main__":
     unittest.main()
