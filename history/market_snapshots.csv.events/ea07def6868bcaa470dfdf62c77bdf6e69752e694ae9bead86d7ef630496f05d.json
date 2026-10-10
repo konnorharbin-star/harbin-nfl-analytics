@@ -1,0 +1,30 @@
+{
+  "archived_at": "2026-10-10T20:48:27.278958+00:00",
+  "capture_is_book_update_time": false,
+  "origin_time_usable": false,
+  "original_market_row": {
+    "away_team": "MIN",
+    "book": "BetRivers",
+    "captured_at": "2026-10-10T20:48:09.905906+00:00",
+    "first_american_odds": 120,
+    "first_line": null,
+    "first_side": "home",
+    "game_id": "2026_05_MIN_NO",
+    "home_team": "NO",
+    "kickoff": "2026-10-11T17:00:00+00:00",
+    "market_type": "moneyline",
+    "provider": "action_network",
+    "season": 2026,
+    "second_american_odds": -142,
+    "second_line": null,
+    "second_side": "away",
+    "source_event_id": "290906",
+    "week": 5
+  },
+  "original_request_url": null,
+  "reported_source_quote_time_verified": false,
+  "schema": 1,
+  "source_quote_age_seconds": null,
+  "source_quote_at": null,
+  "source_quote_time_verified": false
+}
