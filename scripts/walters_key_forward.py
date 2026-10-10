@@ -41,12 +41,11 @@ def _raw_forecasts(path, sport):
         reader = csv.DictReader(fh)
         if not required.issubset(reader.fieldnames or []):
             raise ValueError("Missing canonical pregame fair-score fields")
-        rows, seen = [], set()
+        rows, seen = [], {}
         for row in reader:
             gid = str(row["game_id"]).strip()
-            if not GAME_ID.fullmatch(gid) or gid in seen:
-                raise ValueError("Duplicate or unsafe game identity")
-            seen.add(gid)
+            if not GAME_ID.fullmatch(gid):
+                raise ValueError("Unsafe game identity")
             if not str(row["home_team"]).strip() or not str(row["away_team"]).strip():
                 raise ValueError("Missing team")
             if row["home_team"] == row["away_team"]:
@@ -60,11 +59,19 @@ def _raw_forecasts(path, sport):
                 raise ValueError("Invalid timestamp or model score") from exc
             if not math.isfinite(margin) or week < 1 or week > 30:
                 raise ValueError("Invalid forecast margin or week")
-            rows.append({
+            observation = {
                 "game_id": gid, "sport": sport, "season": season, "week": week,
                 "home_team": row["home_team"], "away_team": row["away_team"],
                 "kickoff": kickoff, "projected_margin": margin,
-            })
+            }
+            if gid in seen:
+                if seen[gid] != observation:
+                    raise ValueError("Conflicting duplicate game forecasts")
+                # NFL dashboard publishes one game three times, by market.
+                # Identical football forecasts count as one frozen game.
+                continue
+            seen[gid] = observation
+            rows.append(observation)
     return rows
 
 
