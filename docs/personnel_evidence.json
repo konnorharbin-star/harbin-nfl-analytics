@@ -1,6 +1,6 @@
 {
   "betting_authorized": false,
-  "capture_id": "c06c1d67d4a792f5c24bd08b",
+  "capture_id": "28d9c77af2bdbcbf97aa6def",
   "error": null,
   "limitations": [
     "Source response timestamp does not establish item freshness",
@@ -9,16 +9,16 @@
     "Current-only evidence is never backfilled into historical models"
   ],
   "model_score_change_enabled": false,
-  "observed_at": "2026-10-10T18:31:08.570561+00:00",
+  "observed_at": "2026-10-10T19:13:38.373417+00:00",
   "official_report_verified": false,
   "record_states": {
-    "FRESH_DATED_SECONDARY_STATUS": 308,
-    "STALE_ITEM_DATE": 392
+    "FRESH_DATED_SECONDARY_STATUS": 307,
+    "STALE_ITEM_DATE": 393
   },
-  "response_generated_at": "2026-10-10T18:31:06Z",
+  "response_generated_at": "2026-10-10T19:13:31Z",
   "source_record_date_states": {
-    "FRESH_DATED_SECONDARY_STATUS": 346,
-    "STALE_ITEM_DATE": 454
+    "FRESH_DATED_SECONDARY_STATUS": 344,
+    "STALE_ITEM_DATE": 456
   },
   "source_records": 800,
   "source_season": 2026,

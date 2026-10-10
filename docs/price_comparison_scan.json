@@ -1,0 +1,363 @@
+{
+  "spec": "exact_line_price_scan_v1",
+  "observed_at": "2026-10-10T19:13:39.494579+00:00",
+  "status": "PRICE_DIAGNOSTICS_ONLY",
+  "betting_authorized": false,
+  "qualified_bets": 0,
+  "counts": {
+    "stale_future_or_started": 6661,
+    "fresh_exact_line_groups": 83,
+    "insufficient_same_line_books": 45
+  },
+  "candidates": [
+    {
+      "game_id": "2026_05_PHI_JAX",
+      "home_team": "JAX",
+      "away_team": "PHI",
+      "kickoff": "2026-10-11T13:30:00+00:00",
+      "market": "moneyline",
+      "side": "home",
+      "line": null,
+      "book_label": "FanDuel",
+      "american_odds": 110.0,
+      "quote_observed_at": "2026-10-10T19:13:39.490845+00:00",
+      "reference_books": 6,
+      "reference_probability": 0.7644205518197011,
+      "price_implied_probability": 0.47619047619047616,
+      "reference_price_gap_pp": 28.8230075629225,
+      "sensitivity_gap_pp": 26.823007562922495,
+      "reference_probability_range": [
+        0.7576981322564361,
+        0.7685185185185186
+      ],
+      "status": "VERIFY_REQUIRED",
+      "betting_authorized": false,
+      "stake_units": 0,
+      "blockers": [
+        "Aggregator book identity and executable price unverified",
+        "Per-side source quote-origin timestamps unverified",
+        "Source market phase and settlement rules unverified",
+        "No verified sharp benchmark",
+        "Reference probabilities are not calibrated model probabilities",
+        "Market-reference strategy lacks validated prospective economic advantage",
+        "User book access and settlement rules unverified"
+      ]
+    },
+    {
+      "game_id": "2026_05_BAL_ATL",
+      "home_team": "ATL",
+      "away_team": "BAL",
+      "kickoff": "2026-10-12T00:20:00+00:00",
+      "market": "moneyline",
+      "side": "home",
+      "line": null,
+      "book_label": "FanDuel",
+      "american_odds": 164.0,
+      "quote_observed_at": "2026-10-10T19:13:39.490845+00:00",
+      "reference_books": 6,
+      "reference_probability": 0.6123798412528794,
+      "price_implied_probability": 0.37878787878787884,
+      "reference_price_gap_pp": 23.35919624650005,
+      "sensitivity_gap_pp": 21.35919624650005,
+      "reference_probability_range": [
+        0.6027039848197343,
+        0.6173677069199456
+      ],
+      "status": "VERIFY_REQUIRED",
+      "betting_authorized": false,
+      "stake_units": 0,
+      "blockers": [
+        "Aggregator book identity and executable price unverified",
+        "Per-side source quote-origin timestamps unverified",
+        "Source market phase and settlement rules unverified",
+        "No verified sharp benchmark",
+        "Reference probabilities are not calibrated model probabilities",
+        "Market-reference strategy lacks validated prospective economic advantage",
+        "User book access and settlement rules unverified"
+      ]
+    },
+    {
+      "game_id": "2026_05_DEN_LAC",
+      "home_team": "LAC",
+      "away_team": "DEN",
+      "kickoff": "2026-10-11T20:05:00+00:00",
+      "market": "moneyline",
+      "side": "away",
+      "line": null,
+      "book_label": "FanDuel",
+      "american_odds": 120.0,
+      "quote_observed_at": "2026-10-10T19:13:39.490845+00:00",
+      "reference_books": 6,
+      "reference_probability": 0.6260230379141418,
+      "price_implied_probability": 0.45454545454545453,
+      "reference_price_gap_pp": 17.14775833686873,
+      "sensitivity_gap_pp": 15.147758336868728,
+      "reference_probability_range": [
+        0.6173677069199456,
+        0.6309403437815976
+      ],
+      "status": "VERIFY_REQUIRED",
+      "betting_authorized": false,
+      "stake_units": 0,
+      "blockers": [
+        "Aggregator book identity and executable price unverified",
+        "Per-side source quote-origin timestamps unverified",
+        "Source market phase and settlement rules unverified",
+        "No verified sharp benchmark",
+        "Reference probabilities are not calibrated model probabilities",
+        "Market-reference strategy lacks validated prospective economic advantage",
+        "User book access and settlement rules unverified"
+      ]
+    },
+    {
+      "game_id": "2026_05_LV_NE",
+      "home_team": "NE",
+      "away_team": "LV",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "market": "moneyline",
+      "side": "away",
+      "line": null,
+      "book_label": "FanDuel",
+      "american_odds": 310.0,
+      "quote_observed_at": "2026-10-10T19:13:39.490845+00:00",
+      "reference_books": 6,
+      "reference_probability": 0.36803344844302066,
+      "price_implied_probability": 0.24390243902439027,
+      "reference_price_gap_pp": 12.41310094186304,
+      "sensitivity_gap_pp": 10.413100941863037,
+      "reference_probability_range": [
+        0.3638867033831629,
+        0.36989795918367335
+      ],
+      "status": "VERIFY_REQUIRED",
+      "betting_authorized": false,
+      "stake_units": 0,
+      "blockers": [
+        "Aggregator book identity and executable price unverified",
+        "Per-side source quote-origin timestamps unverified",
+        "Source market phase and settlement rules unverified",
+        "No verified sharp benchmark",
+        "Reference probabilities are not calibrated model probabilities",
+        "Market-reference strategy lacks validated prospective economic advantage",
+        "User book access and settlement rules unverified"
+      ]
+    },
+    {
+      "game_id": "2026_05_CHI_GB",
+      "home_team": "GB",
+      "away_team": "CHI",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "market": "moneyline",
+      "side": "away",
+      "line": null,
+      "book_label": "FanDuel",
+      "american_odds": 140.0,
+      "quote_observed_at": "2026-10-10T19:13:39.490845+00:00",
+      "reference_books": 6,
+      "reference_probability": 0.5308014278959501,
+      "price_implied_probability": 0.4166666666666667,
+      "reference_price_gap_pp": 11.41347612292834,
+      "sensitivity_gap_pp": 9.413476122928339,
+      "reference_probability_range": [
+        0.5260865852617197,
+        0.5324675324675325
+      ],
+      "status": "VERIFY_REQUIRED",
+      "betting_authorized": false,
+      "stake_units": 0,
+      "blockers": [
+        "Aggregator book identity and executable price unverified",
+        "Per-side source quote-origin timestamps unverified",
+        "Source market phase and settlement rules unverified",
+        "No verified sharp benchmark",
+        "Reference probabilities are not calibrated model probabilities",
+        "Market-reference strategy lacks validated prospective economic advantage",
+        "User book access and settlement rules unverified"
+      ]
+    },
+    {
+      "game_id": "2026_05_HOU_TEN",
+      "home_team": "TEN",
+      "away_team": "HOU",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "market": "moneyline",
+      "side": "away",
+      "line": null,
+      "book_label": "FanDuel",
+      "american_odds": -185.0,
+      "quote_observed_at": "2026-10-10T19:13:39.490845+00:00",
+      "reference_books": 6,
+      "reference_probability": 0.7548321399853889,
+      "price_implied_probability": 0.6491228070175439,
+      "reference_price_gap_pp": 10.570933296784501,
+      "sensitivity_gap_pp": 8.5709332967845,
+      "reference_probability_range": [
+        0.7477827050997783,
+        0.759493670886076
+      ],
+      "status": "VERIFY_REQUIRED",
+      "betting_authorized": false,
+      "stake_units": 0,
+      "blockers": [
+        "Aggregator book identity and executable price unverified",
+        "Per-side source quote-origin timestamps unverified",
+        "Source market phase and settlement rules unverified",
+        "No verified sharp benchmark",
+        "Reference probabilities are not calibrated model probabilities",
+        "Market-reference strategy lacks validated prospective economic advantage",
+        "User book access and settlement rules unverified"
+      ]
+    },
+    {
+      "game_id": "2026_05_DET_ARI",
+      "home_team": "ARI",
+      "away_team": "DET",
+      "kickoff": "2026-10-11T20:25:00+00:00",
+      "market": "moneyline",
+      "side": "home",
+      "line": null,
+      "book_label": "FanDuel",
+      "american_odds": 310.0,
+      "quote_observed_at": "2026-10-10T19:13:39.490845+00:00",
+      "reference_books": 6,
+      "reference_probability": 0.31991710244464266,
+      "price_implied_probability": 0.24390243902439027,
+      "reference_price_gap_pp": 7.6014663420252395,
+      "sensitivity_gap_pp": 5.601466342025238,
+      "reference_probability_range": [
+        0.3146067415730337,
+        0.33109310140343934
+      ],
+      "status": "VERIFY_REQUIRED",
+      "betting_authorized": false,
+      "stake_units": 0,
+      "blockers": [
+        "Aggregator book identity and executable price unverified",
+        "Per-side source quote-origin timestamps unverified",
+        "Source market phase and settlement rules unverified",
+        "No verified sharp benchmark",
+        "Reference probabilities are not calibrated model probabilities",
+        "Market-reference strategy lacks validated prospective economic advantage",
+        "User book access and settlement rules unverified"
+      ]
+    },
+    {
+      "game_id": "2026_05_NYG_WAS",
+      "home_team": "WAS",
+      "away_team": "NYG",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "market": "moneyline",
+      "side": "home",
+      "line": null,
+      "book_label": "FanDuel",
+      "american_odds": -130.0,
+      "quote_observed_at": "2026-10-10T19:13:39.490845+00:00",
+      "reference_books": 6,
+      "reference_probability": 0.6237465234598576,
+      "price_implied_probability": 0.5652173913043479,
+      "reference_price_gap_pp": 5.85291321555097,
+      "sensitivity_gap_pp": 3.218406228136106,
+      "reference_probability_range": [
+        0.6037569709421778,
+        0.6301020408163265
+      ],
+      "status": "VERIFY_REQUIRED",
+      "betting_authorized": false,
+      "stake_units": 0,
+      "blockers": [
+        "Aggregator book identity and executable price unverified",
+        "Per-side source quote-origin timestamps unverified",
+        "Source market phase and settlement rules unverified",
+        "No verified sharp benchmark",
+        "Reference probabilities are not calibrated model probabilities",
+        "Market-reference strategy lacks validated prospective economic advantage",
+        "User book access and settlement rules unverified"
+      ]
+    },
+    {
+      "game_id": "2026_05_SF_SEA",
+      "home_team": "SEA",
+      "away_team": "SF",
+      "kickoff": "2026-10-11T20:25:00+00:00",
+      "market": "moneyline",
+      "side": "away",
+      "line": null,
+      "book_label": "FanDuel",
+      "american_odds": 170.0,
+      "quote_observed_at": "2026-10-10T19:13:39.490845+00:00",
+      "reference_books": 6,
+      "reference_probability": 0.40264557021288294,
+      "price_implied_probability": 0.37037037037037035,
+      "reference_price_gap_pp": 3.227519984251259,
+      "sensitivity_gap_pp": 1.2275199842512574,
+      "reference_probability_range": [
+        0.3888667312403852,
+        0.4066302458405761
+      ],
+      "status": "VERIFY_REQUIRED",
+      "betting_authorized": false,
+      "stake_units": 0,
+      "blockers": [
+        "Aggregator book identity and executable price unverified",
+        "Per-side source quote-origin timestamps unverified",
+        "Source market phase and settlement rules unverified",
+        "No verified sharp benchmark",
+        "Reference probabilities are not calibrated model probabilities",
+        "Market-reference strategy lacks validated prospective economic advantage",
+        "User book access and settlement rules unverified"
+      ]
+    },
+    {
+      "game_id": "2026_05_CIN_MIA",
+      "home_team": "MIA",
+      "away_team": "CIN",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "market": "moneyline",
+      "side": "away",
+      "line": null,
+      "book_label": "FanDuel",
+      "american_odds": -270.0,
+      "quote_observed_at": "2026-10-10T19:13:39.490845+00:00",
+      "reference_books": 6,
+      "reference_probability": 0.7401163424780108,
+      "price_implied_probability": 0.7297297297297298,
+      "reference_price_gap_pp": 1.038661274828101,
+      "sensitivity_gap_pp": -0.9613387251719008,
+      "reference_probability_range": [
+        0.7321840849622903,
+        0.7477827050997783
+      ],
+      "status": "VERIFY_REQUIRED",
+      "betting_authorized": false,
+      "stake_units": 0,
+      "blockers": [
+        "Aggregator book identity and executable price unverified",
+        "Per-side source quote-origin timestamps unverified",
+        "Source market phase and settlement rules unverified",
+        "No verified sharp benchmark",
+        "Reference probabilities are not calibrated model probabilities",
+        "Market-reference strategy lacks validated prospective economic advantage",
+        "User book access and settlement rules unverified"
+      ]
+    }
+  ],
+  "limits": [
+    "Exact line and two same-book prices required",
+    "Exclude quoted book from reference and deduplicate aliases",
+    "Non-push reference prices imply no true EV, ROI or fair price",
+    "Sensitivity haircut is a fixed stress scenario, not a confidence interval",
+    "Unresolved and legacy aggregator labels are not certified live sportsbooks"
+  ],
+  "upcoming_games": 14,
+  "fresh_priced_games": 14,
+  "sport": "nfl",
+  "source_errors": [],
+  "decision": "NO_BET",
+  "supported_markets": [
+    "moneyline",
+    "spread",
+    "total"
+  ],
+  "unsupported_market_reason": null,
+  "capture_id": "3d3837549c76055d6838216f"
+}
