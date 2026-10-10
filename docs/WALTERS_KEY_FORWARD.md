@@ -17,13 +17,13 @@ multipliers fitted using the earlier complete seasons:
 
 - NFL: 2022–2025; CFB: 2023–2025.
 - Never train on the 2026 target-season outcome.
-- Keep the raw independent \`model_margin_home\` from \`docs/latest.csv\`.
-  NFL kickoff field is \`kickoff\`, CFB is \`date\`. Exact board file bytes and
+- Keep the raw independent `model_margin_home` from `docs/latest.csv`.
+  NFL kickoff field is `kickoff`, CFB is `date`. Exact board file bytes and
   training CSV are SHA256-hashed.
 - Only 2026 games more than 5 minutes and no more than 7 days away are
   capturable. This guards accidental after-kickoff "predictions."
 - A separate first-seen JSON record is created **once per game** at
-  \`history/walters_key_forward_v1/forecasts/<game_id>.json\`; never changed.
+  `history/walters_key_forward_v1/forecasts/<game_id>.json`; never changed.
   Every record freezes unrounded baseline/challenger WIN/PUSH/LOSS likelihoods
   at nine prespecified fixed hypothetical spreads. Neither selected odds,
   consensus prices nor other sportsbook variables are inputs.
@@ -32,21 +32,25 @@ multipliers fitted using the earlier complete seasons:
   between the capture and original kickoff. Git commit timestamps are useful
   integrity checks but not independently certified bookmaker source times.
 
-The scheduled GitHub Actions workflow uses existing free forecast and
-historical CSV files. It runs tests, captures future games, grades eligible
-completed games against a separately retrieved **ESPN public final
-scoreboard**, uploads the report artifact, and commits generated data when
-running on \`main\`. Pull requests only test and upload research output.
-A concurrent main-branch push conflict is allowed to fail rather than force
-overwriting earlier immutable forecasts. GitHub scheduled runs are best
-effort and can be delayed, so **missing first captures stay missing**.
+The existing league `nfl-model.yml` and `cfb-model.yml` scheduled model
+workflows are the **only writers**. After their normal model update they
+freeze future games, grade previously committed finals against separately
+fetched **ESPN public final scoreboards**, and publish first snapshots using
+their established generated-state commit logic. No competing writer is
+introduced.
 
-The grading report at \`reports/walters_key_forward.json\` stores an audited
+The `walters-key-forward.yml` PR/dispatch research workflow is deliberately
+**read-only**. It tests the same logic and uploads *uncommitted simulations*
+as artifacts. Those simulations do not qualify as prospective records.
+Scheduled model jobs can be delayed or fail, so **missing first captures
+must remain missing** rather than being reconstructed.
+
+The grading report at `reports/walters_key_forward.json` stores an audited
 source URL and SHA256 of the fetched final-score payload, the pregame Git
 publication time, and paired proper scoring rules. No games are graded from
 a local reconstructed "historical" result. Prior to 128 graded games across
 at least eight distinct kickoff weeks, label evidence
-\`FORWARD_INSUFFICIENT_SAMPLE\`. At larger sample sizes provide conservative
+`FORWARD_INSUFFICIENT_SAMPLE`. At larger sample sizes provide conservative
 week-clustered simultaneous confidence intervals. This **does not** itself
 authorize promotion: the earlier 2025 work already used these data.
 
@@ -62,10 +66,10 @@ a market-edge hypothesis is actionable.
 
 To reproduce on a checkout with the expected repo input files:
 
-\`\`\`bash
+```bash
 python -m pytest -q tests/test_walters_key_forward.py
 python -m scripts.walters_key_forward --sport nfl \
   --historical reports/free_market_predictions.csv
 # College football: --sport cfb \
 #   --historical reports/backtest_predictions.csv
-\`\`\`
+```
