@@ -1,0 +1,32 @@
+{
+  "betting_authorized": false,
+  "capture_id": "c06c1d67d4a792f5c24bd08b",
+  "error": null,
+  "limitations": [
+    "Source response timestamp does not establish item freshness",
+    "No injury record does not mean a healthy roster",
+    "Dated secondary statuses do not verify starters",
+    "Current-only evidence is never backfilled into historical models"
+  ],
+  "model_score_change_enabled": false,
+  "observed_at": "2026-10-10T18:31:08.570561+00:00",
+  "official_report_verified": false,
+  "record_states": {
+    "FRESH_DATED_SECONDARY_STATUS": 308,
+    "STALE_ITEM_DATE": 392
+  },
+  "response_generated_at": "2026-10-10T18:31:06Z",
+  "source_record_date_states": {
+    "FRESH_DATED_SECONDARY_STATUS": 346,
+    "STALE_ITEM_DATE": 454
+  },
+  "source_records": 800,
+  "source_season": 2026,
+  "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries",
+  "sport": "nfl",
+  "starter_verified": false,
+  "status": "DATED_SECONDARY_RESEARCH",
+  "team_games_with_fresh_qb_status": 8,
+  "team_games_with_fresh_records": 28,
+  "upcoming_team_games": 28
+}
