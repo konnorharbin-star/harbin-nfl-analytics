@@ -1,6 +1,5 @@
 """Frozen 2026 key-number shadow must not tune to outcomes or place wagers."""
 import csv
-import json
 from datetime import UTC, datetime, timedelta
 
 import pytest
