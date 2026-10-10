@@ -158,19 +158,36 @@ class FairScoreModel:
         if team not in self.offense:
             raise DataContractError(f"team {team!r} was not present in the training history")
 
+    def _rating_team(self, team: str) -> str:
+        """Resolve a relocation spelling only if its exact training key is absent.
+
+        Retain source-facing names and all fitted coefficients. The 2020 LV opener
+        must use the same Raiders franchise's 2019 OAK prior, not an invented rating.
+        Unknown franchises still fail closed.
+        """
+        if not self.fitted:
+            raise RuntimeError("fair-score model has not been fitted")
+        if team in self.offense:
+            return team
+        counterpart = {"LV": "OAK", "OAK": "LV"}.get(team)
+        if counterpart is not None and counterpart in self.offense:
+            return counterpart
+        self._check_team(team)
+        return team
+
     def project(self, home_team: str, away_team: str) -> FairScoreProjection:
-        self._check_team(home_team)
-        self._check_team(away_team)
+        home_key = self._rating_team(home_team)
+        away_key = self._rating_team(away_team)
         assert self.league_points is not None
         assert self.home_field is not None
 
         home_points = (
             self.league_points
-            + self.offense[home_team]
-            - self.defense[away_team]
+            + self.offense[home_key]
+            - self.defense[away_key]
             + self.home_field
         )
-        away_points = self.league_points + self.offense[away_team] - self.defense[home_team]
+        away_points = self.league_points + self.offense[away_key] - self.defense[home_key]
 
         return FairScoreProjection(
             home_team=home_team,
