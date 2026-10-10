@@ -53,6 +53,8 @@ jobs:
           [ -n "${{ inputs.week }}" ] && ARGS="$ARGS --week ${{ inputs.week }}"
           python capture_lines.py $ARGS
 
+      - name: Compare captured identical-line prices
+        run: python -m scripts.price_comparison_scan --sport nfl
       - name: Commit line history
         shell: bash
         run: |
@@ -60,6 +62,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           [ -f history/market_snapshots.csv ] && git add history/market_snapshots.csv || true
           [ -d history/market_snapshots.csv.events ] && git add history/market_snapshots.csv.events || true
+          git add history/price_scan_v1 docs/price_comparison_scan.json
           [ -f outputs/line_capture_status.json ] && git add outputs/line_capture_status.json || true
           if ! git diff --cached --quiet; then
             git commit -m "lines: capture verified NFL pre-kickoff market snapshot"

@@ -4,6 +4,9 @@ Run `python -m scripts.price_comparison_scan --sport SPORT --refresh-market`.
 SPORT is nfl or cfb. This is a pricing diagnostic and review queue, never BET.
 It changes no football prediction or release requirement. The existing three-times-daily
 recommendation workflow refreshes bulk public data and permanently publishes scans.
+The existing hourly line-capture workflow also scans its newly collected records
+without extra odds requests. CFB model publications refresh the scan from their
+current data. No continuous background work is claimed beyond these workflows.
 The NFL bulk client makes at most two public endpoint attempts; CFB one request.
 No paid odds client is called. HTTP/source failures remain visible. The scanner
 may use an existing published observation only while its collector age is <=15 minutes.

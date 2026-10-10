@@ -101,11 +101,15 @@ def load(sport):
     by_id = {r["game_id"]: r for r in games}
     result = []
     if sport == "cfb":
-        for game in by_id.values():
+        published = list(by_id.values())
+        history = Path("history/market_snapshots.csv")
+        if history.exists():
+            published.extend(r for r in csv.DictReader(history.open()) if r["game_id"] in by_id)
+        for game in published:
             for q in json.loads(game.get("market_quotes_json") or "[]"):
                 if q.get("source") not in ("action_network", "espn_core", "espn"):
                     continue
-                result.extend(normalize(game, q, q.get("captured_at")))
+                result.extend(normalize(game, q, q.get("captured_at") or game.get("captured_at")))
         return games, result
     fields = [
         "captured_at",
