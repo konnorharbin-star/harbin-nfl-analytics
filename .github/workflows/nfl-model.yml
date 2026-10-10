@@ -170,6 +170,11 @@ jobs:
           [ -n "${{ inputs.week }}" ] && ARGS="$ARGS --week ${{ inputs.week }}"
           python harbin_nfl_model.py $ARGS
 
+      - name: Freeze Walters key-number first-pregame research and grade committed finals
+        run: |
+          python -m scripts.walters_key_forward --sport nfl \
+            --historical reports/free_market_predictions.csv
+
       - name: Compare market-relative challenger with historical diagnostic benchmark
         run: python -m nfl.market_residual_challenger
 
