@@ -215,7 +215,9 @@ def build_release_gate(
     checks = [
         _check(
             "data_contracts",
-            str(data_quality.get("status", "UNKNOWN")).upper() != "FAIL",
+            str(data_quality.get("status", "UNKNOWN")).strip().upper()
+            in {"PASS", "OK", "WARN"}
+            and not data_quality.get("errors"),
             data_quality.get("status", "UNKNOWN"),
             "no ERROR-level data-contract violations",
         ),
