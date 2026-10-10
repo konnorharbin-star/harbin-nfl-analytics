@@ -1,0 +1,30 @@
+{
+  "archived_at": "2026-10-10T18:36:10.221112+00:00",
+  "capture_is_book_update_time": false,
+  "origin_time_usable": false,
+  "original_market_row": {
+    "away_team": "IND",
+    "book": "ActionNetwork book 49",
+    "captured_at": "2026-10-10T18:36:09.954376+00:00",
+    "first_american_odds": -114,
+    "first_line": -2.5,
+    "first_side": "home",
+    "game_id": "2026_05_IND_PIT",
+    "home_team": "PIT",
+    "kickoff": "2026-10-11T17:00:00+00:00",
+    "market_type": "spread",
+    "provider": "action_network",
+    "season": 2026,
+    "second_american_odds": -105,
+    "second_line": 2.5,
+    "second_side": "away",
+    "source_event_id": "290909",
+    "week": 5
+  },
+  "original_request_url": null,
+  "reported_source_quote_time_verified": false,
+  "schema": 1,
+  "source_quote_age_seconds": null,
+  "source_quote_at": null,
+  "source_quote_time_verified": false
+}
