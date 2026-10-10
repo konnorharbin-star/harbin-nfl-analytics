@@ -10,8 +10,13 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: pricing-research-${{ github.ref_name }}
-  cancel-in-progress: false
+  group: >-
+    pricing-research-${{
+      github.event_name == 'workflow_run'
+      && github.event.workflow_run.head_branch
+      || github.ref_name
+    }}
+  cancel-in-progress: true
 jobs:
   research:
     runs-on: ubuntu-latest
