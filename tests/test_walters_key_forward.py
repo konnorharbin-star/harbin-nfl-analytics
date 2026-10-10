@@ -5,7 +5,11 @@ from datetime import UTC, datetime, timedelta
 import pytest
 
 from scripts.walters_key_forward import (
-    VERSION, _threeway_score, capture, grade, make_snapshots,
+    VERSION,
+    _threeway_score,
+    capture,
+    grade,
+    make_snapshots,
 )
 
 NOW = datetime(2026, 10, 10, 19, 0, tzinfo=UTC)
