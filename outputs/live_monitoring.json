@@ -1,13 +1,13 @@
 {
   "alerts": [
-    "15 market rows have high model-vs-consensus disagreement",
+    "16 market rows have high model-vs-consensus disagreement",
     "fewer than two markets clear regime-specific edge reliability",
     "NFL injury/weather/travel context coverage is not yet release-ready"
   ],
   "data_integrity_status": "OK",
   "decision_diagnostics": {
     "enforced": false,
-    "high_disagreement_rows": 15,
+    "high_disagreement_rows": 16,
     "movement_coverage": 1.0,
     "research_execution_actions": {
       "BET_NOW": 7,
@@ -18,9 +18,9 @@
   },
   "drift_details": {
     "margin": {
-      "live_mean": -0.8833438115571107,
+      "live_mean": -0.8833438115573522,
       "live_n": 42,
-      "live_std": 2.651561603276078,
+      "live_std": 2.651561603276085,
       "mean_z": 0.689,
       "reference_mean": 1.965844996473403,
       "reference_n": 1087,
@@ -29,9 +29,9 @@
       "std_ratio": 0.6412
     },
     "total": {
-      "live_mean": 45.667525116488065,
+      "live_mean": 45.66752511648829,
       "live_n": 42,
-      "live_std": 3.0174815786461218,
+      "live_std": 3.0174815786461213,
       "mean_z": 0.2943,
       "reference_mean": 44.63397276559055,
       "reference_n": 1087,
@@ -45,7 +45,7 @@
   "live_readiness_score": 79.0,
   "meaning": "operational/model-monitoring score; not a profitability guarantee",
   "scores": {
-    "calibration": 89.07670124431355,
+    "calibration": 89.07670124431358,
     "context": 58.92857142857143,
     "distribution_stability": 80.3,
     "freshness": 100.0,

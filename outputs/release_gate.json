@@ -65,11 +65,11 @@
       "passed": true,
       "requirement": "validated chronological probability reliability clears Brier/ECE, 58%-62% confidence-band, and margin/total interval guardrails",
       "value": {
-        "brier": 0.22871501280256112,
-        "ece": 0.05982942561488687,
+        "brier": 0.2287150128025609,
+        "ece": 0.05982942561488695,
         "margin_80_coverage": 0.7830882352941176,
         "mid_confidence_games": 39,
-        "mid_confidence_gap": 0.01250323046627122,
+        "mid_confidence_gap": 0.012503230466270998,
         "model_family": "gaussian+logistic_moneyline",
         "total_80_coverage": 0.8051470588235294,
         "validated_reliability_ready": true
