@@ -34,7 +34,7 @@ jobs:
           python -m pytest -q tests/test_walters_key_forward.py
       - name: Freeze pregame 2026 distributions and grade published finals
         run: |
-          python scripts/walters_key_forward.py --sport nfl --historical reports/free_market_predictions.csv
+          python -m scripts.walters_key_forward --sport nfl --historical reports/free_market_predictions.csv
       - name: Upload research-only prospective evidence
         uses: actions/upload-artifact@v4
         with:
