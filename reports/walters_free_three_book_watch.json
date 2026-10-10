@@ -1,0 +1,20 @@
+{
+  "betting_authorized": false,
+  "forecast_exclusions": {},
+  "forecasts_with_immutable_pregame_publication": 14,
+  "free_plan_expected_five_minute_delay": true,
+  "measured_clv": null,
+  "measured_roi": null,
+  "mode": "NO_KEY_NO_PRICE",
+  "observations_written": 0,
+  "observed_at": "2026-10-10T21:52:18.489746+00:00",
+  "official_booksite_execution_verified": false,
+  "profitability_validated": false,
+  "provider": "TheRundown_v2_free_pre_match",
+  "provider_price_update_is_not_independent_sportsbook_certification": true,
+  "research_price_comparisons": [],
+  "source_failures": {},
+  "source_urls_requested": [],
+  "spec": "walters_free_three_book_watch_v1",
+  "sport": "nfl"
+}
