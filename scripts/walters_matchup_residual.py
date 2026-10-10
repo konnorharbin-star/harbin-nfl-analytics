@@ -72,6 +72,8 @@ def pregame_features(rows, lookback: int):
     prior_season = None
     output = []
     for (season, _week), games in sorted(weeks.items()):
+        # Stable tie-breaking even when two games share a team and week.
+        games = sorted(games, key=lambda r: r["game_id"])
         if season != prior_season:
             state.clear()
             prior_season = season
