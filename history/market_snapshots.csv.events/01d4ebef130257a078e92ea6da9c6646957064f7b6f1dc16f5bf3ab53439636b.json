@@ -1,0 +1,30 @@
+{
+  "archived_at": "2026-10-10T19:21:25.650396+00:00",
+  "capture_is_book_update_time": false,
+  "origin_time_usable": false,
+  "original_market_row": {
+    "away_team": "DET",
+    "book": "DraftKings",
+    "captured_at": "2026-10-10T19:21:20.875406+00:00",
+    "first_american_odds": -110,
+    "first_line": 54.5,
+    "first_side": "over",
+    "game_id": "2026_05_DET_ARI",
+    "home_team": "ARI",
+    "kickoff": "2026-10-11T20:25:00+00:00",
+    "market_type": "total",
+    "provider": "espn",
+    "season": 2026,
+    "second_american_odds": -110,
+    "second_line": 54.5,
+    "second_side": "under",
+    "source_event_id": "401872991",
+    "week": 5
+  },
+  "original_request_url": null,
+  "reported_source_quote_time_verified": false,
+  "schema": 1,
+  "source_quote_age_seconds": null,
+  "source_quote_at": null,
+  "source_quote_time_verified": false
+}
