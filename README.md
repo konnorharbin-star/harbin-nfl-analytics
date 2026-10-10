@@ -455,3 +455,9 @@ See `docs/parity_plan.md` and the staged architecture/validation documents under
 - No uncapped Kelly and no stake outside the production-controlled portfolio path.
 - NFL thresholds, weights, calibration and release evidence remain independent of NCAA.
 - Production is earned through independent NFL evidence, not because the architecture matches NCAA.
+
+### Prospective paper recommendation records
+
+[Operating contract](docs/RECOMMENDATION_OPERATIONS.md) · [NFL + CFB dashboard](docs/operations.html).
+
+Communicated BETs require a permanent pre-kickoff GitHub receipt; legacy research signals are separate. No real wagers are placed.

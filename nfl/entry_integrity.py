@@ -32,11 +32,7 @@ def annotate_historical_entry_integrity(frame: pl.DataFrame) -> pl.DataFrame:
         return frame
     require_columns(frame, ENTRY_INTEGRITY_REQUIRED, "historical_entry_integrity")
 
-    distinct = (
-        pl.col("has_distinct_open")
-        .cast(pl.Boolean, strict=False)
-        .fill_null(False)
-    )
+    distinct = pl.col("has_distinct_open").cast(pl.Boolean, strict=False).fill_null(False)
     market = pl.col("market_type").cast(pl.String).str.to_lowercase()
     verified_price = distinct & (market == "moneyline")
 
@@ -50,3 +46,22 @@ def annotate_historical_entry_integrity(frame: pl.DataFrame) -> pl.DataFrame:
         .otherwise(pl.lit("archive_final_fallback"))
         .alias("entry_price_stage"),
     )
+
+
+def timestamped_promotion_sample(frame: pl.DataFrame) -> pl.DataFrame:
+    """Archive-stage labels cannot establish an executable pregame entry time.
+
+    Only the timestamped-provider builder sets entry_timestamp_verified after
+    the point-in-time quote selector has checked its decision boundary.
+    """
+    required = {"entry_price_verified", "entry_quote_verified", "entry_timestamp_verified"}
+    if frame.is_empty() or not required.issubset(frame.columns):
+        return frame.head(0)
+    mask = pl.lit(True)
+    for name in required:
+        mask = mask & pl.col(name).cast(pl.Boolean, strict=False).fill_null(False)
+    if "probability_reliability_ready" in frame.columns:
+        mask = mask & pl.col("probability_reliability_ready").cast(
+            pl.Boolean, strict=False
+        ).fill_null(False)
+    return frame.filter(mask)

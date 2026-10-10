@@ -7,6 +7,7 @@ from pathlib import Path
 
 import polars as pl
 
+from .entry_integrity import timestamped_promotion_sample
 from .free_market_backtest import summarize_archive_bets
 
 HISTORICAL_CLV_COVERAGE_MINIMUM = 0.90
@@ -84,17 +85,7 @@ def build_evidence_report(
                 opening_line_observed_bets = int(
                     _bool_column(bets, "has_distinct_open").sum()
                 )
-            if "entry_price_verified" in bets.columns:
-                archive_verified = bets.filter(
-                    _bool_column(bets, "entry_price_verified")
-                )
-                if "probability_reliability_ready" in archive_verified.columns:
-                    archive_verified = archive_verified.filter(
-                        _bool_column(
-                            archive_verified,
-                            "probability_reliability_ready",
-                        )
-                    )
+            archive_verified = timestamped_promotion_sample(bets)
         excluded_unverified = raw_rows - archive_verified.height
 
     provider_verified = pl.DataFrame()
@@ -106,22 +97,7 @@ def build_evidence_report(
             provider_bets = pl.read_csv(provider_source)
         except (OSError, pl.exceptions.PolarsError):
             provider_bets = pl.DataFrame()
-        if (
-            not provider_bets.is_empty()
-            and "entry_price_verified" in provider_bets.columns
-            and "entry_quote_verified" in provider_bets.columns
-        ):
-            provider_verified = provider_bets.filter(
-                _bool_column(provider_bets, "entry_price_verified")
-                & _bool_column(provider_bets, "entry_quote_verified")
-            )
-            if "probability_reliability_ready" in provider_verified.columns:
-                provider_verified = provider_verified.filter(
-                    _bool_column(
-                        provider_verified,
-                        "probability_reliability_ready",
-                    )
-                )
+        provider_verified = timestamped_promotion_sample(provider_bets)
 
     verified_frames = [
         frame
@@ -201,6 +177,7 @@ def build_evidence_report(
         "promotion_sample": {
             "entry_quote_verified": verified_bets > 0,
             "entry_price_verified": verified_bets > 0,
+            "entry_timestamp_verified": verified_bets > 0,
             "verified_bets": verified_bets,
             "verified_archive_bets": archive_verified.height,
             "verified_provider_bets": provider_verified.height,
@@ -233,19 +210,14 @@ def build_evidence_report(
             ),
             "verified_provider_rows": provider_verified.height,
             "historical_entry_provenance": (
-                "explicit provider-labeled opening stage or timestamped provider entry"
+                "timestamp-verified pregame provider entry only"
             ),
         },
         "note": (
-            "Free nflverse archive-final fallbacks and opening-line observations without "
-            "opening juice remain valid research observations, but they are not promotion-quality "
-            "entry-price evidence. ESPN provider-labeled archived opening/closing stages "
-            "qualify without fabricating timestamps. When probability reliability provenance "
-            "is present, only rows that cleared the chronological reliability gate can enter "
-            "promotion evidence. ROBUST status requires verified entry "
-            "prices plus positive "
-            "uncertainty-adjusted ROI/CLV across multiple markets and seasons with "
-            "broad closing-snapshot coverage."
+            "Archive-final and provider-labeled opening/closing stages remain research "
+            "diagnostics. Without verified pregame quote timestamps they cannot enter "
+            "promotion evidence or policy selection. ROBUST requires timestamped entry "
+            "prices and positive uncertainty-adjusted ROI/CLV across independent periods."
         ),
     }
 

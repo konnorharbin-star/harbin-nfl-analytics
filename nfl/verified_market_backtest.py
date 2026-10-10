@@ -304,6 +304,7 @@ def build_verified_market_bets(
         row["entry_line_observed"] = True
         row["entry_price_verified"] = True
         row["entry_quote_verified"] = True
+        row["entry_timestamp_verified"] = True
         row["entry_price_stage"] = "timestamped_provider_entry"
         row["price_stage"] = "timestamped_provider_entry"
         row["clv_proxy"] = clv

@@ -90,6 +90,8 @@ def test_proof_uses_verified_price_subset_for_promotion(tmp_path) -> None:
                 "has_distinct_open": True,
                 "entry_line_observed": True,
                 "entry_price_verified": True,
+                "entry_quote_verified": True,
+                "entry_timestamp_verified": True,
             }
         )
         rows.append(

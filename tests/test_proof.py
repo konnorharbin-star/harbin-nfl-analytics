@@ -29,6 +29,7 @@ def _bet(
         "entry_line_observed": verified,
         "entry_price_verified": verified,
         "entry_quote_verified": quote_verified,
+        "entry_timestamp_verified": stage == "timestamped_provider_entry",
         "entry_price_stage": stage,
     }
 
@@ -101,11 +102,11 @@ def test_proof_uses_verified_provider_rows_without_promoting_archive_fallbacks(
 
     promotion = report["promotion_sample"]
     assert promotion["verified_archive_bets"] == 0
-    assert promotion["verified_provider_bets"] == 2
-    assert promotion["verified_bets"] == 2
-    assert promotion["verified_archived_open_close_bets"] == 1
+    assert promotion["verified_provider_bets"] == 1
+    assert promotion["verified_bets"] == 1
+    assert promotion["verified_archived_open_close_bets"] == 0
     assert promotion["verified_timestamped_provider_bets"] == 1
-    assert promotion["verified_clv_samples"] == 2
+    assert promotion["verified_clv_samples"] == 1
     assert promotion["verified_clv_coverage"] == 1.0
     assert promotion["entry_quote_verified"] is True
-    assert report["source"]["verified_provider_rows"] == 2
+    assert report["source"]["verified_provider_rows"] == 1
