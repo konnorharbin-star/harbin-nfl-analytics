@@ -53,3 +53,27 @@ a JSON artifact; it cannot modify production scoring or execution policies.
 If a repeated prospective advantage later emerges, independently verify entry
 lines, same-market settlement, genuine quote-origin timestamps, source
 freshness, user-accessible prices, closing-line value and economic results.
+
+## Archived research outcome — October 10, 2026
+
+The dedicated GitHub Actions research job completed successfully in both leagues.
+These figures compare exactly the same 2025 games, with correction strength
+and lookback chosen only from 2024 tuning scores.
+
+| League | Target | 2025 games | Baseline MAE | Selected MAE | Baseline RMSE | Selected RMSE | Tuning selection |
+|---|---|---:|---:|---:|---:|---:|---|
+| NFL | Margin | 272 | 10.3724 | 10.3469 | 13.1202 | 13.0652 | prior 10 games, weight 0.25 |
+| NFL | Total | 272 | 10.6990 | 10.6990 | 13.4717 | 13.4717 | zero correction |
+| CFB | Margin | 808 | 12.4032 | 12.3997 | 15.8173 | 15.8278 | prior 3 games, weight 0.50 |
+| CFB | Total | 808 | 12.8620 | 12.8620 | 15.9250 | 15.9250 | zero correction |
+
+The NFL margin candidate improved by only 0.0255 MAE points. Its paired
+familywise confidence bounds did **not** establish a positive improvement.
+The CFB margin candidate worsened RMSE by roughly 0.0106 points. Neither
+total market selected a nonzero correction. No adjusted score is promoted.
+
+This run tested team-level prior-week **scoring residuals**, not independently
+sourced verified QB injuries, lineup values, weather or possessions.
+Market superiority, executable odds and profitability remain **unproven**.
+The historical data were previously inspected: these results are descriptive,
+not prospective validation. All model and betting release gates remain blocked.
