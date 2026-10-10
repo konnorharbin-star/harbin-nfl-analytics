@@ -20,7 +20,7 @@ from zoneinfo import ZoneInfo
 import numpy as np
 
 from scripts.grade_recommendations import fetch, final_result
-from scripts.recommendation_ledger import timestamp
+from scripts.recommendation_ledger import publication_is_pregame, timestamp
 
 SPEC = "market_first_moneyline_v1"
 EVALUATION_END = datetime(2027, 3, 1, tzinfo=UTC)
@@ -339,7 +339,7 @@ def settle(root, now):
             errors[row["id"]] = "Missing unique publication commit"
             continue
         sha, stamp = commits[0].split(" ", 1)
-        if not timestamp(row["captured_at"]) <= timestamp(stamp) < timestamp(row["kickoff"]):
+        if not publication_is_pregame(row["captured_at"], stamp, row["kickoff"]):
             errors[row["id"]] = "Publication not before kickoff"
             continue
         key = (
