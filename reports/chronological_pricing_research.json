@@ -1,0 +1,177 @@
+{
+  "folds": [
+    {
+      "evaluation_season": 2024,
+      "training_seasons": [
+        2022
+      ],
+      "tuning_season": 2023,
+      "games": 272,
+      "selections": {
+        "market_calibration": {
+          "weights": [
+            0.0,
+            0.0
+          ],
+          "reason": "REJECTED_ON_TUNING",
+          "ridge": null,
+          "tuning_market": {
+            "brier": 0.21870951462559265,
+            "log_loss": 0.627348797217123
+          }
+        },
+        "football_residual": {
+          "weights": [
+            0.0,
+            0.0
+          ],
+          "reason": "REJECTED_ON_TUNING",
+          "ridge": null,
+          "tuning_market": {
+            "brier": 0.21870951462559265,
+            "log_loss": 0.627348797217123
+          }
+        }
+      },
+      "metrics": {
+        "market": {
+          "brier": 0.2001616187888562,
+          "log_loss": 0.5874888995056521
+        },
+        "market_calibration": {
+          "brier": 0.2001616187888562,
+          "log_loss": 0.5874888995056521
+        },
+        "football_residual": {
+          "brier": 0.2001616187888562,
+          "log_loss": 0.5874888995056521
+        }
+      }
+    },
+    {
+      "evaluation_season": 2025,
+      "training_seasons": [
+        2022,
+        2023
+      ],
+      "tuning_season": 2024,
+      "games": 271,
+      "selections": {
+        "market_calibration": {
+          "weights": [
+            0.05970648235081248,
+            0.0
+          ],
+          "ridge": 10.0,
+          "reason": "SELECTED_WITHOUT_EVALUATION_OUTCOMES",
+          "tuning_market": {
+            "brier": 0.2001616187888562,
+            "log_loss": 0.5874888995056521
+          },
+          "tuning_candidate": {
+            "brier": 0.1992963240712036,
+            "log_loss": 0.5854188734031562
+          }
+        },
+        "football_residual": {
+          "weights": [
+            0.019161443536327136,
+            0.0
+          ],
+          "ridge": 100.0,
+          "reason": "SELECTED_WITHOUT_EVALUATION_OUTCOMES",
+          "tuning_market": {
+            "brier": 0.2001616187888562,
+            "log_loss": 0.5874888995056521
+          },
+          "tuning_candidate": {
+            "brier": 0.199866468332364,
+            "log_loss": 0.5867811068155263
+          }
+        }
+      },
+      "metrics": {
+        "market": {
+          "brier": 0.21213896835079202,
+          "log_loss": 0.6093832198972614
+        },
+        "market_calibration": {
+          "brier": 0.21249125688329068,
+          "log_loss": 0.6098814166776813
+        },
+        "football_residual": {
+          "brier": 0.2122340685654083,
+          "log_loss": 0.609489982000006
+        }
+      }
+    }
+  ],
+  "evaluation_games": 543,
+  "status": "EXPLORATORY_CHRONOLOGICAL_PRICING_RESEARCH",
+  "betting_authorized": false,
+  "promotion_eligible": false,
+  "historical_untouched_holdout": false,
+  "economic_evidence_eligible": false,
+  "spec": "chronological_pricing_v1",
+  "limits": [
+    "Previously inspected archives are not a pristine holdout",
+    "Archive entry timestamps and executable prices remain unverified",
+    "No thresholds, wagers, ROI or CLV inferred from prediction scores",
+    "Frozen prospective assessment and external release review required"
+  ],
+  "metrics": {
+    "market": {
+      "brier": 0.20613926470282415,
+      "log_loss": 0.5984158991854424
+    },
+    "market_calibration": {
+      "brier": 0.2063150845781596,
+      "log_loss": 0.598664538830919
+    },
+    "football_residual": {
+      "brier": 0.20618672724087392,
+      "log_loss": 0.5984691819291695
+    }
+  },
+  "week_clusters": 36,
+  "paired_improvement": {
+    "market_calibration": {
+      "brier": {
+        "market_minus_candidate": -0.00017581987533543236,
+        "familywise_95_ci": [
+          -0.0007835605719977305,
+          0.00037127337586806907
+        ]
+      },
+      "log_loss": {
+        "market_minus_candidate": -0.00024863964547658303,
+        "familywise_95_ci": [
+          -0.0018934832545486656,
+          0.0012220001648160876
+        ]
+      }
+    },
+    "football_residual": {
+      "brier": {
+        "market_minus_candidate": -4.746253804975639e-05,
+        "familywise_95_ci": [
+          -0.0002437085095875123,
+          0.0001295527134793783
+        ]
+      },
+      "log_loss": {
+        "market_minus_candidate": -5.328274372702102e-05,
+        "familywise_95_ci": [
+          -0.0005798261000983859,
+          0.000417889327401226
+        ]
+      }
+    }
+  },
+  "candidate_decisions": {
+    "market_calibration": "NO_SUPPORTED_MARKET_IMPROVEMENT",
+    "football_residual": "NO_SUPPORTED_MARKET_IMPROVEMENT"
+  },
+  "sport": "nfl",
+  "input_sha256": "79ea46eb3746b522d0502a659a6c1c04622eab7ff7e0cc67f824acbbcdd08abd"
+}

@@ -20,6 +20,7 @@ EXPECTED_WRITERS = {
     "live-grade.yml",
     "market-edge-shrinkage.yml",
     "nfl-model.yml",
+    "pricing-research.yml",
     "probability-forward-capture.yml",
     "probability-forward-grade.yml",
     "qb-total-forward-capture.yml",
