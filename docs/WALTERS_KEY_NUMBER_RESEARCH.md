@@ -77,3 +77,38 @@ python scripts/walters_key_number_distribution.py --sport nfl \
 GitHub Actions workflow \`Walters Key Number Research\` runs the isolated
 tests and grades the archived real-source games. It only uploads an artifact;
 it never alters the production engine or submits wagers.
+
+
+## Historical outcome — evaluated October 10, 2026
+
+The isolated research workflows executed successfully on the repo's **real
+archived independent forecasts**, not only synthetic test fixtures.
+Full results are attached as GitHub Actions research artifacts.
+
+| Sport | 2025 evaluation games | Strength selected on 2024 | Baseline three-way log loss | Adjusted | Baseline Brier | Adjusted |
+|---|---:|---:|---:|---:|---:|---:|
+| NFL | 272 | 1.0 | 0.695499 | 0.687508 | 0.442958 | 0.441499 |
+| CFB | 808 | 1.0 | 0.594281 | 0.588069 | 0.368445 | 0.368506 |
+
+The NFL training-selected *refit* multipliers for the combined absolute
+margins were **3: 2.20** (at the protective cap) and **7: 1.4063**.
+CFB's refit absolute-margin multipliers were **3: 2.20** and
+**7: 2.20**, both at the cap. These are **distribution likelihood
+multipliers, not point-spread adjustments, expected profits or winning
+probabilities**.
+
+Week-paired conservative simultaneous 95% bootstrap intervals for
+*baseline loss minus challenger loss*:
+
+| Sport | Log-loss improvement 95% CI | Brier improvement 95% CI | Required both >0? |
+|---|---|---|---|
+| NFL | [0.001363, 0.014523] | [-0.001488, 0.004646] | **No** |
+| CFB | [0.003694, 0.009116] | [-0.001164, 0.001246] | **No** |
+
+The log-loss result supports an *exploratory scoring-distribution
+hypothesis*, but the Brier intervals include zero and CFB's Brier
+point estimate slightly worsened. Therefore **neither sport passed the
+prespecified two-endpoint statistical screen**. This is **not** an
+investment/betting-edge finding. No scores or live probabilities were
+altered, no candidate was promoted, no bets were made. The 2025
+data are retrospectively inspected, not untouched validation.
