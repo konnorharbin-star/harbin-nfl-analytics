@@ -57,23 +57,23 @@
         "rows": 271
       },
       "2025_raw_model": {
-        "brier": 0.23016991,
-        "hypothetical_archive_roi": -0.05843021,
-        "hypothetical_archived_bets_over_3pct": 190,
-        "log_loss": 0.65069961,
+        "brier": 0.2287936,
+        "hypothetical_archive_roi": -0.0814866,
+        "hypothetical_archived_bets_over_3pct": 186,
+        "log_loss": 0.64780969,
         "rows": 271
       },
       "2025_residual_candidate": {
-        "brier": 0.21533195,
+        "brier": 0.21513417,
         "hypothetical_archive_roi": null,
         "hypothetical_archived_bets_over_3pct": 0,
-        "log_loss": 0.6186528,
+        "log_loss": 0.6182325,
         "rows": 271
       },
-      "alpha_selected_on_2024": -0.2,
+      "alpha_selected_on_2024": -0.125,
       "deployment_authorized": false,
-      "market_minus_candidate_brier": 3.194e-05,
-      "market_minus_candidate_log_loss": 0.00024763,
+      "market_minus_candidate_brier": 0.00022972,
+      "market_minus_candidate_log_loss": 0.00066793,
       "positive_archived_model_edge_proven": false,
       "status": "HISTORICAL_DIAGNOSTIC_NOT_PRODUCTION_VALIDATED"
     },
@@ -88,23 +88,23 @@
         "rows": 269
       },
       "2025_raw_model": {
-        "brier": 0.26409215,
-        "hypothetical_archive_roi": -0.10421799,
-        "hypothetical_archived_bets_over_3pct": 176,
-        "log_loss": 0.72317738,
+        "brier": 0.2653102,
+        "hypothetical_archive_roi": -0.11805046,
+        "hypothetical_archived_bets_over_3pct": 183,
+        "log_loss": 0.72594714,
         "rows": 269
       },
       "2025_residual_candidate": {
-        "brier": 0.25122181,
+        "brier": 0.25128531,
         "hypothetical_archive_roi": null,
         "hypothetical_archived_bets_over_3pct": 0,
-        "log_loss": 0.69559947,
+        "log_loss": 0.69572543,
         "rows": 269
       },
-      "alpha_selected_on_2024": -0.05,
+      "alpha_selected_on_2024": -0.025,
       "deployment_authorized": false,
-      "market_minus_candidate_brier": 0.00015535,
-      "market_minus_candidate_log_loss": 0.00030889,
+      "market_minus_candidate_brier": 9.185e-05,
+      "market_minus_candidate_log_loss": 0.00018293,
       "positive_archived_model_edge_proven": false,
       "status": "HISTORICAL_DIAGNOSTIC_NOT_PRODUCTION_VALIDATED"
     },
@@ -112,30 +112,30 @@
       "2024_development_rows": 272,
       "2025_diagnostic_rows": 272,
       "2025_market_only": {
-        "brier": 0.24981032,
+        "brier": 0.2498346,
         "hypothetical_archive_roi": null,
         "hypothetical_archived_bets_over_3pct": 0,
-        "log_loss": 0.69276372,
+        "log_loss": 0.69281228,
         "rows": 272
       },
       "2025_raw_model": {
-        "brier": 0.25823281,
-        "hypothetical_archive_roi": -0.10878041,
-        "hypothetical_archived_bets_over_3pct": 172,
-        "log_loss": 0.71009191,
+        "brier": 0.25766593,
+        "hypothetical_archive_roi": -0.07463368,
+        "hypothetical_archived_bets_over_3pct": 174,
+        "log_loss": 0.7088707,
         "rows": 272
       },
       "2025_residual_candidate": {
-        "brier": 0.24981032,
+        "brier": 0.24976364,
         "hypothetical_archive_roi": null,
         "hypothetical_archived_bets_over_3pct": 0,
-        "log_loss": 0.69276372,
+        "log_loss": 0.69267036,
         "rows": 272
       },
-      "alpha_selected_on_2024": 0.0,
+      "alpha_selected_on_2024": -0.05,
       "deployment_authorized": false,
-      "market_minus_candidate_brier": 0.0,
-      "market_minus_candidate_log_loss": 0.0,
+      "market_minus_candidate_brier": 7.096e-05,
+      "market_minus_candidate_log_loss": 0.00014192,
       "positive_archived_model_edge_proven": false,
       "status": "HISTORICAL_DIAGNOSTIC_NOT_PRODUCTION_VALIDATED"
     }
