@@ -37,7 +37,8 @@ def test_evaluation_outcomes_cannot_change_fitted_or_selected_coefficients(sport
     updated = evaluate(perturbed, sport, 2024, 2025)
     for target in ("margin", "total"):
         assert baseline["targets"][target]["selection"] == updated["targets"][target]["selection"]
-    assert baseline["targets"]["total"]["evaluation_selected"] != updated["targets"]["total"]["evaluation_selected"]
+    assert (baseline["targets"]["total"]["evaluation_selected"]
+            != updated["targets"]["total"]["evaluation_selected"])
     assert not updated["betting_authorized"]
 
 
