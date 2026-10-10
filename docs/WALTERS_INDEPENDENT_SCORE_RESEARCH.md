@@ -64,3 +64,8 @@ Nothing here places a bet, changes stake sizing, or weakens existing blockers.
 References: Billy Walters official handicapping guide:
 https://realbillywalters.com/handicapping-system/ and his publisher's
 description of `Gambler`: https://www.simonandschuster.com/books/Gambler/Billy-Walters/9781668032862
+
+The emitted report also includes paired season/week bootstrap uncertainty across
+2025 games, with familywise 95% Bonferroni intervals for eight predetermined
+sport/target/metric comparisons. An apparent MAE or RMSE gain whose interval
+crosses zero is **not** evidence of statistically supported improvement.
