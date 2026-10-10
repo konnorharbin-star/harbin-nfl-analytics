@@ -22,9 +22,9 @@
       "live_n": 42,
       "live_std": 2.651561603276078,
       "mean_z": 0.689,
-      "reference_mean": 1.9658449964734308,
+      "reference_mean": 1.9658449964734717,
       "reference_n": 1087,
-      "reference_std": 4.135525119268018,
+      "reference_std": 4.135525119268019,
       "stability_score": 71.7,
       "std_ratio": 0.6412
     },
@@ -33,9 +33,9 @@
       "live_n": 42,
       "live_std": 3.0174815786461218,
       "mean_z": 0.2943,
-      "reference_mean": 44.633972765590514,
+      "reference_mean": 44.63397276559048,
       "reference_n": 1087,
-      "reference_std": 3.511677071871184,
+      "reference_std": 3.5116770718711816,
       "stability_score": 88.9,
       "std_ratio": 0.8593
     }
@@ -45,7 +45,7 @@
   "live_readiness_score": 79.0,
   "meaning": "operational/model-monitoring score; not a profitability guarantee",
   "scores": {
-    "calibration": 89.07670124431355,
+    "calibration": 89.07670124431354,
     "context": 58.92857142857143,
     "distribution_stability": 80.3,
     "freshness": 100.0,
