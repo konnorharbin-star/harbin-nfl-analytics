@@ -1,0 +1,29 @@
+name: Walters Matchup Residual Research
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "scripts/walters_matchup_residual.py"
+      - "tests/test_walters_matchup_residual.py"
+      - ".github/workflows/walters-matchup-research.yml"
+permissions:
+  contents: read
+jobs:
+  retrospective:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run isolated research regression tests
+        run: |
+          python -m pip install pytest
+          python -m pytest -q tests/test_walters_matchup_residual.py
+      - name: Grade strict prior-week matchup features
+        run: |
+          python scripts/walters_matchup_residual.py --sport nfl --source reports/free_market_predictions.csv --out reports/walters_matchup_residual.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: walters-matchup-retrospective
+          path: reports/walters_matchup_residual.json
