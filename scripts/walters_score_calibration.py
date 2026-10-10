@@ -83,6 +83,70 @@ def fit(train, pred, actual, family, ridge):
             "train_mean": mu, "train_sd": sd}
 
 
+
+def paired_week_bootstrap(rows, pred, actual, weights, *, draws=5000):
+    """Week-clustered, paired resampling; baseline minus correction in score points.
+
+    Bonferroni 95% across 2 sports x 2 score targets x 2 endpoints.
+    This is retrospective diagnostic uncertainty, not an economic edge.
+    """
+    from collections import defaultdict
+    import random
+
+    if weights is None:
+        return {"week_clusters": len({(r["season"], r["week"]) for r in rows}),
+                "mae_familywise_95_ci": [0.0, 0.0],
+                "rmse_familywise_95_ci": [0.0, 0.0],
+                "both_lower_bounds_positive": False}
+    groups = defaultdict(list)
+    for r in rows:
+        x = r[pred]
+        baseline_error = x - r[actual]
+        candidate_error = (
+            x + weights["intercept"] +
+            weights["slope_z"] * (x - weights["train_mean"]) / weights["train_sd"]
+            - r[actual]
+        )
+        groups[(r["season"], r["week"])].append((baseline_error, candidate_error))
+    blocks = []
+    for group in groups.values():
+        blocks.append((
+            len(group),
+            sum(abs(b) for b, _ in group),
+            sum(abs(c) for _, c in group),
+            sum(b * b for b, _ in group),
+            sum(c * c for _, c in group),
+        ))
+    rng = random.Random(20261010)
+    mae_deltas, rmse_deltas = [], []
+    for _ in range(draws):
+        n = a0 = a1 = s0 = s1 = 0
+        for _ in blocks:
+            c, ab, ac, sb, sc = blocks[rng.randrange(len(blocks))]
+            n += c
+            a0 += ab
+            a1 += ac
+            s0 += sb
+            s1 += sc
+        mae_deltas.append((a0 - a1) / n)
+        rmse_deltas.append(math.sqrt(s0 / n) - math.sqrt(s1 / n))
+
+    def interval(values):
+        ordered = sorted(values)
+        def quantile(q):
+            position = q * (len(ordered) - 1)
+            left = int(position)
+            right = min(left + 1, len(ordered) - 1)
+            return ordered[left] + (ordered[right] - ordered[left]) * (position - left)
+        return [quantile(0.003125), quantile(0.996875)]
+
+    mae_ci, rmse_ci = interval(mae_deltas), interval(rmse_deltas)
+    return {"week_clusters": len(blocks),
+            "mae_familywise_95_ci": mae_ci,
+            "rmse_familywise_95_ci": rmse_ci,
+            "both_lower_bounds_positive": mae_ci[0] > 0 and rmse_ci[0] > 0}
+
+
 def evaluate(rows, sport: str, tune_season: int, evaluation_season: int):
     if tune_season >= evaluation_season:
         raise ValueError("Evaluation must follow tuning")
@@ -145,6 +209,9 @@ def evaluate(rows, sport: str, tune_season: int, evaluation_season: int):
             } if selected else {"family": "baseline", "ridge": None,
                                 "weights": None}),
             "evaluation_baseline": grade(holdout, pred, actual),
+            "evaluation_uncertainty": paired_week_bootstrap(
+                holdout, pred, actual, selected["weights"] if selected else None
+            ),
             "evaluation_selected": grade(
                 holdout, pred, actual, selected["weights"] if selected else None
             ),
