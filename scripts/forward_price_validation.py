@@ -15,7 +15,6 @@ import subprocess
 from collections import Counter
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from statistics import median
 
 MAX_ORIGIN_LAG = timedelta(minutes=15)
 LAST_QUOTE_WINDOW = timedelta(minutes=30)
