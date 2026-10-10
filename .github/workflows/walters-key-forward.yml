@@ -2,6 +2,11 @@ name: Walters Key Number Prospective Shadow
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/walters_key_forward.py"
+      - ".github/workflows/walters-key-forward.yml"
   pull_request:
     paths:
       - "scripts/walters_key_forward.py"
