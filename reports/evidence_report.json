@@ -2,7 +2,7 @@
   "by_market": {
     "moneyline": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.28584965373235277,
+      "average_expected_value_per_unit": 0.2858496537323526,
       "average_probability_edge": 0.09597125802347392,
       "bets": 886,
       "clv_samples": 0,
@@ -17,8 +17,8 @@
     },
     "spread": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.15080034679951335,
-      "average_probability_edge": 0.0992853466245859,
+      "average_expected_value_per_unit": 0.15080034679951348,
+      "average_probability_edge": 0.099285346624586,
       "bets": 868,
       "clv_samples": 0,
       "losses": 431,
@@ -32,8 +32,8 @@
     },
     "total": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.1201961900827151,
-      "average_probability_edge": 0.08421820000769745,
+      "average_expected_value_per_unit": 0.12019619008271465,
+      "average_probability_edge": 0.08421820000769722,
       "bets": 830,
       "clv_samples": 0,
       "losses": 422,
@@ -49,8 +49,8 @@
   "by_season": {
     "2022": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.18194685099740152,
-      "average_probability_edge": 0.08477160554180177,
+      "average_expected_value_per_unit": 0.1819468509974012,
+      "average_probability_edge": 0.08477160554180173,
       "bets": 551,
       "clv_samples": 0,
       "losses": 319,
@@ -64,8 +64,8 @@
     },
     "2023": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.16924363673194082,
-      "average_probability_edge": 0.09062108774578613,
+      "average_expected_value_per_unit": 0.1692436367319411,
+      "average_probability_edge": 0.09062108774578626,
       "bets": 687,
       "clv_samples": 0,
       "losses": 370,
@@ -79,8 +79,8 @@
     },
     "2024": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.18128399958845837,
-      "average_probability_edge": 0.09592522150344897,
+      "average_expected_value_per_unit": 0.18128399958845828,
+      "average_probability_edge": 0.0959252215034489,
       "bets": 671,
       "clv_samples": 0,
       "losses": 365,
@@ -94,8 +94,8 @@
     },
     "2025": {
       "average_clv_proxy": null,
-      "average_expected_value_per_unit": 0.21593433324330155,
-      "average_probability_edge": 0.10041430506907445,
+      "average_expected_value_per_unit": 0.21593433324330097,
+      "average_probability_edge": 0.10041430506907423,
       "bets": 675,
       "clv_samples": 0,
       "losses": 384,
@@ -108,11 +108,11 @@
       "wins": 289
     }
   },
-  "note": "Free nflverse archive-final fallbacks and opening-line observations without opening juice remain valid research observations, but they are not promotion-quality entry-price evidence. ESPN provider-labeled archived opening/closing stages qualify without fabricating timestamps. When probability reliability provenance is present, only rows that cleared the chronological reliability gate can enter promotion evidence. ROBUST status requires verified entry prices plus positive uncertainty-adjusted ROI/CLV across multiple markets and seasons with broad closing-snapshot coverage.",
+  "note": "Archive-final and provider-labeled opening/closing stages remain research diagnostics. Without verified pregame quote timestamps they cannot enter promotion evidence or policy selection. ROBUST requires timestamped entry prices and positive uncertainty-adjusted ROI/CLV across independent periods.",
   "overall": {
     "average_clv_proxy": null,
-    "average_expected_value_per_unit": 0.18727567027766862,
-    "average_probability_edge": 0.09330933494014215,
+    "average_expected_value_per_unit": 0.18727567027766845,
+    "average_probability_edge": 0.09330933494014212,
     "bets": 2584,
     "clv_samples": 0,
     "losses": 1438,
@@ -125,88 +125,12 @@
     "wins": 1115
   },
   "promotion_sample": {
-    "avg_verified_clv_proxy": 0.06351649044003474,
-    "by_market": {
-      "moneyline": {
-        "average_clv_proxy": 0.002354807850648684,
-        "average_expected_value_per_unit": 0.2699312108424267,
-        "average_probability_edge": 0.09582428137918828,
-        "bets": 456,
-        "clv_samples": 455,
-        "losses": 293,
-        "max_drawdown": 60.79729305667605,
-        "net_units": -39.45260537422521,
-        "pushes": 1,
-        "roi_ci_95_high": 0.04135665248171932,
-        "roi_ci_95_low": -0.20958197105226034,
-        "roi_per_unit_staked": -0.08651887143470441,
-        "wins": 162
-      },
-      "spread": {
-        "average_clv_proxy": 0.1670616113744076,
-        "average_expected_value_per_unit": 0.13351610043164505,
-        "average_probability_edge": 0.09289877371219506,
-        "bets": 423,
-        "clv_samples": 422,
-        "losses": 216,
-        "max_drawdown": 36.70665224800769,
-        "net_units": -33.56719893541515,
-        "pushes": 9,
-        "roi_ci_95_high": 0.015100638412166611,
-        "roi_ci_95_low": -0.16955529096691546,
-        "roi_per_unit_staked": -0.07935508022556773,
-        "wins": 198
-      },
-      "total": {
-        "average_clv_proxy": 0.026004728132387706,
-        "average_expected_value_per_unit": 0.10992244302454576,
-        "average_probability_edge": 0.08085406273158009,
-        "bets": 424,
-        "clv_samples": 423,
-        "losses": 219,
-        "max_drawdown": 62.05612791777129,
-        "net_units": -31.455638552064485,
-        "pushes": 0,
-        "roi_ci_95_high": 0.012198880228417499,
-        "roi_ci_95_low": -0.1655548456422484,
-        "roi_per_unit_staked": -0.07418782677373699,
-        "wins": 205
-      }
-    },
-    "by_season": {
-      "2024": {
-        "average_clv_proxy": 0.058172380259974024,
-        "average_expected_value_per_unit": 0.16472244757601318,
-        "average_probability_edge": 0.08804397097258426,
-        "bets": 656,
-        "clv_samples": 653,
-        "losses": 360,
-        "max_drawdown": 66.36371161171353,
-        "net_units": -52.16437471878388,
-        "pushes": 8,
-        "roi_ci_95_high": 0.005190787286506199,
-        "roi_ci_95_low": -0.16334151956991755,
-        "roi_per_unit_staked": -0.07951886390058518,
-        "wins": 288
-      },
-      "2025": {
-        "average_clv_proxy": 0.06891015960167252,
-        "average_expected_value_per_unit": 0.18255816516116724,
-        "average_probability_edge": 0.0919896927810557,
-        "bets": 647,
-        "clv_samples": 647,
-        "losses": 368,
-        "max_drawdown": 76.80847989381101,
-        "net_units": -52.31106814292096,
-        "pushes": 2,
-        "roi_ci_95_high": 0.012549214878108228,
-        "roi_ci_95_low": -0.16785079422940952,
-        "roi_per_unit_staked": -0.08085172819616841,
-        "wins": 277
-      }
-    },
-    "entry_price_verified": true,
-    "entry_quote_verified": true,
+    "avg_verified_clv_proxy": null,
+    "by_market": {},
+    "by_season": {},
+    "entry_price_verified": false,
+    "entry_quote_verified": false,
+    "entry_timestamp_verified": false,
     "excluded_unverified_bets": 3069,
     "minimum_verified_clv_coverage": 0.9,
     "opening_line_observed_bets": 0,
@@ -214,23 +138,23 @@
     "positive_seasons": 0,
     "raw_archive_bets": 3069,
     "verified_archive_bets": 0,
-    "verified_archived_open_close_bets": 1632,
-    "verified_bets": 1632,
-    "verified_clv_coverage": 0.7965686274509803,
-    "verified_clv_samples": 1300,
-    "verified_provider_bets": 1632,
+    "verified_archived_open_close_bets": 0,
+    "verified_bets": 0,
+    "verified_clv_coverage": 0.0,
+    "verified_clv_samples": 0,
+    "verified_provider_bets": 0,
     "verified_roi_ci_95": [
-      -0.1409245590115701,
-      -0.019146631097100714
+      null,
+      null
     ],
-    "verified_roi_per_unit_staked": -0.08018069290998071,
+    "verified_roi_per_unit_staked": null,
     "verified_timestamped_provider_bets": 0
   },
   "source": {
     "api_key_required": false,
     "clv_label": "opening-to-archive-final CLV proxy",
     "entry_price_rule": "Only the exact price observed at entry can qualify as verified entry-price evidence. Opening spread/total lines without opening juice remain research-only.",
-    "historical_entry_provenance": "explicit provider-labeled opening stage or timestamped provider entry",
+    "historical_entry_provenance": "timestamp-verified pregame provider entry only",
     "historical_market": "nflverse schedules/nfldata public archive",
     "initial_lines_coverage": {
       "available": true,
@@ -251,7 +175,7 @@
     "notes": "Archive-final values are not claimed to be timestamped official closes. When a distinct opening is unavailable, the final archive value is an explicit execution fallback and no CLV proxy is recorded.",
     "opening_market": "nflverse nfldata initial_lines.csv when available",
     "verified_provider_bets_path": "reports/verified_market_bets.csv",
-    "verified_provider_rows": 1632
+    "verified_provider_rows": 0
   },
   "status": "ESTABLISHED SAMPLE"
 }
