@@ -77,7 +77,7 @@ def fit(train, pred, actual, family, ridge):
     z = [(v - mu) / sd for v in x]
     # Shrink both corrections towards zero; forecast remains independent of lines.
     alpha = sum(residual) / (len(x) + ridge)
-    beta = (sum(a * b for a, b in zip(z, residual)) /
+    beta = (sum(a * b for a, b in zip(z, residual, strict=True)) /
             (sum(a * a for a in z) + ridge)) if family == "affine" else 0.0
     return {"intercept": alpha, "slope_z": beta,
             "train_mean": mu, "train_sd": sd}
