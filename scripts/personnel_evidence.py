@@ -30,7 +30,11 @@ def injury_records(payload):
     if not isinstance(groups, list):
         raise TypeError("Missing injury groups")
     for group in groups:
+        if not isinstance(group, dict):
+            raise TypeError("Injury group must be an object")
         for item in group.get("injuries", []):
+            if not isinstance(item, dict):
+                raise TypeError("Injury item must be an object")
             athlete = item.get("athlete") or {}
             team = athlete.get("team") or {}
             ids = set()
@@ -154,6 +158,10 @@ def fetch(sport):
     if len(body) > 12_000_000:
         raise ValueError("Oversized personnel response")
     payload = json.loads(body)
+    if not isinstance(payload, dict):
+        raise TypeError("Personnel response must be an object")
+    if not isinstance(payload.get("season"), dict):
+        raise TypeError("Personnel response lacks season identity")
     if payload.get("status") != "success":
         raise ValueError("Personnel source did not report success")
     return payload, {

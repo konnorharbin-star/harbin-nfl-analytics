@@ -102,3 +102,12 @@ def test_player_id_is_extracted_from_source_link_without_name_guessing():
     assert r["player_id"] == "123" and r["source_item_date"] == "2026-10-10T15:35Z"
     payload["injuries"][0]["injuries"][0]["athlete"]["id"] = "456"
     assert injury_records(payload)[0]["player_id"] is None
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [[], {"injuries": None}, {"injuries": ["bad"]}, {"injuries": [{"injuries": ["bad"]}]}],
+)
+def test_changed_source_schema_is_explicitly_rejected(payload):
+    with pytest.raises(TypeError):
+        injury_records(payload)
