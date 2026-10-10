@@ -144,6 +144,7 @@ jobs:
       PYTHONUNBUFFERED: "1"
       TZ: America/Chicago
       THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
+      THERUNDOWN_API_KEY: ${{ secrets.THERUNDOWN_API_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -179,6 +180,9 @@ jobs:
 
       - name: Compare immutable independent key numbers with source-attested book spreads
         run: python -m scripts.walters_key_market_gate
+
+      - name: Watch free DraftKings FanDuel BetMGM main spreads after model publication
+        run: python -m scripts.therundown_free_watch --sport nfl
 
       - name: Compare market-relative challenger with historical diagnostic benchmark
         run: python -m nfl.market_residual_challenger
