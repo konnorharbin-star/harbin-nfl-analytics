@@ -4,7 +4,7 @@
   "exclusions": {
     "MISSING_KICKOFF_CAPTURE_OR_ORIGIN": 668
   },
-  "generated_at_utc": "2026-10-10T17:31:53.397770+00:00",
+  "generated_at_utc": "2026-10-10T17:34:46.890805+00:00",
   "limitations": "A cross-book median is an imperfect correlated-price reference, not an independently validated probability. Never call its proxy EV a true edge. Push/tie handling and book-specific settlement rules may differ. No fabricated player props or period markets: unprovided prices are reported missing, never filled by guesses. Per-book source updates still may not certify executable prices.",
   "market_coverage": [
     {
