@@ -1,0 +1,33 @@
+{
+  "betting_authorized": false,
+  "by_model_version": {},
+  "by_season": {},
+  "capture": {
+    "new_frozen": 14,
+    "source_errors": []
+  },
+  "evaluation_end_exclusive": "2027-03-01T00:00:00+00:00",
+  "frozen_games": 14,
+  "grading_errors": {},
+  "hypothesis": "Fixed 1.1 market log-odds may improve favorite/longshot calibration",
+  "inference_status": "DESCRIPTIVE_UNTIL_FIXED_HORIZON_THEN_EXTERNAL_RELEASE_REVIEW",
+  "limitations": [
+    "Advertised research prices are not verified executable fills",
+    "Quote-origin timestamps missing; economic EV, ROI and CLV are not certified",
+    "Historical archives already inspected; no pristine holdout claim",
+    "No threshold/weight fitting; six paired tests use Bonferroni week-block intervals",
+    "Prospective probability improvement alone cannot authorize bets"
+  ],
+  "observed_at": "2026-10-10T17:54:16.899330+00:00",
+  "promotion_eligible": false,
+  "scores": {
+    "games": 0,
+    "variants": {},
+    "week_clusters": 0
+  },
+  "spec": "market_first_moneyline_v1",
+  "sport": "nfl",
+  "stake_units": 0,
+  "status": "PROSPECTIVE_RESEARCH_ONLY",
+  "ties_omitted": 0
+}

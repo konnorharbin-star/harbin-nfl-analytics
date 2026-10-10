@@ -1,0 +1,37 @@
+{
+  "away_team": "CLE",
+  "betting_authorized": false,
+  "captured_at": "2026-10-10T17:54:15.949386+00:00",
+  "decision": "RESEARCH_OBSERVATION",
+  "experiment_code_sha256": "98b860d499eb2bfec0b1c8b142169752a7c16d83c7d0c0483e5d4c7b87f5eded",
+  "game_id": "2026_05_CLE_NYJ",
+  "home_team": "NYJ",
+  "id": "8244e16700f620f538aa0056",
+  "kickoff": "2026-10-11T17:00:00+00:00",
+  "model_version": "asset-sha256:21e6193c9aed74d80a247e72f275d6bcffca8b6de8b009d7b9597f2749a9ff34",
+  "original_paired_quote": {
+    "away_ml": 114,
+    "captured_at": "2026-10-10T17:54:13.321618+00:00",
+    "home_ml": -135,
+    "provider": "DraftKings",
+    "source": "espn",
+    "source_event_id": "401872983"
+  },
+  "prediction_source_sha256": "038e883a1d3e877c7237cde3f8cf135a0bd66b49a9718e9af544a581562a3855",
+  "predictions": {
+    "independent_model": 0.47943432205528075,
+    "market": 0.551441114716549,
+    "market_model_25pct": 0.533439416551232,
+    "market_power_1_1": 0.5565432486056524
+  },
+  "quote_collector_observed_at": "2026-10-10T17:54:13.321618+00:00",
+  "reference_book": "DraftKings",
+  "season": 2026,
+  "source_prediction_generated_at": "2026-10-10T17:35:03.363886+00:00",
+  "source_quote_at": null,
+  "source_quote_origin_verified": false,
+  "spec": "market_first_moneyline_v1",
+  "sport": "nfl",
+  "stake_units": 0,
+  "week": 5
+}
