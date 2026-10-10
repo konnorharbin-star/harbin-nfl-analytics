@@ -4,7 +4,7 @@
     "PASS": 42,
     "WAIT_MONITOR": 0
   },
-  "as_of": "2026-10-10T20:48:24.036387+00:00",
+  "as_of": "2026-10-10T21:06:32.176219+00:00",
   "league": "NFL",
   "limits": {
     "lookback_hours": 12,
@@ -26,9 +26,9 @@
   ],
   "observed_movements": {
     "IMPROVED": 3,
-    "MIXED_LINE_PRICE": 0,
+    "MIXED_LINE_PRICE": 1,
     "NO_HISTORY": 0,
-    "STABLE": 39,
+    "STABLE": 38,
     "WORSENED": 0
   },
   "observed_quote_not_guaranteed_fill": true,

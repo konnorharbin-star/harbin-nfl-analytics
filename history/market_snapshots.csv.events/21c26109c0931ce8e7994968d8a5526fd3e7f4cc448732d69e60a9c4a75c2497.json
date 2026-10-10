@@ -1,0 +1,30 @@
+{
+  "archived_at": "2026-10-10T21:06:35.423137+00:00",
+  "capture_is_book_update_time": false,
+  "origin_time_usable": false,
+  "original_market_row": {
+    "away_team": "PHI",
+    "book": "WynnBET",
+    "captured_at": "2026-10-10T21:06:20.211405+00:00",
+    "first_american_odds": -109,
+    "first_line": 41.5,
+    "first_side": "over",
+    "game_id": "2026_05_PHI_JAX",
+    "home_team": "JAX",
+    "kickoff": "2026-10-11T13:30:00+00:00",
+    "market_type": "total",
+    "provider": "action_network",
+    "season": 2026,
+    "second_american_odds": -112,
+    "second_line": 41.5,
+    "second_side": "under",
+    "source_event_id": "290820",
+    "week": 5
+  },
+  "original_request_url": null,
+  "reported_source_quote_time_verified": false,
+  "schema": 1,
+  "source_quote_age_seconds": null,
+  "source_quote_at": null,
+  "source_quote_time_verified": false
+}

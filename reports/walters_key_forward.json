@@ -1,0 +1,37 @@
+{
+  "spec": "walters_key_number_forward_v1",
+  "evaluated_at": "2026-10-10T21:06:36.031865+00:00",
+  "status": "FORWARD_SHADOW_RESEARCH_ONLY",
+  "graded_games": 0,
+  "ungraded": {
+    "2026_05_BAL_ATL.json": "NO_VERIFIED_PREGAME_PUBLICATION",
+    "2026_05_BUF_LA.json": "NO_VERIFIED_PREGAME_PUBLICATION",
+    "2026_05_CHI_GB.json": "NO_VERIFIED_PREGAME_PUBLICATION",
+    "2026_05_CIN_MIA.json": "NO_VERIFIED_PREGAME_PUBLICATION",
+    "2026_05_CLE_NYJ.json": "NO_VERIFIED_PREGAME_PUBLICATION",
+    "2026_05_DEN_LAC.json": "NO_VERIFIED_PREGAME_PUBLICATION",
+    "2026_05_DET_ARI.json": "NO_VERIFIED_PREGAME_PUBLICATION",
+    "2026_05_HOU_TEN.json": "NO_VERIFIED_PREGAME_PUBLICATION",
+    "2026_05_IND_PIT.json": "NO_VERIFIED_PREGAME_PUBLICATION",
+    "2026_05_LV_NE.json": "NO_VERIFIED_PREGAME_PUBLICATION",
+    "2026_05_MIN_NO.json": "NO_VERIFIED_PREGAME_PUBLICATION",
+    "2026_05_NYG_WAS.json": "NO_VERIFIED_PREGAME_PUBLICATION",
+    "2026_05_PHI_JAX.json": "NO_VERIFIED_PREGAME_PUBLICATION",
+    "2026_05_SF_SEA.json": "NO_VERIFIED_PREGAME_PUBLICATION"
+  },
+  "betting_authorized": false,
+  "production_promotion_authorized": false,
+  "book_quote_samples": 0,
+  "roi": null,
+  "clv": null,
+  "minimum_graded_games": 128,
+  "minimum_distinct_weeks": 8,
+  "scores": {},
+  "paired": null,
+  "limitation": "Football probability scoring on synthetic fixed spreads only. No independently verified executable book prices or real CLV.",
+  "graded_rows": [],
+  "capture_summary": {
+    "newly_frozen": 14,
+    "already_frozen": 0
+  }
+}

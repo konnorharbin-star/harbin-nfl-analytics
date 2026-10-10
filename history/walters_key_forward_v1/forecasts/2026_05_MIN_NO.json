@@ -1,0 +1,152 @@
+{
+  "actual_sportsbook_entry_verified": false,
+  "away_team": "MIN",
+  "captured_at": "2026-10-10T21:06:36.031865+00:00",
+  "diagnostic_spreads": [
+    {
+      "baseline": [
+        0.19723220544020037,
+        0.022089664424224664,
+        0.780678130135575
+      ],
+      "home_spread": -7.0,
+      "key_number": [
+        0.17994901415196762,
+        0.030558430854495385,
+        0.7894925549935373
+      ]
+    },
+    {
+      "baseline": [
+        0.21932186986442503,
+        0.0,
+        0.780678130135575
+      ],
+      "home_spread": -6.5,
+      "key_number": [
+        0.210507445006463,
+        0.0,
+        0.7894925549935373
+      ]
+    },
+    {
+      "baseline": [
+        0.2934634374543531,
+        0.027061581518537103,
+        0.6794749810271098
+      ],
+      "home_spread": -3.0,
+      "key_number": [
+        0.27815208734928837,
+        0.05431846584348372,
+        0.667529446807228
+      ]
+    },
+    {
+      "baseline": [
+        0.3205250189728902,
+        0.0,
+        0.6794749810271098
+      ],
+      "home_spread": -2.5,
+      "key_number": [
+        0.3324705531927722,
+        0.0,
+        0.667529446807228
+      ]
+    },
+    {
+      "baseline": [
+        0.3774807394420583,
+        0.029607937784978056,
+        0.5929113227729637
+      ],
+      "home_spread": 0.0,
+      "key_number": [
+        0.3844353209438954,
+        0.027013434259320214,
+        0.5885512447967846
+      ]
+    },
+    {
+      "baseline": [
+        0.4677554651011605,
+        0.0,
+        0.5322445348988395
+      ],
+      "home_spread": 2.5,
+      "key_number": [
+        0.4667993945440363,
+        0.0,
+        0.5332006054559638
+      ]
+    },
+    {
+      "baseline": [
+        0.4677554651011605,
+        0.03070873701007426,
+        0.5015357978887652
+      ],
+      "home_spread": 3.0,
+      "key_number": [
+        0.4667993945440363,
+        0.0616390982631829,
+        0.4715615071927809
+      ]
+    },
+    {
+      "baseline": [
+        0.5899207265428882,
+        0.0,
+        0.4100792734571118
+      ],
+      "home_spread": 6.5,
+      "key_number": [
+        0.611880805752562,
+        0.0,
+        0.3881191942474379
+      ]
+    },
+    {
+      "baseline": [
+        0.5899207265428882,
+        0.029669457784542608,
+        0.3804098156725692
+      ],
+      "home_spread": 7.0,
+      "key_number": [
+        0.611880805752562,
+        0.0410441759905159,
+        0.347075018256922
+      ]
+    }
+  ],
+  "fixed_alpha": 1.0,
+  "game_id": "2026_05_MIN_NO",
+  "historical_source_sha256": "3ca226008b88f709f0e64ac06631195fa40f147dc94566daefc1889481c3759b",
+  "home_team": "NO",
+  "independent_home_margin": -3.734063651143149,
+  "key_multipliers": {
+    "3": 2.2,
+    "7": 1.5162481739387175
+  },
+  "kickoff": "2026-10-11T17:00:00+00:00",
+  "live_board_sha256": "b9ca9b653e34e1b5ff18884b543e2b4479221f66ef66e58337b113242818f311",
+  "model_mean": 0.18410900536652344,
+  "model_sigma": 12.976298003641649,
+  "production_model_changed": false,
+  "release_state": "SHADOW",
+  "season": 2026,
+  "source_limitation": "Board availability is observed at capture time; original fair-score production time requires separate evidence.",
+  "spec": "walters_key_number_forward_v1",
+  "sport": "nfl",
+  "sportsbook_odds_used": false,
+  "training_seasons": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "wager_authorized": false,
+  "week": 5
+}
