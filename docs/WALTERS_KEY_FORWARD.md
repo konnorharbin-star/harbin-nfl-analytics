@@ -64,7 +64,7 @@ To reproduce on a checkout with the expected repo input files:
 
 \`\`\`bash
 python -m pytest -q tests/test_walters_key_forward.py
-python scripts/walters_key_forward.py --sport nfl \
+python -m scripts.walters_key_forward --sport nfl \
   --historical reports/free_market_predictions.csv
 # College football: --sport cfb \
 #   --historical reports/backtest_predictions.csv
