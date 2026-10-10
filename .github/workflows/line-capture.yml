@@ -11,6 +11,12 @@ on:
         description: "Week number (blank = auto-detect)"
         required: false
         default: ""
+  push:
+    branches: [main]
+    paths:
+      - "nfl/line_history.py"
+      - "tests/test_market_snapshot_provenance.py"
+      - ".github/workflows/line-capture.yml"
   schedule:
     - cron: "17 * * * *"
 permissions:
@@ -30,7 +36,6 @@ jobs:
     timeout-minutes: 15
     env:
       PYTHONUNBUFFERED: "1"
-      THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -54,6 +59,7 @@ jobs:
           git config user.name "harbin-nfl-line-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           [ -f history/market_snapshots.csv ] && git add history/market_snapshots.csv || true
+          [ -d history/market_snapshots.csv.events ] && git add history/market_snapshots.csv.events || true
           [ -f outputs/line_capture_status.json ] && git add outputs/line_capture_status.json || true
           if ! git diff --cached --quiet; then
             git commit -m "lines: capture verified NFL pre-kickoff market snapshot"
