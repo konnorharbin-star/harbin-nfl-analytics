@@ -184,6 +184,9 @@ jobs:
       - name: Watch free DraftKings FanDuel BetMGM main spreads after model publication
         run: python -m scripts.therundown_free_watch --sport nfl
 
+      - name: Audit earlier raw NFL spread EV calibration failures (research only)
+        run: python -m scripts.walters_raw_ev_reliability
+
       - name: Compare market-relative challenger with historical diagnostic benchmark
         run: python -m nfl.market_residual_challenger
 
