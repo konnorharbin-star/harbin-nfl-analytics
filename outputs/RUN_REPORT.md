@@ -10,7 +10,7 @@
 - Margin / total 80% coverage: **78.31% / 80.51%**.
 
 ## Monitoring and execution
-- Live readiness: **79.5/100**.
+- Live readiness: **79.0/100**.
 - Portfolio mode: **PAPER**; proposed **0.00u**; approved **0.00u**.
 - Historical evidence: **2584 bets**, ROI **-7.84%**, CLV **—**.
 - Independent forward evidence: **12 bets**, ROI **18.88%**, CLV **8.47%**.
@@ -29,6 +29,7 @@
 ## Operational alerts
 - 15 market rows have high model-vs-consensus disagreement
 - fewer than two markets clear regime-specific edge reliability
+- NFL injury/weather/travel context coverage is not yet release-ready
 
 ## Interpretation
 A green software run, high readiness score, or low model error does not establish a profitable betting edge. Historical and independently graded forward evidence remain separate release requirements.

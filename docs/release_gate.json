@@ -31,7 +31,7 @@
       "passed": false,
       "requirement": ">=95% current games with identified, decision-ready expected starting-QB state",
       "value": {
-        "decision_ready_coverage": 0.6429,
+        "decision_ready_coverage": 0.5,
         "identity_coverage": 1.0
       }
     },
@@ -42,7 +42,7 @@
       "requirement": ">=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
       "value": {
         "feed": {
-          "current_week_rows": 346,
+          "current_week_rows": 357,
           "latest_age_days": null,
           "latest_reported_at": null,
           "reason": "current-week injury rows lack a timestamp column",
@@ -56,7 +56,7 @@
       "name": "context_coverage",
       "passed": false,
       "requirement": ">=90% current injury/rest/weather/travel context coverage",
-      "value": 0.625
+      "value": 0.5893
     },
     {
       "detail": "",
@@ -64,11 +64,11 @@
       "passed": true,
       "requirement": "validated chronological probability reliability clears Brier/ECE, 58%-62% confidence-band, and margin/total interval guardrails",
       "value": {
-        "brier": 0.22871501280256115,
-        "ece": 0.059829425614887,
+        "brier": 0.22871501280256112,
+        "ece": 0.05982942561488687,
         "margin_80_coverage": 0.7830882352941176,
         "mid_confidence_games": 39,
-        "mid_confidence_gap": 0.012503230466271442,
+        "mid_confidence_gap": 0.01250323046627122,
         "model_family": "gaussian+logistic_moneyline",
         "total_80_coverage": 0.8051470588235294,
         "validated_reliability_ready": true
@@ -96,7 +96,7 @@
       "name": "live_monitoring",
       "passed": false,
       "requirement": "engineering readiness >=90/100; multi-book breadth gated separately",
-      "value": 87.2
+      "value": 86.6
     },
     {
       "detail": "ESPN remains the free primary source; an optional source may supplement breadth.",
@@ -137,8 +137,8 @@
         "status": "ESTABLISHED SAMPLE",
         "verified_clv_coverage": 0.7965686274509803,
         "verified_roi_ci_95": [
-          -0.14152061134284574,
-          -0.014929914457022702
+          -0.13902872762360582,
+          -0.017793805511925272
         ]
       }
     },

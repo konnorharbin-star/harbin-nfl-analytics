@@ -27,11 +27,12 @@
     "verified_quote_rows": 334,
     "warnings": []
   },
-  "live_readiness_score": 79.5,
+  "live_readiness_score": 79.0,
   "meaning": "operational health; not a profitability or staking signal",
   "monitor_alerts": [
     "15 market rows have high model-vs-consensus disagreement",
-    "fewer than two markets clear regime-specific edge reliability"
+    "fewer than two markets clear regime-specific edge reliability",
+    "NFL injury/weather/travel context coverage is not yet release-ready"
   ],
   "production_eligible": false,
   "release_blockers": [
