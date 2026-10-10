@@ -120,3 +120,32 @@ def test_default_prior_weight_is_applied_to_prior_team_rows() -> None:
 
     assert model.training_rows == 6
     assert abs(model.training_weight - expected_weight) < 1e-12
+
+
+def test_raiders_relocation_uses_existing_franchise_prior_without_new_scores():
+    games = _balanced_team_games().with_columns(
+        pl.col("team").replace({"A": "OAK", "B": "KC"}),
+        pl.col("opponent").replace({"A": "OAK", "B": "KC"}),
+    )
+    model = FairScoreModel().fit(games)
+    before = model.ratings_table().clone()
+    old = model.project("OAK", "KC")
+    relocated = model.project("LV", "KC")
+    assert relocated.home_team == "LV"
+    assert relocated.home_points == old.home_points
+    assert relocated.away_points == old.away_points
+    assert model.ratings_table().equals(before)
+
+
+def test_relocation_lookup_keeps_exact_key_and_unknown_teams_fail_closed():
+    import pytest
+
+    from nfl.contracts import DataContractError
+    games = _balanced_team_games().with_columns(
+        pl.col("team").replace({"A": "LV", "B": "KC"}),
+        pl.col("opponent").replace({"A": "LV", "B": "KC"}),
+    )
+    model = FairScoreModel().fit(games)
+    assert model._rating_team("LV") == "LV"
+    with pytest.raises(DataContractError):
+        model.project("UNKNOWN", "KC")
