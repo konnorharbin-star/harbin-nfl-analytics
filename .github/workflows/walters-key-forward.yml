@@ -10,6 +10,9 @@ on:
       - "tests/test_walters_key_market_gate.py"
       - "scripts/therundown_free_watch.py"
       - "tests/test_therundown_free_watch.py"
+      - "scripts/walters_web_research.py"
+      - "tests/test_walters_web_research.py"
+      - "history/walters_key_forward_v1/web_observations/**"
       - ".github/workflows/walters-key-forward.yml"
   pull_request:
     paths:
@@ -41,11 +44,14 @@ jobs:
           python -m pytest -q tests/test_walters_key_forward.py
           python -m pytest -q tests/test_walters_key_market_gate.py
           python -m pytest -q tests/test_therundown_free_watch.py
+          python -m pytest -q tests/test_walters_web_research.py
       - name: Freeze pregame 2026 distributions and grade published finals
         run: |
           python -m scripts.walters_key_forward --sport nfl --historical reports/free_market_predictions.csv
       - name: Audit source-attested exact spread prices
         run: python -m scripts.walters_key_market_gate
+      - name: Audit original-published web-researched quote evidence (no keys)
+        run: python -m scripts.walters_web_research
       - name: Upload research-only prospective evidence
         uses: actions/upload-artifact@v4
         with:
@@ -53,5 +59,7 @@ jobs:
           path: |
             reports/walters_key_forward.json
             reports/walters_key_market_gate.json
+            reports/walters_web_research.json
+            history/walters_key_forward_v1/web_observations/*.json
             history/walters_key_forward_v1/forecasts/*.json
           if-no-files-found: warn
