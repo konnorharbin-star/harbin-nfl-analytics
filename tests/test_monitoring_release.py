@@ -186,6 +186,7 @@ def test_release_gate_requires_broad_historical_clv_coverage(tmp_path) -> None:
                 "promotion_sample": {
                     "entry_quote_verified": True,
                     "verified_bets": 1200,
+                    "verified_timestamped_provider_bets": 1200,
                     "verified_roi_ci_95": [0.01, 0.05],
                     "avg_verified_clv_proxy": 0.02,
                     "verified_clv_samples": 1068,
@@ -243,6 +244,7 @@ def test_release_gate_cannot_claim_production_with_paper_policy(tmp_path) -> Non
                 "promotion_sample": {
                     "entry_quote_verified": True,
                     "verified_bets": 1200,
+                    "verified_timestamped_provider_bets": 1200,
                     "verified_roi_ci_95": [0.01, 0.05],
                     "avg_verified_clv_proxy": 0.02,
                     "verified_clv_samples": 1080,
@@ -302,6 +304,7 @@ def test_release_gate_blocks_unreliable_market_regimes(tmp_path) -> None:
                 "promotion_sample": {
                     "entry_quote_verified": True,
                     "verified_bets": 1200,
+                    "verified_timestamped_provider_bets": 1200,
                     "verified_roi_ci_95": [0.01, 0.05],
                     "avg_verified_clv_proxy": 0.02,
                     "verified_clv_samples": 1080,
@@ -370,6 +373,7 @@ def test_release_gate_requires_broad_forward_clv_coverage(tmp_path) -> None:
                 "promotion_sample": {
                     "entry_quote_verified": True,
                     "verified_bets": 1200,
+                    "verified_timestamped_provider_bets": 1200,
                     "excluded_unverified_bets": 0,
                     "verified_roi_ci_95": [0.01, 0.05],
                     "avg_verified_clv_proxy": 0.02,
@@ -448,3 +452,39 @@ def test_release_gate_requires_broad_forward_clv_coverage(tmp_path) -> None:
     assert promoted["live_evidence_ready"] is True
     assert promoted["release_state"] == "PRODUCTION"
     assert promoted["production_eligible"] is True
+
+    
+def test_positive_backtest_without_timestamped_entries_cannot_release(tmp_path) -> None:
+    """Strong simulated ROI cannot substitute for identifiable entry timestamps."""
+    meta = _meta(datetime.now(UTC))
+    meta["market_intelligence"] = {"multi_book_coverage": 1.0}
+    evidence_path = tmp_path / "unverified.json"
+    evidence_path.write_text(
+        json.dumps({
+            "status": "ROBUST",
+            "promotion_sample": {
+                "entry_quote_verified": True,
+                "verified_bets": 1200,
+                "verified_timestamped_provider_bets": 0,
+                "verified_roi_ci_95": [0.01, 0.05],
+                "avg_verified_clv_proxy": 0.02,
+                "verified_clv_coverage": 0.95,
+                "positive_markets": 2,
+                "positive_seasons": 2,
+            },
+        }),
+        encoding="utf-8",
+    )
+    gate = build_release_gate(
+        meta,
+        {"engineering_readiness_score": 95},
+        {"status": "OK"},
+        evidence_path=evidence_path,
+        live_path=tmp_path / "unverified-live.json",
+        policy_path=_write_policy(tmp_path),
+    )
+    checks = {check["name"]: check for check in gate["checks"]}
+    assert checks["historical_entry_integrity"]["passed"] is False
+    assert checks["historical_entry_integrity"]["value"]["timestamp_verified_bets"] == 0
+    assert gate["historical_edge_ready"] is False
+    assert gate["production_eligible"] is False
