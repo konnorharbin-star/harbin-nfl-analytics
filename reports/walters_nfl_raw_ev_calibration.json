@@ -1,0 +1,159 @@
+{
+  "2025_market_minus_full_model": {
+    "brier": -0.01393303709744631,
+    "log_loss": -0.030038784864491408
+  },
+  "2025_paired_week_bootstrap": {
+    "simultaneous_95_ci": {
+      "brier": [
+        -0.02670053895584973,
+        -0.0018446853514525463
+      ],
+      "log_loss": [
+        -0.056897201803944975,
+        -0.005016065661482383
+      ]
+    },
+    "week_clusters": 18
+  },
+  "2025_probability_scores": {
+    "full_raw_model": {
+      "brier": 0.2653101973135499,
+      "empirical_win_rate": 0.48698884758364314,
+      "log_loss": 0.7259471421490538,
+      "mean_probability": 0.5797197209842984,
+      "pushes_excluded": 3,
+      "resolved": 269
+    },
+    "locked_2024_blend": {
+      "brier": 0.25137716021610357,
+      "empirical_win_rate": 0.48698884758364314,
+      "log_loss": 0.6959083572845624,
+      "mean_probability": 0.4995538928719552,
+      "pushes_excluded": 3,
+      "resolved": 269
+    },
+    "market_only": {
+      "brier": 0.25137716021610357,
+      "empirical_win_rate": 0.48698884758364314,
+      "log_loss": 0.6959083572845624,
+      "mean_probability": 0.4995538928719552,
+      "pushes_excluded": 3,
+      "resolved": 269
+    }
+  },
+  "2025_probability_selection_warning": "Archive uses model-selected side, not a randomized side; published odds are provider-labelled historical records and not verified executable.",
+  "2025_spread_archive_large_ev_tails": {
+    "raw_ev_at_least_20_pct": {
+      "archive_profit_units": -3.136457745153397,
+      "archive_roi": -0.05141734008448191,
+      "losses": 31,
+      "observations": 61,
+      "pushes": 0,
+      "raw_mean_ev": 0.29171260936453075,
+      "wins": 30
+    },
+    "raw_ev_at_least_30_pct": {
+      "archive_profit_units": -4.507491059664972,
+      "archive_roi": -0.1878121274860405,
+      "losses": 14,
+      "observations": 24,
+      "pushes": 0,
+      "raw_mean_ev": 0.3617491049067955,
+      "wins": 10
+    }
+  },
+  "2025_spread_archive_roi_by_raw_ev_band": {
+    "0_to_5_pct": {
+      "archive_profit_units": -10.677283183804922,
+      "archive_roi": -0.20145817327933815,
+      "losses": 31,
+      "observations": 53,
+      "pushes": 0,
+      "raw_mean_ev": 0.026559992833264504,
+      "wins": 22
+    },
+    "10_to_20_pct": {
+      "archive_profit_units": -1.5896450400351736,
+      "archive_roi": -0.026494084000586227,
+      "losses": 29,
+      "observations": 60,
+      "pushes": 1,
+      "raw_mean_ev": 0.14736839464236234,
+      "wins": 30
+    },
+    "20_to_30_pct": {
+      "archive_profit_units": 1.3710333145115756,
+      "archive_roi": 0.0370549544462588,
+      "losses": 17,
+      "observations": 37,
+      "pushes": 0,
+      "raw_mean_ev": 0.24628353117495355,
+      "wins": 20
+    },
+    "30_pct_and_up": {
+      "archive_profit_units": -4.507491059664972,
+      "archive_roi": -0.1878121274860405,
+      "losses": 14,
+      "observations": 24,
+      "pushes": 0,
+      "raw_mean_ev": 0.3617491049067955,
+      "wins": 10
+    },
+    "5_to_10_pct": {
+      "archive_profit_units": -6.302626359148099,
+      "archive_roi": -0.17034125294994862,
+      "losses": 21,
+      "observations": 37,
+      "pushes": 0,
+      "raw_mean_ev": 0.07705085653252665,
+      "wins": 16
+    },
+    "below_0": {
+      "archive_profit_units": 4.190033879164314,
+      "archive_roi": 0.06868907998630024,
+      "losses": 26,
+      "observations": 61,
+      "pushes": 2,
+      "raw_mean_ev": -0.024819735929151224,
+      "wins": 33
+    }
+  },
+  "alpha_grid": [
+    0.0,
+    0.1,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "archive_entry_quote_time_independently_verified": false,
+  "betting_authorized": false,
+  "chosen_alpha_2024_only": 0.0,
+  "economic_backtest_actionable": false,
+  "evaluation_year": 2025,
+  "input_model_families": [
+    "conditional_student_t",
+    "conditional_student_t+logistic_moneyline"
+  ],
+  "input_sha256": "06d66c7d403c3a2e3e6d1779a1dc2fb36aa30fc8e6600acdd9e516bb79aaed3c",
+  "model_promotion_allowed": false,
+  "raw_model_is_current_2026_key_number_model": false,
+  "records": 544,
+  "required_next_proof": "Validate first-published 2026 exact-line quotes with independent bookmaker evidence, prospectively scored picks, closing reference and enough settled games to estimate economic performance.",
+  "selection": "one archived spread per game",
+  "spec": "walters_nfl_raw_ev_calibration_audit_v1",
+  "sport": "nfl",
+  "status": "RETROSPECTIVE_DIAGNOSTIC_NO_VALIDATED_EDGE",
+  "tuning_brier_by_alpha": {
+    "0.0": 0.25022842141094315,
+    "0.1": 0.2504756561085914,
+    "0.25": 0.2513572781824283,
+    "0.5": 0.2541233716796695,
+    "0.75": 0.2583263165388203,
+    "1.0": 0.2636844910726378
+  },
+  "tuning_year": 2024,
+  "wagers_placed": 0,
+  "was_2025_previously_inspected": true
+}
