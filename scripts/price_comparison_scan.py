@@ -20,6 +20,7 @@ from scripts.recommendation_ledger import timestamp
 MAX_AGE = timedelta(minutes=15)
 MAX_SKEW = timedelta(minutes=2)
 MIN_REFERENCE_BOOKS = 3
+MAX_UNVERIFIED_PAIR_DIVERGENCE = 0.075  # operational integrity rule, not a fitted edge
 SPEC = "exact_line_price_scan_v1"
 
 
@@ -258,8 +259,65 @@ def refresh(sport, games):
     return result, errors
 
 
+def quarantine_unverified_outliers(quotes):
+    """Isolate unsupported extreme differences in paired no-vig probability.
+
+    Do not treat a freshly *collected* quote as an independently verified book
+    update. The original row remains visible for human source investigation.
+    This is a fail-closed source-integrity policy, not edge estimation.
+    """
+    if len(quotes) < MIN_REFERENCE_BOOKS + 1:
+        return quotes, []
+    probabilities = []
+    for row in quotes:
+        a, b = (1 / decimal(odds) for odds in row["odds"])
+        probabilities.append(a / (a + b))
+    retained, quarantined = [], []
+    for i, (row, probability) in enumerate(zip(quotes, probabilities, strict=True)):
+        peer_probability = median(p for j, p in enumerate(probabilities) if j != i)
+        deviation = abs(probability - peer_probability)
+        independently_verified = all(
+            row.get(key) is True
+            for key in (
+                "book_identity_verified",
+                "source_quote_time_verified",
+                "executable_price_verified",
+            )
+        )
+        if deviation > MAX_UNVERIFIED_PAIR_DIVERGENCE and not independently_verified:
+            quarantined.append({
+                "game_id": row["game_id"],
+                "home_team": row["home_team"],
+                "away_team": row["away_team"],
+                "kickoff": row["kickoff"],
+                "market": row["market"],
+                "line": row["line"],
+                "book_label": row["book_label"],
+                "book_key": row["book_key"],
+                "american_odds_pair": row["odds"],
+                "source": row.get("source"),
+                "source_url": row.get("source_url"),
+                "quote_observed_at": row["observed_at"],
+                "reported_source_time": row.get("reported_source_time"),
+                "paired_no_vig_home_or_over_probability": probability,
+                "other_books_median_probability": peer_probability,
+                "absolute_divergence_pp": 100 * deviation,
+                "status": "UNVERIFIED_EXTREME_SOURCE_OUTLIER",
+                "betting_authorized": False,
+                "reason": (
+                    "Paired no-vig quote differs from peer books by over 7.5 pp "
+                    "without independent book identity, source update time, "
+                    "and executable price confirmation"
+                ),
+            })
+        else:
+            retained.append(row)
+    return retained, quarantined
+
+
 def scan(records, now):
     groups, counts = defaultdict(dict), Counter()
+    quarantined_quotes = []
     for r in records:
         try:
             observed, kickoff = timestamp(r["observed_at"]), timestamp(r["kickoff"])
@@ -287,6 +345,12 @@ def scan(records, now):
         counts["fresh_exact_line_groups"] += 1
         if len(quotes) < MIN_REFERENCE_BOOKS + 1:
             counts["insufficient_same_line_books"] += 1
+            continue
+        quotes, rejected = quarantine_unverified_outliers(quotes)
+        quarantined_quotes.extend(rejected)
+        counts["extreme_unverified_quotes_quarantined"] += len(rejected)
+        if len(quotes) < MIN_REFERENCE_BOOKS + 1:
+            counts["insufficient_after_outlier_quarantine"] += 1
             continue
         for side in (0, 1):
             best = max(quotes, key=lambda r: decimal(r["odds"][side]))
@@ -343,6 +407,12 @@ def scan(records, now):
         "betting_authorized": False,
         "qualified_bets": 0,
         "counts": dict(counts),
+        "quarantined_quotes": sorted(
+            quarantined_quotes,
+            key=lambda row: (
+                row["game_id"], row["market"], str(row["line"]), row["book_key"]
+            ),
+        ),
         "candidates": candidates,
         "limits": [
             "Exact line and two same-book prices required",
@@ -350,6 +420,7 @@ def scan(records, now):
             "Non-push reference prices imply no true EV, ROI or fair price",
             "Sensitivity haircut is a fixed stress scenario, not a confidence interval",
             "Unresolved and legacy aggregator labels are not certified live sportsbooks",
+            "Unverified extreme paired-price outliers are quarantined, not ranked",
         ],
     }
 
