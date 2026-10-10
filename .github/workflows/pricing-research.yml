@@ -1,0 +1,39 @@
+name: Chronological Pricing Research
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/chronological_pricing_research.py"
+      - "tests/test_chronological_pricing_research.py"
+      - ".github/workflows/pricing-research.yml"
+permissions:
+  contents: write
+concurrency:
+  group: pricing-research-${{ github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install numpy pytest
+      - run: python -m pytest -q tests/test_chronological_pricing_research.py
+      - name: Evaluate separated chronological pricing candidates
+        run: |
+          python -m scripts.chronological_pricing_research --sport nfl --historical reports/free_market_bets.csv --out reports/chronological_pricing_research.json
+          cp reports/chronological_pricing_research.json docs/chronological_pricing_research.json
+      - name: Publish research evidence
+        run: |
+          git config user.name "harbin-research-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/chronological_pricing_research.json docs/chronological_pricing_research.json
+          if ! git diff --cached --quiet; then
+            git commit -m "research: publish chronological pricing diagnostics"
+            bash scripts/push_generated_state.sh
+          fi
