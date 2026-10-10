@@ -83,7 +83,7 @@ def make_snapshots(board, historical, sport, *, now=None, horizon_days=7):
     observed_years = {r["season"] for r in train}
     if observed_years != years:
         raise ValueError("Full prior season training archive required")
-    if any(r["season"] >= 2026 for r in train):
+    if any(r["season"] >= 2026 for r in past):
         raise ValueError("Forward season cannot leak into coefficients")
     model = fit(train)
     raw = _raw_forecasts(board, sport)
@@ -206,18 +206,19 @@ def grade(root, *, now=None, commit_lookup=first_commit_time,
         date = kickoff.astimezone(ZoneInfo("America/New_York")).strftime("%Y%m%d")
         key = record["sport"], date
         if key not in cache:
-            if len(cache) >= 40:
+            if len(cache) >= 80:
                 exclusions[path.name] = "SCOREBOARD_QUERY_CAP"
                 continue
             try:
-                cache[key] = scoreboard_fetch(*key)[0]
+                cache[key] = scoreboard_fetch(*key)
             except (ValueError, TimeoutError, OSError) as exc:
                 cache[key] = None
                 exclusions[str(key)] = type(exc).__name__
         if cache[key] is None:
             exclusions[path.name] = "SCOREBOARD_UNAVAILABLE"
             continue
-        final = final_result(record, cache[key])
+        payload, source_url = cache[key]
+        final = final_result(record, payload)
         if final is None:
             exclusions[path.name] = "NOT_CONFIRMED_FINAL"
             continue
@@ -231,6 +232,10 @@ def grade(root, *, now=None, commit_lookup=first_commit_time,
             "captured_at": record["captured_at"],
             "published_at": published.isoformat(),
             "final_score": final,
+            "final_source_url": source_url,
+            "final_scoreboard_sha256": hashlib.sha256(
+                json.dumps(payload, sort_keys=True).encode()
+            ).hexdigest(),
             "baseline": score["baseline"], "key_number": score["key_number"],
         })
     report = {
