@@ -1,0 +1,22 @@
+{
+  "actual_wagers": 0,
+  "attested_two_sided_quote_observations": 0,
+  "betting_authorized": false,
+  "blocked_forecasts": {},
+  "blocked_quote_files": {},
+  "book_execution_independently_confirmed_by_code": false,
+  "comparisons": [],
+  "historical_profitability_and_clv_verified": false,
+  "limits": [
+    "Bookmaker quote source flags are human attestations not verification by code",
+    "Bettable odds must be independently recorded and committed pregame",
+    "No quotes or prices may be invented; missing quotes are missing EV",
+    "Every exact price compares with win, push and loss (not a binary bet)",
+    "Even source-attested disagreements are research, not live bet recommendations"
+  ],
+  "published_pregame_forecasts": 14,
+  "quote_files": 0,
+  "reported_ev_is_a_model_hypothesis_not_observed_profit": true,
+  "spec": "walters_key_spread_price_bridge_v1",
+  "status": "RESEARCH_ONLY_NOT_A_VALIDATED_ECONOMIC_EDGE"
+}
