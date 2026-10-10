@@ -46,3 +46,40 @@ Concurrent collectors retain separate mutable dashboard summaries (_line, _model
 and the recommendation-job default). The dashboard reads the newest dated summary,
 while all immutable captures share the append-only history. This avoids overwriting
 another collector's report or changing strict publication conflict handling.
+
+## Source-coherence quarantine (October 10, 2026)
+
+The October 10 NFL snapshot contained an unverified Action Network-labelled
+FanDuel moneyline pair for PHI at JAX: **JAX +110 / PHI -130**. Seven other
+same-game paired books showed Jacksonville about -375 to -400.
+FanDuel's published Week 5 schedule also showed JAX as a substantial favorite,
+not +110:
+https://www.fanduel.com/research/nfl-week-5-schedule-odds-for-every-game
+
+This is not a certified mispriced sportsbook offer. Source-to-book mapping,
+game association, update timestamps and executable prices were not verified.
+It is an instructive case of an aggregator anomaly being mistaken for a
+potential huge edge, and must not appear at the top of a betting queue.
+
+The scan now uses a prespecified **source-integrity**, not profitability,
+threshold. On each exact game / market / handicap, find the paired no-vig
+probability of each book. Compare to the median of all **other** books.
+A quote more than **7.5 percentage points** away is quarantined unless all
+of book identity, quote-origin timestamp and executable price were
+independently verified. First-seen aggregator retrieval time alone does not
+qualify. Quarantine retains the full quote, observed price and divergence for
+manual review; it removes unsupported extremes from both candidate selection
+and reference probabilities. If fewer than four books survive, issue no
+candidate for that market/line.
+
+This 7.5 pp is a deliberately conservative fixed quality-control boundary
+for conspicuous quote errors, **not fitted to past bet outcomes or validated
+as an EV threshold**. A genuine independently verified large price
+difference may still appear in the diagnostic queue, but it never
+authorizes bets. False positives and legitimate rare opportunities can both
+be quarantined, so report the count and review the raw provenance instead
+of silently treating them as no edge.
+
+The change does not alter fair score, probabilities, active betting policy,
+economic thresholds, historical wagers or autonomous execution. It only
+affects diagnostic review-candidate rankings. No profit claim is made.
