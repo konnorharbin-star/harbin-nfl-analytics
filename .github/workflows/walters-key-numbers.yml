@@ -1,0 +1,29 @@
+name: Walters Key Number Research
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "scripts/walters_key_number_distribution.py"
+      - "tests/test_walters_key_numbers.py"
+      - ".github/workflows/walters-key-numbers.yml"
+permissions:
+  contents: read
+jobs:
+  retrospect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test fixed key-number research
+        run: |
+          python -m pip install pytest
+          python -m pytest -q tests/test_walters_key_numbers.py
+      - name: Grade earlier-season key-number adjustments
+        run: |
+          python scripts/walters_key_number_distribution.py --sport nfl --source reports/free_market_predictions.csv --out reports/walters_key_number_distribution.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: walters-key-number-research-nfl
+          path: reports/walters_key_number_distribution.json
