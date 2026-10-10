@@ -177,6 +177,9 @@ jobs:
           python -m scripts.walters_key_forward --sport nfl \
             --historical reports/free_market_predictions.csv
 
+      - name: Compare immutable independent key numbers with source-attested book spreads
+        run: python -m scripts.walters_key_market_gate
+
       - name: Compare market-relative challenger with historical diagnostic benchmark
         run: python -m nfl.market_residual_challenger
 
