@@ -90,8 +90,8 @@ def paired_week_bootstrap(rows, pred, actual, weights, *, draws=5000):
     Bonferroni 95% across 2 sports x 2 score targets x 2 endpoints.
     This is retrospective diagnostic uncertainty, not an economic edge.
     """
-    from collections import defaultdict
     import random
+    from collections import defaultdict
 
     if weights is None:
         return {"week_clusters": len({(r["season"], r["week"]) for r in rows}),
