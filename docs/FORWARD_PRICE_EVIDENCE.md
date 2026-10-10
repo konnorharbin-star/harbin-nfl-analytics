@@ -115,3 +115,19 @@ Until exact-source independent evidence, chronological first capture,
 user-accessible sportsbook executable odds, and prospective sample
 outcomes exist: economic edge is **NOT VERIFIED**, model promotion is
 **NOT AUTHORIZED**, and stake recommendation is **NO BET**.
+
+## First real-capture outcome — October 10, 2026
+
+The new research workflow ran against the repositories' immutable captured
+market snapshots. After deduplicating exact source-record observations:
+
+| Sport | Distinct quote observations | Source provenance complete | Frozen paper entries | Settled paper entries | Late-market comparison samples |
+|---|---:|---:|---:|---:|---:|
+| NFL | 1,210 | **0** | 0 | 0 | 0 |
+| CFB | 1,344 | **0** | 0 | 0 | 0 |
+
+The archived aggregator quotes fail source-origin/executability verification;
+zero provenance-complete entries is **not evidence that all prices are wrong**.
+No sportsbook economic edge, realized ROI or verified CLV is supported.
+These data must not be promoted to wagers. Re-run the workflow to obtain
+newer counts as free captures accumulate.
