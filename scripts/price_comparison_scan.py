@@ -358,6 +358,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--sport", choices=("nfl", "cfb"), required=True)
     parser.add_argument("--refresh-market", action="store_true")
+    parser.add_argument("--out", type=Path, default=Path("docs/price_comparison_scan.json"))
     args = parser.parse_args()
     games, records = load(args.sport)
     errors = []
@@ -398,9 +399,8 @@ def main():
         Path("history/price_scan_v1/captures") / (identity + ".json"),
         {"report": report, "source_records": current},
     )
-    Path("docs/price_comparison_scan.json").write_text(
-        json.dumps(report, indent=2, allow_nan=False) + "\n"
-    )
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text(json.dumps(report, indent=2, allow_nan=False) + "\n")
     print(
         json.dumps(
             {

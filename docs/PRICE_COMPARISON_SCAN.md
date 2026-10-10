@@ -41,3 +41,8 @@ scan decision in history/price_scan_v1. These research scans are separate from B
 recommendation receipts and do not count toward paper wager returns. Existing
 recommendation recording and grading remain unchanged. Free bulk collection occurs
 at the existing recommendation schedule, not continuous polling or wagering.
+
+Concurrent collectors retain separate mutable dashboard summaries (_line, _model
+and the recommendation-job default). The dashboard reads the newest dated summary,
+while all immutable captures share the append-only history. This avoids overwriting
+another collector's report or changing strict publication conflict handling.
