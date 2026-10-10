@@ -1,0 +1,64 @@
+{
+  "actual_wagers": 0,
+  "board": {
+    "approved_bets": 0,
+    "decision_counts": {
+      "NO_BET": 14
+    },
+    "disclaimer": "A research edge is not a proved profitable bet. Do not wager at an unverified or stale quote.",
+    "distinct_games": 14,
+    "evaluated_at": "2026-10-10T17:21:45.139899+00:00",
+    "method": "ONE_PER_GAME_CONSERVATIVE_EV_PRIORITY",
+    "no_model_or_stake_change": true,
+    "production_eligible": false,
+    "raw_market_candidates": 42,
+    "release_blockers": [
+      "quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state",
+      "injury_personnel_freshness: >=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
+      "context_coverage: >=90% current injury/rest/weather/travel context coverage",
+      "regime_edge_reliability: at least two markets clear fixed regime-specific probability and edge reliability on validation plus untouched holdout",
+      "live_monitoring: engineering readiness >=90/100; multi-book breadth gated separately",
+      "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
+      "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
+      "production_policy: frozen nested chronological policy is production-validated with at least two enabled markets"
+    ],
+    "release_state": "RESEARCH",
+    "sport": "nfl",
+    "version": 1
+  },
+  "decision_counts": {
+    "NO_BET": 14
+  },
+  "grading_status": "Scheduled immutable receipt grading; research ledger remains separate",
+  "observed_at": "2026-10-10T17:21:45.139899+00:00",
+  "publication_requirement": "Verify receipt bytes in GitHub commit before communicating BET",
+  "receipt_ids": [
+    "abb9c398cb4ca9557354b1a42842e0ebec931c5d5af1e00ff36616f0469f01cb",
+    "73334473261f4d12238af3c2f0a8c4ec4514058546553340395f5a1cdd1ed399",
+    "b6b7b1683b4da7c4d96c9b990156c0952733d87d8807c2e0edd043bc35ac3e9e",
+    "694e8c3418cc49e0c3fdc4b19156e2c2be6917611d8003e5855d46788218e4b3",
+    "a25ec7f1468d1fe74ac1a1c8dd1e1de9c685c11ab27c425fe6305ef117da574d",
+    "dc88eb9843131df578b82190cae2dcf3dd04c602db9e5d21ffcb95fad1470d38",
+    "8508b63656f6b72864a9de82fabc732dedbcc7957564325c9a7f52a4be0e91dc",
+    "cf42f82f30d6f9e6f16eae8c92759021b4215f3ead17c31f67cb5104d1e79e8f",
+    "8bcc904ee97b076d2097e3f2a76640220acee3c2da84f6048cccee61114bf424",
+    "a95b0efa8903353312d16864682ad59f45777893819b4b06b33c3c3613b908cd",
+    "6c92bb5b09ca9e5697ec8411978925d70844d3d0083e9263f3b269af3ca7f2b2",
+    "e993268fb0907bc601ca8a9b4fac5dcd1a5310aaf4fc361dc9dc28309fd725d6",
+    "176ce6aa3e7068eec8a42e2bdc51cd919d58f1ce029bca4e6edb00163115cc7a",
+    "e073d414d02df62007c27623d4a13d03f30f48dedc371359a16fdf11a65107bc"
+  ],
+  "release_blockers": [
+    "quarterback_context_coverage: >=95% current games with identified, decision-ready expected starting-QB state",
+    "injury_personnel_freshness: >=95% current games have FRESH injury, depth-chart, and roster context; STALE/UNKNOWN state fails closed",
+    "context_coverage: >=90% current injury/rest/weather/travel context coverage",
+    "regime_edge_reliability: at least two markets clear fixed regime-specific probability and edge reliability on validation plus untouched holdout",
+    "live_monitoring: engineering readiness >=90/100; multi-book breadth gated separately",
+    "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
+    "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
+    "production_policy: frozen nested chronological policy is production-validated with at least two enabled markets",
+    "live_shadow_evidence: >=300 graded portfolio-verified live/shadow bets, non-negative ROI, positive CLV, complete entry provenance, and >=90% CLV coverage"
+  ],
+  "release_state": "RESEARCH",
+  "sport": "nfl"
+}

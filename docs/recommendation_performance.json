@@ -1,0 +1,20 @@
+{
+  "actual_wagers": 0,
+  "average_clv": null,
+  "clv_samples": 0,
+  "graded_bets": 0,
+  "limitations": [
+    "CLV integration pending",
+    "No profitability claim",
+    "Research ledger excluded from recommendation counts"
+  ],
+  "losses": 0,
+  "max_drawdown": 0,
+  "no_bet_receipts": 14,
+  "pushes": 0,
+  "recommended_paper_bets": 0,
+  "roi": null,
+  "source_errors": {},
+  "units": 0,
+  "wins": 0
+}
