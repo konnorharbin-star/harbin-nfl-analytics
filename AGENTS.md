@@ -39,3 +39,12 @@
 - Model `stake_units` or `approved_units` fields, if retained for research, are internal estimates only and never instructions to a sportsbook. A change in model release state does not authorize order execution.
 - Recommendations are informational, not evidence of proven profitability. No unvalidated raw EV signal may be promoted to a confirmed market edge without point-in-time and out-of-sample evidence.
 - These operating requirements apply to every future sport, workflow, dashboard, integration and AI coding agent working in the project.
+
+## Owner research direction — 2026-10-10: Walters-inspired process
+- Make the documented Billy Walters handicapping workflow the organizing research method; never claim access to his unpublished proprietary model or original coefficients.
+- Start each game with an independent team strength/power-rating and fair-score forecast. Quantify pregame roster/QB availability, matchup, travel, rest, home-field and weather only when point-in-time evidence exists. Missing inputs remain unknown.
+- Fit sport-specific weights and formulas using past-only training; select regularization and candidate families on a separate chronological tuning block; evaluate after selections are frozen. Never choose parameters, filters or edge thresholds by inspecting the evaluation outcome. Historical inspected archives are diagnostics, not pristine proof.
+- Challenge every candidate against a no-vig, contemporaneous sportsbook market reference and the existing independent baseline. Require verified executable entry prices, timestamp provenance, reasonable data coverage, multiple-testing controls and independent forward paper results before claiming an edge.
+- Keep a mathematically valid zero-adjustment / NO BET option. A backtest cannot be optimized merely to manufacture a positive return.
+- Log each future published qualified bet recommendation as a prospective immutable paper-bet receipt, regardless of outcome, and grade ROI, CLV, calibration and drawdown; never auto-execute.
+- Continue the free-only and no-automatic-betting rules above. Score-calibration research does not bypass release gates or promote betting probabilities.
