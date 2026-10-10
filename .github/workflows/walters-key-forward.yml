@@ -12,14 +12,12 @@ on:
       - "scripts/walters_key_forward.py"
       - "tests/test_walters_key_forward.py"
       - ".github/workflows/walters-key-forward.yml"
-  schedule:
-    - cron: "22 10,16,20,23 * * *"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: walters-key-forward-nfl-main
+  group: walters-key-forward-review-nfl-main
   cancel-in-progress: false
 
 jobs:
@@ -48,16 +46,3 @@ jobs:
             reports/walters_key_forward.json
             history/walters_key_forward_v1/forecasts/*.json
           if-no-files-found: warn
-      - name: Commit first-published shadow and graded research
-        if: github.event_name != 'pull_request'
-        shell: bash
-        run: |
-          git config user.name "harbin-key-shadow-bot"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add history/walters_key_forward_v1/forecasts reports/walters_key_forward.json
-          if git diff --cached --quiet; then
-            echo "No new forward evidence"
-          else
-            git commit -m "research: freeze Walters key-number forward evidence"
-            bash scripts/push_generated_state.sh
-          fi
