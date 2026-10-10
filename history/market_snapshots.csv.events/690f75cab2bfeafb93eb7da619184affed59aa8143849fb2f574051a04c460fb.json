@@ -1,0 +1,30 @@
+{
+  "archived_at": "2026-10-10T22:26:18.874221+00:00",
+  "capture_is_book_update_time": false,
+  "origin_time_usable": false,
+  "original_market_row": {
+    "away_team": "DEN",
+    "book": "BetRivers",
+    "captured_at": "2026-10-10T22:26:07.605584+00:00",
+    "first_american_odds": -112,
+    "first_line": 3.5,
+    "first_side": "home",
+    "game_id": "2026_05_DEN_LAC",
+    "home_team": "LAC",
+    "kickoff": "2026-10-11T20:05:00+00:00",
+    "market_type": "spread",
+    "provider": "action_network",
+    "season": 2026,
+    "second_american_odds": -108,
+    "second_line": -3.5,
+    "second_side": "away",
+    "source_event_id": "290911",
+    "week": 5
+  },
+  "original_request_url": null,
+  "reported_source_quote_time_verified": false,
+  "schema": 1,
+  "source_quote_age_seconds": null,
+  "source_quote_at": null,
+  "source_quote_time_verified": false
+}

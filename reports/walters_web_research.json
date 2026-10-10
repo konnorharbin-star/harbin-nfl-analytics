@@ -1,0 +1,1003 @@
+{
+  "accepted_paired_web_spreads": 14,
+  "actual_wagers": 0,
+  "bad_forecasts": {},
+  "betting_authorized": false,
+  "blocked_observations": {},
+  "closing_line_value_verified": false,
+  "coverage_by_book": {
+    "FanDuel": 14
+  },
+  "frozen_original_forecasts": 14,
+  "historical_profitable_edge_proven": false,
+  "method": "human_or_assistant_reads_public_web_search_results_then_git_freezes_price",
+  "no_paid_api_required": true,
+  "research_comparisons": [
+    {
+      "away_team": "BAL",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_BAL_ATL",
+      "home_spread": -3.5,
+      "home_team": "ATL",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -122,
+            "loss": 0.37424973927262895,
+            "market_break_even_probability": 0.5495495495495495,
+            "market_conditional_no_vig_probability": 0.5236051502145922,
+            "model_conditional_win_given_no_push": 0.625750260727371,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.1386603105039047,
+            "win": 0.625750260727371
+          },
+          "home": {
+            "exact_american_odds": 100,
+            "loss": 0.625750260727371,
+            "market_break_even_probability": 0.5,
+            "market_conditional_no_vig_probability": 0.47639484978540775,
+            "model_conditional_win_given_no_push": 0.37424973927262895,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.2515005214547421,
+            "win": 0.37424973927262895
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -122,
+            "loss": 0.35261900138712743,
+            "market_break_even_probability": 0.5495495495495495,
+            "market_conditional_no_vig_probability": 0.5236051502145922,
+            "model_conditional_win_given_no_push": 0.6473809986128725,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.178021161410309,
+            "win": 0.6473809986128723
+          },
+          "home": {
+            "exact_american_odds": 100,
+            "loss": 0.6473809986128723,
+            "market_break_even_probability": 0.5,
+            "market_conditional_no_vig_probability": 0.47639484978540775,
+            "model_conditional_win_given_no_push": 0.3526190013871275,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.2947619972257449,
+            "win": 0.35261900138712743
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_BAL_ATL_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    },
+    {
+      "away_team": "BUF",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_BUF_LA",
+      "home_spread": -3.5,
+      "home_team": "LA",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -118,
+            "loss": 0.4129564341882117,
+            "market_break_even_probability": 0.5412844036697247,
+            "market_conditional_no_vig_probability": 0.5149751839808318,
+            "model_conditional_win_given_no_push": 0.5870435658117883,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.08453811310991394,
+            "win": 0.5870435658117883
+          },
+          "home": {
+            "exact_american_odds": -104,
+            "loss": 0.5870435658117883,
+            "market_break_even_probability": 0.5098039215686274,
+            "market_conditional_no_vig_probability": 0.4850248160191682,
+            "model_conditional_win_given_no_push": 0.4129564341882117,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.18997007140004624,
+            "win": 0.4129564341882117
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -118,
+            "loss": 0.3885096591553937,
+            "market_break_even_probability": 0.5412844036697247,
+            "market_conditional_no_vig_probability": 0.5149751839808318,
+            "model_conditional_win_given_no_push": 0.6114903408446064,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.12970249410274726,
+            "win": 0.6114903408446064
+          },
+          "home": {
+            "exact_american_odds": -104,
+            "loss": 0.6114903408446064,
+            "market_break_even_probability": 0.5098039215686274,
+            "market_conditional_no_vig_probability": 0.4850248160191682,
+            "model_conditional_win_given_no_push": 0.3885096591553937,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.23792336088749705,
+            "win": 0.3885096591553937
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_BUF_LA_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    },
+    {
+      "away_team": "CHI",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_CHI_GB",
+      "home_spread": 1.5,
+      "home_team": "GB",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -110,
+            "loss": 0.40316705823587007,
+            "market_break_even_probability": 0.5238095238095238,
+            "market_conditional_no_vig_probability": 0.5,
+            "model_conditional_win_given_no_push": 0.5968329417641299,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.13940834336788444,
+            "win": 0.5968329417641299
+          },
+          "home": {
+            "exact_american_odds": -110,
+            "loss": 0.5968329417641299,
+            "market_break_even_probability": 0.5238095238095238,
+            "market_conditional_no_vig_probability": 0.5,
+            "model_conditional_win_given_no_push": 0.40316705823587007,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.23031743427697532,
+            "win": 0.40316705823587007
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -110,
+            "loss": 0.406597280119079,
+            "market_break_even_probability": 0.5238095238095238,
+            "market_conditional_no_vig_probability": 0.5,
+            "model_conditional_win_given_no_push": 0.593402719880921,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.13285973795448552,
+            "win": 0.5934027198809209
+          },
+          "home": {
+            "exact_american_odds": -110,
+            "loss": 0.5934027198809209,
+            "market_break_even_probability": 0.5238095238095238,
+            "market_conditional_no_vig_probability": 0.5,
+            "model_conditional_win_given_no_push": 0.4065972801190791,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.2237688288635763,
+            "win": 0.406597280119079
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_CHI_GB_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    },
+    {
+      "away_team": "CIN",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_CIN_MIA",
+      "home_spread": 7.0,
+      "home_team": "MIA",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -105,
+            "loss": 0.597586037988263,
+            "market_break_even_probability": 0.5121951219512195,
+            "market_conditional_no_vig_probability": 0.4891657638136511,
+            "model_conditional_win_given_no_push": 0.3842440576843836,
+            "push": 0.029508289045532377,
+            "unshrunk_model_ev_per_unit": -0.2424377780204492,
+            "win": 0.3729056729662046
+          },
+          "home": {
+            "exact_american_odds": -115,
+            "loss": 0.3729056729662046,
+            "market_break_even_probability": 0.5348837209302326,
+            "market_conditional_no_vig_probability": 0.5108342361863489,
+            "model_conditional_win_given_no_push": 0.6157559423156164,
+            "push": 0.029508289045532377,
+            "unshrunk_model_ev_per_unit": 0.14673436006706753,
+            "win": 0.597586037988263
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -105,
+            "loss": 0.6191038681080808,
+            "market_break_even_probability": 0.5121951219512195,
+            "market_conditional_no_vig_probability": 0.4891657638136511,
+            "model_conditional_win_given_no_push": 0.3545590631045818,
+            "push": 0.04080476970366832,
+            "unshrunk_model_ev_per_unit": -0.29520733269069893,
+            "win": 0.340091362188251
+          },
+          "home": {
+            "exact_american_odds": -115,
+            "loss": 0.340091362188251,
+            "market_break_even_probability": 0.5348837209302326,
+            "market_conditional_no_vig_probability": 0.5108342361863489,
+            "model_conditional_win_given_no_push": 0.6454409368954181,
+            "push": 0.04080476970366832,
+            "unshrunk_model_ev_per_unit": 0.1982598274709496,
+            "win": 0.6191038681080808
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_CIN_MIA_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    },
+    {
+      "away_team": "CLE",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_CLE_NYJ",
+      "home_spread": -1.5,
+      "home_team": "NYJ",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -102,
+            "loss": 0.46314519817945987,
+            "market_break_even_probability": 0.504950495049505,
+            "market_conditional_no_vig_probability": 0.48071979434447304,
+            "model_conditional_win_given_no_push": 0.5368548018205401,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.06318303889950105,
+            "win": 0.5368548018205401
+          },
+          "home": {
+            "exact_american_odds": -120,
+            "loss": 0.5368548018205401,
+            "market_break_even_probability": 0.5454545454545454,
+            "market_conditional_no_vig_probability": 0.519280205655527,
+            "model_conditional_win_given_no_push": 0.46314519817945987,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.1509004700043235,
+            "win": 0.46314519817945987
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -102,
+            "loss": 0.46680195436678806,
+            "market_break_even_probability": 0.504950495049505,
+            "market_conditional_no_vig_probability": 0.48071979434447304,
+            "model_conditional_win_given_no_push": 0.5331980456332119,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.055941227626556955,
+            "win": 0.5331980456332119
+          },
+          "home": {
+            "exact_american_odds": -120,
+            "loss": 0.5331980456332119,
+            "market_break_even_probability": 0.5454545454545454,
+            "market_conditional_no_vig_probability": 0.519280205655527,
+            "model_conditional_win_given_no_push": 0.46680195436678806,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.1441964169942218,
+            "win": 0.46680195436678806
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_CLE_NYJ_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    },
+    {
+      "away_team": "DEN",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_DEN_LAC",
+      "home_spread": 3.5,
+      "home_team": "LAC",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -108,
+            "loss": 0.556410682323867,
+            "market_break_even_probability": 0.5192307692307692,
+            "market_conditional_no_vig_probability": 0.4956702459300312,
+            "model_conditional_win_given_no_push": 0.4435893176761329,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.1456798326237439,
+            "win": 0.4435893176761329
+          },
+          "home": {
+            "exact_american_odds": -112,
+            "loss": 0.4435893176761329,
+            "market_break_even_probability": 0.5283018867924528,
+            "market_conditional_no_vig_probability": 0.5043297540699689,
+            "model_conditional_win_given_no_push": 0.556410682323867,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.05320593439874832,
+            "win": 0.556410682323867
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -108,
+            "loss": 0.5829335191130098,
+            "market_break_even_probability": 0.5192307692307692,
+            "market_conditional_no_vig_probability": 0.4956702459300312,
+            "model_conditional_win_given_no_push": 0.4170664808869895,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.19676085162505697,
+            "win": 0.41706648088698905
+          },
+          "home": {
+            "exact_american_odds": -112,
+            "loss": 0.41706648088698905,
+            "market_break_even_probability": 0.5283018867924528,
+            "market_conditional_no_vig_probability": 0.5043297540699689,
+            "model_conditional_win_given_no_push": 0.5829335191130105,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.10340987546391256,
+            "win": 0.5829335191130098
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_DEN_LAC_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    },
+    {
+      "away_team": "DET",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_DET_ARI",
+      "home_spread": 5.5,
+      "home_team": "ARI",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -105,
+            "loss": 0.620174892906443,
+            "market_break_even_probability": 0.5121951219512195,
+            "market_conditional_no_vig_probability": 0.4891657638136511,
+            "model_conditional_win_given_no_push": 0.379825107093557,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.258436695674484,
+            "win": 0.379825107093557
+          },
+          "home": {
+            "exact_american_odds": -115,
+            "loss": 0.379825107093557,
+            "market_break_even_probability": 0.5348837209302326,
+            "market_conditional_no_vig_probability": 0.5108342361863489,
+            "model_conditional_win_given_no_push": 0.620174892906443,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.15945740847726297,
+            "win": 0.620174892906443
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -105,
+            "loss": 0.6410668904675643,
+            "market_break_even_probability": 0.5121951219512195,
+            "market_conditional_no_vig_probability": 0.4891657638136511,
+            "model_conditional_win_given_no_push": 0.3589331095324359,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.2992258337700062,
+            "win": 0.35893310953243596
+          },
+          "home": {
+            "exact_american_odds": -115,
+            "loss": 0.35893310953243596,
+            "market_break_even_probability": 0.5348837209302326,
+            "market_conditional_no_vig_probability": 0.5108342361863489,
+            "model_conditional_win_given_no_push": 0.6410668904675642,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.19851636043935894,
+            "win": 0.6410668904675643
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_DET_ARI_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    },
+    {
+      "away_team": "HOU",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_HOU_TEN",
+      "home_spread": 7.0,
+      "home_team": "TEN",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -115,
+            "loss": 0.6415944700450793,
+            "market_break_even_probability": 0.5348837209302326,
+            "market_conditional_no_vig_probability": 0.5108342361863489,
+            "model_conditional_win_given_no_push": 0.33967878511984856,
+            "push": 0.02836005327872293,
+            "unshrunk_model_ev_per_unit": -0.35459840337012477,
+            "win": 0.33004547667619777
+          },
+          "home": {
+            "exact_american_odds": -105,
+            "loss": 0.33004547667619777,
+            "market_break_even_probability": 0.5121951219512195,
+            "market_conditional_no_vig_probability": 0.4891657638136511,
+            "model_conditional_win_given_no_push": 0.6603212148801515,
+            "push": 0.02836005327872293,
+            "unshrunk_model_ev_per_unit": 0.2809968757476873,
+            "win": 0.6415944700450793
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -115,
+            "loss": 0.6603827195699812,
+            "market_break_even_probability": 0.5348837209302326,
+            "market_conditional_no_vig_probability": 0.5108342361863489,
+            "model_conditional_win_given_no_push": 0.31271164217494507,
+            "push": 0.039147525123540645,
+            "unshrunk_model_ev_per_unit": -0.399104671477392,
+            "win": 0.3004697553064776
+          },
+          "home": {
+            "exact_american_odds": -105,
+            "loss": 0.3004697553064776,
+            "market_break_even_probability": 0.5121951219512195,
+            "market_conditional_no_vig_probability": 0.4891657638136511,
+            "model_conditional_win_given_no_push": 0.6872883578250548,
+            "push": 0.039147525123540645,
+            "unshrunk_model_ev_per_unit": 0.32846616809350443,
+            "win": 0.6603827195699812
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_HOU_TEN_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    },
+    {
+      "away_team": "IND",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_IND_PIT",
+      "home_spread": -2.5,
+      "home_team": "PIT",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -105,
+            "loss": 0.421421383912002,
+            "market_break_even_probability": 0.5121951219512195,
+            "market_conditional_no_vig_probability": 0.4891657638136511,
+            "model_conditional_win_given_no_push": 0.578578616087998,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.12960586950513886,
+            "win": 0.578578616087998
+          },
+          "home": {
+            "exact_american_odds": -115,
+            "loss": 0.578578616087998,
+            "market_break_even_probability": 0.5348837209302326,
+            "market_conditional_no_vig_probability": 0.5108342361863489,
+            "model_conditional_win_given_no_push": 0.421421383912002,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.2121252387732137,
+            "win": 0.421421383912002
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -105,
+            "loss": 0.4284369367357096,
+            "market_break_even_probability": 0.5121951219512195,
+            "market_conditional_no_vig_probability": 0.4891657638136511,
+            "model_conditional_win_given_no_push": 0.5715630632642903,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.11590883780170957,
+            "win": 0.5715630632642902
+          },
+          "home": {
+            "exact_american_odds": -115,
+            "loss": 0.5715630632642902,
+            "market_break_even_probability": 0.5348837209302326,
+            "market_conditional_no_vig_probability": 0.5108342361863489,
+            "model_conditional_win_given_no_push": 0.4284369367357097,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.1990092052332384,
+            "win": 0.4284369367357096
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_IND_PIT_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    },
+    {
+      "away_team": "LV",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_LV_NE",
+      "home_spread": -3.5,
+      "home_team": "NE",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -105,
+            "loss": 0.4372831912588493,
+            "market_break_even_probability": 0.5121951219512195,
+            "market_conditional_no_vig_probability": 0.4891657638136511,
+            "model_conditional_win_given_no_push": 0.5627168087411507,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.09863757897081804,
+            "win": 0.5627168087411507
+          },
+          "home": {
+            "exact_american_odds": -115,
+            "loss": 0.5627168087411507,
+            "market_break_even_probability": 0.5348837209302326,
+            "market_conditional_no_vig_probability": 0.5108342361863489,
+            "model_conditional_win_given_no_push": 0.4372831912588493,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.18247055547258617,
+            "win": 0.4372831912588493
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -105,
+            "loss": 0.41117511580170973,
+            "market_break_even_probability": 0.5121951219512195,
+            "market_conditional_no_vig_probability": 0.4891657638136511,
+            "model_conditional_win_given_no_push": 0.5888248841982904,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.149610488196662,
+            "win": 0.5888248841982904
+          },
+          "home": {
+            "exact_american_odds": -115,
+            "loss": 0.5888248841982904,
+            "market_break_even_probability": 0.5348837209302326,
+            "market_conditional_no_vig_probability": 0.5108342361863489,
+            "model_conditional_win_given_no_push": 0.41117511580170973,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.23128130524028195,
+            "win": 0.41117511580170973
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_LV_NE_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    },
+    {
+      "away_team": "MIN",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_MIN_NO",
+      "home_spread": 1.5,
+      "home_team": "NO",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -120,
+            "loss": 0.437237521465593,
+            "market_break_even_probability": 0.5454545454545454,
+            "market_conditional_no_vig_probability": 0.519280205655527,
+            "model_conditional_win_given_no_push": 0.562762478534407,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.03173121064641288,
+            "win": 0.562762478534407
+          },
+          "home": {
+            "exact_american_odds": -102,
+            "loss": 0.562762478534407,
+            "market_break_even_probability": 0.504950495049505,
+            "market_conditional_no_vig_probability": 0.48071979434447304,
+            "model_conditional_win_given_no_push": 0.437237521465593,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.13409824180343338,
+            "win": 0.437237521465593
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -120,
+            "loss": 0.43895569701548676,
+            "market_break_even_probability": 0.5454545454545454,
+            "market_conditional_no_vig_probability": 0.519280205655527,
+            "model_conditional_win_given_no_push": 0.5610443029845134,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.028581222138274465,
+            "win": 0.5610443029845134
+          },
+          "home": {
+            "exact_american_odds": -102,
+            "loss": 0.5610443029845134,
+            "market_break_even_probability": 0.504950495049505,
+            "market_conditional_no_vig_probability": 0.48071979434447304,
+            "model_conditional_win_given_no_push": 0.43895569701548676,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.1306955804203106,
+            "win": 0.43895569701548676
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_MIN_NO_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    },
+    {
+      "away_team": "NYG",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_NYG_WAS",
+      "home_spread": -3.5,
+      "home_team": "WAS",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -108,
+            "loss": 0.351751828400629,
+            "market_break_even_probability": 0.5192307692307692,
+            "market_conditional_no_vig_probability": 0.4956702459300312,
+            "model_conditional_win_given_no_push": 0.648248171599371,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.24847796011730716,
+            "win": 0.648248171599371
+          },
+          "home": {
+            "exact_american_odds": -112,
+            "loss": 0.648248171599371,
+            "market_break_even_probability": 0.5283018867924528,
+            "market_conditional_no_vig_probability": 0.5043297540699689,
+            "model_conditional_win_given_no_push": 0.351751828400629,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.3341840390988094,
+            "win": 0.351751828400629
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -108,
+            "loss": 0.331835374674923,
+            "market_break_even_probability": 0.5192307692307692,
+            "market_conditional_no_vig_probability": 0.4956702459300312,
+            "model_conditional_win_given_no_push": 0.6681646253250769,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.28683557470014814,
+            "win": 0.6681646253250768
+          },
+          "home": {
+            "exact_american_odds": -112,
+            "loss": 0.6681646253250768,
+            "market_break_even_probability": 0.5283018867924528,
+            "market_conditional_no_vig_probability": 0.5043297540699689,
+            "model_conditional_win_given_no_push": 0.3318353746749231,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.37188304079389556,
+            "win": 0.331835374674923
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_NYG_WAS_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    },
+    {
+      "away_team": "PHI",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_PHI_JAX",
+      "home_spread": -7.5,
+      "home_team": "JAX",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -110,
+            "loss": 0.4736327325086733,
+            "market_break_even_probability": 0.5238095238095238,
+            "market_conditional_no_vig_probability": 0.5,
+            "model_conditional_win_given_no_push": 0.5263672674913267,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.004882965210714574,
+            "win": 0.5263672674913267
+          },
+          "home": {
+            "exact_american_odds": -110,
+            "loss": 0.5263672674913267,
+            "market_break_even_probability": 0.5238095238095238,
+            "market_conditional_no_vig_probability": 0.5,
+            "model_conditional_win_given_no_push": 0.4736327325086733,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.0957920561198054,
+            "win": 0.4736327325086733
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -110,
+            "loss": 0.4351460676973743,
+            "market_break_even_probability": 0.5238095238095238,
+            "market_conditional_no_vig_probability": 0.5,
+            "model_conditional_win_given_no_push": 0.5648539323026258,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": 0.07835750712319467,
+            "win": 0.5648539323026258
+          },
+          "home": {
+            "exact_american_odds": -110,
+            "loss": 0.5648539323026258,
+            "market_break_even_probability": 0.5238095238095238,
+            "market_conditional_no_vig_probability": 0.5,
+            "model_conditional_win_given_no_push": 0.4351460676973743,
+            "push": 0.0,
+            "unshrunk_model_ev_per_unit": -0.1692665980322855,
+            "win": 0.4351460676973743
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_PHI_JAX_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    },
+    {
+      "away_team": "SF",
+      "betting_authorized": false,
+      "book": "FanDuel",
+      "book_access_verified": false,
+      "book_execution_independently_verified": false,
+      "game_id": "2026_05_SF_SEA",
+      "home_spread": -3.0,
+      "home_team": "SEA",
+      "injury_and_personnel_context_verified": false,
+      "model_git_commit_precedes_web_capture": true,
+      "models": {
+        "discrete_gaussian": {
+          "away": {
+            "exact_american_odds": -104,
+            "loss": 0.38926844760791424,
+            "market_break_even_probability": 0.5098039215686274,
+            "market_conditional_no_vig_probability": 0.4850248160191682,
+            "model_conditional_win_given_no_push": 0.598756539324068,
+            "push": 0.029844755719743654,
+            "unshrunk_model_ev_per_unit": 0.16927654919241475,
+            "win": 0.5808867966723421
+          },
+          "home": {
+            "exact_american_odds": -118,
+            "loss": 0.5808867966723421,
+            "market_break_even_probability": 0.5412844036697247,
+            "market_conditional_no_vig_probability": 0.5149751839808318,
+            "model_conditional_win_given_no_push": 0.401243460675932,
+            "push": 0.029844755719743654,
+            "unshrunk_model_ev_per_unit": -0.2509982817503809,
+            "win": 0.38926844760791424
+          }
+        },
+        "key_number": {
+          "away": {
+            "exact_american_odds": -104,
+            "loss": 0.36652272948257636,
+            "market_break_even_probability": 0.5098039215686274,
+            "market_conditional_no_vig_probability": 0.4850248160191682,
+            "model_conditional_win_given_no_push": 0.6101942249216568,
+            "push": 0.05972986313783397,
+            "unshrunk_model_ev_per_unit": 0.18515746992087512,
+            "win": 0.5737474073795894
+          },
+          "home": {
+            "exact_american_odds": -118,
+            "loss": 0.5737474073795894,
+            "market_break_even_probability": 0.5412844036697247,
+            "market_conditional_no_vig_probability": 0.5149751839808318,
+            "model_conditional_win_given_no_push": 0.3898057750783432,
+            "push": 0.05972986313783397,
+            "unshrunk_model_ev_per_unit": -0.26313492476723654,
+            "win": 0.36652272948257636
+          }
+        }
+      },
+      "observation_id": "nfl_20261010_2220_fanduel_week5",
+      "original_capture_git_commit_verified": true,
+      "publisher": "FanDuel Research",
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table.",
+      "quote_id": "2026_05_SF_SEA_web_fanduel",
+      "source_kind": "public_webpage_read",
+      "source_price_timestamp_verified": false,
+      "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+      "status": "PUBLIC_WEB_RESEARCH_ONLY_NO_EXECUTABLE_EDGE",
+      "wager_authorized": false,
+      "weather_context_verified": false,
+      "web_observed_at": "2026-10-10T22:20:02+00:00"
+    }
+  ],
+  "spec": "walters_web_research_audit_v1",
+  "status": "RESEARCH_ONLY_NO_VERIFIED_ECONOMIC_EDGE",
+  "web_evidence_documents": 1,
+  "webpage_read_does_not_automatically_refresh": true,
+  "webpage_read_does_not_prove_executable_sportsbook_odds": true,
+  "webpage_read_does_not_prove_original_book_quote_update_time": true
+}
