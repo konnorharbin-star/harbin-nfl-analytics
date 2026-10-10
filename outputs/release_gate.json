@@ -5,6 +5,7 @@
     "context_coverage: >=90% current injury/rest/weather/travel context coverage",
     "regime_edge_reliability: at least two markets clear fixed regime-specific probability and edge reliability on validation plus untouched holdout",
     "live_monitoring: engineering readiness >=90/100; multi-book breadth gated separately",
+    "historical_entry_integrity: promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
     "historical_clv_coverage: >=90% of verified historical bets have same-book closing CLV",
     "historical_market_edge: ROBUST verified-entry NFL evidence with positive ROI confidence lower bound and CLV across markets/seasons",
     "production_policy: frozen nested chronological policy is production-validated with at least two enabled markets",
@@ -64,11 +65,11 @@
       "passed": true,
       "requirement": "validated chronological probability reliability clears Brier/ECE, 58%-62% confidence-band, and margin/total interval guardrails",
       "value": {
-        "brier": 0.2287150128025609,
-        "ece": 0.05982942561488695,
+        "brier": 0.22871501280256112,
+        "ece": 0.05982942561488687,
         "margin_80_coverage": 0.7830882352941176,
         "mid_confidence_games": 39,
-        "mid_confidence_gap": 0.012503230466270998,
+        "mid_confidence_gap": 0.01250323046627122,
         "model_family": "gaussian+logistic_moneyline",
         "total_80_coverage": 0.8051470588235294,
         "validated_reliability_ready": true
@@ -108,11 +109,11 @@
     {
       "detail": "",
       "name": "historical_entry_integrity",
-      "passed": true,
+      "passed": false,
       "requirement": "promotion sample uses explicit opening-entry observations, not archive-final fallbacks",
       "value": {
         "excluded_unverified_bets": 3069,
-        "verified_bets": 1632
+        "verified_bets": 0
       }
     },
     {
@@ -121,9 +122,9 @@
       "passed": false,
       "requirement": ">=90% of verified historical bets have same-book closing CLV",
       "value": {
-        "verified_bets": 1632,
-        "verified_clv_coverage": 0.7965686274509803,
-        "verified_clv_samples": 1300
+        "verified_bets": 0,
+        "verified_clv_coverage": 0.0,
+        "verified_clv_samples": 0
       }
     },
     {
@@ -135,10 +136,10 @@
         "positive_markets": 0,
         "positive_seasons": 0,
         "status": "ESTABLISHED SAMPLE",
-        "verified_clv_coverage": 0.7965686274509803,
+        "verified_clv_coverage": 0.0,
         "verified_roi_ci_95": [
-          -0.1404771631425152,
-          -0.02082707056106407
+          null,
+          null
         ]
       }
     },
@@ -210,6 +211,7 @@
     "Refresh injury, depth-chart, and roster sources until at least 95% of current games have FRESH personnel context.",
     "Complete timestamp-safe NFL injuries/rest/weather/travel context coverage.",
     "Keep production disabled until at least two NFL markets clear the fixed regime-specific reliability audit on validation and holdout.",
+    "Accumulate explicit forward/opening entry snapshots; archive-final fallbacks cannot promote the model.",
     "Keep NFL policy in paper research until verified-entry chronological ROI/CLV evidence clears the hard gates.",
     "Accumulate independently graded portfolio decisions; historical backtests do not substitute for live evidence."
   ],
