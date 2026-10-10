@@ -5,7 +5,7 @@
   },
   "disclaimer": "A research edge is not a proved profitable bet. Do not wager at an unverified or stale quote.",
   "distinct_games": 14,
-  "evaluated_at": "2026-10-10T19:15:03.914735+00:00",
+  "evaluated_at": "2026-10-10T19:22:23.605411+00:00",
   "method": "ONE_PER_GAME_CONSERVATIVE_EV_PRIORITY",
   "no_model_or_stake_change": true,
   "production_eligible": false,
