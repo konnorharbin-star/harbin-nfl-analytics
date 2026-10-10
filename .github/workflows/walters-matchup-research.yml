@@ -1,6 +1,11 @@
 name: Walters Matchup Residual Research
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - "scripts/walters_matchup_residual.py"
+      - "tests/test_walters_matchup_residual.py"
+      - ".github/workflows/walters-matchup-research.yml"
 permissions:
   contents: read
 jobs:
