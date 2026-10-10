@@ -191,8 +191,13 @@ def test_paper_result_does_not_reweight_forecast_probabilities(tmp_path):
 def test_invalid_duplicate_game_or_naive_time_fails_closed(tmp_path):
     archive, board = _fixture(tmp_path, "nfl")
     original = board.read_text()
+    # Repeated identical rows are expected: NFL dashboard markets share a game.
     board.write_text(original + original.splitlines()[-1] + "\n")
-    with pytest.raises(ValueError, match="Duplicate"):
+    assert len(make_snapshots(board, archive, "nfl", now=NOW)) == 1
+    # Conflicting game-level projections must never silently pick one market row.
+    changed = original.splitlines()[-1].replace(",2.5,", ",5.5,")
+    board.write_text(original + changed + "\n")
+    with pytest.raises(ValueError, match="Conflicting duplicate"):
         make_snapshots(board, archive, "nfl", now=NOW)
     board.write_text(original.replace("+00:00", ""))
     with pytest.raises(ValueError, match="Invalid timestamp"):
