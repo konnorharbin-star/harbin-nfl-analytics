@@ -20,7 +20,13 @@ from scripts.forward_price_validation import first_commit_time, utc
 from scripts.grade_recommendations import fetch as fetch_scoreboard
 from scripts.grade_recommendations import final_result
 from scripts.walters_key_number_distribution import (
-    LINES, bootstrap, distribution, fit, load, metrics, outcomes,
+    LINES,
+    bootstrap,
+    distribution,
+    fit,
+    load,
+    metrics,
+    outcomes,
 )
 
 VERSION = "walters_key_number_forward_v1"
