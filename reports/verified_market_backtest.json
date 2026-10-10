@@ -4,8 +4,8 @@
   "by_market": {
     "moneyline": {
       "average_clv_proxy": 0.0050763256490320915,
-      "average_expected_value_per_unit": 0.242917802345099,
-      "average_probability_edge": 0.09440548764819708,
+      "average_expected_value_per_unit": 0.2429178023450995,
+      "average_probability_edge": 0.09440548764819723,
       "bets": 430,
       "clv_samples": 429,
       "losses": 261,
@@ -19,8 +19,8 @@
     },
     "spread": {
       "average_clv_proxy": 0.16820276497695852,
-      "average_expected_value_per_unit": 0.1533276847362194,
-      "average_probability_edge": 0.10327875720589966,
+      "average_expected_value_per_unit": 0.15332768473621922,
+      "average_probability_edge": 0.10327875720589952,
       "bets": 435,
       "clv_samples": 434,
       "losses": 218,
@@ -34,8 +34,8 @@
     },
     "total": {
       "average_clv_proxy": 0.10476190476190476,
-      "average_expected_value_per_unit": 0.10679467828828988,
-      "average_probability_edge": 0.07921592081771395,
+      "average_expected_value_per_unit": 0.1067946782882905,
+      "average_probability_edge": 0.07921592081771425,
       "bets": 421,
       "clv_samples": 420,
       "losses": 219,
@@ -51,8 +51,8 @@
   "by_season": {
     "2024": {
       "average_clv_proxy": 0.07919164506439622,
-      "average_expected_value_per_unit": 0.17076596134592853,
-      "average_probability_edge": 0.09595824570479942,
+      "average_expected_value_per_unit": 0.17076596134592872,
+      "average_probability_edge": 0.09595824570479951,
       "bets": 648,
       "clv_samples": 645,
       "losses": 339,
@@ -66,8 +66,8 @@
     },
     "2025": {
       "average_clv_proxy": 0.10673845240893294,
-      "average_expected_value_per_unit": 0.1652921856988345,
-      "average_probability_edge": 0.08885513874739598,
+      "average_expected_value_per_unit": 0.1652921856988349,
+      "average_probability_edge": 0.08885513874739615,
       "bets": 638,
       "clv_samples": 638,
       "losses": 359,
@@ -85,7 +85,7 @@
   "clv_samples": 1283,
   "coverage": {
     "books": [
-      "DraftKings",
+      "Draft Kings",
       "ESPN BET"
     ],
     "closing_pairs": 1658,
@@ -100,8 +100,8 @@
   "meaning": "Historical research diagnostic uses ESPN's explicit archived provider open and close snapshots. These are verified archive stages, not fabricated point-in-time timestamps. Archive stages cannot qualify for promotion. Forward evidence retains strict timestamped capture requirements.",
   "overall": {
     "average_clv_proxy": 0.09288990156152359,
-    "average_expected_value_per_unit": 0.16805035569830334,
-    "average_probability_edge": 0.09243430928269726,
+    "average_expected_value_per_unit": 0.16805035569830362,
+    "average_probability_edge": 0.09243430928269737,
     "bets": 1286,
     "clv_samples": 1283,
     "losses": 698,
