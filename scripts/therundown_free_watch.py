@@ -262,6 +262,7 @@ def scan(sport, forecast_root, evidence_root, *, now=None,
                 quote = {
                     "quote_id": "indicative",
                     "game_id": f["game_id"], "sport": sport,
+                    "source_url": _url(sport, date),
                     "book": BOOKS[book],
                     "home_spread": paired["home"]["line"],
                     "away_spread": paired["away"]["line"],
