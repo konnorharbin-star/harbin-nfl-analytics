@@ -83,7 +83,9 @@ def write_case(root, entry=None, close=None, final=None):
 
 
 def publisher(p):
-    return KICKOFF - timedelta(minutes=5) if p.parent.name == "late_quotes" else NOW + timedelta(minutes=3)
+    if p.parent.name == "late_quotes":
+        return KICKOFF - timedelta(minutes=5)
+    return NOW + timedelta(minutes=3)
 
 
 def test_full_research_replay_has_correct_moneyline_profit_and_direction(tmp_path):
