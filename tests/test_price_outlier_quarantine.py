@@ -2,6 +2,8 @@
 
 from copy import deepcopy
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
+import json
 
 import pytest
 
@@ -112,3 +114,25 @@ def test_unusable_prices_do_not_create_quarantine(bad):
     report = scan(rows, NOW)
     assert report["counts"]["invalid_pair"] >= 1
     assert report["quarantined_quotes"] == []
+
+
+def test_archived_october_10_jaguars_dislocation_is_quarantined():
+    """Exercise the raw unaltered capture, not only a synthetic analogue."""
+    archive = Path(
+        "history/price_scan_v1/captures/6f49d529fec7adf50373711b.json"
+    )
+    assert archive.exists(), "Expected exact immutable capture for regression"
+    payload = json.loads(archive.read_text(encoding="utf-8"))
+    observed = datetime.fromisoformat(payload["report"]["observed_at"])
+    scan_result = scan(payload["source_records"], observed)
+    assert any(
+        r["game_id"] == "2026_05_PHI_JAX"
+        and r["book_label"] == "FanDuel"
+        and r["american_odds_pair"] == [110.0, -130.0]
+        for r in scan_result["quarantined_quotes"]
+    )
+    assert not any(
+        r["game_id"] == "2026_05_PHI_JAX"
+        and r["book_label"] == "FanDuel"
+        for r in scan_result["candidates"]
+    )
