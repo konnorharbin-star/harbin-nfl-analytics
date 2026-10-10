@@ -147,6 +147,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -174,6 +176,9 @@ jobs:
         run: |
           python -m scripts.walters_key_forward --sport nfl \
             --historical reports/free_market_predictions.csv
+
+      - name: Compare immutable independent key numbers with source-attested book spreads
+        run: python -m scripts.walters_key_market_gate
 
       - name: Compare market-relative challenger with historical diagnostic benchmark
         run: python -m nfl.market_residual_challenger
