@@ -126,3 +126,28 @@ def test_collector_timestamp_does_not_certify_book_origin():
     assert row["observed_at"] == NOW.isoformat()
     assert not row["source_quote_time_verified"]
     assert not row["executable_price_verified"]
+
+
+@pytest.mark.parametrize("market", ["spread", "total"])
+def test_both_side_lines_required_for_non_moneyline_pairs(market):
+    game = {
+        "game_id": "g",
+        "home_team": "h",
+        "away_team": "a",
+        "date": (NOW + timedelta(hours=1)).isoformat(),
+    }
+    q = (
+        {
+            "provider": "Book",
+            "home_spread": -3,
+            "home_spread_price": -110,
+            "away_spread_price": -110,
+        }
+        if market == "spread"
+        else {"provider": "Book", "market_total": 40, "over_price": -110, "under_price": -110}
+    )
+    assert normalize(game, q, NOW.isoformat()) == []
+    q.update(away_spread=3) if market == "spread" else q.update(over_total=40, under_total=40)
+    assert len(normalize(game, q, NOW.isoformat())) == 1
+    q.update(away_spread=3.5) if market == "spread" else q.update(under_total=41)
+    assert normalize(game, q, NOW.isoformat()) == []

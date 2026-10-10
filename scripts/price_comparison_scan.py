@@ -83,6 +83,12 @@ def normalize(game, q, observed):
         prices = [number(q.get(k)) for k in keys]
         if market != "moneyline" and line is None:
             continue
+        if market == "spread" and number(q.get("away_spread")) != -line:
+            continue
+        if market == "total" and (
+            number(q.get("over_total")) != line or number(q.get("under_total")) != line
+        ):
+            continue
         if all(decimal(p) is not None for p in prices):
             records.append(
                 {**base, "market": market, "line": line, "sides": [first, second], "odds": prices}
@@ -146,9 +152,12 @@ def load(sport):
             "home_ml": prices.get("home") if market == "moneyline" else None,
             "away_ml": prices.get("away") if market == "moneyline" else None,
             "home_spread": lines.get("home"),
+            "away_spread": lines.get("away"),
             "home_spread_price": prices.get("home") if market == "spread" else None,
             "away_spread_price": prices.get("away") if market == "spread" else None,
             "market_total": lines.get("over"),
+            "over_total": lines.get("over"),
+            "under_total": lines.get("under"),
             "over_price": prices.get("over"),
             "under_price": prices.get("under"),
         }
@@ -205,9 +214,12 @@ def refresh(sport, games):
                 "home_ml": sides.get("home") if market.market_type == "moneyline" else None,
                 "away_ml": sides.get("away") if market.market_type == "moneyline" else None,
                 "home_spread": lines.get("home"),
+                "away_spread": lines.get("away"),
                 "home_spread_price": sides.get("home") if market.market_type == "spread" else None,
                 "away_spread_price": sides.get("away") if market.market_type == "spread" else None,
                 "market_total": lines.get("over"),
+                "over_total": lines.get("over"),
+                "under_total": lines.get("under"),
                 "over_price": sides.get("over"),
                 "under_price": sides.get("under"),
             }
@@ -311,6 +323,7 @@ def scan(records, now):
                     "blockers": [
                         "Aggregator book identity and executable price unverified",
                         "Per-side source quote-origin timestamps unverified",
+                        "Source market phase and settlement rules unverified",
                         "No verified sharp benchmark",
                         "Reference probabilities are not calibrated model probabilities",
                         "Market-reference strategy lacks validated prospective economic advantage",
@@ -364,7 +377,17 @@ def main():
         {r["game_id"] for r in games if timestamp(r.get("kickoff") or r["date"]) > now}
     )
     report["fresh_priced_games"] = len({r["game_id"] for r in current})
-    report.update(sport=args.sport, source_errors=errors, decision="NO_BET")
+    report.update(
+        sport=args.sport,
+        source_errors=errors,
+        decision="NO_BET",
+        supported_markets=["moneyline", "spread", "total"]
+        if args.sport == "nfl"
+        else ["moneyline"],
+        unsupported_market_reason=None
+        if args.sport == "nfl"
+        else "CFB normalized feed does not retain both spread/total side lines",
+    )
     identity = hashlib.sha256(json.dumps(report, sort_keys=True).encode()).hexdigest()[:24]
     report["capture_id"] = identity
     immutable(

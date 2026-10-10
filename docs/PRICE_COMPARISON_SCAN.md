@@ -8,7 +8,10 @@ The NFL bulk client makes at most two public endpoint attempts; CFB one request.
 No paid odds client is called. HTTP/source failures remain visible. The scanner
 may use an existing published observation only while its collector age is <=15 minutes.
 
-Require two actual same-book prices. Compare the exact game, market and line only;
+Require two source same-book prices. Both original opposite spread lines or
+equal over/under lines must be retained. The existing CFB normalized feed drops
+those paired lines, so CFB spreads/totals remain unsupported; CFB moneylines and
+all three NFL markets are supported for diagnostics. Compare the exact game, market and line only;
 never mix different spreads or totals. Home/away spreads must use opposite signs;
 missing prices never receive -110. Deduplicate bookmaker aliases, including duplicate
 ESPN/Action Network DraftKings labels. Keep each book's latest observation and require
