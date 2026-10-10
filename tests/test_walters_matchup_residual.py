@@ -42,7 +42,8 @@ def test_same_week_outcomes_cannot_leak_into_any_pregame_feature():
                for a, b in same_week)
     # The next week is allowed to incorporate the newly completed result.
     assert any(a["delta_total"] != b["delta_total"]
-               for a, b in zip(before, after, strict=True) if a["season"] == 2023 and a["week"] == 2)
+               for a, b in zip(before, after, strict=True)
+               if a["season"] == 2023 and a["week"] == 2)
 
 
 @pytest.mark.parametrize("sport", ["nfl", "cfb"])
