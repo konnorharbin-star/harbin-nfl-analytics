@@ -155,12 +155,12 @@ def test_no_publication_or_unverified_source_blocks_paper_entry(tmp_path):
 
 def test_invalid_price_and_source_timestamp_are_not_accepted():
     entry = complete_entry()
-    assert not entry_reasons(entry, publisher(None))
+    assert not entry_reasons(entry, NOW + timedelta(minutes=3))
     entry["american_odds"] = 99
-    assert "INVALID_EXACT_PAIRED_PRICE" in entry_reasons(entry, publisher(None))
+    assert "INVALID_EXACT_PAIRED_PRICE" in entry_reasons(entry, NOW + timedelta(minutes=3))
     entry = complete_entry()
     entry["source_quote_at"] = stamp(NOW - timedelta(hours=3))
-    assert "STALE_ORIGIN_QUOTE" in entry_reasons(entry, publisher(None))
+    assert "STALE_ORIGIN_QUOTE" in entry_reasons(entry, NOW + timedelta(minutes=3))
     with pytest.raises(ValueError, match="Naive"):
         utc("2026-10-10T17:00:00")
 
