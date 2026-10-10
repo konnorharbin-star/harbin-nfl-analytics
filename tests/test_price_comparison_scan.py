@@ -1,5 +1,6 @@
 from copy import deepcopy
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 import pytest
 
@@ -147,7 +148,76 @@ def test_both_side_lines_required_for_non_moneyline_pairs(market):
         else {"provider": "Book", "market_total": 40, "over_price": -110, "under_price": -110}
     )
     assert normalize(game, q, NOW.isoformat()) == []
+
     q.update(away_spread=3) if market == "spread" else q.update(over_total=40, under_total=40)
     assert len(normalize(game, q, NOW.isoformat())) == 1
     q.update(away_spread=3.5) if market == "spread" else q.update(under_total=41)
     assert normalize(game, q, NOW.isoformat()) == []
+
+
+@pytest.mark.skipif(not Path("harbin").is_dir(), reason="CFB collector runtime")
+def test_cfb_bulk_refresh_imports_runtime_and_never_calls_paid_client(monkeypatch):
+    from harbin.market_intel import MarketIntelligence
+
+    from scripts.price_comparison_scan import refresh
+
+    monkeypatch.setenv("THE_ODDS_API_KEY", "unused-test-value")
+
+    def forbidden(self):
+        raise AssertionError("Paid client called")
+
+    def public(self, games):
+        self.action_games = [
+            {
+                "home_names": {"home"},
+                "away_names": {"away"},
+                "start_time": (NOW + timedelta(hours=2)).isoformat(),
+                "quotes": [
+                    {
+                        "provider": "Book",
+                        "source": "action_network",
+                        "home_ml": -110,
+                        "away_ml": -110,
+                    }
+                ],
+            }
+        ]
+
+    monkeypatch.setattr(MarketIntelligence, "_load_odds_api", forbidden)
+    monkeypatch.setattr(MarketIntelligence, "_load_action_network", public)
+    game = {
+        "game_id": "g",
+        "home_team": "Home",
+        "away_team": "Away",
+        "date": (datetime.now(UTC) + timedelta(hours=2)).isoformat(),
+        "season": 2026,
+        "week": 6,
+    }
+
+    # Use the same actual future kickoff in the mocked bulk payload.
+    def current_public(self, games):
+        public(self, games)
+        self.action_games[0]["start_time"] = game["date"]
+
+    monkeypatch.setattr(MarketIntelligence, "_load_action_network", current_public)
+    rows, errors = refresh("cfb", [game])
+    assert len(rows) == 1 and errors == []
+
+
+def test_custom_collector_report_does_not_overwrite_another_writer(monkeypatch, tmp_path):
+    import sys
+
+    from scripts import price_comparison_scan as cli
+
+    monkeypatch.chdir(tmp_path)
+    Path("docs").mkdir()
+    default = Path("docs/price_comparison_scan.json")
+    default.write_text('{"other_collector":"preserve"}')
+    monkeypatch.setattr(cli, "load", lambda sport: ([], []))
+    monkeypatch.setattr(
+        sys, "argv", ["scan", "--sport", "nfl", "--out", "docs/price_comparison_scan_line.json"]
+    )
+    cli.main()
+    assert default.read_text() == '{"other_collector":"preserve"}'
+    assert Path("docs/price_comparison_scan_line.json").exists()
+    assert len(list(Path("history/price_scan_v1/captures").glob("*.json"))) == 1
