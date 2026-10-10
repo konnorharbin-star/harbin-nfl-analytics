@@ -1,0 +1,30 @@
+{
+  "archived_at": "2026-10-10T22:32:07.172407+00:00",
+  "capture_is_book_update_time": false,
+  "origin_time_usable": false,
+  "original_market_row": {
+    "away_team": "IND",
+    "book": "DraftKings",
+    "captured_at": "2026-10-10T22:32:05.295775+00:00",
+    "first_american_odds": -148,
+    "first_line": null,
+    "first_side": "home",
+    "game_id": "2026_05_IND_PIT",
+    "home_team": "PIT",
+    "kickoff": "2026-10-11T17:00:00+00:00",
+    "market_type": "moneyline",
+    "provider": "espn",
+    "season": 2026,
+    "second_american_odds": 124,
+    "second_line": null,
+    "second_side": "away",
+    "source_event_id": "401872985",
+    "week": 5
+  },
+  "original_request_url": null,
+  "reported_source_quote_time_verified": false,
+  "schema": 1,
+  "source_quote_age_seconds": null,
+  "source_quote_at": null,
+  "source_quote_time_verified": false
+}
