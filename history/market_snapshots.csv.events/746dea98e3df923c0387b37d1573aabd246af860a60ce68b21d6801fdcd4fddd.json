@@ -1,0 +1,30 @@
+{
+  "archived_at": "2026-10-10T18:45:48.356473+00:00",
+  "capture_is_book_update_time": false,
+  "origin_time_usable": false,
+  "original_market_row": {
+    "away_team": "HOU",
+    "book": "DraftKings",
+    "captured_at": "2026-10-10T18:45:35.079444+00:00",
+    "first_american_odds": -114,
+    "first_line": 38.0,
+    "first_side": "over",
+    "game_id": "2026_05_HOU_TEN",
+    "home_team": "TEN",
+    "kickoff": "2026-10-11T17:00:00+00:00",
+    "market_type": "total",
+    "provider": "action_network",
+    "season": 2026,
+    "second_american_odds": -106,
+    "second_line": 38.0,
+    "second_side": "under",
+    "source_event_id": "290905",
+    "week": 5
+  },
+  "original_request_url": null,
+  "reported_source_quote_time_verified": false,
+  "schema": 1,
+  "source_quote_age_seconds": null,
+  "source_quote_at": null,
+  "source_quote_time_verified": false
+}
