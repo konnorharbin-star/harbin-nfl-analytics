@@ -23,6 +23,7 @@ from scripts.grade_recommendations import fetch, final_result
 from scripts.recommendation_ledger import timestamp
 
 SPEC = "market_first_moneyline_v1"
+EVALUATION_END = datetime(2027, 3, 1, tzinfo=UTC)
 VARIANTS = ("independent_model", "market_model_25pct", "market_power_1_1")
 MIN_GAMES, MIN_WEEKS = 100, 8
 
@@ -242,6 +243,9 @@ def capture(sport, root, now, *, refresh_market=False):
         row = items[0]
         p = probability(row.get("calibrated_home_probability"))
         kickoff = timestamp(row.get("kickoff") or row.get("date"))
+        if kickoff >= EVALUATION_END:
+            counts["outside_frozen_evaluation_window"] += 1
+            continue
         if kickoff <= now:
             counts["already_started"] += 1
             continue
@@ -436,6 +440,8 @@ def main():
     report.update(
         {
             "spec": SPEC,
+            "evaluation_end_exclusive": EVALUATION_END.isoformat(),
+            "inference_status": "DESCRIPTIVE_UNTIL_FIXED_HORIZON_THEN_EXTERNAL_RELEASE_REVIEW",
             "sport": args.sport,
             "betting_authorized": False,
             "promotion_eligible": False,

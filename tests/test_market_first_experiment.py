@@ -193,3 +193,12 @@ def test_verified_final_grades_original_forecast(tmp_path, monkeypatch):
     original = path.read_bytes()
     settle(root, NOW + timedelta(days=2))
     assert path.read_bytes() == original
+
+
+def test_collection_stops_at_declared_evaluation_horizon(tmp_path, monkeypatch):
+    row = publication(tmp_path, monkeypatch)
+    row["date"] = "2027-03-01T00:00:00+00:00"
+    write_publication(tmp_path, row)
+    result = capture("cfb", tmp_path / "history", NOW)
+    assert result["outside_frozen_evaluation_window"] == 1
+    assert result.get("new_frozen", 0) == 0

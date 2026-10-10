@@ -14,7 +14,7 @@ Three candidates are declared before the new prospective cohort settles:
 2. 75% market / 25% independent model probability (explicit downstream pricing layer).
 3. `sigmoid(1.1 * logit(market_probability))`, a fixed favorite/longshot-calibration hypothesis.
 
-No coefficients or betting thresholds are fitted to this experiment. Book choice is
+No coefficients or betting thresholds are fitted to this experiment. The prospective evaluation ends at March 1, 2027 UTC; later games require a new declared experiment. Results seen before that cutoff are descriptive and cannot be used to select or promote a winner. Book choice is
 fixed: prefer DraftKings by name, otherwise alphabetically choose a named book. Never
 choose a book by apparent EV, outcome or model agreement. Anonymous book IDs are excluded.
 Collectors may observe advertised stale prices; collector time is **not** source quote
@@ -43,7 +43,7 @@ Report Brier, log loss and descriptive ECE by model version and season. Paired c
 intervals resample whole season/week clusters (10,000 draws, fixed seed). Bonferroni
 intervals cover three candidates times two loss metrics. Intervals require at least
 100 games and eight week clusters. Sparse ECE is withheld below 100 games. These are
-fixed-horizon exploratory summaries: repeated dashboard inspection is not a sequential
+fixed-horizon exploratory summaries through games kicking off before March 1, 2027 UTC: repeated dashboard inspection is not a sequential
 promotion test. Any future promotion needs a separately frozen evaluation window and
 all existing economic, quote-provenance and release requirements.
 
