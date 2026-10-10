@@ -36,7 +36,7 @@
     "verified_quote_rows": 334,
     "warnings": []
   },
-  "generated_at": "2026-10-10T16:15:23.504391+00:00",
+  "generated_at": "2026-10-10T16:17:08.340318+00:00",
   "health": {
     "data_quality": {
       "candidate_rows": 42,
@@ -113,7 +113,7 @@
   },
   "identity": {
     "league": "NFL",
-    "model_generated_at": "2026-10-10T16:15:21.901076+00:00",
+    "model_generated_at": "2026-10-10T16:17:06.202435+00:00",
     "prediction_games": 14,
     "prediction_rows": 42,
     "season": 2026,
@@ -697,8 +697,8 @@
           "status": "ESTABLISHED SAMPLE",
           "verified_clv_coverage": 0.7965686274509803,
           "verified_roi_ci_95": [
-            -0.13902872762360582,
-            -0.017793805511925272
+            -0.13891466364439087,
+            -0.02070265302142115
           ]
         }
       },
@@ -778,18 +778,6 @@
   "schema_version": 1,
   "status": "WARN",
   "trend": [
-    {
-      "approved_units": 0.0,
-      "data_quality_status": "OK",
-      "distribution_stability": 80.3,
-      "generated_at": "2026-10-09T00:42:03.366592+00:00",
-      "live_readiness_score": 80.0,
-      "model_generated_at": "2026-10-09T00:42:00.941366+00:00",
-      "publication_status": "WARN",
-      "release_state": "RESEARCH",
-      "season": 2026,
-      "week": 5
-    },
     {
       "approved_units": 0.0,
       "data_quality_status": "OK",
@@ -917,6 +905,18 @@
       "generated_at": "2026-10-10T05:44:35.342266+00:00",
       "live_readiness_score": 79.5,
       "model_generated_at": "2026-10-10T05:44:33.014711+00:00",
+      "publication_status": "WARN",
+      "release_state": "RESEARCH",
+      "season": 2026,
+      "week": 5
+    },
+    {
+      "approved_units": 0.0,
+      "data_quality_status": "OK",
+      "distribution_stability": 80.3,
+      "generated_at": "2026-10-10T16:15:23.504391+00:00",
+      "live_readiness_score": 79.0,
+      "model_generated_at": "2026-10-10T16:15:21.901076+00:00",
       "publication_status": "WARN",
       "release_state": "RESEARCH",
       "season": 2026,
