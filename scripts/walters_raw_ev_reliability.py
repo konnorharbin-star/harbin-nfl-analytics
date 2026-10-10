@@ -98,7 +98,8 @@ def load(path):
 def blend(row, alpha):
     """Market log odds plus a 2024-selected fraction of model disagreement."""
     m, b = row["model_p"], row["market_p"]
-    logit = lambda p: math.log(p / (1 - p))
+    def logit(p):
+        return math.log(p / (1 - p))
     x = logit(b) + alpha * (logit(m) - logit(b))
     return 1.0 / (1.0 + math.exp(-x))
 
