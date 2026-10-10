@@ -46,7 +46,7 @@ def test_zero_update_when_tuning_is_adversarial():
     for row in rows:
         if row["season"] == 2024:
             row["actual_total"] = row["projected_total"] - 30
-            row["actual_home_margin"] = row["projected_home_margin"] - 30
+            row["actual_home_margin"] = row["projected_home_margin"] + 30
     report = evaluate(rows, "nfl", 2024, 2025)
     assert all(report["targets"][target]["selection"]["family"] == "baseline"
                for target in ("margin", "total"))
