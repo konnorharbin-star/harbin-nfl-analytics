@@ -8,6 +8,7 @@ on:
       - 'scripts/recommendation_ledger.py'
       - 'scripts/persist_decisions.py'
       - 'scripts/grade_recommendations.py'
+      - 'scripts/market_first_experiment.py'
       - '.github/workflows/recommendation-records.yml'
   schedule:
     - cron: '47 11,17,23 * * *'
@@ -31,20 +32,23 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install pytest
+      - run: python -m pip install pytest numpy polars
       - name: Validate immutable receipts and settlement
-        run: python -m pytest -q tests/test_recommendation_ledger.py tests/test_recommendation_grading.py tests/test_final_edge_board.py
+        run: python -m pytest -q tests/test_recommendation_ledger.py tests/test_recommendation_grading.py tests/test_final_edge_board.py tests/test_market_first_experiment.py
       - name: Record release-gated decisions
         run: python -m scripts.persist_decisions --sport nfl --source outputs/actionable_betting_board.csv
       - name: Grade frozen recommendations from independent final scores
         run: python -m scripts.grade_recommendations
+      - name: Freeze all-game market-first research and grade committed forecasts
+        run: python -m scripts.market_first_experiment --sport nfl --refresh-market
       - name: Publish permanent receipts before exposing recommendation artifacts
         shell: bash
         run: |
           set -euo pipefail
           git config user.name harbin-paper-record-bot
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add history/recommendations_v1 docs/recommendation_status.json docs/recommendation_performance.json
+          git add history/recommendations_v1 docs/recommendation_status.json docs/recommendation_performance.json docs/market_first_experiment.json
+          if [ -d history/market_first_v1 ]; then git add history/market_first_v1; fi
           if ! git diff --cached --quiet; then
             git commit -m "paper: persist immutable decisions and verified grades"
             bash scripts/push_generated_state.sh origin main
@@ -57,4 +61,5 @@ jobs:
           path: |
             docs/recommendation_status.json
             docs/recommendation_performance.json
+            docs/market_first_experiment.json
           retention-days: 30
