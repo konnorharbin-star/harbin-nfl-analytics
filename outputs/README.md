@@ -1,11 +1,11 @@
 # Latest NFL model output
 
 **Season / Week:** 2026 / 5  
-**Updated:** Oct 10, 2026 · 3:32 PM CT  
+**Updated:** Oct 10, 2026 · 3:36 PM CT  
 **Release state:** RESEARCH  
 
 ## Fresh PNGs for mobile
-- [Fresh page 1 — cache-safe](nfl_week_5_run_20261010_153257_CT_page1.png)
+- [Fresh page 1 — cache-safe](nfl_week_5_run_20261010_153604_CT_page1.png)
 
 These filenames change on every run so GitHub/mobile cannot reuse an old image preview. Use these links when checking the latest model.
 
