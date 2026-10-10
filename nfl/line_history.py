@@ -182,6 +182,11 @@ def append_market_snapshots(
         writer = csv.DictWriter(handle, fieldnames=list(SNAPSHOT_FIELDS))
         if not handle.tell():
             writer.writeheader()
+        elif new_rows:
+            with source.open("rb") as raw:
+                raw.seek(-1, os.SEEK_END)
+                if raw.read(1) not in {b"\n", b"\r"}:
+                    handle.write("\n")
         writer.writerows(new_rows)
         handle.flush()
         os.fsync(handle.fileno())

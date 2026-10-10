@@ -93,3 +93,15 @@ def test_late_archival_cannot_certify_an_old_pregame_quote(tmp_path):
     path = tmp_path / "markets.csv"
     append_market_snapshots([market], games, path=path)
     assert load_market_snapshots(path).row(0, named=True)["origin_time_usable"] is False
+
+
+def test_append_preserves_unterminated_legacy_tail(tmp_path):
+    market, games = inputs()
+    path = tmp_path / "markets.csv"
+    append_market_snapshots([market], games, path=path)
+    original = path.read_bytes().rstrip(b"\r\n")
+    path.write_bytes(original)
+    newer = replace(market, captured_at=market.captured_at + timedelta(minutes=2))
+    append_market_snapshots([newer], games, path=path)
+    assert path.read_bytes().startswith(original)
+    assert load_market_snapshots(path).height == 2
