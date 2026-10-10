@@ -22,6 +22,12 @@ def timestamp(value):
     return dt.astimezone(UTC)
 
 
+def publication_is_pregame(captured_at, committed_at, kickoff):
+    """Git commit time has one-second precision; capture retains full precision."""
+    capture, commit, start = map(timestamp, (captured_at, committed_at, kickoff))
+    return capture < start and capture.replace(microsecond=0) <= commit < start
+
+
 def finite(value):
     n = float(value)
     if not math.isfinite(n):

@@ -19,7 +19,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
 
-from scripts.recommendation_ledger import canonical, timestamp
+from scripts.recommendation_ledger import canonical, publication_is_pregame, timestamp
 
 ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/football/{}/scoreboard?dates={}&limit=500"
 ALIASES = {"JAC": "JAX", "LA": "LAR", "WSH": "WAS"}
@@ -30,8 +30,10 @@ def team_matches(label, team, sport):
         left = str(label).upper()
         right = str(team.get("abbreviation", "")).upper()
         return ALIASES.get(left, left) == ALIASES.get(right, right)
+
     def normalize(x):
         return re.sub(r"[^a-z0-9]", "", str(x).casefold())
+
     return bool(label) and normalize(label) in {
         normalize(team.get(k, "")) for k in ("location", "displayName", "shortDisplayName")
     }
@@ -164,7 +166,7 @@ def main():
             errors[receipt["bet_id"]] = "Recommendation publication commit unavailable"
             continue
         commit_sha, committed_at = publication[0].split(" ", 1)
-        if not timestamp(receipt["recommended_at"]) <= timestamp(committed_at) < kickoff:
+        if not publication_is_pregame(receipt["recommended_at"], committed_at, row["kickoff"]):
             errors[receipt["bet_id"]] = "Recommendation not committed before kickoff"
             continue
         key = row["sport"], kickoff.astimezone(ZoneInfo("America/New_York")).strftime("%Y%m%d")

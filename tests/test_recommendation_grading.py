@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 import pytest
 
 from scripts.grade_recommendations import final_result, grade
-from scripts.recommendation_ledger import archive_decision
+from scripts.recommendation_ledger import archive_decision, publication_is_pregame
 
 
 def receipt(tmp_path, market="spread", side="home", line=-3.5):
@@ -75,3 +75,18 @@ def test_final_score_requires_identity_time_and_completed_status(tmp_path):
     assert final_result(row, {"events": [event, event]}) is None
     event["status"]["type"]["completed"] = False
     assert final_result(row, {"events": [event]}) is None
+
+
+@pytest.mark.parametrize(
+    "capture,commit,kickoff,valid",
+    [
+        ("2026-10-10T17:53:40.797Z", "2026-10-10T17:53:40Z", "2026-10-10T18:00:00Z", True),
+        ("2026-10-10T17:53:40.797Z", "2026-10-10T17:53:39Z", "2026-10-10T18:00:00Z", False),
+        ("2026-10-10T17:53:40.797Z", "2026-10-10T18:00:00Z", "2026-10-10T18:00:00Z", False),
+        ("2026-10-10T18:00:00.001Z", "2026-10-10T18:00:00Z", "2026-10-10T18:00:00Z", False),
+    ],
+)
+def test_publication_respects_git_precision_without_relaxing_kickoff(
+    capture, commit, kickoff, valid
+):
+    assert publication_is_pregame(capture, commit, kickoff) is valid

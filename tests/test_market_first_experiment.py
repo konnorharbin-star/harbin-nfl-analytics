@@ -202,3 +202,23 @@ def test_collection_stops_at_declared_evaluation_horizon(tmp_path, monkeypatch):
     result = capture("cfb", tmp_path / "history", NOW)
     assert result["outside_frozen_evaluation_window"] == 1
     assert result.get("new_frozen", 0) == 0
+
+
+def test_same_second_publication_can_grade_a_valid_forecast(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    publication(tmp_path, monkeypatch)
+    root = tmp_path / "history"
+    captured = NOW.replace(microsecond=797850)
+    capture("cfb", root, captured)
+    monkeypatch.setattr(
+        "scripts.market_first_experiment.subprocess.run",
+        lambda *a, **k: SimpleNamespace(stdout="sha " + NOW.isoformat()),
+    )
+    monkeypatch.setattr("scripts.market_first_experiment.fetch", lambda *a: ({}, "source"))
+    monkeypatch.setattr(
+        "scripts.market_first_experiment.final_result",
+        lambda *a: {"home_score": 20, "away_score": 10, "event_id": "x"},
+    )
+    assert settle(root, NOW + timedelta(days=1)) == {}
+    assert len(list((root / "grades").glob("*.json"))) == 1
