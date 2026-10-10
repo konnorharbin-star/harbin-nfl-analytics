@@ -448,3 +448,35 @@ def test_release_gate_requires_broad_forward_clv_coverage(tmp_path) -> None:
     assert promoted["live_evidence_ready"] is True
     assert promoted["release_state"] == "PRODUCTION"
     assert promoted["production_eligible"] is True
+
+
+def test_release_gate_fails_closed_without_valid_data_quality_report(tmp_path) -> None:
+    meta = _meta(datetime.now(UTC))
+    for invalid in (
+        {},
+        {"status": "UNKNOWN"},
+        {"status": "FAIL"},
+        {"status": "OK", "errors": ["bad record"]},
+        {"status": "WARN", "errors": 2},
+    ):
+        gate = build_release_gate(
+            meta,
+            {"engineering_readiness_score": 95},
+            invalid,
+            evidence_path=tmp_path / "missing-evidence.json",
+            live_path=tmp_path / "missing-live.json",
+        )
+        checks = {item["name"]: item for item in gate["checks"]}
+        assert checks["data_contracts"]["passed"] is False
+        assert gate["engineering_ready"] is False
+        assert gate["release_state"] == "RESEARCH"
+        assert gate["production_eligible"] is False
+
+    gate = build_release_gate(
+        meta,
+        {"engineering_readiness_score": 95},
+        {"status": "WARN", "errors": []},
+        evidence_path=tmp_path / "missing-evidence.json",
+        live_path=tmp_path / "missing-live.json",
+    )
+    assert next(c for c in gate["checks"] if c["name"] == "data_contracts")["passed"] is True
