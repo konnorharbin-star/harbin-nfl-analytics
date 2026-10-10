@@ -1,0 +1,1107 @@
+{
+  "betting_authorized": false,
+  "error": null,
+  "game_evidence": [
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641736",
+        "641678",
+        "641677",
+        "641605",
+        "641592",
+        "-2032774",
+        "641328"
+      ],
+      "fresh_source_record_count": 7,
+      "game_id": "2026_05_DET_ARI",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T20:25:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 7,
+        "STALE_ITEM_DATE": 18
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "ARI"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641718",
+        "641716",
+        "641670",
+        "641668",
+        "-2033873",
+        "-2031379"
+      ],
+      "fresh_source_record_count": 6,
+      "game_id": "2026_05_DET_ARI",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T20:25:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 6,
+        "STALE_ITEM_DATE": 19
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "DET"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641634",
+        "641632",
+        "641589",
+        "641564",
+        "-2033428",
+        "-2033429",
+        "-2033424",
+        "-2033425",
+        "641392",
+        "641310"
+      ],
+      "fresh_source_record_count": 10,
+      "game_id": "2026_05_HOU_TEN",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 10,
+        "STALE_ITEM_DATE": 15
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "TEN"
+    },
+    {
+      "fresh_qb_status_records": [
+        {
+          "group_team_id": "34",
+          "player_id": "4695400",
+          "player_name": "Mark Gronowski",
+          "position": "QB",
+          "source": {
+            "description": "basic/manual",
+            "id": "1",
+            "state": "basic"
+          },
+          "source_item_date": "2026-10-07T22:14Z",
+          "source_item_id": "641249",
+          "source_status": "Active",
+          "team": {
+            "abbreviation": "HOU",
+            "displayName": "Houston Texans",
+            "id": "34",
+            "location": null,
+            "shortDisplayName": null
+          }
+        }
+      ],
+      "fresh_source_item_ids": [
+        "641751",
+        "641639",
+        "641636",
+        "641635",
+        "641593",
+        "-2033510",
+        "641480",
+        "641473",
+        "-2032588",
+        "-2032590",
+        "-2032578",
+        "-2032579",
+        "-2032576",
+        "-2032566",
+        "641342",
+        "641340",
+        "641323",
+        "641249"
+      ],
+      "fresh_source_record_count": 18,
+      "game_id": "2026_05_HOU_TEN",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 18,
+        "STALE_ITEM_DATE": 7
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "HOU"
+    },
+    {
+      "fresh_qb_status_records": [
+        {
+          "group_team_id": "28",
+          "player_id": "2576980",
+          "player_name": "Marcus Mariota",
+          "position": "QB",
+          "source": {
+            "description": "basic/manual",
+            "id": "1",
+            "state": "basic"
+          },
+          "source_item_date": "2026-10-09T21:35Z",
+          "source_item_id": "641598",
+          "source_status": "Out",
+          "team": {
+            "abbreviation": "WSH",
+            "displayName": "Washington Commanders",
+            "id": "28",
+            "location": null,
+            "shortDisplayName": null
+          }
+        },
+        {
+          "group_team_id": "28",
+          "player_id": "4426348",
+          "player_name": "Jayden Daniels",
+          "position": "QB",
+          "source": {
+            "description": "basic/manual",
+            "id": "1",
+            "state": "basic"
+          },
+          "source_item_date": "2026-10-09T16:54Z",
+          "source_item_id": "641523",
+          "source_status": "Active",
+          "team": {
+            "abbreviation": "WSH",
+            "displayName": "Washington Commanders",
+            "id": "28",
+            "location": null,
+            "shortDisplayName": null
+          }
+        }
+      ],
+      "fresh_source_item_ids": [
+        "641724",
+        "641723",
+        "641722",
+        "641720",
+        "641680",
+        "641679",
+        "641676",
+        "641674",
+        "641643",
+        "-2033908",
+        "641598",
+        "641597",
+        "641596",
+        "641583",
+        "641523",
+        "641515",
+        "641450",
+        "641391",
+        "641292",
+        "641245"
+      ],
+      "fresh_source_record_count": 20,
+      "game_id": "2026_05_NYG_WAS",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 20,
+        "STALE_ITEM_DATE": 5
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "WAS"
+    },
+    {
+      "fresh_qb_status_records": [
+        {
+          "group_team_id": "19",
+          "player_id": "4243322",
+          "player_name": "Jake Haener",
+          "position": "QB",
+          "source": {
+            "description": "basic/manual",
+            "id": "1",
+            "state": "basic"
+          },
+          "source_item_date": "2026-10-07T21:53Z",
+          "source_item_id": "641240",
+          "source_status": "Active",
+          "team": {
+            "abbreviation": "NYG",
+            "displayName": "New York Giants",
+            "id": "19",
+            "location": null,
+            "shortDisplayName": null
+          }
+        }
+      ],
+      "fresh_source_item_ids": [
+        "641719",
+        "641717",
+        "641672",
+        "-2033897",
+        "641581",
+        "641576",
+        "641517",
+        "641284",
+        "641240"
+      ],
+      "fresh_source_record_count": 9,
+      "game_id": "2026_05_NYG_WAS",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 9,
+        "STALE_ITEM_DATE": 16
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "NYG"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641725",
+        "641682",
+        "641681",
+        "-2034008",
+        "641602",
+        "-2032743",
+        "-2032745",
+        "641303",
+        "641264"
+      ],
+      "fresh_source_record_count": 9,
+      "game_id": "2026_05_SF_SEA",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T20:25:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 9,
+        "STALE_ITEM_DATE": 16
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "SEA"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641726",
+        "641689",
+        "641687",
+        "641684",
+        "641590",
+        "641420"
+      ],
+      "fresh_source_record_count": 6,
+      "game_id": "2026_05_SF_SEA",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T20:25:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 6,
+        "STALE_ITEM_DATE": 19
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "SF"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641701",
+        "641700",
+        "641633",
+        "641631",
+        "-2032186",
+        "-2032183",
+        "-2032170",
+        "641336",
+        "641334"
+      ],
+      "fresh_source_record_count": 9,
+      "game_id": "2026_05_BAL_ATL",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-12T00:20:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 9,
+        "STALE_ITEM_DATE": 16
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "ATL"
+    },
+    {
+      "fresh_qb_status_records": [
+        {
+          "group_team_id": "33",
+          "player_id": "4035671",
+          "player_name": "Tyler Huntley",
+          "position": "QB",
+          "source": {
+            "description": "basic/manual",
+            "id": "1",
+            "state": "basic"
+          },
+          "source_item_date": "2026-10-09T17:40Z",
+          "source_item_id": "641533",
+          "source_status": "Active",
+          "team": {
+            "abbreviation": "BAL",
+            "displayName": "Baltimore Ravens",
+            "id": "33",
+            "location": null,
+            "shortDisplayName": null
+          }
+        },
+        {
+          "group_team_id": "33",
+          "player_id": "3916387",
+          "player_name": "Lamar Jackson",
+          "position": "QB",
+          "source": {
+            "description": "basic/manual",
+            "id": "1",
+            "state": "basic"
+          },
+          "source_item_date": "2026-10-09T17:34Z",
+          "source_item_id": "641531",
+          "source_status": "Out",
+          "team": {
+            "abbreviation": "BAL",
+            "displayName": "Baltimore Ravens",
+            "id": "33",
+            "location": null,
+            "shortDisplayName": null
+          }
+        }
+      ],
+      "fresh_source_item_ids": [
+        "641705",
+        "641646",
+        "641645",
+        "641577",
+        "-2033560",
+        "641535",
+        "641533",
+        "641531",
+        "641436",
+        "641373",
+        "-2032259",
+        "-2032236",
+        "641281",
+        "641250"
+      ],
+      "fresh_source_record_count": 14,
+      "game_id": "2026_05_BAL_ATL",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-12T00:20:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 14,
+        "STALE_ITEM_DATE": 11
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "BAL"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641731",
+        "641721",
+        "641647",
+        "641594",
+        "641586",
+        "641584",
+        "-2033635",
+        "-2033595",
+        "-2033597",
+        "641444",
+        "641283"
+      ],
+      "fresh_source_record_count": 11,
+      "game_id": "2026_05_CIN_MIA",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 11,
+        "STALE_ITEM_DATE": 14
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "MIA"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641649",
+        "641648",
+        "641595",
+        "-2033612",
+        "-2033613",
+        "-2033614",
+        "641573",
+        "641519",
+        "-2032387",
+        "-2032388"
+      ],
+      "fresh_source_record_count": 10,
+      "game_id": "2026_05_CIN_MIA",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 10,
+        "STALE_ITEM_DATE": 15
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "CIN"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641714",
+        "641713",
+        "641711",
+        "641710",
+        "641665",
+        "641664",
+        "641603",
+        "641565",
+        "-2033457",
+        "641459",
+        "641293"
+      ],
+      "fresh_source_record_count": 11,
+      "game_id": "2026_05_CHI_GB",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 11,
+        "STALE_ITEM_DATE": 14
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "GB"
+    },
+    {
+      "fresh_qb_status_records": [
+        {
+          "group_team_id": "3",
+          "player_id": "4431611",
+          "player_name": "Caleb Williams",
+          "position": "QB",
+          "source": {
+            "description": "basic/manual",
+            "id": "1",
+            "state": "basic"
+          },
+          "source_item_date": "2026-10-09T19:03Z",
+          "source_item_id": "641547",
+          "source_status": "Questionable",
+          "team": {
+            "abbreviation": "CHI",
+            "displayName": "Chicago Bears",
+            "id": "3",
+            "location": null,
+            "shortDisplayName": null
+          }
+        }
+      ],
+      "fresh_source_item_ids": [
+        "-2034486",
+        "-2034469",
+        "641698",
+        "641628",
+        "-2033357",
+        "-2033358",
+        "-2033345",
+        "641547",
+        "641546",
+        "641526",
+        "641277"
+      ],
+      "fresh_source_record_count": 11,
+      "game_id": "2026_05_CHI_GB",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 11,
+        "STALE_ITEM_DATE": 14
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "CHI"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641683",
+        "641614",
+        "641470",
+        "641464",
+        "-2032841",
+        "641460",
+        "-2032830",
+        "641457",
+        "641338"
+      ],
+      "fresh_source_record_count": 9,
+      "game_id": "2026_05_BUF_LA",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-13T00:15:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 9,
+        "STALE_ITEM_DATE": 16
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "LA"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641752",
+        "641750",
+        "-2034422",
+        "641749",
+        "641748",
+        "641466",
+        "641463",
+        "641424",
+        "641337"
+      ],
+      "fresh_source_record_count": 9,
+      "game_id": "2026_05_BUF_LA",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-13T00:15:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 9,
+        "STALE_ITEM_DATE": 16
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "BUF"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641697",
+        "641695",
+        "641694",
+        "641630",
+        "641629",
+        "641626",
+        "641622",
+        "641620",
+        "641618",
+        "641617",
+        "641612",
+        "641544",
+        "641529",
+        "641296",
+        "-2031417"
+      ],
+      "fresh_source_record_count": 15,
+      "game_id": "2026_05_LV_NE",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 15,
+        "STALE_ITEM_DATE": 10
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "NE"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641699",
+        "641621",
+        "641548",
+        "641545",
+        "-2033322",
+        "641536",
+        "641469",
+        "641401",
+        "-2032509"
+      ],
+      "fresh_source_record_count": 9,
+      "game_id": "2026_05_LV_NE",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 9,
+        "STALE_ITEM_DATE": 16
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "LV"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641753",
+        "-2034370",
+        "641627",
+        "641625",
+        "641623",
+        "641563",
+        "641425"
+      ],
+      "fresh_source_record_count": 7,
+      "game_id": "2026_05_IND_PIT",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 7,
+        "STALE_ITEM_DATE": 18
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "PIT"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641747",
+        "641746",
+        "641737",
+        "641702",
+        "641686",
+        "641640",
+        "641637",
+        "641566",
+        "-2033443",
+        "641431"
+      ],
+      "fresh_source_record_count": 10,
+      "game_id": "2026_05_IND_PIT",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 10,
+        "STALE_ITEM_DATE": 15
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "IND"
+    },
+    {
+      "fresh_qb_status_records": [
+        {
+          "group_team_id": "18",
+          "player_id": "4360689",
+          "player_name": "Tyler Shough",
+          "position": "QB",
+          "source": {
+            "description": "basic/manual",
+            "id": "1",
+            "state": "basic"
+          },
+          "source_item_date": "2026-10-09T18:46Z",
+          "source_item_id": "641543",
+          "source_status": "Active",
+          "team": {
+            "abbreviation": "NO",
+            "displayName": "New Orleans Saints",
+            "id": "18",
+            "location": null,
+            "shortDisplayName": null
+          }
+        }
+      ],
+      "fresh_source_item_ids": [
+        "641741",
+        "641734",
+        "-2034266",
+        "641696",
+        "641693",
+        "641611",
+        "641610",
+        "641609",
+        "641608",
+        "641543",
+        "641541",
+        "641539",
+        "-2032611",
+        "641332",
+        "641329"
+      ],
+      "fresh_source_record_count": 15,
+      "game_id": "2026_05_MIN_NO",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 15,
+        "STALE_ITEM_DATE": 10
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "NO"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641692",
+        "641691",
+        "641690",
+        "641606",
+        "641540",
+        "641527",
+        "641484",
+        "641307"
+      ],
+      "fresh_source_record_count": 8,
+      "game_id": "2026_05_MIN_NO",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 8,
+        "STALE_ITEM_DATE": 17
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "MIN"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641642",
+        "641641",
+        "-2033533",
+        "-2033534",
+        "-2033535",
+        "-2033536",
+        "-2033537",
+        "-2033539",
+        "641324"
+      ],
+      "fresh_source_record_count": 9,
+      "game_id": "2026_05_PHI_JAX",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T13:30:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 9,
+        "STALE_ITEM_DATE": 16
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "JAX"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641715",
+        "641712",
+        "641675",
+        "641673",
+        "641671",
+        "641669",
+        "641667",
+        "641662",
+        "641624",
+        "641588",
+        "641575",
+        "641514",
+        "641513",
+        "641465",
+        "641313"
+      ],
+      "fresh_source_record_count": 15,
+      "game_id": "2026_05_PHI_JAX",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T13:30:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 15,
+        "STALE_ITEM_DATE": 10
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "PHI"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641688",
+        "641666",
+        "641663",
+        "641660",
+        "641615",
+        "641613",
+        "641607",
+        "641604",
+        "641599",
+        "641506",
+        "641505",
+        "641346",
+        "641345",
+        "641344",
+        "641308",
+        "641236"
+      ],
+      "fresh_source_record_count": 16,
+      "game_id": "2026_05_CLE_NYJ",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 16,
+        "STALE_ITEM_DATE": 9
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "NYJ"
+    },
+    {
+      "fresh_qb_status_records": [
+        {
+          "group_team_id": "5",
+          "player_id": "4427238",
+          "player_name": "Dillon Gabriel",
+          "position": "QB",
+          "source": {
+            "description": "basic/manual",
+            "id": "1",
+            "state": "basic"
+          },
+          "source_item_date": "2026-10-10T00:37Z",
+          "source_item_id": "641659",
+          "source_status": "Injured Reserve",
+          "team": {
+            "abbreviation": "CLE",
+            "displayName": "Cleveland Browns",
+            "id": "5",
+            "location": null,
+            "shortDisplayName": null
+          }
+        }
+      ],
+      "fresh_source_item_ids": [
+        "641730",
+        "641703",
+        "641659",
+        "641657",
+        "641655",
+        "641652",
+        "641650",
+        "-2033705",
+        "-2033706",
+        "-2032310",
+        "641326"
+      ],
+      "fresh_source_record_count": 11,
+      "game_id": "2026_05_CLE_NYJ",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 11,
+        "STALE_ITEM_DATE": 14
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "CLE"
+    },
+    {
+      "fresh_qb_status_records": [
+        {
+          "group_team_id": "24",
+          "player_id": "4383351",
+          "player_name": "Trey Lance",
+          "position": "QB",
+          "source": {
+            "description": "basic/manual",
+            "id": "1",
+            "state": "basic"
+          },
+          "source_item_date": "2026-10-10T00:34Z",
+          "source_item_id": "641656",
+          "source_status": "Doubtful",
+          "team": {
+            "abbreviation": "LAC",
+            "displayName": "Los Angeles Chargers",
+            "id": "24",
+            "location": null,
+            "shortDisplayName": null
+          }
+        }
+      ],
+      "fresh_source_item_ids": [
+        "641740",
+        "641727",
+        "641709",
+        "641707",
+        "641706",
+        "641661",
+        "641658",
+        "641656",
+        "641654",
+        "641653",
+        "641601",
+        "-2033793",
+        "-2033788",
+        "-2033775",
+        "-2033776",
+        "641582",
+        "641579"
+      ],
+      "fresh_source_record_count": 17,
+      "game_id": "2026_05_DEN_LAC",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T20:05:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 17,
+        "STALE_ITEM_DATE": 8
+      },
+      "score_adjustment_enabled": false,
+      "side": "home",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "LAC"
+    },
+    {
+      "fresh_qb_status_records": [],
+      "fresh_source_item_ids": [
+        "641739",
+        "641738",
+        "641651",
+        "641600",
+        "641485",
+        "-2032753"
+      ],
+      "fresh_source_record_count": 6,
+      "game_id": "2026_05_DEN_LAC",
+      "healthy_roster_inferred": false,
+      "kickoff": "2026-10-11T20:05:00+00:00",
+      "official_team_report_verified": false,
+      "record_states": {
+        "FRESH_DATED_SECONDARY_STATUS": 6,
+        "STALE_ITEM_DATE": 19
+      },
+      "score_adjustment_enabled": false,
+      "side": "away",
+      "source_record_count": 25,
+      "starter_verified": false,
+      "status": "DATED_SECONDARY_EVIDENCE",
+      "team": "DEN"
+    }
+  ],
+  "model_score_change_enabled": false,
+  "payload_sha256": "e615c45f844e829d78d29828cfb626c23d5f74a358c190ea66d6659638b16b8b",
+  "record_states": {
+    "FRESH_DATED_SECONDARY_STATUS": 307,
+    "STALE_ITEM_DATE": 393
+  },
+  "schema": 1,
+  "source": {
+    "observed_at": "2026-10-10T19:21:06.355258+00:00",
+    "raw_response_sha256": "d6a25cd8f0d9839e02c5a210e74d2e4cfdd21d8e12ac00d2795bef2cf87cbcdc",
+    "request_started_at": "2026-10-10T19:21:05.692894+00:00",
+    "response_generated_at": "2026-10-10T19:20:55Z",
+    "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries"
+  },
+  "source_season": 2026,
+  "sport": "nfl"
+}
