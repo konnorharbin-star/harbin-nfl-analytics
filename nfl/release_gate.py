@@ -135,6 +135,18 @@ def build_release_gate(
     verified_ci = promotion.get("verified_roi_ci_95")
     if not isinstance(verified_ci, list) or len(verified_ci) != 2:
         verified_ci = [None, None]
+    # Provider-labeled opening prices are not proof of a timestamped, executable
+    # sportsbook quote. Missing provenance MUST fail closed, even if archived
+    # prices have been marked "verified" by an upstream source.
+    verified_bets = int(promotion.get("verified_bets", 0) or 0)
+    timestamped_bets = int(
+        promotion.get("verified_timestamped_provider_bets", 0) or 0
+    )
+    historical_entry_integrity_ready = (
+        bool(promotion.get("entry_quote_verified", False))
+        and verified_bets > 0
+        and timestamped_bets >= verified_bets
+    )
     historical_clv_coverage = float(
         promotion.get("verified_clv_coverage", 0.0) or 0.0
     )
@@ -143,8 +155,8 @@ def build_release_gate(
     )
     historical_ready = (
         str(evidence.get("status") or "").upper() == "ROBUST"
-        and bool(promotion.get("entry_quote_verified", False))
-        and int(promotion.get("verified_bets", 0) or 0) >= 1000
+        and historical_entry_integrity_ready
+        and verified_bets >= 1000
         and verified_ci[0] is not None
         and float(verified_ci[0]) > 0
         and promotion.get("avg_verified_clv_proxy") is not None
@@ -297,14 +309,15 @@ def build_release_gate(
         ),
         _check(
             "historical_entry_integrity",
-            bool(promotion.get("entry_quote_verified", False)),
+            historical_entry_integrity_ready,
             {
-                "verified_bets": promotion.get("verified_bets", 0),
+                "verified_bets": verified_bets,
+                "timestamp_verified_bets": timestamped_bets,
                 "excluded_unverified_bets": promotion.get("excluded_unverified_bets", 0),
             },
             (
-                "promotion sample uses explicit opening-entry observations, not "
-                "archive-final fallbacks"
+                "every historical promotion entry has independent timestamp "
+                "provenance; provider-labeled opening prices alone do not qualify"
             ),
         ),
         _check(
@@ -452,10 +465,11 @@ def build_release_gate(
         next_steps.append(
             "Accumulate or supplement verified multi-book current pricing coverage."
         )
-    if not bool(promotion.get("entry_quote_verified", False)):
+    if not historical_entry_integrity_ready:
         next_steps.append(
-            "Accumulate explicit forward/opening entry snapshots; archive-final "
-            "fallbacks cannot promote the model."
+            "Capture independently timestamped sportsbook entry quotes for the "
+            "entire historical promotion sample; provider-labeled opening prices "
+            "and archive-final fallbacks cannot establish execution provenance."
         )
     if not historical_ready:
         next_steps.append(
