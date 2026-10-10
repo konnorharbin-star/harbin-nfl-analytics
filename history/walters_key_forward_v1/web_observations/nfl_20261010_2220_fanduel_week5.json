@@ -1,0 +1,175 @@
+{
+  "spec": "walters_web_research_observation_v1",
+  "observation_id": "nfl_20261010_2220_fanduel_week5",
+  "sport": "nfl",
+  "observed_at": "2026-10-10T22:20:02+00:00",
+  "source_kind": "public_webpage_read",
+  "source_url": "https://fanduel.com/research/nfl-week-5-schedule-odds-for-every-game",
+  "publisher": "FanDuel Research",
+  "book": "FanDuel",
+  "publisher_is_official_book": true,
+  "verified_executable_sportsbook_quote": false,
+  "page_price_updated_at": null,
+  "methodological_limitations": [
+    "Page states odds can change after article publication",
+    "The displayed UTC date under each matchup refers to scheduled game time; it is NOT a verified sportsbook quote update timestamp",
+    "Web-observed prices may be stale or unavailable in user's jurisdiction/account; not betting recommendations",
+    "These records were transcribed from a public web result; there is no separately authenticated FanDuel betslip"
+  ],
+  "quotes": [
+    {
+      "game_id": "2026_05_BAL_ATL",
+      "home_team": "ATL",
+      "away_team": "BAL",
+      "kickoff": "2026-10-12T00:20:00+00:00",
+      "home_spread": -3.5,
+      "home_american_odds": 100,
+      "away_spread": 3.5,
+      "away_american_odds": -122,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    },
+    {
+      "game_id": "2026_05_BUF_LA",
+      "home_team": "LA",
+      "away_team": "BUF",
+      "kickoff": "2026-10-13T00:15:00+00:00",
+      "home_spread": -3.5,
+      "home_american_odds": -104,
+      "away_spread": 3.5,
+      "away_american_odds": -118,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    },
+    {
+      "game_id": "2026_05_CHI_GB",
+      "home_team": "GB",
+      "away_team": "CHI",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "home_spread": 1.5,
+      "home_american_odds": -110,
+      "away_spread": -1.5,
+      "away_american_odds": -110,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    },
+    {
+      "game_id": "2026_05_CIN_MIA",
+      "home_team": "MIA",
+      "away_team": "CIN",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "home_spread": 7,
+      "home_american_odds": -115,
+      "away_spread": -7,
+      "away_american_odds": -105,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    },
+    {
+      "game_id": "2026_05_CLE_NYJ",
+      "home_team": "NYJ",
+      "away_team": "CLE",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "home_spread": -1.5,
+      "home_american_odds": -120,
+      "away_spread": 1.5,
+      "away_american_odds": -102,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    },
+    {
+      "game_id": "2026_05_DEN_LAC",
+      "home_team": "LAC",
+      "away_team": "DEN",
+      "kickoff": "2026-10-11T20:05:00+00:00",
+      "home_spread": 3.5,
+      "home_american_odds": -112,
+      "away_spread": -3.5,
+      "away_american_odds": -108,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    },
+    {
+      "game_id": "2026_05_DET_ARI",
+      "home_team": "ARI",
+      "away_team": "DET",
+      "kickoff": "2026-10-11T20:25:00+00:00",
+      "home_spread": 5.5,
+      "home_american_odds": -115,
+      "away_spread": -5.5,
+      "away_american_odds": -105,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    },
+    {
+      "game_id": "2026_05_HOU_TEN",
+      "home_team": "TEN",
+      "away_team": "HOU",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "home_spread": 7,
+      "home_american_odds": -105,
+      "away_spread": -7,
+      "away_american_odds": -115,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    },
+    {
+      "game_id": "2026_05_IND_PIT",
+      "home_team": "PIT",
+      "away_team": "IND",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "home_spread": -2.5,
+      "home_american_odds": -115,
+      "away_spread": 2.5,
+      "away_american_odds": -105,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    },
+    {
+      "game_id": "2026_05_LV_NE",
+      "home_team": "NE",
+      "away_team": "LV",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "home_spread": -3.5,
+      "home_american_odds": -115,
+      "away_spread": 3.5,
+      "away_american_odds": -105,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    },
+    {
+      "game_id": "2026_05_MIN_NO",
+      "home_team": "NO",
+      "away_team": "MIN",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "home_spread": 1.5,
+      "home_american_odds": -102,
+      "away_spread": -1.5,
+      "away_american_odds": -120,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    },
+    {
+      "game_id": "2026_05_NYG_WAS",
+      "home_team": "WAS",
+      "away_team": "NYG",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "home_spread": -3.5,
+      "home_american_odds": -112,
+      "away_spread": 3.5,
+      "away_american_odds": -108,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    },
+    {
+      "game_id": "2026_05_PHI_JAX",
+      "home_team": "JAX",
+      "away_team": "PHI",
+      "kickoff": "2026-10-11T13:30:00+00:00",
+      "home_spread": -7.5,
+      "home_american_odds": -110,
+      "away_spread": 7.5,
+      "away_american_odds": -110,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    },
+    {
+      "game_id": "2026_05_SF_SEA",
+      "home_team": "SEA",
+      "away_team": "SF",
+      "kickoff": "2026-10-11T20:25:00+00:00",
+      "home_spread": -3,
+      "home_american_odds": -118,
+      "away_spread": 3,
+      "away_american_odds": -104,
+      "quote_context": "Main full-game spread and corresponding two-sided prices visible under this named NFL Week 5 game in FanDuel Research public odds table."
+    }
+  ]
+}
