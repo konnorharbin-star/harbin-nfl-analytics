@@ -203,6 +203,7 @@ def order(row):
     cushion = row["price_cushion_pp"]
     return (
         decisions[row["decision"]],
+        -(row["conservative_ev"] if row["conservative_ev"] is not None else -9999.0),
         -cushion if cushion is not None else 9999.0,
         -(row["line_cushion_points"] or 0),
         str(row["game_id"]), str(row["market"]),
@@ -233,7 +234,7 @@ def build(rows, *, sport, gate, as_of):
         "raw_market_candidates": len(examined), "distinct_games": len(ranked),
         "decision_counts": counts, "approved_bets": counts.get("BET_READY", 0),
         "release_blockers": gate.get("blockers", [])[:8],
-        "method": "ONE_PER_GAME_CHRONOLOGICAL_CONSERVATIVE_RESEARCH_PRIORITY",
+        "method": "ONE_PER_GAME_CONSERVATIVE_EV_PRIORITY",
         "no_model_or_stake_change": True,
         "disclaimer": (
             "A research edge is not a proved profitable bet. "

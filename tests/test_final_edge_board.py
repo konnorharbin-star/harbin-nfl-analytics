@@ -104,3 +104,10 @@ def test_game_started_and_unsupported_raw_edge_never_recommended():
 def test_release_authority_is_required():
     with pytest.raises(ValueError, match="release authority"):
         build([nfl()], sport="nfl", gate={}, as_of=NOW)
+
+
+def test_conservative_ev_controls_priority_not_raw_ev_or_line_cushion():
+    rows = [nfl(game_id="low", conservative_ev=".01", quant_ev="9.0"),
+            nfl(game_id="high", conservative_ev=".06", quant_ev=".1")]
+    out, _ = build(rows, sport="nfl", gate={"production_eligible": True}, as_of=NOW)
+    assert [r["game_id"] for r in out] == ["high", "low"]

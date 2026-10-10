@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import csv
+import fcntl
+import hashlib
 import json
+import os
 from datetime import UTC, datetime
 from math import isfinite
 from pathlib import Path
-
-import polars as pl
 
 SIGNATURE_FIELDS = (
     "quant_market",
@@ -152,64 +153,92 @@ def _signature(row: dict[str, object]) -> str:
 
 
 def append_portfolio_decisions(
-    decisions: pl.DataFrame,
-    *,
-    path: str | Path = "history/portfolio_decisions_v1.csv",
+    decisions,
+    path="history/portfolio_decisions_v1.csv",
     decision_at: str | None = None,
-) -> dict[str, object]:
-    """Persist cap-constrained PAPER/SHADOW/BET decisions for independent grading."""
+) -> dict:
+    """Append research decisions without rewriting any historical bytes.
 
+    This is the legacy research ledger, not a receipt proving a user recommendation.
+    Lock concurrent writers and deduplicate all prior signatures per game/market.
+    Fail closed on unreadable or incompatible history rather than replacing it.
+    """
     source = Path(path)
     source.parent.mkdir(parents=True, exist_ok=True)
-    if decisions.is_empty():
-        return {"path": str(source), "eligible_rows": 0, "appended_rows": 0}
-
-    rows = []
-    for row in decisions.to_dicts():
-        units = float(row.get("portfolio_candidate_units") or 0.0)
-        action = str(row.get("portfolio_action") or "PASS").upper()
-        if units > 0 and action in {"PAPER", "SHADOW", "BET"}:
-            rows.append(row)
+    records = decisions.to_dicts()
+    rows = [
+        r
+        for r in records
+        if float(r.get("portfolio_candidate_units") or 0) > 0
+        and str(r.get("portfolio_action") or "PASS").upper() in {"PAPER", "SHADOW", "BET"}
+    ]
     if not rows:
         return {"path": str(source), "eligible_rows": 0, "appended_rows": 0}
-
-    old: list[dict[str, object]] = []
-    if source.exists() and source.stat().st_size:
-        try:
-            with source.open(newline="") as handle:
-                old = list(csv.DictReader(handle))
-        except OSError:
-            old = []
-
-    latest: dict[tuple[str, str], str] = {}
-    for row in old:
-        key = (str(row.get("game_id") or ""), str(row.get("quant_market") or ""))
-        latest[key] = str(row.get("decision_signature") or "")
-
     stamp = decision_at or datetime.now(UTC).isoformat()
-    additions: list[dict[str, object]] = []
-    for row in rows:
-        signature = _signature(row)
-        key = (str(row.get("game_id") or ""), str(row.get("quant_market") or ""))
-        if latest.get(key) == signature:
-            continue
-        record: dict[str, object] = {"decision_at": stamp}
-        for field in LEDGER_FIELDS:
-            record[field] = row.get(field)
-        record["decision_signature"] = signature
-        additions.append(record)
-        latest[key] = signature
-
-    fieldnames = ["decision_at", *LEDGER_FIELDS, "decision_signature"]
-    combined = [*old, *additions]
-    if additions or not source.exists():
-        with source.open("w", newline="") as handle:
-            writer = csv.DictWriter(handle, fieldnames=fieldnames, extrasaction="ignore")
+    expected = ["decision_at", *LEDGER_FIELDS, "decision_signature"]
+    with source.open("a+", newline="") as handle:
+        fcntl.flock(handle, fcntl.LOCK_EX)
+        handle.seek(0)
+        reader = csv.DictReader(handle)
+        fields = reader.fieldnames or expected
+        if reader.fieldnames and not {
+            "decision_at",
+            "game_id",
+            "quant_market",
+            "decision_signature",
+        }.issubset(fields):
+            raise ValueError("Incompatible decision ledger schema; history preserved")
+        old = list(reader)
+        seen = {
+            (
+                str(r.get("game_id") or ""),
+                str(r.get("quant_market") or ""),
+                str(r.get("decision_signature") or ""),
+            )
+            for r in old
+        }
+        additions = []
+        for row in rows:
+            signature = _signature(row)
+            key = (str(row.get("game_id") or ""), str(row.get("quant_market") or ""), signature)
+            if not key[0] or not key[1]:
+                raise ValueError("Decision requires game and market identity")
+            if key in seen:
+                continue
+            additions.append(
+                {
+                    "decision_at": stamp,
+                    **{k: row.get(k) for k in LEDGER_FIELDS},
+                    "decision_signature": signature,
+                }
+            )
+            seen.add(key)
+        # Legacy headers stay byte-for-byte intact. Freeze the complete modern
+        # row in a sidecar so new context fields are never silently discarded.
+        if set(LEDGER_FIELDS) - set(fields):
+            events = source.with_suffix(".events")
+            events.mkdir(exist_ok=True)
+            for record in additions:
+                identity = {
+                    k: record.get(k) for k in ("game_id", "quant_market", "decision_signature")
+                }
+                event_id = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
+                event_path = events / (event_id + ".json")
+                if not event_path.exists():
+                    with event_path.open("x") as event:
+                        json.dump(record, event, sort_keys=True, default=str)
+                        event.flush()
+                        os.fsync(event.fileno())
+        handle.seek(0, 2)
+        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+        if handle.tell() == 0:
             writer.writeheader()
-            writer.writerows(combined)
+        writer.writerows(additions)
+        handle.flush()
+        os.fsync(handle.fileno())
     return {
         "path": str(source),
         "eligible_rows": len(rows),
         "appended_rows": len(additions),
-        "total_rows": len(combined),
+        "total_rows": len(old) + len(additions),
     }

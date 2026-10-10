@@ -74,21 +74,9 @@ def _profit_stats(frame: pl.DataFrame) -> dict[str, object]:
 
 
 def _promotion_sample(frame: pl.DataFrame) -> pl.DataFrame:
-    if frame.is_empty() or "entry_price_verified" not in frame.columns:
-        return frame.head(0)
-    verified = (
-        pl.col("entry_price_verified")
-        .cast(pl.Boolean, strict=False)
-        .fill_null(False)
-    )
-    if "probability_reliability_ready" in frame.columns:
-        reliable = (
-            pl.col("probability_reliability_ready")
-            .cast(pl.Boolean, strict=False)
-            .fill_null(False)
-        )
-        return frame.filter(verified & reliable)
-    return frame.filter(verified)
+    from .entry_integrity import timestamped_promotion_sample
+
+    return timestamped_promotion_sample(frame)
 
 
 def _ordered(frame: pl.DataFrame) -> pl.DataFrame:

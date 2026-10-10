@@ -799,9 +799,10 @@ def build_espn_archive_report(
         "by_market": by_market,
         "by_season": by_season,
         "meaning": (
-            "Historical promotion sample uses ESPN's explicit archived provider open "
+            "Historical research diagnostic uses ESPN's explicit archived provider open "
             "and close snapshots. These are verified archive stages, not fabricated "
-            "point-in-time timestamps. Forward evidence retains strict timestamped "
+            "point-in-time timestamps. Archive stages cannot qualify for promotion. "
+            "Forward evidence retains strict timestamped "
             "capture requirements."
         ),
     }

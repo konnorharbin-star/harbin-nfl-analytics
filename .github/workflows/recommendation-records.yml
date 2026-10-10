@@ -1,0 +1,60 @@
+name: Prospective Recommendation Records
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/recommendation_ledger.py'
+      - 'scripts/persist_decisions.py'
+      - 'scripts/grade_recommendations.py'
+      - '.github/workflows/recommendation-records.yml'
+  schedule:
+    - cron: '47 11,17,23 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: recommendation-records
+  cancel-in-progress: true
+
+jobs:
+  records:
+    if: ${{ github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' || github.event.workflow_run.head_branch == 'main') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pytest
+      - name: Validate immutable receipts and settlement
+        run: python -m pytest -q tests/test_recommendation_ledger.py tests/test_recommendation_grading.py tests/test_final_edge_board.py
+      - name: Record release-gated decisions
+        run: python -m scripts.persist_decisions --sport nfl --source outputs/actionable_betting_board.csv
+      - name: Grade frozen recommendations from independent final scores
+        run: python -m scripts.grade_recommendations
+      - name: Publish permanent receipts before exposing recommendation artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name harbin-paper-record-bot
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add history/recommendations_v1 docs/recommendation_status.json docs/recommendation_performance.json
+          if ! git diff --cached --quiet; then
+            git commit -m "paper: persist immutable decisions and verified grades"
+            bash scripts/push_generated_state.sh origin main
+          fi
+          echo "Receipt publication commit: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo "No real wagers. BET requires a verified receipt commit before kickoff." >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: committed-recommendation-records
+          path: |
+            docs/recommendation_status.json
+            docs/recommendation_performance.json
+          retention-days: 30

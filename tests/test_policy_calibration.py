@@ -22,6 +22,8 @@ def _rows(*, evaluation_profit: float = 0.9, verified: bool = True) -> pl.DataFr
                     "net_units": profit,
                     "clv_proxy": 0.02,
                     "entry_price_verified": verified,
+                    "entry_quote_verified": verified,
+                    "entry_timestamp_verified": verified,
                 }
             )
     return pl.DataFrame(rows)

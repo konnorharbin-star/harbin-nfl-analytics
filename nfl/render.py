@@ -459,6 +459,8 @@ def render_html(
         '<!doctype html><html><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         f'<title>NFL Model Week {week}</title><style>{css}</style></head><body>'
+        '<a href="operations.html" style="display:block;padding:12px;color:#9bc8ff">'
+        'NFL + CFB paper performance and release blockers</a>'
         '<div class="shell"><div class="status" style="padding:5px 0 10px">'
         '<a href="manual_review.csv" style="color:#9bbef5">View research evidence '
         '&amp; blocked-bet reasons (CSV)</a> · no automatic wagering</div>'
