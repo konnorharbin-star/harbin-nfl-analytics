@@ -1,0 +1,86 @@
+name: Public Professional Bettor Research Tracker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/public-bettor-watch.yml"
+      - "scripts/public_bettor_tracking.py"
+      - "research/public_expert_picks_2026.csv"
+      - "tests/test_public_bettor_tracking.py"
+  workflow_dispatch:
+  schedule:
+    # Re-grade frozen published picks with a free public NFL game-results source.
+    # Sunday, Monday, Tuesday at 15:05 UTC. No unverified live pick scraping.
+    - cron: "5 15 * * 0,1,2"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-bettor-watch
+  cancel-in-progress: true
+
+jobs:
+  public-tracker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install free code dependencies
+        run: python -m pip install pytest
+
+      - name: Verify exact-market and publication safeguards
+        run: python -m pytest -q tests/test_public_bettor_tracking.py
+
+      - name: Grade only settled events from public NFL schedules
+        run: |
+          mkdir -p reports
+          python -m scripts.public_bettor_tracking \
+            --picks research/public_expert_picks_2026.csv \
+            --season 2026 \
+            --output reports/public_bettor_tracking.json
+
+      - name: Publish research-only dashboard summary
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          data = json.loads(Path("reports/public_bettor_tracking.json").read_text())
+          lines = [
+            "## Public expert picks — editorial price research",
+            f"Frozen picks: {data['pick_count']}",
+            f"Status: {data['status']}",
+            "These are public editorial recommendations, NOT verified executable BetMGM bets.",
+            "Do not copy aggregate units into actual bankroll performance.",
+            "",
+            "| Analyst | W | L | Push | Pending | Player box needed |",
+            "|---|---:|---:|---:|---:|---:|",
+          ]
+          for analyst, row in sorted(data["author_summary"].items()):
+            lines.append(
+              f"| {analyst} | {row['wins']} | {row['losses']} | "
+              f"{row['pushes']} | {row['pending']} | {row['needs_player_box']} |"
+            )
+          summary = "\n".join(lines)
+          print(summary)
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf8") as stream:
+              stream.write(summary + "\n")
+          PY
+
+      - name: Freeze source and settlement evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-bettor-research-ledger
+          path: |
+            research/public_expert_picks_2026.csv
+            reports/public_bettor_tracking.json
+          retention-days: 30
