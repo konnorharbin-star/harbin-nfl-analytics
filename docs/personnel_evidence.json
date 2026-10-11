@@ -1,6 +1,6 @@
 {
   "betting_authorized": false,
-  "capture_id": "2bda4e54107d7910cf2a3831",
+  "capture_id": "03b38304c51f6a21ae5671df",
   "error": null,
   "limitations": [
     "Source response timestamp does not establish item freshness",
@@ -9,16 +9,16 @@
     "Current-only evidence is never backfilled into historical models"
   ],
   "model_score_change_enabled": false,
-  "observed_at": "2026-10-10T20:42:39.206112+00:00",
+  "observed_at": "2026-10-11T02:12:07.286861+00:00",
   "official_report_verified": false,
   "record_states": {
-    "FRESH_DATED_SECONDARY_STATUS": 316,
-    "STALE_ITEM_DATE": 384
+    "FRESH_DATED_SECONDARY_STATUS": 305,
+    "STALE_ITEM_DATE": 395
   },
-  "response_generated_at": "2026-10-10T20:42:38Z",
+  "response_generated_at": "2026-10-11T02:12:04Z",
   "source_record_date_states": {
-    "FRESH_DATED_SECONDARY_STATUS": 353,
-    "STALE_ITEM_DATE": 447
+    "FRESH_DATED_SECONDARY_STATUS": 340,
+    "STALE_ITEM_DATE": 460
   },
   "source_records": 800,
   "source_season": 2026,
@@ -26,7 +26,7 @@
   "sport": "nfl",
   "starter_verified": false,
   "status": "DATED_SECONDARY_RESEARCH",
-  "team_games_with_fresh_qb_status": 8,
+  "team_games_with_fresh_qb_status": 6,
   "team_games_with_fresh_records": 28,
   "upcoming_team_games": 28
 }
