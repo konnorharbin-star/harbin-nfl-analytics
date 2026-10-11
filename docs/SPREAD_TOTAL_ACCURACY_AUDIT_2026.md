@@ -15,9 +15,9 @@ Comparison line: nflverse archived **final** spread and total (`spread_line` = h
 | Target | Independent football forecast MAE | Archive-final market MAE | Market + training-fitted independent residual MAE | Independent RMSE | Archive-final RMSE |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Home scoring margin / spread | 10.606922 | **9.992788** | **9.992788** | 13.199584 | 12.322148 |
-| Full-game total | 10.483861 | **10.081731** | **10.081731** | 13.303445 | 12.322148 (see workflow detailed totals RMSE) |
+| Full-game total | 10.483861 | **10.081731** | **10.081731** | 13.303445 | **12.982607** |
 
-**Correction note:** Re-verify the exact totals RMSE from archived report before using any copied value in a later quantitative decision; totals RMSE is omitted as a decision input here. The archive-final comparison is more accurate on MAE for both markets.
+The archive-final comparison is more accurate on both MAE and RMSE for both markets.
 
 A *descriptive* MSE-optimal market blend was estimated on 2023–2024 only, with a fixed conservative shrink penalty and alpha constrained 0–1. Selected independent-score weights were **0.0 for both margin and total**. Therefore the blended diagnostic equals archived market, not a new independent +EV signal. The 2025 dataset had been inspected in previous project research, so this is not a pristine holdout.
 
