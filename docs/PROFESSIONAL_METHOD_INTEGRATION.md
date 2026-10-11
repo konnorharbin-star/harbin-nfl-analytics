@@ -39,3 +39,9 @@ An optional `model` object requires `source_kind: INDEPENDENT_MODEL`, `forecast_
 Set new discovery to RESEARCH_ONLY until (a) exact pre-kickoff input provenance and contract price, (b) independent forecast with calibrated P(win/push/loss), (c) frozen prospective holdout, (d) positive conservative return and uncertainty assessment, and (e) user-confirmed account-accepted quote exist. Only then can independent manual review even be considered; no auto bet.
 
 No new model coefficients have been fitted and no positive EV was declared in this upgrade. Keep previous ATS/research-only residual results unchanged.
+
+## Implementation extension — 2026-10-11 v4.5.1
+
+Added `compare_same_contract_prices(offers, selected)` and optional `offers` input to the same audit module. This ranks American prices **only** if all quotes are pre-kickoff, same event/market/period/participant/line/side, have an identical quoted UTC time and come from different book-region combinations. Every entry must contain source URL and capture time. Higher decimal odds rank as a better *quoted price*, not as a validated positive-EV opportunity. No price is asserted to be executable.
+
+Mismatched lines or as-of times fail closed; the output always includes `execution_verified: false` and `edge_validated: false`. Real-world books rarely provide exactly synchronized publicly captured quotes; until they do, PASS/no cross-book ranking is correct. This is a price-only research instrument, not a live odds scraper.
