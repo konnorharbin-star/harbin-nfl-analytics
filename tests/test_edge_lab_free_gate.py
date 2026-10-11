@@ -34,6 +34,14 @@ class TestEdgeLabFreeGate(unittest.TestCase):
         row = build_report({"status": "READY", "games": games}, "2026_05_BUF_LA")
         self.assertEqual(row["status"], "BLOCKED")
 
+    def test_expected_qb_check(self):
+        game = {"game_id": "2026_05_BAL_ATL", "away_qb_proxy_name": "L.Jackson",
+                "baseline_home_margin": 1.2, "baseline_total": 44.0}
+        report = build_report({"status": "READY", "games": [game]},
+                              "2026_05_BAL_ATL", expected_away_qb="Tyler Huntley")
+        self.assertEqual(report["status"], "BLOCKED")
+        self.assertIsNone(report["projection"])
+
     def test_missing_game_fails_closed(self):
         row = build_report({"status": "READY", "games": []}, "2026_05_BUF_LA")
         self.assertEqual(row["status"], "BLOCKED")
