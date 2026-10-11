@@ -1,0 +1,57 @@
+name: Edge Lab NFL Discrete Score Diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-discrete-score.yml"
+      - "scripts/discrete_score_diagnostic.py"
+      - "tests/test_discrete_score_diagnostic.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: edge-lab-discrete-score
+  cancel-in-progress: true
+
+jobs:
+  diagnostics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Check key-number and chronological regression tests
+        run: python -m pytest -q tests/test_discrete_score_diagnostic.py
+      - name: Run real NFL push-aware margin and total diagnostic
+        run: python -m scripts.discrete_score_diagnostic > reports_discrete_stdout.txt
+      - name: Publish bounded summary
+        if: success()
+        run: |
+          python - <<'PY'
+          import json, os
+          r=json.load(open('reports/discrete_score_diagnostic.json'))
+          lines=["## Fixed empirical discrete NFL distribution: research only"]
+          for market,v in r["by_market"].items():
+              lines.append(f"- {market}: normal logloss={v['historical_gaussian']['multiclass_log_loss']}; empirical logloss={v['fixed_empirical_conditional']['multiclass_log_loss']}; delta={v['challenger_minus_gaussian_log_loss']}; descriptive CI={v['descriptive_week_cluster_ci95']}; observed pushes={v['historical_gaussian']['actual_pushes']}")
+          lines.append("No verified BetMGM EV. Do not promote on inspected 2025.")
+          summary="\n".join(lines)
+          print(summary)
+          with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as f:f.write(summary+"\n")
+          PY
+      - name: Archive non-executable research diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-discrete-score-diagnostic
+          path: |
+            reports/discrete_score_diagnostic.json
+            reports_discrete_stdout.txt
+          retention-days: 90
