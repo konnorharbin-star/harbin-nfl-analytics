@@ -1,7 +1,7 @@
 {
   "automatic_betting_enabled": false,
   "disagreement_watchlist": [],
-  "generated_at": "2026-10-10T22:26:07.609423+00:00",
+  "generated_at": "2026-10-11T01:59:09.268715+00:00",
   "limits": "Pairs are captured within 5 minutes across named independent sportsbooks and must be less than 10 minutes old, both strictly pre-kickoff. They may have moved or be unfillable; neither simultaneous availability, live liquidity, stake limits, taxes nor settle/push rules are certified. Prices must be manually rechecked. No EV or future profitability inferred.",
   "mode": "FREE_THEORETICAL_SAME_POINT_CROSS_BOOK_ARBITRAGE_RESEARCH",
   "model_win_probability_used": false,
@@ -13,9 +13,9 @@
   "summary": {
     "admissible_side_quotes": 0,
     "excluded_snapshots": {
-      "no_verified_book_offer_origin_time": 334
+      "no_verified_book_offer_origin_time": 335
     },
-    "input_two_way_snapshots": 334,
+    "input_two_way_snapshots": 335,
     "leave_one_book_out_consensus_disagreements": 0,
     "matched_two_way_market_lines": 0,
     "theoretical_arbitrage_observations": 0
