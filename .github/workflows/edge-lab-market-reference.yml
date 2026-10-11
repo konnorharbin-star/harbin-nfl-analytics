@@ -1,0 +1,31 @@
+name: Edge Lab External Model Benchmark Safety
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-market-reference.yml"
+      - "scripts/market_first_reference.py"
+      - "tests/test_market_first_reference.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reference-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install only free test runner
+        run: python -m pip install pytest
+      - name: Market-first price provenance and anti-edge tests
+        run: python -m pytest -q tests/test_market_first_reference.py tests/test_professional_method_audit.py
+      - name: Declare limited scope
+        run: |
+          echo "RESEARCH ONLY: synthetic fixtures test exact prices and market-center arithmetic."
+          echo "No bookmaker account accepted quote, independent model backtest or confirmed NFL betting EV."
