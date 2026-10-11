@@ -63,6 +63,17 @@ def test_temporal_correction_rejected(tmp_path):
         read_picks(late)
 
 
+def test_other_nfl_team_codes_are_valid(tmp_path):
+    source = PICKS.read_text(encoding="utf8")
+    assert ",spread,BAL,BAL,+3.5," in source
+    tmp = tmp_path / "other_teams.csv"
+    tmp.write_text(source.replace(",spread,BAL,BAL,+3.5,",
+                                  ",spread,BUF,BUF,+3.5,"),
+                   encoding="utf8")
+    picks = read_picks(tmp)
+    assert picks[0]["selection"] == "BUF"
+
+
 def test_duplicate_rejected(tmp_path):
     source = PICKS.read_text(encoding="utf8")
     tmp = tmp_path / "dups.csv"
