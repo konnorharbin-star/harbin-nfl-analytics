@@ -18,6 +18,16 @@ class TestEdgeLabFreeGate(unittest.TestCase):
         self.assertIsNone(row["estimated_ev"])
         self.assertEqual(row["projection"]["model_implied_away_points"], 25.25)
 
+    def test_live_engine_baseline_fields_supported(self):
+        x = {"game_id": "2026_05_BUF_LA", "home_team": "LA", "away_team": "BUF",
+             "baseline_home_margin": 0.75, "baseline_total": 49.5}
+        row = build_report({"status": "READY", "games": [x]}, "2026_05_BUF_LA")
+        self.assertEqual(row["status"], "RESEARCH_ONLY")
+        self.assertEqual(row["projection"]["source_score_fields"],
+                         ["baseline_home_margin", "baseline_total"])
+        self.assertEqual(row["projection"]["home_margin_points"], 0.75)
+        self.assertFalse(row["bet_authorized"])
+
     def test_nonfinite_projection_fails_closed(self):
         games = [{"game_id": "2026_05_BUF_LA", "model_margin_home": "nan",
                   "model_total": 50.0}]
