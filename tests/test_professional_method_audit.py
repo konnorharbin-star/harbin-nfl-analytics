@@ -1,7 +1,7 @@
 """Regression tests for exact-contract professional-method guard."""
 import copy
 import math
-from scripts.professional_method_audit import audit, fair_snapshot, decimal_odds
+from scripts.professional_method_audit import audit, fair_snapshot, decimal_odds, compare_same_contract_prices
 
 
 def q(selection, *, line="44.5", quote="2026-10-11T20:00:00Z",
@@ -120,3 +120,36 @@ def test_fair_snapshot_never_makes_absolute_push_claim():
     s = fair_snapshot(a, b)
     assert "p_push" not in s
     assert "no_vig_conditional_nonpush" in s
+
+
+def test_cross_book_price_ranking_same_snapshot_contract_only():
+    mgm = q("OVER", odds="-110")
+    other = q("OVER", odds="+102")
+    other["bookmaker"] = "Other Public Book"
+    other["snapshot_id"] = "independent"
+    report = compare_same_contract_prices([mgm, other], "OVER")
+    assert report["ranked_offers"][0]["bookmaker"] == "Other Public Book"
+    assert not report["execution_verified"]
+    assert not report["edge_validated"]
+
+
+def test_cross_book_different_line_rejected():
+    mgm = q("OVER")
+    other = q("OVER", line="45.5")
+    other["bookmaker"] = "Other Public Book"
+    try:
+        compare_same_contract_prices([mgm, other], "OVER")
+        assert False, "different lines must be rejected"
+    except ValueError as exc:
+        assert "different contracts" in str(exc)
+
+
+def test_cross_book_stale_observation_rejected():
+    mgm = q("OVER")
+    other = q("OVER", quote="2026-10-11T20:01:00Z")
+    other["bookmaker"] = "Other Public Book"
+    try:
+        compare_same_contract_prices([mgm, other], "OVER")
+        assert False, "different timestamps must be rejected"
+    except ValueError as exc:
+        assert "not simultaneous" in str(exc)
