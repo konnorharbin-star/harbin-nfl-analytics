@@ -1,0 +1,64 @@
+name: Edge Lab External Elo Independent Replay
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-external-elo.yml"
+      - "scripts/external_public_elo_replay.py"
+      - "tests/test_external_public_elo_replay.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: edge-lab-external-elo
+  cancel-in-progress: true
+
+jobs:
+  real-data-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free NFL research dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Unit tests for before-week information
+        run: python -m pytest -q tests/test_external_public_elo_replay.py
+      - name: Run 2014-2025 real NFL Elo + totals diagnostic
+        run: python -m scripts.external_public_elo_replay > external_elo_stdout.txt
+      - name: Report both markets and original archive benchmark
+        if: success()
+        run: |
+          python - <<'PY'
+          import json, os
+          r=json.load(open('reports/external_elo_replay.json'))
+          lines=["## External public Elo / own trailing-total challenger",
+                 "RESEARCH ONLY: 2023-2025 are previously inspected, archive-final not tradable."]
+          for season, by_market in r["by_season"].items():
+              for market, v in by_market.items():
+                  lines.append(
+                    f"- {season} {market}, n={v['n']}: alternate MAE={v['external_public_method']['mae']}; "
+                    f"canonical MAE={v['canonical_fair_score']['mae']}; "
+                    f"archive MAE={v['archive_final_market']['mae']}; "
+                    f"alternate minus canonical CI={v['method_minus_canonical_mae_ci95_week_bootstrap']}"
+                  )
+          lines.append("No account BetMGM odds or validated positive expected value.")
+          summary="\n".join(lines)
+          print(summary)
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:f.write(summary+"\n")
+          PY
+      - name: Retain fingerprinted original research output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: external-elo-nfl-replication-research
+          path: |
+            reports/external_elo_replay.json
+            external_elo_stdout.txt
+          retention-days: 90
