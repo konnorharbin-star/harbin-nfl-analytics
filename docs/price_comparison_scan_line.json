@@ -1,14 +1,14 @@
 {
   "spec": "exact_line_price_scan_v1",
-  "observed_at": "2026-10-10T22:32:08.120639+00:00",
+  "observed_at": "2026-10-11T01:54:13.046837+00:00",
   "status": "PRICE_DIAGNOSTICS_ONLY",
   "betting_authorized": false,
   "qualified_bets": 0,
   "counts": {
-    "stale_future_or_started": 6995,
-    "fresh_exact_line_groups": 86,
+    "stale_future_or_started": 7329,
+    "fresh_exact_line_groups": 84,
     "extreme_unverified_quotes_quarantined": 8,
-    "insufficient_same_line_books": 47
+    "insufficient_same_line_books": 43
   },
   "quarantined_quotes": [
     {
@@ -26,7 +26,7 @@
       ],
       "source": "action_network",
       "source_url": null,
-      "quote_observed_at": "2026-10-10T22:32:06.891710+00:00",
+      "quote_observed_at": "2026-10-11T01:54:11.742677+00:00",
       "reported_source_time": null,
       "paired_no_vig_home_or_over_probability": 0.36309581830587784,
       "other_books_median_probability": 0.6092362344582594,
@@ -50,11 +50,11 @@
       ],
       "source": "action_network",
       "source_url": null,
-      "quote_observed_at": "2026-10-10T22:32:06.891710+00:00",
+      "quote_observed_at": "2026-10-11T01:54:11.742677+00:00",
       "reported_source_time": null,
       "paired_no_vig_home_or_over_probability": 0.5996387718242023,
-      "other_books_median_probability": 0.4673721072853394,
-      "absolute_divergence_pp": 13.226666453886294,
+      "other_books_median_probability": 0.47116833430347727,
+      "absolute_divergence_pp": 12.847043752072507,
       "status": "UNVERIFIED_EXTREME_SOURCE_OUTLIER",
       "betting_authorized": false,
       "reason": "Paired no-vig quote differs from peer books by over 7.5 pp without independent book identity, source update time, and executable price confirmation"
@@ -74,7 +74,7 @@
       ],
       "source": "action_network",
       "source_url": null,
-      "quote_observed_at": "2026-10-10T22:32:06.891710+00:00",
+      "quote_observed_at": "2026-10-11T01:54:11.742677+00:00",
       "reported_source_time": null,
       "paired_no_vig_home_or_over_probability": 0.5634920634920635,
       "other_books_median_probability": 0.3737655878199512,
@@ -98,7 +98,7 @@
       ],
       "source": "action_network",
       "source_url": null,
-      "quote_observed_at": "2026-10-10T22:32:06.891710+00:00",
+      "quote_observed_at": "2026-10-11T01:54:11.742677+00:00",
       "reported_source_time": null,
       "paired_no_vig_home_or_over_probability": 0.23409789548356588,
       "other_books_median_probability": 0.31746194981489095,
@@ -122,11 +122,11 @@
       ],
       "source": "action_network",
       "source_url": null,
-      "quote_observed_at": "2026-10-10T22:32:06.891710+00:00",
+      "quote_observed_at": "2026-10-11T01:54:11.742677+00:00",
       "reported_source_time": null,
       "paired_no_vig_home_or_over_probability": 0.37753344813882633,
-      "other_books_median_probability": 0.24531831938637877,
-      "absolute_divergence_pp": 13.221512875244755,
+      "other_books_median_probability": 0.24635914678995485,
+      "absolute_divergence_pp": 13.117430134887147,
       "status": "UNVERIFIED_EXTREME_SOURCE_OUTLIER",
       "betting_authorized": false,
       "reason": "Paired no-vig quote differs from peer books by over 7.5 pp without independent book identity, source update time, and executable price confirmation"
@@ -146,7 +146,7 @@
       ],
       "source": "action_network",
       "source_url": null,
-      "quote_observed_at": "2026-10-10T22:32:06.891710+00:00",
+      "quote_observed_at": "2026-10-11T01:54:11.742677+00:00",
       "reported_source_time": null,
       "paired_no_vig_home_or_over_probability": 0.7659021045164341,
       "other_books_median_probability": 0.630521192298962,
@@ -170,11 +170,11 @@
       ],
       "source": "action_network",
       "source_url": null,
-      "quote_observed_at": "2026-10-10T22:32:06.891710+00:00",
+      "quote_observed_at": "2026-10-11T01:54:11.742677+00:00",
       "reported_source_time": null,
       "paired_no_vig_home_or_over_probability": 0.5427435387673957,
-      "other_books_median_probability": 0.6251358413786594,
-      "absolute_divergence_pp": 8.239230261126373,
+      "other_books_median_probability": 0.6242375323150653,
+      "absolute_divergence_pp": 8.149399354766961,
       "status": "UNVERIFIED_EXTREME_SOURCE_OUTLIER",
       "betting_authorized": false,
       "reason": "Paired no-vig quote differs from peer books by over 7.5 pp without independent book identity, source update time, and executable price confirmation"
@@ -194,11 +194,11 @@
       ],
       "source": "action_network",
       "source_url": null,
-      "quote_observed_at": "2026-10-10T22:32:06.891710+00:00",
+      "quote_observed_at": "2026-10-11T01:54:11.742677+00:00",
       "reported_source_time": null,
       "paired_no_vig_home_or_over_probability": 0.4572564612326044,
-      "other_books_median_probability": 0.7658679532275798,
-      "absolute_divergence_pp": 30.861149199497547,
+      "other_books_median_probability": 0.7636104931428627,
+      "absolute_divergence_pp": 30.63540319102583,
       "status": "UNVERIFIED_EXTREME_SOURCE_OUTLIER",
       "betting_authorized": false,
       "reason": "Paired no-vig quote differs from peer books by over 7.5 pp without independent book identity, source update time, and executable price confirmation"
@@ -215,7 +215,7 @@
       "line": null,
       "book_label": "FanDuel",
       "american_odds": 170.0,
-      "quote_observed_at": "2026-10-10T22:32:06.891710+00:00",
+      "quote_observed_at": "2026-10-11T01:54:11.742677+00:00",
       "reference_books": 6,
       "reference_probability": 0.40264557021288294,
       "price_implied_probability": 0.37037037037037035,
@@ -224,6 +224,39 @@
       "reference_probability_range": [
         0.3888667312403852,
         0.4066302458405761
+      ],
+      "status": "VERIFY_REQUIRED",
+      "betting_authorized": false,
+      "stake_units": 0,
+      "blockers": [
+        "Aggregator book identity and executable price unverified",
+        "Per-side source quote-origin timestamps unverified",
+        "Source market phase and settlement rules unverified",
+        "No verified sharp benchmark",
+        "Reference probabilities are not calibrated model probabilities",
+        "Market-reference strategy lacks validated prospective economic advantage",
+        "User book access and settlement rules unverified"
+      ]
+    },
+    {
+      "game_id": "2026_05_CIN_MIA",
+      "home_team": "MIA",
+      "away_team": "CIN",
+      "kickoff": "2026-10-11T17:00:00+00:00",
+      "market": "moneyline",
+      "side": "away",
+      "line": null,
+      "book_label": "FanDuel",
+      "american_odds": -270.0,
+      "quote_observed_at": "2026-10-11T01:54:11.742677+00:00",
+      "reference_books": 6,
+      "reference_probability": 0.7406294567419602,
+      "price_implied_probability": 0.7297297297297298,
+      "reference_price_gap_pp": 1.089972701223041,
+      "sensitivity_gap_pp": -0.9100272987769609,
+      "reference_probability_range": [
+        0.7321840849622903,
+        0.7477827050997783
       ],
       "status": "VERIFY_REQUIRED",
       "betting_authorized": false,
@@ -258,5 +291,5 @@
     "total"
   ],
   "unsupported_market_reason": null,
-  "capture_id": "dd675efcda44a592a936f2e4"
+  "capture_id": "c03ea8829230187c32e122fd"
 }
