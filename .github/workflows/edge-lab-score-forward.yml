@@ -1,0 +1,89 @@
+name: Edge Lab First Seen NFL Score Journal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/freeze_nfl_score_forward.py"
+      - "tests/test_freeze_nfl_score_forward.py"
+      - ".github/workflows/edge-lab-score-forward.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "13 16,22 * 9,10,11,12 *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nfl-frozen-first-seen-journal
+  cancel-in-progress: false
+
+jobs:
+  freeze-forecast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free NFL dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Test immutable score journal without future-result leakage
+        run: python -m pytest -q tests/test_freeze_nfl_score_forward.py tests/test_edge_lab_free_gate.py tests/test_current_projection.py
+      - name: Generate independent current model forecast
+        run: |
+          mkdir -p reports
+          python run_current_projection.py 2026 --refresh --blocked-report > reports/current_independent_nfl.json
+      - name: Freeze first-seen before kickoff, never overwrite original game
+        run: |
+          python -m scripts.freeze_nfl_score_forward \
+            --projection reports/current_independent_nfl.json \
+            --season 2026 \
+            --history history/score_forward_2026.jsonl \
+            --summary reports/score_forward_snapshot.json
+      - name: Persist new unique frozen forecasts
+        run: |
+          if [ -f history/score_forward_2026.jsonl ]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add history/score_forward_2026.jsonl
+            if ! git diff --cached --quiet; then
+              git commit -m 'research: append first-seen independent NFL score projections'
+              git push
+            else
+              echo 'No new eligible first-seen games to persist'
+            fi
+          else
+            echo 'No pregame scores eligible: fail closed'
+          fi
+      - name: Show exactly what was frozen
+        if: always()
+        run: |
+          if [ -f reports/score_forward_snapshot.json ]; then
+            python - <<'PY'
+          import json, os
+          r=json.load(open('reports/score_forward_snapshot.json'))
+          lines=['## Frozen NFL score research — no betting recommendation',
+                 f"Status: {r['status']}; decision: {r['decision']}",
+                 f"New pre-kickoff predictions: {len(r['new_records'])}",
+                 f"Already frozen: {len(r['skipped_existing'])}",
+                 f"Started or completed: {len(r['skipped_not_pregame'])}",
+                 "No U.S. BetMGM price, modeled market EV or approved wager."]
+          report='\n'.join(lines)
+          print(report)
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:f.write(report+'\n')
+          PY
+          fi
+      - name: Preserve original cloud run report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-first-seen-score-snapshot
+          path: |
+            reports/current_independent_nfl.json
+            reports/score_forward_snapshot.json
+          retention-days: 90
