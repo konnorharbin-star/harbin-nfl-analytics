@@ -57,14 +57,20 @@ def build_report(projection, game_id, *, captured_utc=None, source_sha=None):
         report['blockers'].append(f'Expected exactly one game match; found {len(matching)}')
         return report
     record = matching[0]
-    margin = finite_number(record.get('model_margin_home'))
-    total = finite_number(record.get('model_total'))
+    # Modern current-projection engine emits baseline_*; earlier research CSVs emit model_*.
+    # Never combine incompatible columns or invent a missing score.
+    field_pair = ('baseline_home_margin', 'baseline_total') if (
+        'baseline_home_margin' in record or 'baseline_total' in record
+    ) else ('model_margin_home', 'model_total')
+    margin = finite_number(record.get(field_pair[0]))
+    total = finite_number(record.get(field_pair[1]))
     if margin is None or total is None:
         report['status'] = 'BLOCKED'
         report['blockers'].append('Score projection missing or nonfinite')
         return report
     report['status'] = 'RESEARCH_ONLY'
     report['projection'] = {
+        'source_score_fields': list(field_pair),
         'home': record.get('home_team'),
         'away': record.get('away_team'),
         'home_margin_points': margin,
