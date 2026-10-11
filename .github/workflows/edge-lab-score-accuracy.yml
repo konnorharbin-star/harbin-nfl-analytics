@@ -1,0 +1,56 @@
+name: Edge Lab NFL Spread Total Accuracy Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-score-accuracy.yml"
+      - "scripts/score_market_accuracy.py"
+      - "tests/test_score_market_accuracy.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: edge-lab-score-accuracy
+  cancel-in-progress: true
+
+jobs:
+  scoreboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free NFL dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Test independent forecast and market provenance
+        run: python -m pytest -q tests/test_score_market_accuracy.py tests/test_ratings.py
+      - name: Replay 2023-2025 NFL scores against free archived markets
+        run: python -m scripts.score_market_accuracy
+      - name: Show research-only results
+        if: success()
+        run: |
+          python - <<'PY'
+          import json, os
+          d=json.load(open('reports/score_market_accuracy.json'))
+          lines=["## NFL market accuracy — research only",
+                 "Archive-final market prices are NOT verified decision-time BetMGM offers."]
+          for k,v in d["by_target"].items():
+              x=v["diagnostic_2025"]
+              lines.append(f"- {k}: n={x['paired']}, independent MAE={x['independent_paired']['mae']}, archive-final MAE={x['archive_final']['mae']}, blend MAE={x['blended_archive']['mae']}, descriptive CI={x['descriptive_week_ci_blend_minus_archive']}")
+          summary="\n".join(lines)
+          print(summary)
+          with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as f: f.write(summary+"\n")
+          PY
+      - name: Archive immutable run report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-spread-total-accuracy-audit
+          path: reports/score_market_accuracy.json
+          retention-days: 90
