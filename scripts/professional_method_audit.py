@@ -154,14 +154,14 @@ def _probability_audit(model, quote):
     }, None
 
 
-def audit(entry_a, entry_b, *, selected, close_a=None, close_b=None, model=None):
+def audit(entry_a, entry_b, *, selected, close_a=None, close_b=None, model=None, offers=None):
     """All failures are fail-closed PASS with explicit blockers."""
     result = {
         "version": "professional-method-audit-v1",
         "decision": "PASS", "bet_authorized": False,
         "execution_quote_verified": False,
         "edge_validated": False, "entry_market": None, "model": None,
-        "closing_line_value": None, "blockers": [],
+        "closing_line_value": None, "price_shopping": None, "blockers": [],
         "professional_methods": [
             "independent_score_model_required",
             "asof_news_and_starter_verification_required",
@@ -186,6 +186,8 @@ def audit(entry_a, entry_b, *, selected, close_a=None, close_b=None, model=None)
             result["blockers"].append("EDITORIAL_OR_PUBLIC_PRICE_NOT_EXECUTABLE")
         else:
             result["blockers"].append("ACCOUNT_QUOTE_STILL_REQUIRES_INDEPENDENT_ACCEPTANCE_CHECK")
+        if offers is not None:
+            result["price_shopping"] = compare_same_contract_prices(offers, selected)
         if (close_a is None) != (close_b is None):
             raise ValueError("closing snapshot must provide BOTH market sides")
         if close_a is not None:
@@ -214,6 +216,53 @@ def audit(entry_a, entry_b, *, selected, close_a=None, close_b=None, model=None)
     return result
 
 
+
+def compare_same_contract_prices(offers, selected):
+    """Rank archived prices ONLY when they are synchronous exact contracts.
+
+    This is price-shopping RESEARCH, not evidence a BetMGM account can
+    accept any price or that an independent model has positive EV.
+    """
+    if not isinstance(offers, list) or len(offers) < 2:
+        raise ValueError("need at least two independently sourced offers")
+    for offer in offers:
+        _validate_quote(offer)
+        if offer["selection"] != selected:
+            raise ValueError("offers must name the identical selected side")
+    base = offers[0]
+    fingerprints = set()
+    for offer in offers:
+        if _key(offer, CONTRACT) != _key(base, CONTRACT):
+            raise ValueError("cross-book offers are different contracts")
+        if _utc(offer["quote_utc"]) != _utc(base["quote_utc"]):
+            raise ValueError("cross-book offers are not simultaneous")
+        ident = (offer["bookmaker"], offer["region"])
+        if ident in fingerprints:
+            raise ValueError("duplicate book-region offers")
+        fingerprints.add(ident)
+    ordered = sorted(offers, key=lambda x: decimal_odds(x["american_odds"]),
+                     reverse=True)
+    return {
+        "status": "RESEARCH_ONLY_PRICE_RANKING",
+        "selection": selected,
+        "quote_utc": base["quote_utc"],
+        "contract": {k: base[k] for k in CONTRACT},
+        "ranked_offers": [
+            {"bookmaker": o["bookmaker"], "region": o["region"],
+             "source_type": o["source_type"], "american_odds": o["american_odds"],
+             "decimal_odds": decimal_odds(o["american_odds"]),
+             "source_url": o["source_url"]}
+            for o in ordered
+        ],
+        "decimal_price_improvement_over_worst":
+            decimal_odds(ordered[0]["american_odds"]) -
+            decimal_odds(ordered[-1]["american_odds"]),
+        "execution_verified": False,
+        "edge_validated": False,
+        "note": "Different prices alone do not establish mispricing or expected value",
+    }
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--input", type=Path, required=True,
@@ -223,7 +272,7 @@ def main():
     data = json.loads(args.input.read_text(encoding="utf-8"))
     result = audit(data["entry_a"], data["entry_b"], selected=data["selected"],
                    close_a=data.get("close_a"), close_b=data.get("close_b"),
-                   model=data.get("model"))
+                   model=data.get("model"), offers=data.get("offers"))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n",
                            encoding="utf-8")
