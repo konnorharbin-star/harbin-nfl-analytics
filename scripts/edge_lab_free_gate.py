@@ -23,7 +23,7 @@ def finite_number(value):
         return None
 
 
-def build_report(projection, game_id, *, captured_utc=None, source_sha=None):
+def build_report(projection, game_id, *, captured_utc=None, source_sha=None, expected_away_qb=None):
     timestamp = captured_utc or datetime.now(timezone.utc).isoformat()
     report = {
         'report_version': 'edge-lab-free-pregame-v1',
@@ -57,6 +57,20 @@ def build_report(projection, game_id, *, captured_utc=None, source_sha=None):
         report['blockers'].append(f'Expected exactly one game match; found {len(matching)}')
         return report
     record = matching[0]
+    if expected_away_qb:
+        observed = str(record.get('away_qb_proxy_name') or '')
+        expected_last = expected_away_qb.strip().replace('.', ' ').split()[-1].lower()
+        proxy_last = observed.replace('.', ' ').split()[-1].lower() if observed else ''
+        report['confirmed_away_starter'] = expected_away_qb
+        report['prior_week_away_qb_proxy'] = observed
+        if not proxy_last or proxy_last != expected_last:
+            report['status'] = 'BLOCKED'
+            report['blockers'].append(
+                'CONFIRMED_STARTER_MISMATCH: preweek forecast uses ' + observed +
+                ' but confirmed next starter is ' + expected_away_qb +
+                '; do not convert old QB score to a priced forecast.'
+            )
+            return report
     # Modern current-projection engine emits baseline_*; earlier research CSVs emit model_*.
     # Never combine incompatible columns or invent a missing score.
     field_pair = ('baseline_home_margin', 'baseline_total') if (
@@ -88,10 +102,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--projection', type=Path, required=True)
     parser.add_argument('--game-id', default='2026_05_BUF_LA')
+    parser.add_argument('--expected-away-qb', default=None)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     projection = json.loads(args.projection.read_text(encoding='utf8'))
-    output = build_report(projection, args.game_id, source_sha=os.getenv('GITHUB_SHA'))
+    output = build_report(projection, args.game_id, source_sha=os.getenv('GITHUB_SHA'),
+                          expected_away_qb=args.expected_away_qb)
     args.output.parent.mkdir(exist_ok=True, parents=True)
     args.output.write_text(json.dumps(output, indent=2, sort_keys=True) + '\n', encoding='utf8')
     print(json.dumps(output, indent=2, sort_keys=True))
