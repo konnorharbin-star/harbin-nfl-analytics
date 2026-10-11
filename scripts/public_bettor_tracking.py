@@ -55,8 +55,12 @@ def read_picks(path):
         if row["market"] not in {"spread", "total", "moneyline", "receiving_yards",
                                  "receptions", "rushing_yards", "anytime_td"}:
             raise ValueError("unsupported or ambiguous market")
-        if row["selection"].lower() not in {"over", "under", "atl", "bal"}:
-            raise ValueError("unsupported selection for the initial capture")
+        selection = row["selection"].upper()
+        if row["market"] in {"spread", "moneyline"}:
+            if not selection.isalpha() or not 2 <= len(selection) <= 3:
+                raise ValueError("a team market requires an NFL team abbreviation")
+        elif row["selection"].lower() not in {"over", "under"}:
+            raise ValueError("prop and total markets require over or under")
         if row["market"] in {"spread", "total", "receiving_yards", "receptions",
                               "rushing_yards"}:
             float(row["line"])
