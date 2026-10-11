@@ -70,6 +70,15 @@ jobs:
             --game-id 2026_05_BUF_LA \
             --output reports/edge_lab_pregame_research.json
 
+      - name: Check Ravens-Falcons confirmed quarterback before kickoff
+        if: steps.window.outputs.enabled == 'true'
+        run: |
+          python -m scripts.edge_lab_free_gate \
+            --projection reports/edge_lab_engine.json \
+            --game-id 2026_05_BAL_ATL \
+            --expected-away-qb 'Tyler Huntley' \
+            --output reports/edge_lab_ravens_falcons.json
+
       - name: Summarize safely in job output
         if: steps.window.outputs.enabled == 'true'
         shell: bash
