@@ -80,7 +80,9 @@ def _usage_forecast(row, past, window):
         raise ValueError("Unsupported market or fixed window")
     field = {"receptions":"targets","receiving_yards":"targets",
              "rushing_yards":"carries","passing_yards":"attempts"}[market]
-    previous=[r for r in past
+    pool=(past.get((row["season"],row["team"],row["player_id"]), [])
+          if isinstance(past,dict) else past)
+    previous=[r for r in pool
               if r["season"]==row["season"] and r["week"]<row["week"]
               and r["team"]==row["team"] and r["player_id"]==row["player_id"]]
     previous.sort(key=lambda x:(x["week"],x["game_id"]))
@@ -172,6 +174,9 @@ def run_study(games, stats):
     test=_examples(games,stats,2025)
     if not training or not test:
         raise ValueError("Missing 2024 or 2025 completed historical player games")
+    histories=defaultdict(list)
+    for item in stats:
+        histories[(item["season"],item["team"],item["player_id"])].append(item)
     report={"status":"HISTORICAL_RESEARCH_ONLY","spec_version":VERSION,
             "training_season":2024,"diagnostic_season":2025,
             "diagnostic_is_untouched_holdout":False,
@@ -187,7 +192,7 @@ def run_study(games, stats):
             continue
         candidates=[]
         for window in WINDOWS:
-            forecasted=[(_usage_forecast(r,stats,window),y) for r,y in train]
+            forecasted=[(_usage_forecast(r,histories,window),y) for r,y in train]
             eligible=[(p,y) for p,y in forecasted if p is not None]
             if len(eligible)<75 or len(eligible)/len(train)<.90:
                 continue
@@ -201,7 +206,7 @@ def run_study(games, stats):
         per_week=defaultdict(list)
         missing=0
         for r,y in hold:
-            p=_usage_forecast(r,stats,chosen)
+            p=_usage_forecast(r,histories,chosen)
             if p is None:
                 missing+=1
                 continue
