@@ -177,3 +177,24 @@ def test_multiple_markets_sorted_diagnostic_but_all_pass():
     ranked=r["provisional_only_diagnostic_contracts"]
     assert len(ranked)==2 and ranked[0]["market"]=="GAME_SPREAD"
     assert not ranked[0]["approved"] and r["best_verified_edge"] is None
+
+def test_model_first_created_after_quote_is_blocked_even_if_pregame():
+    a=pair()
+    # Price observed at 20:00, captured at 20:04; retroactively matching a
+    # model forecast first created at 20:02 would produce false backtest ROI.
+    m=model(a[0],forecast_utc="2026-10-11T20:02:00Z")
+    r=screen(doc(a,m))
+    assert r["decision"]=="PASS"
+    assert r["markets"][0]["status"]=="BLOCKED"
+    assert any("original quote time" in reason for reason in r["markets"][0]["blockers"])
+    assert r["markets"][0]["independent_probability"] is None
+    assert r["best_verified_edge"] is None
+
+
+def test_model_at_exact_original_quote_time_is_still_research_only():
+    a=pair()
+    m=model(a[0],forecast_utc="2026-10-11T20:00:00Z")
+    r=screen(doc(a,m))
+    assert r["markets"][0]["status"]=="RESEARCH_ONLY"
+    assert r["markets"][0]["independent_probability"] is not None
+    assert not r["recommending_bet"]
