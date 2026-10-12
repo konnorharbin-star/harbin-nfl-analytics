@@ -73,7 +73,7 @@ def collect(games, fetch_week, *, observed, journal=None):
         try:
             markets,observed_source,diagnostic=fetch_week(season,week,targets)
             exact_observed=_utc(observed_source)
-            if exact_observed < at or exact_observed > datetime.now(timezone.utc)+timedelta(minutes=3):
+            if exact_observed < at or exact_observed > at+timedelta(minutes=5):
                 raise ValueError("invalid fetch observation time")
             if any(exact_observed>=_utc(x["kickoff_utc"]) for x in targets):
                 # Individual games might have kicked off during the read; let
