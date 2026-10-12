@@ -120,8 +120,8 @@ def candidate_distributions(predictions,catalog):
         if group is None:
             continue
         mean=float(p["challenger_mean"])
-        if not math.isfinite(mean) or mean<0:
-            raise ValueError("invalid original player-stat mean")
+        if not math.isfinite(mean):
+            raise ValueError("non-finite original player-stat point forecast")
         output.append({
             "model":VERSION,"game_id":str(p["game_id"]),
             "season":int(p["season"]),"week":int(p["week"]),
@@ -211,8 +211,10 @@ def exact_line_probabilities(snapshot,catalog,line,*,observed_utc,
         push=0.
     elif float(price_line).is_integer():
         n=int(price_line)
+        if n==0:
+            raise ValueError("whole-stat zero line unsupported: rushing yards may be negative")
         over=over_probability(mean,n+.5,market,errors)
-        at_least=over_probability(mean,n-.5,market,errors) if n>0 else 1.
+        at_least=over_probability(mean,n-.5,market,errors)
         under=1-at_least
         push=max(0.,at_least-over)
     else:
