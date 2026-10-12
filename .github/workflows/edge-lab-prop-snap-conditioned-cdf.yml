@@ -1,0 +1,85 @@
+name: NFL Player Prop Prior-Snap Conditional CDF Challenger (Research)
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-prop-snap-conditioned-cdf.yml"
+      - "scripts/nfl_prop_snap_conditional_cdf.py"
+      - "tests/test_nfl_prop_snap_conditional_cdf.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "31 13 * 9,10,11,12 *"
+permissions:
+  contents: write
+concurrency:
+  group: nfl-prop-snap-conditional-cdf-2026
+  cancel-in-progress: false
+jobs:
+  previous-snaps-vs-exact-stat-lines:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Limit scheduled 2026 first-seen cohort
+        id: guard
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" && "$(date -u +%Y)" != "2026" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.enabled == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.enabled == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free nflverse sources
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pip install -e '.[dev]'
+      - name: Check strict preweek source and calibrated bucket integrity
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pytest -q tests/test_nfl_prop_snap_conditional_cdf.py
+      - name: Fit 2024 once, replay historical 2025 paired CDF Brier and freeze 2026 challenger
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m scripts.nfl_prop_snap_conditional_cdf
+      - name: Preserve original 2024 fitted bucket catalog and 2026 first-seen challenger
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add history/player_prop_prior_snap_cdf_2024_v1.json
+          if [[ -f history/player_prop_snap_cdf_sidecar_v1_2026.jsonl ]]; then
+            git add history/player_prop_snap_cdf_sidecar_v1_2026.jsonl
+          fi
+          if ! git diff --cached --quiet; then
+            git commit -m 'research: freeze 2024 prior-snap-conditioned residuals and 2026 CDF first-seen candidates'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Reject false executable-prop advantage
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("reports/player_prop_prior_snap_cdf_research.json"))
+          assert r["decision"]=="PASS"
+          assert r["2025_already_inspected_not_independent_clean_test"]
+          assert r["synthetic_grid_not_real_bookmaker_lines"]
+          assert r["2026_original_full_and_v2_forecasts_modified"] is False
+          assert not r["player_active_or_void_model_verified"]
+          assert not r["profitability_validated"] and r["approved_bets"]==0
+          assert r["US_BetMGM_account_accepted_prices"]==0 and r["true_EV"] is None
+          print("2024 training matched player-stat markets:",r["2024_snap_conditioned_rows"])
+          print("2025 same-cohort over/under synthetic thresholds:",r["2025_market_diagnostics"])
+          print("2026 frozen pregame sidecar:",r["2026_first_seen_freeze"])
+          print("No actual BetMGM contract EV validated. PASS.")
+          PY
+      - name: Save retrospective research report
+        if: always() && steps.guard.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-player-prop-prior-snap-conditioned-cdf-research
+          path: reports/player_prop_prior_snap_cdf_research.json
+          if-no-files-found: warn
+          retention-days: 90
