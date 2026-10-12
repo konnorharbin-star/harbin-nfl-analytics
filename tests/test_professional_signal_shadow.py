@@ -118,6 +118,7 @@ def test_cannot_use_game_result_that_finishes_after_next_post():
     second = rec(0)
     second["record_id"] = "other-id"
     second["event_id"] = "other-event"
+    second["market_pair"]["event_id"] = "other-event"
     second["published_utc"] = "2026-01-01T02:00:00+00:00"
     second["captured_utc"] = "2026-01-01T02:01:00+00:00"
     second["market_pair"]["quote_utc"] = "2026-01-01T02:05:00+00:00"
