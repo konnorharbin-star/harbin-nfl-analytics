@@ -26,7 +26,7 @@ from nfl.data import NFLDataClient
 from nfl.pregame import schedule_kickoff_utc
 from scripts.nfl_moneyline_elo_research import market_home_no_vig,prior_tie_rate
 
-VERSION="NFL_PRIOR_WEEK_QB_EPA_MONEYLINE_CHALLENGER_V1"
+VERSION="NFL_PRIOR_WEEK_QB_EPA_MONEYLINE_CHALLENGER_V2_10_DAY_WINDOW"
 DEVELOPMENT_YEARS=(2019,2020,2021,2022)
 HISTORICAL_DIAGNOSTIC_YEARS=(2023,2024,2025)
 FEATURES=("intercept","prior_margin_diff","last_qb_epa_diff",
@@ -252,7 +252,8 @@ def run(*,schedules,players):
             "archived_market_plus_QB_challenger":evaluate(group,market_resid,market_offset=True)}
     return rows,report
 
-def freeze_first_seen(rows,*,coefficients,tie_prior,observed_utc,path):
+def freeze_first_seen(rows,*,coefficients,tie_prior,observed_utc,path,horizon_days=10):
+    if not 0<horizon_days<=21:raise ValueError("future horizon must be between 1 and 21 days")
     at=utc(observed_utc)
     path=Path(path)
     existing=[]
@@ -264,7 +265,7 @@ def freeze_first_seen(rows,*,coefficients,tie_prior,observed_utc,path):
     coeff_hash=hashlib.sha256(json.dumps(coefficients,separators=(",",":")).encode()).hexdigest()
     for r in rows:
         ko=utc(r["kickoff_utc"]) if r.get("kickoff_utc") else None
-        if r["season"]!=2026 or r["game_id"] in old or ko is None or at>=ko:
+        if r["season"]!=2026 or r["game_id"] in old or ko is None or not at<ko<=at+timedelta(days=horizon_days):
             continue
         if r["home_score"] is not None or r["away_score"] is not None:
             continue
@@ -296,7 +297,7 @@ def freeze_first_seen(rows,*,coefficients,tie_prior,observed_utc,path):
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--season",type=int,default=2026)
-    ap.add_argument("--journal",type=Path,default=Path("history/moneyline_weekly_qb_challenger_2026.jsonl"))
+    ap.add_argument("--journal",type=Path,default=Path("history/moneyline_weekly_qb_challenger_v2_2026.jsonl"))
     ap.add_argument("--report",type=Path,default=Path("reports/moneyline_weekly_qb_challenger.json"))
     a=ap.parse_args()
     if a.season!=2026:ap.error("registered prospective study requires 2026")
@@ -306,12 +307,14 @@ def main():
     players=data.load_player_stats(list(range(2019,2027)),refresh=True).to_dicts()
     rows,report=run(schedules=schedules,players=players)
     tie,tn,tt=prior_tie_rate(schedules)
+    report["forward_window_days"]=10
+    report["v1_full_schedule_194_originals_retained_as_long_horizon_not_next_week_forecasts"]=True
     report["tie_prior_2014_2023"]=tie
     report["tie_prior_dev_games"]=tn
     report["tie_prior_dev_ties"]=tt
     report["forward"]=freeze_first_seen(rows,
         coefficients=report["independent_coefficients"],tie_prior=tie,
-        observed_utc=datetime.now(timezone.utc).isoformat(),path=a.journal)
+        observed_utc=datetime.now(timezone.utc).isoformat(),path=a.journal,horizon_days=10)
     a.report.parent.mkdir(parents=True,exist_ok=True)
     a.report.write_text(json.dumps(report,sort_keys=True,indent=2,allow_nan=False)+"\n")
     print(json.dumps({"model":VERSION,"decision":report["decision"],
