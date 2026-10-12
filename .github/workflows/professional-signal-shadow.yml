@@ -7,6 +7,12 @@ on:
       - 'tests/test_professional_signal_shadow.py'
       - 'research/professional_signal_shadow.json'
       - '.github/workflows/professional-signal-shadow.yml'
+  pull_request:
+    paths:
+      - 'scripts/professional_signal_shadow.py'
+      - 'tests/test_professional_signal_shadow.py'
+      - 'research/professional_signal_shadow.json'
+      - '.github/workflows/professional-signal-shadow.yml'
   workflow_dispatch:
 permissions:
   contents: read
