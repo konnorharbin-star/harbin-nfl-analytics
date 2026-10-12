@@ -209,7 +209,9 @@ def grade(forecasts, games, stats, *, captured_utc, previous=None):
         "score_metrics_by_market":summary,
         "independently_validated_betmgm_positive_ev":False,
         "any_account_wager_verified":False,
-        "status":"SCORED_RESEARCH" if scored else "NO_FINAL_RESULT_ELIGIBLE",
+        "status":("SCORED_RESEARCH" if scored else
+                  "SCORED_RESEARCH_CUMULATIVE" if all_scored else
+                  "NO_FINAL_RESULT_ELIGIBLE"),
         "note":"Thresholds for same player/game correlated; use player-game clusters, no bookmaker ROI without timestamped odds.",
     }
 
