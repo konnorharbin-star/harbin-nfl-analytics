@@ -272,6 +272,23 @@ def freeze(rows,coefficients,*,observed_utc,path):
             for r in fresh:f.write(json.dumps(r,sort_keys=True,allow_nan=False)+"\n")
     return {"existing":len(old),"new":len(fresh),"total":len(old)+len(fresh)}
 
+def fixed_training_cohort(fitted_beta,baseline,train_rows,
+                          path=Path("history/player_prop_stat_row_training_2024_v1.json")):
+    catalog=json.loads(Path(path).read_text(encoding="utf8"))
+    if (catalog["model"]!=VERSION or
+        catalog["development_year"]!=DEVELOPMENT_YEAR or
+        tuple(catalog["feature_names"])!=FEATURES or
+        float(catalog["ridge_alpha"])!=RIDGE):
+        raise ValueError("pinned 2024 development model identity changed")
+    sha=hashlib.sha256(json.dumps(catalog["full_beta"],sort_keys=True).encode()).hexdigest()
+    if sha!=catalog["full_beta_sha256"]:
+        raise ValueError("pinned full model coefficient SHA is corrupted")
+    if (len(train_rows)!=catalog["development_unique_player_games"]
+        or abs(float(baseline)-catalog["development_stat_row_presence_rate"])>1e-12
+        or any(abs(x-y)>1e-12 for x,y in zip(fitted_beta,catalog["full_beta"]))):
+        raise ValueError("archived 2024 source/fit revised; do NOT silently refit frozen 2026")
+    return catalog["full_beta"],catalog["full_beta_sha256"]
+
 def run():
     nflclient=NFLDataClient()
     schedule=nflclient.load_schedules([2024,2025,2026],refresh=True)
@@ -283,7 +300,8 @@ def run():
     raw_schedules=schedule.to_dicts()
     dev,rejected_dev=make_cohorts(games,player_rows,raw_schedules,raw_snap,gsis_pfr,
                                    season=2024)
-    beta,mean=fit(dev)
+    fit_beta,mean=fit(dev)
+    beta,verified_beta_sha=fixed_training_cohort(fit_beta,mean,dev)
     count_only_beta,_=fit(dev,allowed_features=(0,3))
     holdout,rejected_holdout=make_cohorts(games,player_rows,raw_schedules,raw_snap,gsis_pfr,
                                          season=2025)
@@ -310,6 +328,8 @@ def run():
         "2024_train_player_games":len(dev),"2024_train_mean_rate":mean,
         "2024_rejected_feature_coverage":rejected_dev,
         "fitted_features":FEATURES,"fitted_beta":beta,"ridge":RIDGE,
+        "pinned_first_seen_full_coefficients_sha256":verified_beta_sha,
+        "immutable_2024_original_training_catalog":"history/player_prop_stat_row_training_2024_v1.json",
         "2025_retrospective_diagnostic":diag,
         "2025_cluster_brier_delta_ci95":ci,
         "2025_count_only_prior_snap_observation_history_comparator":count_only,
