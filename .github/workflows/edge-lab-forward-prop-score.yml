@@ -66,7 +66,10 @@ jobs:
             git add history/player_prop_outcomes_2026.jsonl
             if ! git diff --cached --quiet; then
               git commit -m 'research: freeze first settled NFL player-prop forecast grades'
-              git push
+              # Preserve concurrently committed model source changes; never force push.
+              # A real collision in graded history still fails closed for review.
+              git pull --rebase origin main
+              git push origin HEAD:main
             fi
           fi
       - name: Write research-only forward calibration summary
