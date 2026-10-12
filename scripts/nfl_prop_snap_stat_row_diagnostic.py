@@ -144,18 +144,25 @@ def make_cohorts(games,stats,raw_schedule,raw_snaps,crosswalk,*,season,
     out.sort(key=lambda r:(r["game_id"],r["player_id"]))
     return out,dict(count)
 
-def fit(rows,*,ridge=RIDGE,min_dev=MIN_DEV):
+def fit(rows,*,ridge=RIDGE,min_dev=MIN_DEV,allowed_features=None):
     if len(rows)<min_dev:raise ValueError("insufficient prior-game 2024 development cohort")
     if any(r["season"]!=DEVELOPMENT_YEAR for r in rows):
         raise ValueError("fit season must be 2024")
     if any(r["observed_stats_row_presence"] not in (0,1) for r in rows):
         raise ValueError("missing/invalid development label")
     x=np.asarray([r["features"] for r in rows],dtype=float)
+    allowed=set(range(len(FEATURES))) if allowed_features is None else set(allowed_features)
+    if 0 not in allowed or not allowed.issubset(set(range(len(FEATURES)))):
+        raise ValueError("intercept and a valid restricted feature subset required")
+    for k in set(range(len(FEATURES)))-allowed:
+        x[:,k]=0.
     y=np.asarray([r["observed_stats_row_presence"] for r in rows],dtype=float)
     if x.shape[1]!=len(FEATURES):raise ValueError("wrong feature width")
     prior=(sum(y)+1)/(len(y)+2)  # Beta(1,1) smoothed event rate baseline
     beta=np.array([math.log(prior/(1-prior))]+[0.]*(x.shape[1]-1))
     penalty=np.diag([0.]+[float(ridge)]*(x.shape[1]-1))
+    # Restricted coefficients never updated (feature columns identically 0).
+
     for iteration in range(100):
         eta=np.clip(x@beta,-25,25)
         p=1/(1+np.exp(-eta))
@@ -209,6 +216,25 @@ def cluster_interval(rows,beta,baseline,*,draws=BOOTSTRAPS,seed=2026):
     return [round(sample[int((draws-1)*.025)],8),
             round(sample[int((draws-1)*.975)],8)]
 
+def cluster_interval_comparison(rows,more_beta,less_beta,*,draws=BOOTSTRAPS,seed=2026):
+    groups=defaultdict(list)
+    for r in rows:
+        y=int(r["observed_stats_row_presence"])
+        a=predict(r["features"],more_beta)
+        b=predict(r["features"],less_beta)
+        groups[r["game_id"]].append((a-y)**2-(b-y)**2)
+    games=sorted(groups)
+    if len(games)<20:return None
+    rng=random.Random(seed)
+    bootstrap=[]
+    for _ in range(draws):
+        sampled=[games[rng.randrange(len(games))] for _ in games]
+        values=[d for gid in sampled for d in groups[gid]]
+        bootstrap.append(sum(values)/len(values))
+    bootstrap.sort()
+    return [round(bootstrap[int((draws-1)*.025)],8),
+            round(bootstrap[int((draws-1)*.975)],8)]
+
 def freeze(rows,coefficients,*,observed_utc,path):
     at=_utc(observed_utc)
     path=Path(path)
@@ -258,6 +284,7 @@ def run():
     dev,rejected_dev=make_cohorts(games,player_rows,raw_schedules,raw_snap,gsis_pfr,
                                    season=2024)
     beta,mean=fit(dev)
+    count_only_beta,_=fit(dev,allowed_features=(0,3))
     holdout,rejected_holdout=make_cohorts(games,player_rows,raw_schedules,raw_snap,gsis_pfr,
                                          season=2025)
     if len(holdout)<MIN_DIAG:
@@ -269,6 +296,15 @@ def run():
         path=Path("history/player_prop_stat_row_proxy_v1_2026.jsonl"))
     diag=_metrics(holdout,beta,mean)
     ci=cluster_interval(holdout,beta,mean)
+    count_only=_metrics(holdout,count_only_beta,mean)
+    full_v_count=[]
+    for row in holdout:
+        yy=int(row["observed_stats_row_presence"])
+        p_full=predict(row["features"],beta)
+        p_count=predict(row["features"],count_only_beta)
+        full_v_count.append((p_full-yy)**2-(p_count-yy)**2)
+    paired_full_minus_count=sum(full_v_count)/len(full_v_count)
+    count_only_ci=cluster_interval_comparison(holdout,beta,count_only_beta)
     report={
         "version":VERSION,"decision":"PASS","model_type":"OFFICIAL_STAT_ROW_PRESENCE_PROXY",
         "2024_train_player_games":len(dev),"2024_train_mean_rate":mean,
@@ -276,6 +312,10 @@ def run():
         "fitted_features":FEATURES,"fitted_beta":beta,"ridge":RIDGE,
         "2025_retrospective_diagnostic":diag,
         "2025_cluster_brier_delta_ci95":ci,
+        "2025_count_only_prior_snap_observation_history_comparator":count_only,
+        "2025_full_minus_count_only_brier":round(paired_full_minus_count,8),
+        "2025_full_minus_count_only_game_cluster_ci95":count_only_ci,
+        "2024_count_only_coefficients":count_only_beta,
         "2025_previously_inspected_not_clean_profitability_holdout":True,
         "2025_rejected_feature_coverage":rejected_holdout,
         "2026_future_first_observed_utc":now,
