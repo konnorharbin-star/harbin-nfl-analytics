@@ -49,6 +49,11 @@ def _model_diagnostic(model, quote, decision_time):
     forecast=_utc(model["forecast_utc"])
     if forecast > decision_time or forecast >= _utc(quote["kickoff_utc"]):
         raise ValueError("forecast is future or post-kickoff")
+    # Point-in-time parity: a forecast cannot be used to backtest the price
+    # originally quoted BEFORE that forecast existed. Source-origin price time
+    # is not interchangeable with collector capture or decision time.
+    if forecast > _utc(quote["quote_utc"]):
+        raise ValueError("independent forecast did not exist at original quote time")
     win=_number(model["p_win"],"p_win")
     push=_number(model["p_push"],"p_push")
     loss=_number(model["p_loss"],"p_loss")
