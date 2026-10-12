@@ -1,0 +1,29 @@
+{
+  "model": "NFL_PFR_STAT_ROW_PRESENCE_RESEARCH_V1",
+  "first_fitted_utc": "2026-10-12T11:43:15.149334+00:00",
+  "from_verified_actions_run": "https://github.com/konnorharbin-star/harbin-nfl-analytics/actions/runs/38244401097",
+  "development_year": 2024,
+  "development_unique_player_games": 4632,
+  "development_stat_row_presence_rate": 0.8234786361674579,
+  "feature_names": [
+    "intercept",
+    "prior_snap_mean_60",
+    "prior_snap_last_60",
+    "prior_snap_observed_count_4",
+    "prior_snap_trend_60"
+  ],
+  "ridge_alpha": 50,
+  "full_beta": [
+    0.2691495684627541,
+    0.4797360719039616,
+    0.904741916724421,
+    0.5576941081881193,
+    0.5078521564486058
+  ],
+  "full_beta_sha256": "6fed24b417f9f6beb116c5323692b32a08ce97f9be35c84116a876a18df1a66c",
+  "original_2026_forecasts_reference": "history/player_prop_stat_row_proxy_v1_2026.jsonl",
+  "model_is_actual_player_active_or_void": false,
+  "accepted_US_BetMGM_prices": 0,
+  "approved_wagers": 0,
+  "decision": "PASS"
+}
