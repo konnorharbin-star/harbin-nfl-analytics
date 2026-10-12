@@ -75,5 +75,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nfl-original-quote-provenance-probe
-          path: reports/free_source_*.json
+          path: |
+            reports/free_source_*.json
+            history/public_aggregator_quotes_2026.jsonl
           retention-days: 90
