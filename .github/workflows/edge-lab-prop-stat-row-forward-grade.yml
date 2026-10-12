@@ -1,0 +1,83 @@
+name: NFL Frozen 2026 Prop Stat-Row Prospective Grader (Not Bets)
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-prop-stat-row-forward-grade.yml"
+      - "scripts/nfl_prop_stat_row_forward_grader.py"
+      - "tests/test_nfl_prop_stat_row_forward_grader.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "44 18 * 9,10,11,12 *"
+permissions:
+  contents: write
+concurrency:
+  group: nfl-stat-row-prospective-grading-2026
+  cancel-in-progress: false
+jobs:
+  grade-only-truly-matured-source-rows:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - name: Disable recurring scoring outside 2026
+        id: guard
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" && "$(date -u +%Y)" != "2026" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.enabled == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.enabled == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free NFL source
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pip install -e '.[dev]'
+      - name: Test immutable prospective 2026 probability and provider-complete outcome safeguards
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pytest -q tests/test_nfl_prop_stat_row_forward_grader.py
+      - name: Grade only 72h-matured complete football games' official player stat row presence
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m scripts.nfl_prop_stat_row_forward_grader
+      - name: Preserve first grade and append only identifiable source corrections
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [[ -f history/player_prop_stat_row_grades_v1_2026.jsonl ]]; then
+            git add history/player_prop_stat_row_grades_v1_2026.jsonl
+            if ! git diff --cached --quiet; then
+              git commit -m 'research: append frozen NFL stat-row proxy outcomes on fully matured games'
+              git pull --rebase origin main
+              git push origin HEAD:main
+            fi
+          fi
+      - name: Grade is not sportsbook ticket performance
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("reports/player_prop_stat_row_forward_grading.json"))
+          assert r["decision"]=="PASS"
+          assert r["source_outcomes_mature_72h_only"]
+          assert r["official_stat_rows_are_NOT_player_active_or_bet_settlements"]
+          assert r["true_EV"] is None and r["wagers"]==0
+          assert not r["profitable_BetMGM_edge"]
+          assert r["source_original_bookmaker_price_verified"]==0
+          print("Mature source games graded:",r["eligible_grades_this_capture"])
+          print("Source maturity/coverage blocks:",r["source_condition_blocks"])
+          print("Original pregame model forward performance:",r["forward_scoring"])
+          print("Decision PASS: zero BetMGM wagers.")
+          PY
+      - name: Preserve independent forward calibration report
+        if: always() && steps.guard.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-player-prop-forward-stat-row-proxy-grade
+          path: reports/player_prop_stat_row_forward_grading.json
+          if-no-files-found: warn
+          retention-days: 90
