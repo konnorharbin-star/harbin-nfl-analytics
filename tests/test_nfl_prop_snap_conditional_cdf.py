@@ -170,3 +170,21 @@ def test_nfl_player_crosswalk_504_retries_without_stale_identity():
     with pytest.raises(ConnectionError,match="source players unavailable"):
         public_download_with_retry(lambda: (_ for _ in ()).throw(ConnectionError("504")),
                                    label="players",attempts=2,sleep=lambda _:None)
+
+
+def test_source_year_download_retries_without_cross_season_data(monkeypatch):
+    import polars as pl
+    from scripts.nfl_prop_snap_conditional_cdf import historical_frames_by_season_with_retry
+    attempts={}
+    class Client:
+        def load_player_stats(self,years,refresh=False):
+            year=years[0]
+            attempts[year]=attempts.get(year,0)+1
+            if year==2025 and attempts[year]==1:raise ConnectionError("504")
+            return pl.DataFrame({"season":[year],"test_value":[year]})
+    got=historical_frames_by_season_with_retry(Client(),"player_stats",
+        [2024,2025],attempts=2,sleep=lambda _:None)
+    assert got["season"].to_list()==[2024,2025]
+    assert attempts[2025]==2
+    with pytest.raises(ValueError,match="unsupported NFL source"):
+        historical_frames_by_season_with_retry(Client(),"future_unknown",[2024])
