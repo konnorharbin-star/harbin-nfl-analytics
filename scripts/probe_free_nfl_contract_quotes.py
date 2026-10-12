@@ -66,6 +66,8 @@ def main():
 
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.quotes.parent.mkdir(parents=True, exist_ok=True)
+    capture_file = args.report.with_name("free_source_capture.json")
+    capture_file.write_text(json.dumps(captured, indent=2, sort_keys=True) + "\n")
     args.report.write_text(json.dumps(origin_report, indent=2, sort_keys=True, default=str) + "\n")
     args.quotes.write_text(json.dumps(strict_quotes, indent=2, sort_keys=True) + "\n")
     print(json.dumps({
