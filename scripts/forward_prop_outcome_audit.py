@@ -165,8 +165,18 @@ def grade(forecasts, games, stats, *, captured_utc, previous=None):
             "betting_roi":None,
         }
         scored.append(row)
+    # Monitor cumulative FIRST-SEEN grades, not only rows added today.
+    # An append-only journal is useful only if daily reports retain its entire
+    # accuracy history. Never refit the predictions after observing results.
+    previous_rows=list(previous or [])
+    if len({x["forecast_id"] for x in previous_rows})!=len(previous_rows):
+        raise ValueError("duplicate persisted scored forecast")
+    new_groups={
+        (r["event_id"],r["player_id"],r["market"]) for r in scored
+    }
+    all_scored=[*previous_rows,*scored]
     groups=defaultdict(list)
-    for row in scored:
+    for row in all_scored:
         groups[(row["event_id"],row["player_id"],row["market"])].append(
             row["brier_over"]
         )
@@ -177,7 +187,7 @@ def grade(forecasts, games, stats, *, captured_utc, previous=None):
         name:{
             "independent_player_game_clusters":len(values),
             "graded_correlated_threshold_rows":sum(
-                1 for s in scored if s["market"]==name),
+                1 for s in all_scored if s["market"]==name),
             "equal_weight_player_game_brier":round(sum(values)/len(values),8),
             "market_odds_baseline":None,
             "valid_2026_prospective_roi_estimate":False,
@@ -186,7 +196,9 @@ def grade(forecasts, games, stats, *, captured_utc, previous=None):
     return scored,{
         "version":VERSION,"decision":"PASS",
         "graded_new_threshold_rows":len(scored),
-        "new_independent_player_game_clusters":len(groups),
+        "new_independent_player_game_clusters":len(new_groups),
+        "cumulative_graded_threshold_rows":len(all_scored),
+        "cumulative_player_game_clusters":len(groups),
         "ungraded_reason_counts":dict(sorted(pending.items())),
         "graded_population":"PLAYERS_WITH_OFFICIAL_WEEKLY_STATS_ROW_ONLY",
         "missing_player_status_not_assumed_dnp_or_zero":True,
