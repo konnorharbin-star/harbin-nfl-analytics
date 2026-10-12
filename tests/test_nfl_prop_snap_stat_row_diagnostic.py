@@ -89,7 +89,7 @@ def test_prior_player_row_missing_not_automatically_zero(monkeypatch):
 def test_stats_row_observed_whether_or_not_snap_was_in_target_week(monkeypatch):
     import scripts.nfl_prop_snap_stat_row_diagnostic as module
     monkeypatch.setattr(module,"forecast_week",stub_forecast)
-    raw=[g(str(x),2024,x) for x in range(1,6)]
+    raw=[g(str(x),2024,x) for x in range(1,5)]+[g("target",2024,5)]
     snapped=[snap(str(x),x,35) for x in range(1,5)]
     outcomes=[{"game_id":"target","player_id":"GSIS_A","team":"BUF"}]
     a,_=make_cohorts(fake_games(raw),outcomes,raw,snapped,
