@@ -274,6 +274,23 @@ def freeze_future(full_originals,snap_context,cat,baseline,*,observed_utc,path):
     return {"original_prior":len(old),"new_originals":len(fresh),
             "total_original":len(old)+len(fresh),"excluded":dict(ignored)}
 
+def public_download_with_retry(loader,*,label,attempts=4,sleep=time.sleep):
+    """Do not replace a failed public input with a stale or synthetic identity table."""
+    if attempts<1 or attempts>5:
+        raise ValueError("invalid bounded public source retry count")
+    for attempt in range(attempts):
+        try:
+            values=loader()
+            if not values:
+                raise ValueError(f"empty public data source {label}")
+            return values
+        except (ConnectionError,TimeoutError,OSError) as exc:
+            if attempt+1==attempts:
+                raise ConnectionError(
+                    f"Free source {label} unavailable after {attempts} attempts"
+                ) from exc
+            sleep(min(10,2**attempt))
+
 def load_snap_history_with_retry(years, *,attempts=4,sleep=time.sleep):
     """One season per request; fail closed on public source 5xx, no stale data substitutions."""
     if attempts<1 or attempts>5:
@@ -305,7 +322,7 @@ def run():
     years=[2024,2025,2026]
     schedules=client.load_schedules(years,refresh=True)
     stats=client.load_player_stats(years,refresh=True)
-    nfl_players=nfl.load_players().to_dicts()
+    nfl_players=public_download_with_retry(lambda:nfl.load_players().to_dicts(),label="nflverse players GSIS/PFR crosswalk")
     gsis_pfr=unique_crosswalk(nfl_players)
     snaps=load_snap_history_with_retry(years)
     games,player_rows,source=source_frames(schedules,stats)
