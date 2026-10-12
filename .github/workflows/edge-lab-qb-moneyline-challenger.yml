@@ -1,0 +1,84 @@
+name: NFL Moneyline Pregame QB Efficiency Challenger (Research)
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-qb-moneyline-challenger.yml"
+      - "scripts/nfl_moneyline_qb_efficiency_challenger.py"
+      - "tests/test_nfl_moneyline_qb_efficiency_challenger.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "23 12 * 9,10,11,12 *"
+permissions:
+  contents: write
+concurrency:
+  group: nfl-qb-moneyline-first-seen-2026
+  cancel-in-progress: false
+jobs:
+  preweek-qb-epa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Guard scheduled season
+        id: guard
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" && "$(date -u +%Y)" != "2026" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.enabled == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.enabled == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install nflverse and model package
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pip install -e '.[dev]'
+      - name: Guard QB/target-week leakage and freeze-first-seen
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pytest -q tests/test_nfl_moneyline_qb_efficiency_challenger.py
+      - name: Compare real prior-season QB challenger to historical market
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python -m scripts.nfl_moneyline_qb_efficiency_challenger \
+            --season 2026 \
+            --journal history/moneyline_weekly_qb_challenger_2026.jsonl \
+            --report reports/moneyline_weekly_qb_challenger.json
+      - name: Write ORIGINAL future moneyline candidate without backfill
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [[ -f history/moneyline_weekly_qb_challenger_2026.jsonl ]]; then
+            git add history/moneyline_weekly_qb_challenger_2026.jsonl
+            if ! git diff --cached --quiet; then
+              git commit -m 'research: freeze as-of prior-week QB-efficiency NFL moneyline challenger'
+              git pull --rebase origin main
+              git push origin HEAD:main
+            fi
+          fi
+      - name: Enforce no executable quote or winner bet
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("reports/moneyline_weekly_qb_challenger.json"))
+          assert r["decision"] == "PASS"
+          assert not r["approved_profitable_model"] and not r["recommended_wagers"]
+          assert r["betting_EV"] is None and r["no_contemporaneous_BetMGM_quote"]
+          print("2019-22 QB model development games:",r["n_independent_development"])
+          print("2023-25 retrospective diagnostics:",r["diagnostics"])
+          print("Original 2026 pregame QB moneyline shadows:",r["forward"])
+          print("BetMGM accepted bids/offers: ZERO. Decision PASS.")
+          PY
+      - name: Preserve verification report
+        if: always() && steps.guard.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-qb-efficiency-moneyline-research
+          path: reports/moneyline_weekly_qb_challenger.json
+          if-no-files-found: warn
+          retention-days: 90
