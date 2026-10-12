@@ -1,0 +1,54 @@
+name: NFL Frozen Moneyline vs Public Price Shadow (PASS)
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-moneyline-forward-price-shadow.yml"
+      - "scripts/nfl_moneyline_forward_public_quote_shadow.py"
+      - "tests/test_nfl_moneyline_forward_public_quote_shadow.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "17 16 * 9,10,11,12 *"
+permissions:
+  contents: read
+jobs:
+  timestamp-safe-originals-versus-collection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate no stale book quote, no false market EV
+        run: |
+          python -m pip install pytest
+          python -m pytest -q tests/test_nfl_moneyline_forward_public_quote_shadow.py
+      - name: Match only original pregame model versus later public observations
+        run: |
+          python -m scripts.nfl_moneyline_forward_public_quote_shadow \
+            --forecasts history/moneyline_elo_v1_2026.jsonl \
+            --quotes history/public_aggregator_quotes_2026.jsonl \
+            --report reports/moneyline_forward_public_price_shadow.json
+      - name: Fail if a public aggregator becomes an authorized bet
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("reports/moneyline_forward_public_price_shadow.json"))
+          assert r["decision"]=="PASS"
+          assert r["accepted_BetMGM_US_account_offers"]==0
+          assert r["origin_bookmaker_offer_times_confirmed"]==0
+          assert r["estimated_true_EV"] is None
+          assert r["validated_profitable_bets"]==0 and not r["wager_recommendations"]
+          print("Research-only first-after-freeze game pairs:",r["postmodel_first_capture_game_pairs"])
+          print("Reject reasons:",r["reject_reason_counts"])
+          print("PASS. Absolutely no account quote proof or wager.")
+          PY
+      - name: Preserve audit of correctly observed quotes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-moneyline-frozen-vs-public-quote-research
+          path: reports/moneyline_forward_public_price_shadow.json
+          if-no-files-found: warn
+          retention-days: 90
