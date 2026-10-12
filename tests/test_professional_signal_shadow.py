@@ -120,3 +120,24 @@ def test_cannot_use_game_result_that_finishes_after_next_post():
     second["market_pair"]["quote_utc"] = "2026-01-01T02:05:00+00:00"
     second["market_pair"]["captured_utc"] = "2026-01-01T02:06:00+00:00"
     assert audit([first, second], "NFL")["records"][1]["frozen_prior_picks"] == 0
+
+
+def test_cli_filters_mixed_leagues_and_fails_on_unknown(tmp_path):
+    import json
+    import subprocess
+    import sys
+    source = tmp_path / "mixed.json"
+    output = tmp_path / "out.json"
+    rows = [rec(0, league="NFL"), rec(1, league="CFB")]
+    source.write_text(json.dumps({"records": rows}))
+    result = subprocess.run([sys.executable, "-m", "scripts.professional_signal_shadow",
+                             "--league", "NFL", "--input", str(source), "--output", str(output)],
+                            capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    saved = json.loads(output.read_text())
+    assert saved["league"] == "NFL" and len(saved["records"]) == 1
+    source.write_text(json.dumps({"records": [{**rec(0), "league": "NBA"}]}))
+    result = subprocess.run([sys.executable, "-m", "scripts.professional_signal_shadow",
+                             "--league", "NFL", "--input", str(source), "--output", str(output)],
+                            capture_output=True, text=True)
+    assert result.returncode != 0
