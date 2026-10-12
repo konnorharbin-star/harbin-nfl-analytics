@@ -10,9 +10,11 @@ from __future__ import annotations
 from collections import defaultdict
 from datetime import datetime,timezone,timedelta
 import json
+import math
 from pathlib import Path
 import nflreadpy as nfl
 from nfl.data import NFLDataClient
+from scripts.nfl_moneyline_elo_research import _team
 
 VERSION="PFR_PRIOR_OFFENSIVE_SNAP_EVIDENCE_V1"
 
@@ -35,7 +37,7 @@ def preceding_games(schedule,season,week,team):
     games=[g for g in schedule
         if g.get("game_type")=="REG" and int(g["season"])==season
         and int(g["week"])<week
-        and team in (g["home_team"],g["away_team"])
+        and team in (_team(g["home_team"]),_team(g["away_team"]))
         and g.get("home_score") is not None and g.get("away_score") is not None]
     return sorted(games,key=lambda g:(int(g["week"]),str(g["game_id"])))[-4:]
 
@@ -48,13 +50,13 @@ def coverage(full,players,snaps,schedule,at):
         if x.get("game_type")!="REG":continue
         gid=str(x.get("game_id") or "")
         pf=str(x.get("pfr_player_id") or "")
-        tm=str(x.get("team") or "")
+        tm=_team(x.get("team") or "")
         if not gid or not pf or not tm:continue
         key=(gid,tm,pf)
         if key in index:raise ValueError("ambiguous PFR player-game snap record")
         n=x.get("offense_snaps")
         value=float(n) if n is not None else None
-        if value is not None and (value<0 or value>150):
+        if value is not None and (not math.isfinite(value) or value<0 or value>150):
             raise ValueError("invalid historical offensive snap count")
         index[key]=value
         by_team[(gid,tm)]+=1
@@ -68,11 +70,11 @@ def coverage(full,players,snaps,schedule,at):
         if at<as_utc(r["first_observed_at_utc"]):
             raise ValueError("source capture cannot predate full-distribution freeze")
         pfr_id=mapping.get(str(r["player_id"]))
-        games=preceding_games(schedule,int(r["season"]),int(r["week"]),r["team"])
-        available=[g for g in games if by_team[(str(g["game_id"]),str(r["team"]))]>0]
-        observed=[index[(str(g["game_id"]),str(r["team"]),pfr_id)]
+        games=preceding_games(schedule,int(r["season"]),int(r["week"]),_team(r["team"]))
+        available=[g for g in games if by_team[(str(g["game_id"]),_team(r["team"]))]>0]
+        observed=[index[(str(g["game_id"]),_team(r["team"]),pfr_id)]
             for g in available if pfr_id is not None and
-            index.get((str(g["game_id"]),str(r["team"]),pfr_id)) is not None]
+            index.get((str(g["game_id"]),_team(r["team"]),pfr_id)) is not None]
         status=("MISSING_UNIQUE_PFR_GSIS_CROSSWALK" if pfr_id is None
             else "INSUFFICIENT_OFFICIAL_TEAM_SNAP_COVERAGE" if len(available)<2
             else "PLAYER_SNAP_HISTORY_INSUFFICIENT" if len(observed)<2
