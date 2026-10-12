@@ -165,6 +165,7 @@ def score(rows,cat,baseline,*,bootstrap=BOOTSTRAPS,seed=20261012):
         for gid,y,p,q,line,pid in items:
             games[gid].append((q-y)**2-(p-y)**2)
         ci=None
+        familywise_ci=None
         keys=sorted(games)
         if len(keys)>=20:
             values=[]
@@ -175,6 +176,13 @@ def score(rows,cat,baseline,*,bootstrap=BOOTSTRAPS,seed=20261012):
             values.sort()
             ci=[round(values[int((bootstrap-1)*.025)],8),
                 round(values[int((bootstrap-1)*.975)],8)]
+            # Four predeclared prop markets: two-sided Bonferroni familywise
+            # alpha .05 gives individual 98.75% interval. These remain
+            # exploratory retrospective tests, not sportsbook selection.
+            familywise_ci=[
+                round(values[int((bootstrap-1)*(.05/4/2))],8),
+                round(values[int((bootstrap-1)*(1-.05/4/2))],8),
+            ]
         out[market]={
             "source_official_stat_row_player_market_groups":len(unique_player_market[market]),
             "unique_nfl_games":len(keys),
@@ -184,6 +192,8 @@ def score(rows,cat,baseline,*,bootstrap=BOOTSTRAPS,seed=20261012):
             "snap_conditioned_cdf_brier":round(after,8),
             "brier_delta_snap_minus_original":round(after-before,8),
             "game_cluster_bootstrap_ci95":ci,
+            "four_market_Bonferroni_game_cluster_ci98_75":familywise_ci,
+            "survives_four_market_familywise_interval":bool(familywise_ci and familywise_ci[1]<0),
             "baseline_log_loss":round(logold,8),
             "snap_challenger_log_loss":round(lognew,8),
             "positive_2025_diagnostic":after<before,
