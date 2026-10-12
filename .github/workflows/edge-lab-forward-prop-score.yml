@@ -1,0 +1,97 @@
+name: Edge Lab Prospective NFL Prop Scoring
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-forward-prop-score.yml"
+      - "scripts/forward_prop_outcome_audit.py"
+      - "tests/test_forward_prop_outcome_audit.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "31 11 * 9,10,11,12 *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nfl-first-graded-player-stat-forward
+  cancel-in-progress: false
+
+jobs:
+  grade-forward-player-probs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Guard 2026 source validation season
+        id: guard
+        shell: bash
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" && "$(date -u +%Y)" != "2026" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.enabled == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.enabled == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install public nflverse client and tests
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pip install -e '.[dev]'
+      - name: Test player-stat outcome, void and forward-date safeguards
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python -m pytest -q \
+            tests/test_forward_prop_outcome_audit.py \
+            tests/test_frozen_prop_contract_adapter.py \
+            tests/test_contract_first_scanner.py
+      - name: Grade only games with official final scores and player rows
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python -m scripts.forward_prop_outcome_audit \
+            --season 2026 \
+            --source history/player_prop_probability_forward.csv \
+            --history history/player_prop_outcomes_2026.jsonl \
+            --report reports/forward_prop_outcome_audit.json
+      - name: Preserve first-grade record without overwriting previous outcomes
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          if [ -f history/player_prop_outcomes_2026.jsonl ]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add history/player_prop_outcomes_2026.jsonl
+            if ! git diff --cached --quiet; then
+              git commit -m 'research: freeze first settled NFL player-prop forecast grades'
+              git push
+            fi
+          fi
+      - name: Write research-only forward calibration summary
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python - <<'PY'
+          import json,os
+          r=json.load(open("reports/forward_prop_outcome_audit.json"))
+          s="\n".join([
+            "## NFL frozen 2026 player prop calibration",
+            f"Status: {r['status']}",
+            f"New finalized synthetic thresholds: {r['graded_new_threshold_rows']}",
+            f"Independent player-game clusters: {r['new_independent_player_game_clusters']}",
+            f"Missing stats/final blockers: {r['ungraded_reason_counts']}",
+            f"Official source errors: {r['source_errors']}",
+            "No verified sportsbook odds or settled cash/paper wagers.",
+            "No demonstrated independent positive-EV edge. Decision PASS.",
+          ])
+          print(s)
+          with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as f:f.write(s+"\n")
+          PY
+      - name: Retain source-availability and grading evidence
+        if: always() && steps.guard.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-first-seen-player-prop-grading
+          path: reports/forward_prop_outcome_audit.json
+          retention-days: 90
