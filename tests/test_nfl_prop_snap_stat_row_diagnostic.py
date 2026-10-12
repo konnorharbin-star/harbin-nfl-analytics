@@ -151,3 +151,24 @@ def test_original_target_contract_rejects_non_utc(tmp_path):
     with pytest.raises(ValueError,match="UTC"):
         freeze([],[],observed_utc="2026-10-12T12:00:00",
                path=tmp_path/"original")
+
+
+def test_count_only_restricted_model_does_not_use_snap_magnitude():
+    data=records(520)
+    b,_=fit(data,allowed_features=(0,3))
+    assert b[1]==0 and b[2]==0 and b[4]==0
+    first=predict((1.,.1,.5,.75,-.4),b)
+    second=predict((1.,2.,1.8,.75,.9),b)
+    assert first==pytest.approx(second)
+
+def test_restricted_features_require_intercept():
+    with pytest.raises(ValueError,match="intercept"):
+        fit(records(),allowed_features=(3,))
+
+def test_game_cluster_incremental_comparison_is_deterministic():
+    from scripts.nfl_prop_snap_stat_row_diagnostic import cluster_interval_comparison
+    data=records(520)
+    complete,_=fit(data)
+    simple,_=fit(data,allowed_features=(0,3))
+    ci=cluster_interval_comparison(data,complete,simple,draws=25)
+    assert ci is not None and ci[0]<=ci[1]
