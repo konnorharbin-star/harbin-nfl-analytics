@@ -137,3 +137,22 @@ def test_frozen_original_catalog_sha_checked_before_price_evaluation():
     base["vectors"]["rushing_yards|RB"][0]=9999
     with pytest.raises(ValueError,match="corrupted original"):
         score(train_samples(10),c,base)
+
+
+def test_public_source_retry_preserves_data_and_rejects_permanent_504(monkeypatch):
+    import scripts.nfl_prop_snap_conditional_cdf as module
+    calls=[]
+    class Response:
+        def to_dicts(self): return [{"year":2024,"offense_snaps":50}]
+    def flaky(seasons):
+        calls.append(tuple(seasons))
+        if len(calls)==1:raise ConnectionError("504 Gateway Timeout")
+        return Response()
+    monkeypatch.setattr(module.nfl,"load_snap_counts",flaky)
+    rows=module.load_snap_history_with_retry([2024],attempts=2,sleep=lambda _:None)
+    assert rows==[{"year":2024,"offense_snaps":50}]
+    assert calls==[(2024,),(2024,)]
+    def dead(seasons):raise ConnectionError("504 Gateway Timeout")
+    monkeypatch.setattr(module.nfl,"load_snap_counts",dead)
+    with pytest.raises(ConnectionError,match="unavailable after 2 attempts"):
+        module.load_snap_history_with_retry([2024],attempts=2,sleep=lambda _:None)
