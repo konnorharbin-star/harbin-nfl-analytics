@@ -19,14 +19,18 @@ permissions:
 jobs:
   research:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install pytest
-      - run: python -m pytest -q tests/test_professional_signal_shadow.py
+      - name: Install repository test dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Full repository regression suite
+        run: python -m pytest -q
+      - name: New professional shadow regression tests
+        run: python -m pytest -q tests/test_professional_signal_shadow.py
       - run: |
           mkdir -p reports
           python -m scripts.professional_signal_shadow --league NFL --input research/professional_signal_shadow.json --output reports/nfl_professional_shadow.json
