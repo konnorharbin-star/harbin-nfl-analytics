@@ -1,0 +1,31 @@
+name: Contract-First NFL Research Checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-contract-first.yml"
+      - "scripts/contract_first_scanner.py"
+      - "tests/test_contract_first_scanner.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract-guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install free tests
+        run: python -m pip install pytest
+      - name: Verify three-outcome EV and matched-contract rules
+        run: python -m pytest -q tests/test_contract_first_scanner.py tests/test_professional_method_audit.py
+      - name: No real bookmaker account or automatic bet
+        run: |
+          echo "PASS means no independently approved market-specific NFL model"
+          echo "No account executable odds verified; no bet is recommended"
