@@ -1,0 +1,78 @@
+name: Edge Lab Free Original Time Market Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-free-source-probe.yml"
+      - "scripts/action_network_contract_feed.py"
+      - "tests/test_action_network_contract_feed.py"
+      - "scripts/probe_free_nfl_contract_quotes.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "27 12,16,20 12 10 *"
+
+permissions:
+  contents: read
+
+jobs:
+  sportsbook-research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Guard scheduled research window
+        id: guard
+        shell: bash
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" && "$(date -u +%F)" != "2026-10-12" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "No historical backfill from a later date."
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.enabled == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.enabled == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free NFL data packages
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pip install -e '.[dev]'
+      - name: Test original-offer timestamp gate and no-imputation rule
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pytest -q tests/test_action_network_contract_feed.py tests/test_contract_first_scanner.py
+      - name: Query next NFL game via existing optional public provider
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python -m scripts.probe_free_nfl_contract_quotes \
+            --season 2026 --week 5 \
+            --event 2026_05_BUF_LA --home LA --away BUF \
+            --kickoff 2026-10-13T00:15:00Z
+      - name: Show quote origin validation, without invented betting prices
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python - <<'PY'
+          import json,os
+          p=json.load(open('reports/free_source_probe.json'))
+          summary="\n".join([
+           "## Bills-Rams free quote-origin audit",
+           f"Raw complete markets: {p['source_raw_two_sided_rows']}",
+           f"Valid recent original-time pairs: {p['eligible_quote_pairs']}",
+           f"Source errors: {p['source_call_errors']}",
+           f"Source parser diagnostic: {p['source_parser_diagnostics']}",
+           "Actual U.S. BetMGM account price verified: NO",
+           "Independent approved profitable model: NO",
+           "Decision PASS. Never wager automatically.",
+          ])
+          print(summary)
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:f.write(summary+"\n")
+          PY
+      - name: Preserve time-stamped observation or negative probe
+        if: always() && steps.guard.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-original-quote-provenance-probe
+          path: reports/free_source_*.json
+          retention-days: 90
