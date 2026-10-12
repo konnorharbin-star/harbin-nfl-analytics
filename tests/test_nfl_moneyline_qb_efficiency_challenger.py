@@ -145,7 +145,9 @@ def test_qb_duplicate_does_not_accidentally_duplicate_output():
 def test_only_forecasts_within_ten_day_freeze_window(tmp_path):
   coeff,_=fit(training_rows(),use_market_offset=False)
   near=prior_features([game("near",2026,6,"BUF","KC")],[])
-  far=prior_features([game("far",2026,12,"BUF","KC")],[])
+  far_game=game("far",2026,12,"BUF","KC")
+  far_game["gameday"]="2026-11-22"
+  far=prior_features([far_game],[])
   out=freeze_first_seen(near+far,coefficients=coeff,tie_prior=.005,
     observed_utc="2026-10-12T11:00:00Z",path=tmp_path/"window.jsonl",
     horizon_days=10)
