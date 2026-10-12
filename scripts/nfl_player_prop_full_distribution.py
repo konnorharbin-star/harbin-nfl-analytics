@@ -183,7 +183,13 @@ def exact_line_probabilities(snapshot,catalog,line,*,observed_utc,
     kickoff=_utc(snapshot["kickoff_utc"])
     if not freeze<=now<kickoff:
         raise ValueError("as-of outside original forecast-to-kickoff window")
-    if snapshot["model"]!=VERSION or snapshot["residual_catalog_sha256"]!=catalog["sha256"]:
+    claimed_catalog_sha = catalog.get("sha256")
+    if not isinstance(claimed_catalog_sha, str) or (
+        hash_object({key: value for key, value in catalog.items() if key != "sha256"})
+        != claimed_catalog_sha
+    ):
+        raise ValueError("full residual catalog content hash integrity failure")
+    if snapshot["model"]!=VERSION or snapshot["residual_catalog_sha256"]!=claimed_catalog_sha:
         raise ValueError("frozen distribution does not match immutable original catalog")
     market=snapshot["market"]
     group=snapshot["residual_group_key"]
