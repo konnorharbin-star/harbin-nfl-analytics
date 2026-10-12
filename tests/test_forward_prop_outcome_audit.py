@@ -118,3 +118,45 @@ def test_all_missing_results_remain_pass():
     assert s==[]
     assert m["decision"]=="PASS"
     assert m["status"]=="NO_FINAL_RESULT_ELIGIBLE"
+
+def test_current_nflverse_team_and_game_id_schema_scores():
+    item=stat()
+    item.pop("recent_team")
+    item["team"]="LA"
+    item["game_id"]="2026_05_BUF_LA"
+    item["season_type"]="REG"
+    s,meta=run(ss=[item])
+    assert meta["graded_new_threshold_rows"]==1
+    assert s[0]["actual_over"]==1
+
+
+def test_current_nflverse_different_game_id_cannot_be_scored():
+    item=stat()
+    item.pop("recent_team")
+    item["team"]="LA"
+    item["game_id"]="2026_05_OTHER_LA"
+    s,meta=run(ss=[item])
+    assert not s
+    assert meta["ungraded_reason_counts"]["PLAYER_GAME_ID_MISMATCH"]==1
+
+
+def test_conflicting_team_aliases_error_out():
+    item=stat()
+    item["team"]="BUF"
+    with pytest.raises(ValueError,match="conflicting"):
+        run(ss=[item])
+
+
+def test_team_identity_must_be_present():
+    item=stat()
+    item.pop("recent_team")
+    with pytest.raises(ValueError,match="missing team"):
+        run(ss=[item])
+
+
+def test_postseason_player_stats_not_scored_for_regular_game():
+    item=stat()
+    item["season_type"]="POST"
+    s,meta=run(ss=[item])
+    assert not s
+    assert meta["ungraded_reason_counts"]["PLAYER_NOT_REGULAR_SEASON"]==1
