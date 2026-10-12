@@ -84,7 +84,7 @@ def build_anchor_candidates(lines,*,now):
             continue
         # Original BASE probability exclusively decides the primary line.
         selected=min(ordered,key=lambda x:(
-            abs(float(x["p_over_original_conditional_on_official_stat_row"])-.5),
+            round(abs(float(x["p_over_original_conditional_on_official_stat_row"])-.5),10),
             float(x["synthetic_line"]),
         ))
         item={
