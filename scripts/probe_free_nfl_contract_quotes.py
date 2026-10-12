@@ -11,7 +11,7 @@ from pathlib import Path
 import polars as pl
 
 from nfl.action_network import ActionNetworkNFLClient
-from scripts.action_network_contract_feed import probe
+from scripts.action_network_contract_feed import probe\nfrom scripts.public_quote_capture_journal import capture, append_file
 
 
 def main():
@@ -24,7 +24,7 @@ def main():
     ap.add_argument("--kickoff",required=True)
     ap.add_argument("--report",type=Path,default=Path("reports/free_source_probe.json"))
     ap.add_argument("--quotes",type=Path,default=Path("reports/free_source_quotes.json"))
-    a=ap.parse_args()
+    ap.add_argument("--capture-history",type=Path,default=None)\n    a=ap.parse_args()
     time=datetime.now(timezone.utc).isoformat()
     targets=pl.DataFrame([dict(season=a.season,game_id=a.event,
                                home_team=a.home,away_team=a.away)])
@@ -35,7 +35,7 @@ def main():
     except Exception as exc:
         raw=[]
         errors.append(f"{type(exc).__name__}: {str(exc)[:350]}")
-    request,report=probe(raw,{a.event:a.kickoff},time)
+    request,report=probe(raw,{a.event:a.kickoff},time)\n    captured=capture(raw,event_id=a.event,kickoff_utc=a.kickoff,observed_utc=time,\n        source_url="https://api.actionnetwork.com/web/v2/scoreboard/nfl")\n    report["capture_only_snapshot_sha256"]=captured["snapshot_sha256"]\n    report["capture_only_public_market_count"]=captured["paired_public_market_count"]\n    if a.capture_history is not None:\n        report["capture_archive_record_number"]=append_file(a.capture_history,captured)
     report["source_call_errors"]=errors
     report["source_parser_diagnostics"]=reader.last_diagnostic
     report["source_raw_two_sided_rows"]=len(raw)
@@ -48,7 +48,7 @@ def main():
     a.report.write_text(json.dumps(report,indent=2,sort_keys=True,default=str)+"\n")
     a.quotes.write_text(json.dumps(request,indent=2,sort_keys=True)+"\n")
     print(json.dumps({"decision":"PASS","observed_utc":time,
-                      "source_raw_two_sided_rows":len(raw),
+                      "source_raw_two_sided_rows":len(raw),\n                      "capture_only_observed_pairs":captured["paired_public_market_count"],\n                      "actual_book_origin_verified_pairs":captured["bookmaker_original_quote_times_available"],
                       "original_time_fresh_eligible_pairs":report["eligible_quote_pairs"],
                       "bookmakers":report["bookmakers_seen"],
                       "source_errors":errors,
