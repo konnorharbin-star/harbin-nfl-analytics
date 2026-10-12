@@ -26,7 +26,7 @@ MARKET_FIELDS={
 REQUIRED_FORECAST={"game_id","season","week","kickoff_utc","team","player_id",
                    "market","synthetic_line","probability_over",
                    "probability_under","first_observed_at_utc"}
-REQUIRED_STAT={"season","week","player_id","recent_team"}
+REQUIRED_STAT={"season","week","player_id"}
 
 
 def _number(value,name):
@@ -53,7 +53,16 @@ def _stats(rows):
     for row in rows:
         if any(k not in row for k in REQUIRED_STAT):
             raise ValueError("official player stats missing temporal keys")
-        key=(int(row["season"]),int(row["week"]),str(row["recent_team"]),
+        # nflverse's current weekly stats use 'team'; older compatible
+        # extracts sometimes use 'recent_team'. Accept either only when
+        # unambiguous, and confirm event game_id downstream if supplied.
+        teams=[str(row[k]) for k in ("team","recent_team")
+               if row.get(k) not in (None,"")]
+        if not teams:
+            raise ValueError("official player stats missing team identity")
+        if len(set(teams))!=1:
+            raise ValueError("conflicting official team identities")
+        key=(int(row["season"]),int(row["week"]),teams[0],
              str(row["player_id"]))
         if key in stats: raise ValueError("duplicate player game stats "+str(key))
         stats[key]=row
@@ -125,6 +134,12 @@ def grade(forecasts, games, stats, *, captured_utc, previous=None):
             # Missing is NOT equal to zero: DNP/no-snap and sportsbook void
             # treatment are contract-specific.
             pending["MISSING_PLAYER_STATS_OR_DNP"]+=1
+            continue
+        if player.get("game_id") not in (None,"",event):
+            pending["PLAYER_GAME_ID_MISMATCH"]+=1
+            continue
+        if player.get("season_type") not in (None,"","REG"):
+            pending["PLAYER_NOT_REGULAR_SEASON"]+=1
             continue
         val=player.get(MARKET_FIELDS[f["market"]])
         if val is None:
