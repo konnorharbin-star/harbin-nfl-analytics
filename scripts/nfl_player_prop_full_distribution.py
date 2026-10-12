@@ -247,7 +247,7 @@ def run(*,season=2026,horizon_days=10,
     stats=cli.load_player_stats(years,refresh=True)
     games,players,source=source_frames(schedules,stats)
     catalog,is_new=load_or_create_calibration(calibrations_path,games=games,players=players)
-    weeks=future_weeks(schedules.to_dicts(),observed_utc=now,season=season,horizon_days=horizon_days)
+    weeks=future_weeks(schedules.to_dicts(),observed_utc=now.isoformat(),season=season,horizon_days=horizon_days)
     snapshots=[]
     for w in weeks:
         fresh=forecast_week(games,players,season=season,week=w["week"],
