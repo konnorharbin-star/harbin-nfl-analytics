@@ -156,3 +156,17 @@ def test_public_source_retry_preserves_data_and_rejects_permanent_504(monkeypatc
     monkeypatch.setattr(module.nfl,"load_snap_counts",dead)
     with pytest.raises(ConnectionError,match="unavailable after 2 attempts"):
         module.load_snap_history_with_retry([2024],attempts=2,sleep=lambda _:None)
+
+
+def test_nfl_player_crosswalk_504_retries_without_stale_identity():
+    from scripts.nfl_prop_snap_conditional_cdf import public_download_with_retry
+    attempts={"count":0}
+    def recover():
+        attempts["count"]+=1
+        if attempts["count"]==1:raise ConnectionError("HTTP 504")
+        return [{"gsis_id":"ABC","pfr_id":"XYZ"}]
+    ids=public_download_with_retry(recover,label="players",attempts=3,sleep=lambda _:None)
+    assert ids==[{"gsis_id":"ABC","pfr_id":"XYZ"}]
+    with pytest.raises(ConnectionError,match="source players unavailable"):
+        public_download_with_retry(lambda: (_ for _ in ()).throw(ConnectionError("504")),
+                                   label="players",attempts=2,sleep=lambda _:None)
