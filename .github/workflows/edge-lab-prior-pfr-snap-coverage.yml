@@ -1,0 +1,80 @@
+name: NFL Pregame Prior PFR Snap Coverage (Research)
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-prior-pfr-snap-coverage.yml"
+      - "scripts/nfl_pfr_prior_snap_coverage.py"
+      - "tests/test_nfl_pfr_prior_snap_coverage.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "56 12 * 9,10,11,12 *"
+permissions:
+  contents: write
+concurrency:
+  group: nfl-prior-pfr-snap-source-coverage
+  cancel-in-progress: false
+jobs:
+  prior-snap-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Restrict scheduled research season
+        id: guard
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" && "$(date -u +%Y)" != "2026" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.enabled == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.enabled == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free public player-ID and snap sources
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pip install -e '.[dev]'
+      - name: Test GSIS/PFR crosswalk and future-snap leakage controls
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pytest -q tests/test_nfl_pfr_prior_snap_coverage.py
+      - name: Record original 2026 prior-game PFR snap evidence
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m scripts.nfl_pfr_prior_snap_coverage
+      - name: Preserve first-seen source observation without modifying forecasts
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [[ -f history/player_prop_prior_snap_coverage_2026.jsonl ]]; then
+            git add history/player_prop_prior_snap_coverage_2026.jsonl
+            if ! git diff --cached --quiet; then
+              git commit -m 'research: first-seen in-season prior PFR snaps for prospective NFL prop players'
+              git pull --rebase origin main
+              git push origin HEAD:main
+            fi
+          fi
+      - name: Confirm current participation remains unverified
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("reports/player_prop_prior_snap_coverage.json"))
+          assert r["decision"]=="RESEARCH_ONLY"
+          assert r["current_activity_confirmations"]==0
+          assert r["market_quote_records"]==0
+          assert r["original_probability_sources_edited"] is False
+          print("Prior-game snap coverage:",r["status_counts"])
+          print("Original context rows:",r["first_seen"])
+          print("Future active/DNP/void unresolved. No booking of bets.")
+          PY
+      - name: Keep as-of source coverage report
+        if: always() && steps.guard.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-prior-pfr-player-snap-coverage
+          path: reports/player_prop_prior_snap_coverage.json
+          if-no-files-found: warn
+          retention-days: 90
