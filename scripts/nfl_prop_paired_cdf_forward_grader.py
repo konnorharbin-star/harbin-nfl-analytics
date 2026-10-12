@@ -11,6 +11,7 @@ reconstruction is allowed after the first paired forecast. Prices are NONE:
 all rows RESEARCH_ONLY / PASS and no sportsbook wagering.
 """
 from __future__ import annotations
+import argparse
 from collections import defaultdict
 from datetime import datetime,timezone,timedelta
 import argparse
@@ -388,7 +389,7 @@ def grade_metrics(grade_rows,*,draws=BOOTSTRAPS,seed=2026):
             "wagers":0}
 
 
-def run():
+def run(*,freeze_only=False):
     now=datetime.now(timezone.utc).isoformat()
     full=read_jsonl("history/player_prop_full_distributions_2026.jsonl")
     snap=read_jsonl("history/player_prop_snap_cdf_sidecar_v1_2026.jsonl")
@@ -396,7 +397,15 @@ def run():
     snapcat=json.loads(Path("history/player_prop_prior_snap_cdf_2024_v1.json").read_text())
     if not full or not snap:raise ValueError("missing original CDF first-seen sources")
     frozen=freeze_pairs(full,snap,base,snapcat,now=now,path=FROZEN_PATH)
-    # Always freeze first, BEFORE any call to retrieve target-game stats.
+    if freeze_only:
+        print(json.dumps({"model":VERSION,"stage":"PREGAME_FIRST_SEEN_ONLY",
+                          "first_seen_capture_utc":now,"paired_originals":frozen,
+                          "no_postgame_data_loaded":True,
+                          "betting_decision":"PASS"},sort_keys=True))
+        return frozen
+    # First-seen paired lines must already be COMMITTED by the workflow before
+    # any target-game provider source is queried. An outage cannot erase
+    # the original forecast or make it post-kickoff.
     cli=NFLDataClient()
     schedules=cli.load_schedules([2026],refresh=True).to_dicts()
     stats=cli.load_player_stats([2026],refresh=True).to_dicts()
@@ -422,4 +431,7 @@ def run():
 
 
 if __name__=="__main__":
-    run()
+    p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--freeze-only",action="store_true",help="Commit before touching postgame source")
+    a=p.parse_args()
+    run(freeze_only=a.freeze_only)
