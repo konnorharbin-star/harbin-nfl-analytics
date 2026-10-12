@@ -22,7 +22,7 @@ jobs:
           python-version: "3.12"
       - name: Validate no stale book quote, no false market EV
         run: |
-          python -m pip install pytest
+          python -m pip install -e '.[dev]'
           python -m pytest -q tests/test_nfl_moneyline_forward_public_quote_shadow.py
       - name: Match only original pregame model versus later public observations
         run: |
