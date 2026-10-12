@@ -19,6 +19,7 @@ import json
 import math
 from pathlib import Path
 import random
+import time
 
 import nflreadpy as nfl
 from nfl.data import NFLDataClient
@@ -273,6 +274,32 @@ def freeze_future(full_originals,snap_context,cat,baseline,*,observed_utc,path):
     return {"original_prior":len(old),"new_originals":len(fresh),
             "total_original":len(old)+len(fresh),"excluded":dict(ignored)}
 
+def load_snap_history_with_retry(years, *,attempts=4,sleep=time.sleep):
+    """One season per request; fail closed on public source 5xx, no stale data substitutions."""
+    if attempts<1 or attempts>5:
+        raise ValueError("invalid bounded public download attempts")
+    complete=[]
+    for year in years:
+        last_error=None
+        for attempt in range(attempts):
+            try:
+                season_rows=nfl.load_snap_counts([year]).to_dicts()
+                if not season_rows:
+                    raise ValueError(f"public PFR snap dataset empty for season {year}")
+                complete.extend(season_rows)
+                last_error=None
+                break
+            except (ConnectionError,TimeoutError,OSError) as exc:
+                last_error=exc
+                if attempt+1<attempts:
+                    sleep(min(10,2**attempt))
+        if last_error is not None:
+            raise ConnectionError(
+                f"Public PFR season {year} unavailable after {attempts} attempts; "
+                "no CDF evaluation or source interpolation"
+            ) from last_error
+    return complete
+
 def run():
     client=NFLDataClient()
     years=[2024,2025,2026]
@@ -280,7 +307,7 @@ def run():
     stats=client.load_player_stats(years,refresh=True)
     nfl_players=nfl.load_players().to_dicts()
     gsis_pfr=unique_crosswalk(nfl_players)
-    snaps=nfl.load_snap_counts(years).to_dicts()
+    snaps=load_snap_history_with_retry(years)
     games,player_rows,source=source_frames(schedules,stats)
     original,created_original=load_or_create_calibration(
         "history/player_prop_2024_residual_catalog_v1.json")
