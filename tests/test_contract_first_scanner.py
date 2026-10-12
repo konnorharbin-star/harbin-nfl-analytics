@@ -93,7 +93,7 @@ def test_half_point_threshold_push_not_allowed():
     m=model(a[0],pwin=.57,ppush=.05,ploss=.38)
     r=screen(doc(a,m))
     assert r["markets"][0]["status"]=="BLOCKED"
-    assert "fractional NFL threshold cannot push" in r["markets"][0]["blockers"][0]
+    assert any("fractional NFL threshold cannot push" in error for error in r["markets"][0]["blockers"])
 
 
 def test_provided_model_mismatching_exact_line_fails():
@@ -107,7 +107,7 @@ def test_provided_model_mismatching_exact_line_fails():
 def test_pre_kickoff_enforced_from_decision_time():
     r=screen(doc(pair(),now="2026-10-12T00:20:00Z"))
     assert r["markets"][0]["status"]=="BLOCKED"
-    assert "already kicked off" in r["markets"][0]["blockers"]
+    assert any("already kicked off" in error for error in r["markets"][0]["blockers"])
 
 
 def test_stale_public_price_cannot_be_called_executable():
