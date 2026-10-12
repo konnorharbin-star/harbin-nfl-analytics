@@ -140,3 +140,14 @@ def test_qb_duplicate_does_not_accidentally_duplicate_output():
       game("b",2024,6,"BUF","KC")]
   a=prior_features(s,[qb("a",2024,5,"BUF"),qb("a",2024,5,"BUF")])
   assert len(a)==2
+
+
+def test_only_forecasts_within_ten_day_freeze_window(tmp_path):
+  coeff,_=fit(training_rows(),use_market_offset=False)
+  near=prior_features([game("near",2026,6,"BUF","KC")],[])
+  far=prior_features([game("far",2026,12,"BUF","KC")],[])
+  out=freeze_first_seen(near+far,coefficients=coeff,tie_prior=.005,
+    observed_utc="2026-10-12T11:00:00Z",path=tmp_path/"window.jsonl",
+    horizon_days=10)
+  assert out["frozen_new"]==1
+  assert out["first_seen_game_ids"]==["near"]
