@@ -1,0 +1,81 @@
+name: Participation-Conditional Prop V2 Research
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-participation-v2.yml"
+      - "scripts/participation_conditional_prop_v2.py"
+      - "tests/test_participation_conditional_prop_v2.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nfl-participation-conditional-v2
+  cancel-in-progress: false
+
+jobs:
+  chronology-and-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free nflverse and regression suite
+        run: python -m pip install -e '.[dev]'
+      - name: Test zero-stat, DNP unknown, time ordering and frozen records
+        run: |
+          python -m pytest -q \
+            tests/test_participation_conditional_prop_v2.py \
+            tests/test_forward_prop_outcome_audit.py \
+            tests/test_frozen_prop_contract_adapter.py
+      - name: Run comparable 2024 development and 2025 diagnostic, freeze future 2026
+        run: |
+          python -m scripts.participation_conditional_prop_v2 \
+            --season 2026 --week 6 \
+            --freeze history/prop_participation_shadow_v2_2026.csv \
+            --report reports/participation_conditional_v2_replay.json
+      - name: Require researched result with no profitable bet claims
+        run: |
+          python - <<'PY'
+          import json,os
+          r=json.load(open('reports/participation_conditional_v2_replay.json'))
+          assert r['decision']=='PASS'
+          assert r['train_year']==2024 and r['diagnostic_year']==2025
+          assert not r['approved_betting_model'] and not r['profitability_verified']
+          assert r['2026_not_used_for_fit']
+          s="\n".join([
+            "## Player-prop participation-conditioned v2 candidate",
+            f"Matched 2024 development stat rows: {r['2024_matched_player_market_predictions']}",
+            f"2024 missing-stat candidate rows not imputed: {r['2024_unresolved_missing_player_predictions']}",
+            f"2025 previously inspected paired diagnostic: {r['replay_2025']}",
+            f"2026 new prospective synthetic forecasts: {r['forward_frozen_records']['new']}",
+            "Model is not market-calibrated. No account accepted BetMGM odds or approved +EV bet.",
+          ])
+          print(s)
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:f.write(s+"\n")
+          PY
+      - name: Persist first-seen Week 6 player-shadow candidate without overwrite
+        run: |
+          if [ -f history/prop_participation_shadow_v2_2026.csv ]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add history/prop_participation_shadow_v2_2026.csv
+            if ! git diff --cached --quiet; then
+              git commit -m 'research: freeze 2026 future player v2 probability challenger before kickoff'
+              git pull --rebase origin main
+              git push origin HEAD:main
+            fi
+          fi
+      - name: Preserve all replay audit data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: 2026-player-participation-v2-replay
+          path: reports/participation_conditional_v2_replay.json
+          retention-days: 90
