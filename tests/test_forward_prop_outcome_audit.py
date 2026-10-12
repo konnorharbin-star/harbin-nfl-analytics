@@ -96,6 +96,10 @@ def test_previous_result_is_not_overwritten(tmp_path):
         append_results(p,a)
     after,meta=run(previous=a)
     assert not after and meta["ungraded_reason_counts"]["ALREADY_GRADED"]==1
+    assert meta["status"]=="SCORED_RESEARCH_CUMULATIVE"
+    assert meta["cumulative_graded_threshold_rows"]==1
+    assert meta["cumulative_player_game_clusters"]==1
+    assert meta["score_metrics_by_market"]["receptions"]["equal_weight_player_game_brier"]==.16
 
 def test_invalid_prediction_fails_closed():
     with pytest.raises(ValueError,match="bad frozen probability"):
