@@ -6,7 +6,7 @@ from scripts.nfl_prop_primary_anchor_cohort import (
     build_anchor_candidates,VERSION as ANCHOR_VERSION
 )
 from scripts.nfl_prop_paired_cdf_forward_grader import sha_payload
-from tests.test_nfl_prop_primary_anchor_cohort import source_lines
+from test_nfl_prop_primary_anchor_cohort import source_lines
 
 
 def first_seen():
