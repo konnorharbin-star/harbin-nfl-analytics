@@ -44,3 +44,9 @@ The audit does not modify original frozen forecasts or original graded results, 
 - **Betting status: PASS / no independently verified positive expected-value U.S. BetMGM opportunity.**
 
 **v4.15.0 is a prospective model challenger and data-accuracy research upgrade, not a profitable strategy release.**
+
+## Automated prospective v2 settlement study
+
+The project also has [scripts/grade_participation_prop_v2.py](../scripts/grade_participation_prop_v2.py), [source-isolation tests](../tests/test_grade_participation_prop_v2.py), and the scheduled [v2 forward grading workflow](../.github/workflows/edge-lab-participation-v2-grade.yml). They load the distinct original v2 research-only probability journal and **only after individual 2026 games end** join official matching player/game statistics, without refitting the probability distribution. New records are append-only in [history/prop_participation_outcomes_v2_2026.jsonl](../history/prop_participation_outcomes_v2_2026.jsonl) once a source game qualifies; this target file may not yet exist before eligible Week 6 games finish. Cumulative player-game-stat Brier is reported separately from v1, not retroactively recreated. Unknown participation and absence-of-stat lines remain blocked.
+
+This is an automatic research-grade evaluation, not execution, and cannot derive true market EV or accepted BetMGM prices.
