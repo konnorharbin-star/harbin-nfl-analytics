@@ -40,22 +40,35 @@ jobs:
       - name: Validate original sources, same-line contracts, 72-hour complete outcome gate
         if: steps.guard.outputs.enabled == 'true'
         run: python -m pytest -q tests/test_nfl_prop_paired_cdf_forward_grader.py
-      - name: Freeze unobserved pairs BEFORE loading official postgame source and grade only mature originals
+      - name: Freeze original same-line probabilities WITHOUT accessing target-game result source
         if: steps.guard.outputs.enabled == 'true'
-        run: python -m scripts.nfl_prop_paired_cdf_forward_grader
-      - name: Append original pregame paired prop snapshots and later official revisions
+        run: python -m scripts.nfl_prop_paired_cdf_forward_grader --freeze-only
+      - name: Commit ORIGINAL 2026 paired probabilities before any postgame API request
         if: steps.guard.outputs.enabled == 'true'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add history/player_prop_paired_cdf_lines_v1_2026.jsonl
-          if [[ -f history/player_prop_paired_cdf_line_grades_v1_2026.jsonl ]]; then
-            git add history/player_prop_paired_cdf_line_grades_v1_2026.jsonl
-          fi
           if ! git diff --cached --quiet; then
-            git commit -m 'research: freeze first-seen matched player prop CDF thresholds and append matured source grades'
+            git commit -m 'research: preserve matched same-line NFL prop original pregame CDF'
             git pull --rebase origin main
             git push origin HEAD:main
+          fi
+      - name: Grade only 72h-matured full-stat-row outcomes after original commit
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m scripts.nfl_prop_paired_cdf_forward_grader
+      - name: Append result and provider correction journal independently of first-seen freeze
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [[ -f history/player_prop_paired_cdf_line_grades_v1_2026.jsonl ]]; then
+            git add history/player_prop_paired_cdf_line_grades_v1_2026.jsonl
+            if ! git diff --cached --quiet; then
+              git commit -m 'research: append only matured official NFL player-stat original line grading'
+              git pull --rebase origin main
+              git push origin HEAD:main
+            fi
           fi
       - name: Validate this output cannot recommend a BetMGM bet
         if: steps.guard.outputs.enabled == 'true'
