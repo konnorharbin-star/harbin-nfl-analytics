@@ -167,6 +167,8 @@ def test_reused_event_id_cannot_have_two_kickoffs():
     first, second = rec(0), rec(1)
     second["event_id"] = first["event_id"]
     second["market_pair"]["event_id"] = first["event_id"]
+    second["participant"] = "another-synthetic-player"
+    second["market_pair"]["participant"] = second["participant"]
     with pytest.raises(ValueError, match="contradictory kickoff"):
         audit([first, second], "NFL")
 
