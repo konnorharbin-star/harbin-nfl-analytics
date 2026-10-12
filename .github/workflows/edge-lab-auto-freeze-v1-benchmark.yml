@@ -1,0 +1,92 @@
+name: NFL v1 Frozen Player Prop Benchmark Capture
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-auto-freeze-v1-benchmark.yml"
+      - "scripts/auto_freeze_legacy_prop_baseline.py"
+      - "tests/test_auto_freeze_legacy_prop_baseline.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "29 10 * 9,10,11,12 *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nfl-v1-unchanged-pregame-benchmark
+  cancel-in-progress: false
+
+jobs:
+  pregame-reference-probabilities:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Guard original 2026 forward study
+        id: guard
+        shell: bash
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" && "$(date -u +%Y)" != "2026" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.enabled == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.enabled == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free public nflverse client
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pip install -e '.[dev]'
+      - name: Verify no postkickoff benchmark backfill
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python -m pytest -q \
+            tests/test_auto_freeze_legacy_prop_baseline.py \
+            tests/test_auto_freeze_participation_v2.py
+      - name: Freeze unchanged original v1 model on all approaching 2026 NFL weeks
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python -m scripts.auto_freeze_legacy_prop_baseline \
+            --season 2026 --horizon-days 10 \
+            --report reports/legacy_v1_prop_benchmark_freeze.json
+      - name: Preserve separate original model first-seen ledgers
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add history/player_prop_forward.csv history/player_prop_probability_forward.csv
+          if ! git diff --cached --quiet; then
+            git commit -m 'research: freeze original NFL player v1 point and prop forecasts before kickoff'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Assert v1 remains retired as betting signal
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python - <<'PY'
+          import json,os
+          r=json.load(open('reports/legacy_v1_prop_benchmark_freeze.json'))
+          assert r['decision']=='PASS' and r['v1_legacy_unchanged']
+          assert r['approved_betting_signals']==0
+          s="\n".join([
+            "## Original v1 NFL player prop benchmark future captures",
+            f"Future game weeks: {r['future_weeks']}",
+            f"Baseline pregame prediction coverage: {r['screened_weeks']}",
+            "Bookmaker account verified odds: NONE.",
+            "Model edge independently proven: NO. PASS.",
+          ])
+          print(s)
+          with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as f:f.write(s+"\n")
+          PY
+      - name: Preserve original benchmark source diagnostics
+        if: always() && steps.guard.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-nfl-v1-benchmark-pregame-capture
+          path: reports/legacy_v1_prop_benchmark_freeze.json
+          retention-days: 90
