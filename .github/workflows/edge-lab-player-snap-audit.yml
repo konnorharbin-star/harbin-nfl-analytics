@@ -1,0 +1,59 @@
+name: NFL Player GSIS-PFR Snap Participation Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-player-snap-audit.yml"
+      - "scripts/prop_snap_participation_audit.py"
+      - "tests/test_prop_snap_participation_audit.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-player-participation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free nflverse data packages
+        run: python -m pip install -e '.[dev]'
+      - name: Test crosswalk ambiguity and missing market-stat rules
+        run: python -m pytest -q tests/test_prop_snap_participation_audit.py
+      - name: Audit real PFR snap-count data on first-seen ungraded 2026 forecasts
+        run: |
+          python -m scripts.prop_snap_participation_audit \
+            --season 2026 \
+            --frozen history/player_prop_probability_forward.csv \
+            --report reports/player_snap_participation_audit.json
+      - name: Reject sportsbook grade or profitable-edge conclusions
+        run: |
+          python - <<'PY'
+          import json,os
+          r=json.load(open('reports/player_snap_participation_audit.json'))
+          assert r['decision']=='PASS' and not r['may_promote_model']
+          assert not r['can_impute_missing_official_stats_as_zero']
+          s="\n".join([
+            "## NFL player missing-stat PFR/GSIS audit",
+            f"status: {r['status']}",
+            f"missing synthetic thresholds: {r.get('missing_original_threshold_rows')}",
+            f"distinct player/game/stat missing: {r.get('missing_distinct_player_game_market_groups')}",
+            f"classifications: {r.get('classification_groups')}",
+            f"source error: {r.get('source_error')}",
+            "Verified sportsbook zero-stat settlement: NO",
+            "No positive EV or betting recommendation.",
+          ])
+          print(s)
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:f.write(s+"\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: free-pfr-nfl-player-participation-audit
+          path: reports/player_snap_participation_audit.json
+          retention-days: 90
