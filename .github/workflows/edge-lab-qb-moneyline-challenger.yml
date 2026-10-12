@@ -45,15 +45,15 @@ jobs:
         run: |
           python -m scripts.nfl_moneyline_qb_efficiency_challenger \
             --season 2026 \
-            --journal history/moneyline_weekly_qb_challenger_2026.jsonl \
+            --journal history/moneyline_weekly_qb_challenger_v2_2026.jsonl \
             --report reports/moneyline_weekly_qb_challenger.json
       - name: Write ORIGINAL future moneyline candidate without backfill
         if: steps.guard.outputs.enabled == 'true'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          if [[ -f history/moneyline_weekly_qb_challenger_2026.jsonl ]]; then
-            git add history/moneyline_weekly_qb_challenger_2026.jsonl
+          if [[ -f history/moneyline_weekly_qb_challenger_v2_2026.jsonl ]]; then
+            git add history/moneyline_weekly_qb_challenger_v2_2026.jsonl
             if ! git diff --cached --quiet; then
               git commit -m 'research: freeze as-of prior-week QB-efficiency NFL moneyline challenger'
               git pull --rebase origin main
@@ -71,7 +71,8 @@ jobs:
           assert r["betting_EV"] is None and r["no_contemporaneous_BetMGM_quote"]
           print("2019-22 QB model development games:",r["n_independent_development"])
           print("2023-25 retrospective diagnostics:",r["diagnostics"])
-          print("Original 2026 pregame QB moneyline shadows:",r["forward"])
+          assert r['forward_window_days']==10
+          print("Original next-10-day 2026 pregame QB moneyline shadows:",r["forward"])
           print("BetMGM accepted bids/offers: ZERO. Decision PASS.")
           PY
       - name: Preserve verification report
