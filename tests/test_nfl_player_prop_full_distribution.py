@@ -56,11 +56,10 @@ def test_whole_number_push_explicit_and_total_probability_one():
     assert sum(probs)==pytest.approx(1,abs=1e-7)
     assert probs[2]>=0
 
-def test_zero_integer_line_nonnegative_stats_no_under():
+def test_whole_zero_push_line_fails_closed_for_potential_negative_rushing():
     s,c=original()
-    x=exact_line_probabilities(s,c,0,observed_utc="2026-10-12T04:45:00Z")
-    assert x["p_under_conditional_on_official_stat_row"]==0
-    assert x["p_push_conditional_on_official_stat_row"]>=0
+    with pytest.raises(ValueError,match="zero line unsupported"):
+        exact_line_probabilities(s,c,0,observed_utc="2026-10-12T04:45:00Z")
 
 def test_late_quote_origin_cannot_backfill_before_frozen_model():
     s,c=original()
@@ -134,3 +133,12 @@ def test_invalid_participant_does_not_create_wager():
     assert x["participation_or_void_verified"] is False
     assert not x["betmgm_account_quote_accepted"]
     assert x["calibrated_market_edge"] is False
+
+
+def test_negative_projected_rushing_stat_is_preserved_not_silently_clamped():
+    c=catalog()
+    pred=dict(forecast(),challenger_mean=-2.5)
+    r=candidate_distributions([pred],c)
+    assert r[0]['original_point_mean']==-2.5
+    assert r[0]['original_scale']>0
+    assert r[0]['decision']=='PASS'
