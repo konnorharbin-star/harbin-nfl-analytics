@@ -42,7 +42,7 @@ jobs:
         run: python -m pip install -e '.[dev]'
       - name: Test original-offer timestamp gate and no-imputation rule
         if: steps.guard.outputs.enabled == 'true'
-        run: python -m pytest -q tests/test_action_network_contract_feed.py tests/test_contract_first_scanner.py
+        run: python -m pytest -q tests/test_action_network_contract_feed.py tests/test_public_quote_capture_journal.py tests/test_contract_first_scanner.py
       - name: Query next NFL game via existing optional public provider
         if: steps.guard.outputs.enabled == 'true'
         run: |
