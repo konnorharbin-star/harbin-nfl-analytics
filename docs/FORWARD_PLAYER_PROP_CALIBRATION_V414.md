@@ -1,0 +1,29 @@
+# BetMGM Edge Lab v4.14.0 — Prospective player-prop outcome accuracy audit
+
+**As-of 2026-10-12 UTC | RESEARCH ONLY | no verified profitable BetMGM edge**
+
+## Correctness fixes to contract-level pricing
+
+The market scanner previously allowed a probability forecast to be attached to a bookmaker quote that had been recorded before the model forecast existed. That is an as-of/chronological research error. The scanner now requires model forecast UTC to be no later than the source quote UTC, not just capture/decision UTC. The frozen prop adapter additionally rejects non-half-point or nonfinite thresholds: the frozen synthetic grid always presumes no push, whereas whole-number yardage/reception lines may push. Both hardening changes passed GitHub CI.
+
+Passing regression runs: https://github.com/konnorharbin-star/harbin-nfl-analytics/actions/runs/38198579183 and https://github.com/konnorharbin-star/harbin-nfl-analytics/actions/runs/38198595177 .
+
+## Real forward outcome grading: completed and preserved
+
+The new independent forward grader https://github.com/konnorharbin-star/harbin-nfl-analytics/blob/main/scripts/forward_prop_outcome_audit.py combines exact original frozen player/game/stat/half-point probability from https://github.com/konnorharbin-star/harbin-nfl-analytics/blob/main/history/player_prop_probability_forward.csv with official free nflverse 2026 weekly player statistics and completed schedule records. It validates all original forecast times before kickoffs, official game_id and team identities, no missing-stat equals zero, actual regular season stats, and no result until >=3 hours after kickoff and a populated final score. It scores only once per first-seen contract and appends immutable-in-code research records to https://github.com/konnorharbin-star/harbin-nfl-analytics/blob/main/history/player_prop_outcomes_2026.jsonl . Missing players cannot silently turn into under wins because bookmaker participation and void treatment are unresolved.
+
+The original implementation's first actual-data run exposed changed nflverse source schema: new weekly player data have a field named team rather than older recent_team. The code now supports either when unambiguous and verifies the full game ID when present. Initial 2026 scoring and GitHub persistence completed successfully in https://github.com/konnorharbin-star/harbin-nfl-analytics/actions/runs/38198846646 . Subsequent successful recurring run https://github.com/konnorharbin-star/harbin-nfl-analytics/actions/runs/38199121473 proved that score history is preserved and cumulative performance remains available on days with zero new grades. Regression tests: https://github.com/konnorharbin-star/harbin-nfl-analytics/blob/main/tests/test_forward_prop_outcome_audit.py . GitHub push is now protected from unrelated concurrent model-source commits using normal non-force rebase.
+
+Initial 2026 pregame-frozen player-prop forecast audit as-of 2026-10-12T03:13:30.865195Z:
+- Original frozen synthetic threshold forecasts: **4,186**.
+- First newly graded original threshold probabilities: **3,052** across **12 NFL games**.
+- Distinct player-game-stat clusters: **436**, not 3,052 independent picks.
+- Ungraded: **602** insufficient post-kickoff elapsed time; **532** missing official player stat row or uncertain participation/void.
+- Recorded research-only Brier, equal-weight per distinct player-game-stat group (lower better): receiving yards **0.09999574** on 163 groups; receptions **0.11616997** on 164 groups; rushing yards **0.08659318** on 87 groups; passing yards **0.24502972** on 22 groups. Each group has seven correlated fixed synthetic thresholds.
+- This is **not a valid comparison with any current BetMGM offer**. No line/odds acceptance, independent benchmark against contemporary same-contract market fair probability, calibration interval for traded contracts, wager, cash return, or profitable EV evidence.
+
+**Critical model-target mismatch discovered.** Source https://github.com/konnorharbin-star/harbin-nfl-analytics/blob/main/nfl/prop_probability.py historically imputes player DNP/missing official stat rows as zero for its 2024 calibration and 2025 diagnostic. The newly correct forward trading-outcome evaluator instead leaves absent player stat rows unresolved; sportsbook void rules may depend on participation. These are NOT the same target population. Therefore the apparent 2026 Brier accuracy on players with recorded stats is NOT validation of the model's market probabilities. The grader now explicitly returns graded_population=PLAYERS_WITH_OFFICIAL_WEEKLY_STATS_ROW_ONLY, training_forward_evaluation_population_mismatch=true and comparability_status=BLOCKED_PENDING_PARTICIPATION_RESOLUTION, and testing protects those flags.
+
+Repair strategy: Match free PFR snap count participation against GSIS IDs only through independently validated crosswalks; for confirmed active players with no applicable stat, use the verified zero; distinguish no participation and book void from an actual losing over. Refit a separate participation-conditional challenger using **earlier training seasons only** and freeze it BEFORE new future games. Never retroactively refit on these newly revealed 2026 outcomes and reuse them as independent evidence. Official player schema reference: https://nflreadr.nflverse.com/reference/load_player_stats.html ; snap count documentation: https://nflreadr.nflverse.com/reference/load_snap_counts.html . Snap-count rows use PFR IDs, not automatically interchangeable with player-stats GSIS IDs.
+
+**Decision:** no promotion to the approved model registry; no user-account BetMGM price verified, no wager recommended or placed, and no verified positive expected value. This update repairs timing/push assumptions and creates real prospective forecast accuracy measurement while explicitly blocking a major participation-population mismatch.
