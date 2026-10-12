@@ -1,0 +1,85 @@
+name: NFL Moneyline Elo Research Freeze (No Bets)
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-moneyline-elo.yml"
+      - "scripts/nfl_moneyline_elo_research.py"
+      - "tests/test_nfl_moneyline_elo_research.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "08 11 * 9,10,11,12 *"
+permissions:
+  contents: write
+concurrency:
+  group: nfl-moneyline-first-seen-original-2026
+  cancel-in-progress: false
+jobs:
+  nfl-outcome-only-moneyline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Restrict scheduled original cohort to 2026
+        id: guard
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" && "$(date -u +%Y)" != "2026" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.enabled == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.enabled == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free public nflverse dependencies
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pip install -e '.[dev]'
+      - name: Test chronology and two-way contract integrity
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pytest -q tests/test_nfl_moneyline_elo_research.py
+      - name: Replay old inspected seasons and freeze original 2026 upcoming moneylines
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python -m scripts.nfl_moneyline_elo_research \
+            --season 2026 --horizon-days 10 \
+            --journal history/moneyline_elo_v1_2026.jsonl \
+            --report reports/moneyline_elo_research.json
+      - name: Persist immutable source forecast journal
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [[ -f history/moneyline_elo_v1_2026.jsonl ]]; then
+            git add history/moneyline_elo_v1_2026.jsonl
+            if ! git diff --cached --quiet; then
+              git commit -m 'research: preserve original NFL moneyline Elo pregame probabilities'
+              git pull --rebase origin main
+              git push origin HEAD:main
+            fi
+          fi
+      - name: Enforce no executable BetMGM moneyline picks
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("reports/moneyline_elo_research.json"))
+          assert r["decision"] == "PASS"
+          assert not r["independently_profitable_edge"] and r["approved_bets"]==0
+          assert r["archive_moneylines_are_user_executable_quotes"] is False
+          assert r["replay_snapshots_have_origin_times"] is False
+          print("Forward freeze:",r["forward"])
+          print("2024 diagnostic:",r["diagnostics"]["2024"])
+          print("2025 diagnostic:",r["diagnostics"]["2025"])
+          print("Cash bets: 0; market edge validated: NO; PASS")
+          PY
+      - name: Preserve retrospective score diagnostics
+        if: always() && steps.guard.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-moneyline-elo-research-only
+          path: reports/moneyline_elo_research.json
+          if-no-files-found: warn
+          retention-days: 90
