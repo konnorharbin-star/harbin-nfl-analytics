@@ -1,0 +1,83 @@
+name: NFL Player Prop Prior Snap Stat-Row Proxy Diagnostic
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-prop-snap-stat-row-proxy.yml"
+      - "scripts/nfl_prop_snap_stat_row_diagnostic.py"
+      - "tests/test_nfl_prop_snap_stat_row_diagnostic.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "13 13 * 9,10,11,12 *"
+permissions:
+  contents: write
+concurrency:
+  group: nfl-prop-stat-row-proxy-originals-2026
+  cancel-in-progress: false
+jobs:
+  snap-to-official-stat-row-proxy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Prevent scheduled model rollout outside 2026
+        id: guard
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" && "$(date -u +%Y)" != "2026" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.enabled == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.enabled == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free public historical snap and player GSIS sources
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pip install -e '.[dev]'
+      - name: Assert no same-week snap leakage or DNP inference
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pytest -q tests/test_nfl_prop_snap_stat_row_diagnostic.py
+      - name: Fit only 2024 and evaluate old 2025 holdout without tuning
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m scripts.nfl_prop_snap_stat_row_diagnostic
+      - name: Persist first-seen 2026 row-observation proxy
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [[ -f history/player_prop_stat_row_proxy_v1_2026.jsonl ]]; then
+            git add history/player_prop_stat_row_proxy_v1_2026.jsonl
+            if ! git diff --cached --quiet; then
+              git commit -m 'research: first-seen NFL snap-based player stat-row presence probabilities'
+              git pull --rebase origin main
+              git push origin HEAD:main
+            fi
+          fi
+      - name: Enforce not an active-player or tradable prop probability
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("reports/player_prop_stat_row_proxy_research.json"))
+          assert r["decision"]=="PASS" and not r["approved_profit_model"]
+          assert r["true_EV"] is None and r["approved_wagers"]==0
+          assert r["label_does_NOT_prove_played_or_void"]
+          assert r["original_full_prop_or_v2_journals_modified"] is False
+          assert r["betmgm_bookmaker_offers_verified"]==0
+          print("2024 development player-games:",r["2024_train_player_games"])
+          print("2025 previously inspected diagnostic:",r["2025_retrospective_diagnostic"])
+          print("2025 game-cluster interval:",r["2025_cluster_brier_delta_ci95"])
+          print("2026 original forward proxy:",r["2026_forward_freeze"])
+          print("No verified prop market or activation. PASS.")
+          PY
+      - name: Preserve complete retrospective report
+        if: always() && steps.guard.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-prop-prior-snap-stat-row-observation-diagnostic
+          path: reports/player_prop_stat_row_proxy_research.json
+          if-no-files-found: warn
+          retention-days: 90
