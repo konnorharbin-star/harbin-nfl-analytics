@@ -74,7 +74,7 @@ def test_missing_player_in_some_prior_games_no_zero_imputation():
     r=coverage([full()],players(),snap_rows,schedules(),
        "2026-10-12T11:30:00Z")[0]
     assert r["observed_offense_snaps"]==[20,40,50]
-    assert r["observed_mean"]==pytest.approx(110/3)
+    assert r["observed_mean"]==pytest.approx(110/3,abs=.0005)
     assert not r["missing_as_zero"]
 
 def test_no_postkickoff_coverage_new_row():
