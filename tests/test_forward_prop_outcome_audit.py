@@ -160,3 +160,11 @@ def test_postseason_player_stats_not_scored_for_regular_game():
     s,meta=run(ss=[item])
     assert not s
     assert meta["ungraded_reason_counts"]["PLAYER_NOT_REGULAR_SEASON"]==1
+
+def test_historical_dnp_zero_policy_is_explicitly_blocked_as_model_mismatch():
+    _,meta=run()
+    assert meta["historical_v1_calibration_imputed_missing_player_as_zero"]
+    assert meta["training_forward_evaluation_population_mismatch"]
+    assert meta["comparability_status"]=="BLOCKED_PENDING_PARTICIPATION_RESOLUTION"
+    assert meta["graded_population"]=="PLAYERS_WITH_OFFICIAL_WEEKLY_STATS_ROW_ONLY"
+    assert not meta["independently_validated_betmgm_positive_ev"]
