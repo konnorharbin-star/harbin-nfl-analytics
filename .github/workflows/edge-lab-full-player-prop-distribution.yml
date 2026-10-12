@@ -1,0 +1,92 @@
+name: NFL Full Player Prop Distribution Freeze (Research Only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-full-player-prop-distribution.yml"
+      - "scripts/nfl_player_prop_full_distribution.py"
+      - "tests/test_nfl_player_prop_full_distribution.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "43 11 * 9,10,11,12 *"
+permissions:
+  contents: write
+concurrency:
+  group: nfl-new-2026-full-prop-distribution-originals
+  cancel-in-progress: false
+jobs:
+  pregame-full-distribution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Keep scheduled study within 2026
+        id: guard
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" && "$(date -u +%Y)" != "2026" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.enabled == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.enabled == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free nflverse and test dependencies
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pip install -e '.[dev]'
+      - name: Validate immutable model identity, actual-threshold math and kickoff gates
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python -m pytest -q \
+            tests/test_nfl_player_prop_full_distribution.py \
+            tests/test_participation_conditional_prop_v2.py
+      - name: Create once-frozen 2024 empirical residual catalog and pregame 2026 original distributions
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python -m scripts.nfl_player_prop_full_distribution \
+            --season 2026 --horizon-days 10 \
+            --calibration history/player_prop_2024_residual_catalog_v1.json \
+            --shadow history/player_prop_full_distributions_2026.jsonl \
+            --report reports/player_prop_full_distribution_research.json
+      - name: Commit frozen catalog and first-observed player-stat sufficient statistics
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [[ -f history/player_prop_2024_residual_catalog_v1.json ]]; then
+            git add history/player_prop_2024_residual_catalog_v1.json
+          fi
+          if [[ -f history/player_prop_full_distributions_2026.jsonl ]]; then
+            git add history/player_prop_full_distributions_2026.jsonl
+          fi
+          if ! git diff --cached --quiet; then
+            git commit -m 'research: freeze original NFL player complete empirical distributions before kickoff'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Research-only checks
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open('reports/player_prop_full_distribution_research.json'))
+          assert r['decision']=='PASS'
+          assert r['training_year']==2024 and not r['2026_outcomes_used_to_fit']
+          assert not r['profitable_market_edge_confirmed']
+          assert r['approved_bets']==r['cash_wagers']==r['betmgm_executable_prices']==0
+          assert r['old_synthetic_v1_v2_journals_modified'] is False
+          print('Frozen calibration groups:',r['catalog_groups'])
+          print('Original prospective player-market distribution groups:',r['forward_records'])
+          print('NO BET. No market-time quotes or independently validated profit.')
+          PY
+      - name: Archive as-of source and model coverage report
+        if: always() && steps.guard.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-full-player-prop-distribution-research
+          path: reports/player_prop_full_distribution_research.json
+          if-no-files-found: warn
+          retention-days: 90
