@@ -25,8 +25,18 @@ SOURCE_VERSION="prop_empirical_error_cdf_v1"
 
 
 def _line(v):
-    try:return Decimal(str(v))
-    except (TypeError,InvalidOperation):raise ValueError("malformed numeric threshold") from None
+    try:
+        value=Decimal(str(v))
+    except (TypeError,InvalidOperation):
+        raise ValueError("malformed numeric threshold") from None
+    if not value.is_finite():
+        raise ValueError("nonfinite numeric threshold")
+    # Archived shadow curves assume a two-outcome .5-line: no exact integer
+    # stat result can equal the quoted threshold. Whole-number props can push
+    # and MUST NOT inherit a probability curve with p_push hardcoded to zero.
+    if value % 1 != Decimal("0.5"):
+        raise ValueError("frozen prop shadows support only .5 no-push lines")
+    return value
 
 
 def load_frozen_forecasts(path):
