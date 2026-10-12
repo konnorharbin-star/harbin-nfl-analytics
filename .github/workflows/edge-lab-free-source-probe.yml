@@ -49,7 +49,8 @@ jobs:
           python -m scripts.probe_free_nfl_contract_quotes \
             --season 2026 --week 5 \
             --event 2026_05_BUF_LA --home LA --away BUF \
-            --kickoff 2026-10-13T00:15:00Z
+            --kickoff 2026-10-13T00:15:00Z \\
+            --capture-history history/public_aggregator_quotes_2026.jsonl
       - name: Show quote origin validation, without invented betting prices
         if: steps.guard.outputs.enabled == 'true'
         run: |
