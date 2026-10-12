@@ -172,3 +172,41 @@ def test_game_cluster_incremental_comparison_is_deterministic():
     simple,_=fit(data,allowed_features=(0,3))
     ci=cluster_interval_comparison(data,complete,simple,draws=25)
     assert ci is not None and ci[0]<=ci[1]
+
+
+def test_original_2024_beta_catalog_matches_first_2026_shadow(tmp_path):
+    from scripts.nfl_prop_snap_stat_row_diagnostic import fixed_training_cohort
+    import hashlib
+    dev=records()
+    beta,mean=fit(dev)
+    catalog={"model":VERSION,"development_year":2024,
+       "development_unique_player_games":len(dev),
+       "development_stat_row_presence_rate":mean,
+       "feature_names":FEATURES,"ridge_alpha":50.,
+       "full_beta":beta,
+       "full_beta_sha256":hashlib.sha256(json.dumps(beta,sort_keys=True).encode()).hexdigest()}
+    file=tmp_path/"pinned.json"
+    file.write_text(json.dumps(catalog))
+    pinned,sha=fixed_training_cohort(beta,mean,dev,path=file)
+    assert pinned==beta and sha==catalog["full_beta_sha256"]
+    file.write_text(json.dumps(dict(catalog,full_beta=[0.]*len(beta))))
+    with pytest.raises(ValueError,match="SHA"):
+        fixed_training_cohort(beta,mean,dev,path=file)
+
+def test_revised_training_cohort_cannot_change_original_coefficients(tmp_path):
+    from scripts.nfl_prop_snap_stat_row_diagnostic import fixed_training_cohort
+    import hashlib
+    dev=records()
+    beta,mean=fit(dev)
+    catalog={"model":VERSION,"development_year":2024,
+       "development_unique_player_games":len(dev),
+       "development_stat_row_presence_rate":mean,
+       "feature_names":FEATURES,"ridge_alpha":50.,
+       "full_beta":beta,
+       "full_beta_sha256":hashlib.sha256(json.dumps(beta,sort_keys=True).encode()).hexdigest()}
+    file=tmp_path/"pinned.json"
+    file.write_text(json.dumps(catalog))
+    revised=records(n=521)
+    newbeta,newmean=fit(revised)
+    with pytest.raises(ValueError,match="do NOT silently refit"):
+        fixed_training_cohort(newbeta,newmean,revised,path=file)
