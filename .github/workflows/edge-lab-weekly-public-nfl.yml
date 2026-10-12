@@ -1,0 +1,102 @@
+name: Edge Lab Weekly All NFL Games Capture
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-weekly-public-nfl.yml"
+      - "scripts/weekly_public_nfl_odds.py"
+      - "tests/test_weekly_public_nfl_odds.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "9 7,15,22 * 9,10,11,12 *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: quote-capture-by-NFL-week
+  cancel-in-progress: false
+
+jobs:
+  capture-all-upcoming:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Only schedule during the 2026 NFL regular season
+        id: season
+        shell: bash
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" && "$(date -u +%Y)" != "2026" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Future NFL seasons require separately reviewed schedule/model."
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.season.outputs.enabled == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.season.outputs.enabled == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free public football tooling
+        if: steps.season.outputs.enabled == 'true'
+        run: python -m pip install -e '.[dev]'
+      - name: Validate no-fabrication and pre-kickoff cutoffs
+        if: steps.season.outputs.enabled == 'true'
+        run: |
+          python -m pytest -q \
+            tests/test_weekly_public_nfl_odds.py \
+            tests/test_public_quote_capture_journal.py \
+            tests/test_action_network_contract_feed.py \
+            tests/test_contract_first_scanner.py
+      - name: Collect all upcoming NFL game markets (free public source)
+        if: steps.season.outputs.enabled == 'true'
+        run: |
+          python -m scripts.weekly_public_nfl_odds \
+            --season 2026 \
+            --hours 192 --max-games 32 \
+            --refresh-schedules \
+            --history history/public_aggregator_quotes_2026.jsonl \
+            --report reports/weekly_public_quote_capture.json
+      - name: Persist each pregame snapshot without rewriting older entries
+        if: steps.season.outputs.enabled == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [ -f history/public_aggregator_quotes_2026.jsonl ]; then
+            git add history/public_aggregator_quotes_2026.jsonl
+            if ! git diff --cached --quiet; then
+              git commit -m 'research: append all upcoming NFL public odds observations, not live account prices'
+              git push
+            else
+              echo "No new source observations"
+            fi
+          fi
+      - name: Report research coverage without claiming bookmaker-edge execution
+        if: steps.season.outputs.enabled == 'true'
+        run: |
+          python - <<'PY'
+          import json,os
+          r=json.load(open("reports/weekly_public_quote_capture.json"))
+          s="\n".join([
+            "## All upcoming NFL games, public odds capture",
+            f"Target upcoming games: {r['target_games']}",
+            f"Pregame games with captured public markets: {r['games_with_capture']}",
+            f"Two-way market pairs captured: {r['captured_paired_rows']}",
+            f"Bookmaker original-price-update timestamp pairs: {r['origin_verified_paired_rows']}",
+            f"Source failures: {len(r['rejections'])}",
+            "BetMGM US account accepted quote: NOT VERIFIED.",
+            "Independently validated profitable bet: NONE. Decision PASS.",
+          ])
+          print(s)
+          with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as f: f.write(s+"\n")
+          PY
+      - name: Preserve dated metadata and source availability errors
+        if: always() && steps.season.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-weekly-public-odds-source-report
+          path: reports/weekly_public_quote_capture.json
+          retention-days: 90
