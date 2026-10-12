@@ -217,7 +217,11 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     data = json.loads(args.input.read_text(encoding="utf-8"))
-    result = audit(data["records"], args.league)
+    if not isinstance(data, dict) or not isinstance(data.get("records"), list):
+        raise ValueError("records input must be an array")
+    if any(not isinstance(r, dict) or r.get("league") not in {"NFL", "CFB"} for r in data["records"]):
+        raise ValueError("unrecognized record league")
+    result = audit([r for r in data["records"] if r["league"] == args.league], args.league)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps({"status": result["status"], "count": len(result["records"]),
