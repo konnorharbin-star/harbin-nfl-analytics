@@ -1,0 +1,84 @@
+name: NFL Frozen Paired Player Prop CDF Forward Grade — Research Only
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-prop-paired-cdf-forward-grade.yml"
+      - "scripts/nfl_prop_paired_cdf_forward_grader.py"
+      - "tests/test_nfl_prop_paired_cdf_forward_grader.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "53 15 * 9,10,11,12 *"
+permissions:
+  contents: write
+concurrency:
+  group: nfl-2026-original-versus-snap-cdf-forward
+  cancel-in-progress: false
+jobs:
+  capture-and-grade-mature-source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Disable 2027 or later scheduled first-seen research
+        id: guard
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" && "$(date -u +%Y)" != "2026" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.enabled == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.enabled == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install free NFL model dependencies
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pip install -e '.[dev]'
+      - name: Validate original sources, same-line contracts, 72-hour complete outcome gate
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pytest -q tests/test_nfl_prop_paired_cdf_forward_grader.py
+      - name: Freeze unobserved pairs BEFORE loading official postgame source and grade only mature originals
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m scripts.nfl_prop_paired_cdf_forward_grader
+      - name: Append original pregame paired prop snapshots and later official revisions
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add history/player_prop_paired_cdf_lines_v1_2026.jsonl
+          if [[ -f history/player_prop_paired_cdf_line_grades_v1_2026.jsonl ]]; then
+            git add history/player_prop_paired_cdf_line_grades_v1_2026.jsonl
+          fi
+          if ! git diff --cached --quiet; then
+            git commit -m 'research: freeze first-seen matched player prop CDF thresholds and append matured source grades'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+      - name: Validate this output cannot recommend a BetMGM bet
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("reports/player_prop_paired_cdf_forward_2026.json"))
+          assert r["decision"]=="PASS"
+          assert r["source_grading_min_hours_after_kickoff"]==72
+          assert r["actual_US_BetMGM_account_quotes"]==0
+          assert r["true_market_ev"] is None and r["cash_bets"]==0
+          assert not r["profitable_strategy_validated"]
+          assert r["original_full_and_snap_CDF_journals_unchanged"]
+          print("Paired first-seen half-point probabilities:",r["paired_originals"])
+          print("Official source eligibility blocks:",r["source_grading_eligibility"])
+          print("Future conditional CDF results:",r["forward_performance"])
+          print("Decision PASS — no evidence of executable betting edge.")
+          PY
+      - name: Preserve provenance and grouped forward analysis report
+        if: always() && steps.guard.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-paired-original-vs-snap-cdf-2026-prospective
+          path: reports/player_prop_paired_cdf_forward_2026.json
+          if-no-files-found: warn
+          retention-days: 90
