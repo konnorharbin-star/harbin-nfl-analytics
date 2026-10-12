@@ -28,7 +28,12 @@ Only exact matching thresholds, participant, period and game count.
 
 market_pair requires bookmaker, region, snapshot_id, quote_utc,
 captured_utc, source_url, and sides (two exact-contract records each
-containing selection, line and american_odds). A snapshot also must carry\nmatching event_id, market, period and participant. Same two-sided selection\nlabels or line numbers alone cannot prove same-contract comparability. Market\nquote time must be after pick publication, and its capture must precede kickoff.\nSettled outcomes must include outcome_source_url (HTTPS) in addition to\nsettled_utc; the original event_id must map to a consistent kickoff.
+containing selection, line and american_odds). A snapshot also must carry
+matching event_id, market, period and participant. Same two-sided selection
+labels or line numbers alone cannot prove same-contract comparability. Market
+quote time must be after pick publication, and its capture must precede kickoff.
+Settled outcomes must include outcome_source_url (HTTPS) in addition to
+settled_utc; the original event_id must map to a consistent kickoff.
 Provide optional independent_model_p and independent_model_frozen_utc
 only when the independent model prediction was frozen BEFORE the
 professional published the selection. Never fabricate missing odds.
