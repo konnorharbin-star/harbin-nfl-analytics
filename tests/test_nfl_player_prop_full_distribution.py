@@ -142,3 +142,11 @@ def test_negative_projected_rushing_stat_is_preserved_not_silently_clamped():
     assert r[0]['original_point_mean']==-2.5
     assert r[0]['original_scale']>0
     assert r[0]['decision']=='PASS'
+
+
+def test_catalog_vector_tampering_without_sha_change_is_blocked():
+    s,c=original()
+    c["vectors"]["rushing_yards|RB"][0]+=0.25
+    # An attacker changing only calibration content must not reuse stored hash.
+    with pytest.raises(ValueError,match="content hash integrity"):
+        exact_line_probabilities(s,c,69.5,observed_utc="2026-10-12T04:45:00Z")
