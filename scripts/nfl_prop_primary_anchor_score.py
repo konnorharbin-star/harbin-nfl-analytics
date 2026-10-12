@@ -71,7 +71,7 @@ def anchor_results(anchors,paired_originals,graded,*,seed=2026,draws=BOOTSTRAPS)
         if any(v is None for v in complete):
             raise ValueError("anchor no longer has all seven original lines")
         expected=min(complete,key=lambda r:(
-            abs(r["p_over_original_conditional_on_official_stat_row"]-.5),
+            round(abs(r["p_over_original_conditional_on_official_stat_row"]-.5),10),
             r["synthetic_line"],
         ))
         if float(expected["synthetic_line"])!=k[3]:
