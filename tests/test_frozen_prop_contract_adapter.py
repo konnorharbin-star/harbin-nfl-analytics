@@ -125,3 +125,25 @@ def test_missing_bookmaker_price_does_not_make_bet(tmp_path):
     x=join(q,index)
     assert x["markets"][0]["status"]=="BLOCKED"
     assert x["best_verified_edge"] is None
+
+def test_integer_line_fails_closed_instead_of_fake_zero_push(tmp_path):
+    index=load_frozen_forecasts(write_csv(tmp_path,[frozen()]))
+    result=join(quotes(line="49"),index)
+    assert result["decision"]=="PASS"
+    assert not result["frozen_prop_matches"]
+    assert "no-push lines" in result["frozen_prop_unmatched"][0]["reason"]
+    assert result["best_verified_edge"] is None
+
+
+def test_synthetic_integer_forecast_row_rejected(tmp_path):
+    row=frozen()
+    row["synthetic_line"]="49"
+    with pytest.raises(ValueError,match="no-push lines"):
+        load_frozen_forecasts(write_csv(tmp_path,[row]))
+
+
+def test_nan_synthetic_threshold_rejected(tmp_path):
+    row=frozen()
+    row["synthetic_line"]="NaN"
+    with pytest.raises(ValueError,match="nonfinite"):
+        load_frozen_forecasts(write_csv(tmp_path,[row]))
