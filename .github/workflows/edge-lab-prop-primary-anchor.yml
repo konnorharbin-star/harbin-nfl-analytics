@@ -6,6 +6,8 @@ on:
       - ".github/workflows/edge-lab-prop-primary-anchor.yml"
       - "scripts/nfl_prop_primary_anchor_cohort.py"
       - "tests/test_nfl_prop_primary_anchor_cohort.py"
+      - "scripts/nfl_prop_primary_anchor_score.py"
+      - "tests/test_nfl_prop_primary_anchor_score.py"
   workflow_dispatch:
   schedule:
     - cron: "08 16 * 9,10,11,12 *"
@@ -39,7 +41,7 @@ jobs:
         run: python -m pip install -e '.[dev]'
       - name: Test distribution monotonicity, complete 7 lines and pregame original
         if: steps.guard.outputs.enabled == 'true'
-        run: python -m pytest -q tests/test_nfl_prop_primary_anchor_cohort.py
+        run: python -m pytest -q tests/test_nfl_prop_primary_anchor_cohort.py tests/test_nfl_prop_primary_anchor_score.py
       - name: Freeze baseline-only anchor rule before kickoff without player outcomes
         if: steps.guard.outputs.enabled == 'true'
         run: python -m scripts.nfl_prop_primary_anchor_cohort
