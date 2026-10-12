@@ -18,10 +18,13 @@ def rec(i=0, outcome="WIN", league="NFL", analyst="FIXTURE"):
                             "quote_utc": stamp(t + timedelta(minutes=5)),
                             "captured_utc": stamp(t + timedelta(minutes=6)),
                             "source_url": "https://example.org/market-snapshot",
+                            "event_id": f"event-{i}", "market": "PLAYER_RECEIVING_YARDS",
+                            "period": "FULL_GAME", "participant": "synthetic-player",
                             "sides": [{"selection": "OVER", "line": line, "american_odds": -110},
                                       {"selection": "UNDER", "line": line, "american_odds": -110}]},
             "outcome": outcome,
             "settled_utc": None if outcome == "PENDING" else stamp(t + timedelta(hours=10)),
+            "outcome_source_url": "https://example.org/verified-final-box-score",
             "independent_model_p": 0.53,
             "independent_model_frozen_utc": stamp(t - timedelta(hours=1))}
 
@@ -115,6 +118,7 @@ def test_cannot_use_game_result_that_finishes_after_next_post():
     second = rec(0)
     second["record_id"] = "other-id"
     second["event_id"] = "other-event"
+    second["market_pair"]["event_id"] = "other-event"
     second["published_utc"] = "2026-01-01T02:00:00+00:00"
     second["captured_utc"] = "2026-01-01T02:01:00+00:00"
     second["market_pair"]["quote_utc"] = "2026-01-01T02:05:00+00:00"
@@ -141,3 +145,57 @@ def test_cli_filters_mixed_leagues_and_fails_on_unknown(tmp_path):
                              "--league", "NFL", "--input", str(source), "--output", str(output)],
                             capture_output=True, text=True)
     assert result.returncode != 0
+
+
+def test_market_pair_must_match_exact_event_market_period_and_player():
+    for key, wrong in (("event_id", "wrong-game"), ("market", "GAME_TOTAL"),
+                       ("period", "FIRST_HALF"), ("participant", "different-player")):
+        row = rec()
+        row["market_pair"][key] = wrong
+        with pytest.raises(ValueError, match="same event and exact contract"):
+            audit([row], "NFL")
+
+
+def test_settled_pick_requires_a_verifiable_result_source():
+    row = rec()
+    del row["outcome_source_url"]
+    with pytest.raises(ValueError, match="settled outcome needs a source"):
+        audit([row], "NFL")
+
+
+def test_reused_event_id_cannot_have_two_kickoffs():
+    first, second = rec(0), rec(1)
+    second["event_id"] = first["event_id"]
+    second["market_pair"]["event_id"] = first["event_id"]
+    second["participant"] = "another-synthetic-player"
+    second["market_pair"]["participant"] = second["participant"]
+    with pytest.raises(ValueError, match="contradictory kickoff"):
+        audit([first, second], "NFL")
+
+
+def test_many_correlated_same_game_picks_cannot_trigger_incremental_claim():
+    # 27 completed prior games create an eligible learned shift.
+    historical = [rec(i) for i in range(27)]
+    base = rec(28)
+    same_game = []
+    for i in range(25):
+        row = rec(28)
+        row["record_id"] = f"correlated-{i}"
+        row["participant"] = f"synthetic-player-{i}"
+        row["market_pair"]["participant"] = row["participant"]
+        t = datetime.fromisoformat(base["published_utc"]) + timedelta(minutes=i)
+        row["published_utc"] = t.isoformat()
+        row["captured_utc"] = (t + timedelta(minutes=1)).isoformat()
+        row["market_pair"]["quote_utc"] = (t + timedelta(minutes=5)).isoformat()
+        row["market_pair"]["captured_utc"] = (t + timedelta(minutes=6)).isoformat()
+        same_game.append(row)
+    results = audit(historical + same_game, "NFL")
+    analyst = results["analysts"]["FIXTURE"]
+    assert analyst["shadow_offset_decisions"] >= 20
+    assert analyst["distinct_live_events"] < 20
+    assert analyst["bonferroni_game_cluster_bootstrap_upper_brier"] is None
+    assert not analyst["eligible_for_incremental_claim"]
+
+
+def test_empty_research_registry_still_remains_pass():
+    assert audit([], "CFB")["decision"] == "PASS"

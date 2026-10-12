@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 import json
 import math
 from pathlib import Path
+import random
 
 VERSION = "professional_signal_shadow_v1"
 SUPPORTED = {
@@ -25,6 +26,8 @@ SUPPORTED = {
 MIN_TRAIN_PICKS = 25
 MIN_TRAIN_EVENTS = 20
 MIN_SCORE_PICKS = 20
+MIN_SCORE_EVENTS = 20
+BOOTSTRAP_SAMPLES = 2000
 OFFSETS = tuple(n / 20 for n in range(-20, 21))
 PENALTY = 0.15  # pre-registered stabilization, not learned from test outcomes
 
@@ -107,11 +110,13 @@ def validate(record, league):
             raise ValueError("only half-point thresholds supported in binary shadow")
     pair = record["market_pair"]
     expected = ("bookmaker", "snapshot_id", "region", "source_url", "quote_utc",
-                "captured_utc", "sides")
+                "captured_utc", "event_id", "market", "period", "participant", "sides")
     if not isinstance(pair, dict) or any(not pair.get(k) for k in expected):
         raise ValueError("incomplete two-sided market evidence")
     if not str(pair["source_url"]).startswith("https://"):
         raise ValueError("missing market source URL")
+    if any(pair[key] != record[key] for key in ("event_id", "market", "period", "participant")):
+        raise ValueError("market snapshot not the same event and exact contract")
     if not pub <= utc(pair["quote_utc"]) <= utc(pair["captured_utc"]) < kickoff:
         raise ValueError("market observation not contemporaneous post-publication")
     sides = pair["sides"]
@@ -128,8 +133,11 @@ def validate(record, league):
     if record["outcome"] == "PENDING":
         if record.get("settled_utc") is not None:
             raise ValueError("pending pick cannot have a settlement")
-    elif record.get("settled_utc") is None or utc(record["settled_utc"]) <= kickoff:
-        raise ValueError("settlement must follow kickoff")
+    else:
+        if record.get("settled_utc") is None or utc(record["settled_utc"]) <= kickoff:
+            raise ValueError("settlement must follow kickoff")
+        if not str(record.get("outcome_source_url", "")).startswith("https://"):
+            raise ValueError("settled outcome needs a source URL")
     model_p = record.get("independent_model_p")
     if model_p is not None:
         probability(model_p)
@@ -154,6 +162,34 @@ def _train_shift(prior):
     return (shift, "PRIOR_MARKET_IMPROVEMENT") if objective + 1e-12 < baseline else (0.0, "NO_PRIOR_IMPROVEMENT")
 
 
+def _event_cluster_upper_brier(rows, upper_tail_alpha):
+    """Deterministic one-sided upper percentile of the GAME-cluster bootstrap.
+
+    Diagnostic only: resample events, never pretend correlated contracts are
+    independent tickets. Multiple analysts are Bonferroni adjusted in audit.
+    """
+    by_event = defaultdict(list)
+    for row in rows:
+        by_event[row["event_id"]].append(row["expert_delta_brier"])
+    if len(by_event) < MIN_SCORE_EVENTS:
+        return None
+    groups = list(by_event.values())
+    n = len(groups)
+    rng = random.Random(20261012)
+    draws = []
+    for _ in range(BOOTSTRAP_SAMPLES):
+        total, count = 0.0, 0
+        for _ in range(n):
+            selected = groups[rng.randrange(n)]
+            total += sum(selected)
+            count += len(selected)
+        draws.append(total / count)
+    draws.sort()
+    k = max(0, min(BOOTSTRAP_SAMPLES - 1,
+                   math.ceil((1.0 - upper_tail_alpha) * BOOTSTRAP_SAMPLES) - 1))
+    return draws[k]
+
+
 def audit(records, league):
     if league not in {"NFL", "CFB"} or not isinstance(records, list):
         raise ValueError("league must be NFL/CFB and records a list")
@@ -162,6 +198,12 @@ def audit(records, league):
         raise ValueError("duplicate record_id")
     if len({(r["analyst"], r["event_id"], r["market"], r["participant"], r["selection"], str(r["line"])) for r in validated}) != len(validated):
         raise ValueError("duplicate expert contract")
+    # Reused event IDs cannot silently refer to incompatible kickoffs.
+    event_kickoffs = {}
+    for record in validated:
+        previous = event_kickoffs.setdefault(record["event_id"], utc(record["kickoff_utc"]))
+        if previous != utc(record["kickoff_utc"]):
+            raise ValueError("event_id has contradictory kickoff timestamps")
     validated.sort(key=lambda r: (r["_pub"], r["record_id"]))
     rows = []
     for r in validated:
@@ -195,10 +237,18 @@ def audit(records, league):
     for analyst, cohort in sorted(grouped.items()):
         scored = [r for r in cohort if r["market_logloss"] is not None]
         live = [r for r in scored if r["fit_gate"] == "PRIOR_MARKET_IMPROVEMENT"]
+        event_count = len({r["event_id"] for r in live})
+        upper = _event_cluster_upper_brier(live, 0.025 / max(1, len(grouped)))
+        passes_sample = len(live) >= MIN_SCORE_PICKS and event_count >= MIN_SCORE_EVENTS
+        # Statistical evidence is a RESEARCH diagnostic, never an EV release.
+        passes_significance = passes_sample and upper is not None and upper < 0
         results[analyst] = {
             "submitted": len(cohort), "settled_binary": len(scored),
             "shadow_offset_decisions": len(live),
-            "eligible_for_incremental_claim": len(live) >= MIN_SCORE_PICKS,
+            "distinct_live_events": event_count,
+            "min_distinct_events_met": passes_sample,
+            "bonferroni_game_cluster_bootstrap_upper_brier": round(upper, 8) if upper is not None else None,
+            "eligible_for_incremental_claim": passes_significance,
             "paired_market_logloss": round(sum(r["market_logloss"] for r in live) / len(live), 6) if live else None,
             "paired_expert_logloss": round(sum(r["expert_logloss"] for r in live) / len(live), 6) if live else None,
             "mean_expert_minus_market_brier": round(sum(r["expert_delta_brier"] for r in live) / len(live), 6) if live else None,
