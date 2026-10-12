@@ -1,0 +1,59 @@
+name: NFL Original Player Prop v2 vs Frozen Full CDF Integrity Audit
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/edge-lab-prop-full-cdf-consistency.yml"
+      - "scripts/nfl_prop_original_consistency_audit.py"
+      - "tests/test_nfl_prop_original_consistency_audit.py"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare-originals-without-editing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install original free public NFL dependency set
+        run: python -m pip install -e '.[dev]'
+      - name: Unit test exact original cohort reconciliation
+        run: |
+          python -m pytest -q \
+            tests/test_nfl_prop_original_consistency_audit.py \
+            tests/test_nfl_player_prop_full_distribution.py
+      - name: Compare first-seen v2 threshold probabilities versus first-seen full distribution
+        run: |
+          python -m scripts.nfl_prop_original_consistency_audit \
+            --v2 history/prop_participation_shadow_v2_2026.csv \
+            --full history/player_prop_full_distributions_2026.jsonl \
+            --catalog history/player_prop_2024_residual_catalog_v1.json \
+            --report reports/player_full_vs_v2_original_audit.json
+      - name: Guard true results, original forecasts and bookmaker pricing
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("reports/player_full_vs_v2_original_audit.json"))
+          assert r["decision"]=="PASS" and r["wagers"]==0
+          assert not r["bookmaker_EV_or_profitability_validated"]
+          assert not r["outcomes_used_for_reconciliation"]
+          assert not r["source_originals_modified"]
+          print("Original v2 grid threshold lines:",r["old_v2_original_thresholds"])
+          print("Original full player-game-market groups:",r["new_full_original_player_market_groups"])
+          print("Exact pairs:",r["overlap_exact_line_pairs"])
+          print("Cross-version disagreements:",r["threshold_probability_differences_gt_tol"])
+          print("Representative mismatches:",r["largest_difference_examples"][:3])
+          print("PASS: market edge NOT validated.")
+          PY
+      - name: Attach model integrity report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-prop-original-full-cdf-consistency
+          path: reports/player_full_vs_v2_original_audit.json
+          if-no-files-found: warn
+          retention-days: 90
