@@ -188,3 +188,15 @@ def test_source_year_download_retries_without_cross_season_data(monkeypatch):
     assert attempts[2025]==2
     with pytest.raises(ValueError,match="unsupported NFL source"):
         historical_frames_by_season_with_retry(Client(),"future_unknown",[2024])
+
+
+def test_four_market_multiple_comparison_interval_not_narrower_than_ci95():
+    baseline=base_catalog()
+    cohort=train_samples(420)
+    cat=fit_buckets(cohort,baseline)
+    m=score(cohort,cat,baseline,bootstrap=400)["rushing_yards"]
+    a=m["game_cluster_bootstrap_ci95"]
+    b=m["four_market_Bonferroni_game_cluster_ci98_75"]
+    assert a is not None and b is not None
+    assert b[0]<=a[0] and b[1]>=a[1]
+    assert m["survives_four_market_familywise_interval"] == (b[1]<0)
