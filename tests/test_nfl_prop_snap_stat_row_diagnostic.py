@@ -78,7 +78,7 @@ def test_no_same_week_pfr_input_enters_feature_cohort(monkeypatch):
 def test_prior_player_row_missing_not_automatically_zero(monkeypatch):
     import scripts.nfl_prop_snap_stat_row_diagnostic as module
     monkeypatch.setattr(module,"forecast_week",stub_forecast)
-    raw=[g(str(x),2024,x) for x in range(1,6)]
+    raw=[g(str(x),2024,x) for x in range(1,5)]+[g("target",2024,5)]
     snapped=[snap(str(x),x,35) for x in (1,3,4)]
     snapped+=[snap("2",2,12,pid="PFR_B")]
     a,_=make_cohorts(fake_games(raw),[],raw,snapped,{"GSIS_A":"PFR_A"},season=2024)
