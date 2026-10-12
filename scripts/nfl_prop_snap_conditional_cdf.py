@@ -22,6 +22,7 @@ import random
 import time
 
 import nflreadpy as nfl
+import polars as pl
 from nfl.data import NFLDataClient
 from nfl.prop_challenger import source_frames
 from nfl.prop_probability import PROP_THRESHOLD_GRID,_scale,over_probability
@@ -317,11 +318,31 @@ def load_snap_history_with_retry(years, *,attempts=4,sleep=time.sleep):
             ) from last_error
     return complete
 
+def historical_frames_by_season_with_retry(client,which,years,*,attempts=4,sleep=time.sleep):
+    """Download each official player/schedule season separately with bounded retry.
+
+    This handles transient nflverse GitHub Release 504 responses. It refuses
+    to fill a failing year with another season or an outdated source.
+    """
+    if which not in {"schedules","player_stats"}:
+        raise ValueError("unsupported NFL source dataset")
+    loader=client.load_schedules if which=="schedules" else client.load_player_stats
+    frames=[]
+    for year in years:
+        frame=public_download_with_retry(
+            lambda yr=year: [loader([yr],refresh=True)],
+            label=f"nflverse {which} season {year}",attempts=attempts,sleep=sleep,
+        )[0]
+        if frame.is_empty():
+            raise ValueError(f"empty NFL {which} season {year}")
+        frames.append(frame)
+    return pl.concat(frames,how="diagonal_relaxed")
+
 def run():
     client=NFLDataClient()
     years=[2024,2025,2026]
-    schedules=client.load_schedules(years,refresh=True)
-    stats=client.load_player_stats(years,refresh=True)
+    schedules=historical_frames_by_season_with_retry(client,"schedules",years)
+    stats=historical_frames_by_season_with_retry(client,"player_stats",years)
     nfl_players=public_download_with_retry(lambda:nfl.load_players().to_dicts(),label="nflverse players GSIS/PFR crosswalk")
     gsis_pfr=unique_crosswalk(nfl_players)
     snaps=load_snap_history_with_retry(years)
