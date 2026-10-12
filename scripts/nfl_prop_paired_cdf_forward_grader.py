@@ -14,7 +14,6 @@ from __future__ import annotations
 import argparse
 from collections import defaultdict
 from datetime import datetime,timezone,timedelta
-import argparse
 import hashlib
 import json
 import math
@@ -411,12 +410,25 @@ def run(*,freeze_only=False):
     stats=cli.load_player_stats([2026],refresh=True).to_dicts()
     gradeable,blocks=eligible_grades(read_jsonl(FROZEN_PATH),schedules,stats,now=now)
     written=append_grades(gradeable,GRADE_PATH)
-    grade=grade_metrics(read_jsonl(GRADE_PATH))
+    all_grades=read_jsonl(GRADE_PATH)
+    grade=grade_metrics(all_grades)
+    # The anchor is selected from original BASE probabilities and first-seen
+    # before kickoff. Never generate or edit anchors after seeing outcomes.
+    original_anchors=read_jsonl(
+        "history/player_prop_primary_anchor_v1_2026.jsonl")
+    anchor_grade=None
+    if original_anchors:
+        from scripts.nfl_prop_primary_anchor_score import anchor_results
+        anchor_grade=anchor_results(
+            original_anchors,read_jsonl(FROZEN_PATH),all_grades)
     report={
         "model":VERSION,"decision":"PASS","first_seen_capture_utc":now,
         "paired_originals":frozen,"source_grading_eligibility":blocks,
         "mature_official_stat_row_conditional_grades_now":len(gradeable),
         "append_only_grade_journal":written,"forward_performance":grade,
+        "primary_one_line_per_player_game_market_anchored_scoring":anchor_grade,
+        "primary_anchor_preregistered_source_count":len(original_anchors),
+        "all_seven_lines_are_correlated_sensitivity_analysis":True,
         "original_full_and_snap_CDF_journals_unchanged":True,
         "2024_original_calibration_catalogs_unchanged":True,
         "source_grading_min_hours_after_kickoff":MATURE_HOURS,
