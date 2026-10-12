@@ -57,7 +57,7 @@ def test_american_to_implied_and_novig():
     assert american_implied(100)==pytest.approx(.5)
     assert market_home_no_vig(-110,-110)==pytest.approx(.5)
     assert market_home_no_vig(0,-110) is None
-    assert market_home_no_vig(-1000,1000) == pytest.approx(.5)
+    assert market_home_no_vig(-1000,1000) == pytest.approx(10/11)
     assert market_home_no_vig(None,-110) is None
 
 def test_prior_tie_pre2024_only():
