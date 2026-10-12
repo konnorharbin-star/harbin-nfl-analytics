@@ -1,0 +1,40 @@
+name: Professional signal shadow (research only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/professional_signal_shadow.py'
+      - 'tests/test_professional_signal_shadow.py'
+      - 'research/professional_signal_shadow.json'
+      - '.github/workflows/professional-signal-shadow.yml'
+  pull_request:
+    paths:
+      - 'scripts/professional_signal_shadow.py'
+      - 'tests/test_professional_signal_shadow.py'
+      - 'research/professional_signal_shadow.json'
+      - '.github/workflows/professional-signal-shadow.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install lightweight isolated test dependencies
+        run: python -m pip install pytest
+      - name: Professional signal shadow regression suite
+        run: python -m pytest -q tests/test_professional_signal_shadow.py
+      - run: |
+          mkdir -p reports
+          python -m scripts.professional_signal_shadow --league NFL --input research/professional_signal_shadow.json --output reports/nfl_professional_shadow.json
+          python -m scripts.professional_signal_shadow --league CFB --input research/professional_signal_shadow.json --output reports/cfb_professional_shadow.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: professional-signal-shadow-no-bets
+          path: reports/*_professional_shadow.json
+          retention-days: 30
