@@ -4,6 +4,7 @@ from datetime import UTC,datetime
 from pathlib import Path
 import nflreadpy as nfl
 from nfl.web_context_research import collect_web_context
+from nfl.player_evidence_bridge import review_player_evidence
 
 def main():
     p=argparse.ArgumentParser()
@@ -27,6 +28,22 @@ def main():
     if len(games)!=len(ids):
         raise ValueError("SCHEDULE_ID_MISMATCH")
     report=collect_web_context(games,at=at)
+    # Extra free nflverse source: player GSIS<->ESPN ID map. A missing
+    # directory does not invalidate earlier score research, but disables
+    # participant-linked injury evidence instead of guessing by name.
+    try:
+        directory=nfl.load_players().to_dicts()
+        report["player_evidence_review"]=review_player_evidence(
+            source,report,directory,at=at)
+    except (ValueError,RuntimeError,KeyError,TypeError,OSError) as error:
+        report["source_errors"].append({
+            "source":"NFLVERSE_ESPN_PLAYER_ID_CROSSWALK",
+            "error":type(error).__name__+":"+str(error)[:180]})
+        report["player_evidence_review"]={
+            "status":"PLAYER_ID_SOURCE_NOT_VERIFIED",
+            "official_week_specific_inactives_verified":False,
+            "model_fair_score_or_prop_adjusted":False,
+            "wager_authorized":False}
     report["paired_original_model_capture_utc"]=source["capture_utc"]
     report["paired_model_artifact_sha256"]=hashlib.sha256(raw).hexdigest()
     a.out.parent.mkdir(parents=True,exist_ok=True)
@@ -36,6 +53,7 @@ def main():
       "source_errors":len(report["source_errors"]),
       "weather_available":sum(r["weather"].get("status")=="ASOF_HOURLY_FORECAST_CAPTURED" for r in report["games"]),
       "model_changed":False,"wager_authorized":False,
+      "player_evidence":report["player_evidence_review"]["status"],
       "artifact_sha256":hashlib.sha256(blob.encode()).hexdigest()}))
 
 if __name__=="__main__":
