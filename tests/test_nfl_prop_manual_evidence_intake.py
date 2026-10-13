@@ -252,3 +252,37 @@ def test_new_quote_cannot_be_inserted_after_kickoff_with_old_registered(tmp_path
         run(**args,now=(datetime.fromisoformat(frozen[0]["kickoff_utc"])+
                         timedelta(hours=1)).isoformat())
     assert output.read_text()==old
+
+
+
+def test_multiweek_manual_batch_keeps_prior_and_accepts_new_pregame(tmp_path):
+    obs, frozen, catalog, now=example()
+    manual=tmp_path/"manual.json"
+    output=tmp_path/"candidates.json"
+    f=tmp_path/"frozen.jsonl"
+    c=tmp_path/"catalog.json"
+    manual.write_text(json.dumps({"records":[obs]}))
+    f.write_text(json.dumps(frozen[0])+"\n")
+    c.write_text(json.dumps(catalog))
+    args=dict(input_path=manual,output_path=output,forecasts_path=f,
+              catalog_path=c,report_path=tmp_path/"report.json")
+    run(**args,now=now)
+    first=json.loads(output.read_text())["records"][0]
+    later=datetime.fromisoformat(frozen[0]["kickoff_utc"])+timedelta(days=1)
+    future={**frozen[0], "game_id":"2026_07_NEW_TEST_GAME",
+            "player_id":"00-NEWGSIS", 
+            "kickoff_utc":(later+timedelta(days=4)).isoformat()}
+    new_raw={**obs, "quote_id":"MANUAL_NEW_WEEK_02",
+             "game_id":future["game_id"],
+             "source_observed_utc":later.isoformat(),
+             "snapshot_id":"different-week-original"}
+    f.write_text(json.dumps(frozen[0])+"\n"+json.dumps(future)+"\n")
+    manual.write_text(json.dumps({"records":[obs,new_raw]}))
+    r=run(**args,now=(later+timedelta(minutes=1)).isoformat())
+    assert r["historical_source_observations_verified_without_repricing"]==1
+    assert r["new_source_observations_eligible_for_current_cutoff"]==1
+    assert r["strict_first_seen_candidates"]["new"]==1
+    saved=json.loads(output.read_text())["records"]
+    assert len(saved)==2
+    assert saved[0]==first
+    assert saved[1]["player_id"]=="00-NEWGSIS"
