@@ -82,8 +82,9 @@ def create_rows(quotes, forecasts, catalog, *, now):
                     "kickoff_utc", "period", "bookmaker", "book_region",
                     "snapshot_id", "source_url", "source_observed_utc",
                     "source_quote_origin_utc", "sides", "line")
-        if any(key not in q or q[key] in (None, "") for key in required
-               if key != "source_quote_origin_utc"):
+        if any(key not in q for key in required) or any(
+                q[key] in (None, "") for key in required
+                if key != "source_quote_origin_utc"):
             raise ValueError("incomplete original prop quote observation")
         if not isinstance(q["quote_id"], str) or not q["quote_id"].strip():
             raise ValueError("invalid quote identifier")
@@ -128,6 +129,10 @@ def create_rows(quotes, forecasts, catalog, *, now):
         for side in sides:
             if check_line(side.get("line")) != line:
                 raise ValueError("over/under price thresholds are not the same contract")
+            if any(side.get(name) != q[name] for name in (
+                    "snapshot_id", "bookmaker", "source_url",
+                    "source_observed_utc", "source_quote_origin_utc")):
+                raise ValueError("bookmaker side snapshots have mismatched provenance")
             price_by_side[side["selection"]] = decimal_price(side.get("american_odds"))
         raw_over = 1 / price_by_side["OVER"]
         raw_under = 1 / price_by_side["UNDER"]
