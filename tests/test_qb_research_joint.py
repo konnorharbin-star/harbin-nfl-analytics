@@ -1,4 +1,4 @@
-from tests.test_coupled_drive_player_shadow import run
+from test_coupled_drive_player_shadow import run
 
 
 def test_qb_research_conserves_passing_volume():
