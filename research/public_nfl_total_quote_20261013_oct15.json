@@ -1,0 +1,24 @@
+{
+  "status": "PUBLIC_AGGREGATOR_RESEARCH_ONLY_NOT_ORIGINAL_OFFER",
+  "source_attribution": "OddsChecker U.S. NFL odds public listing, not sportsbook account",
+  "observation_note": "Web retrieval at 2026-10-13 17:12 CDT. Public page displays SEA@DEN O 40.5 -110 and U 40.5 -104; publication/book offer origin unknown; prices can change.",
+  "observations": [
+    {
+      "game_id": "2026_06_SEA_DEN",
+      "market": "NFL_FULL_GAME_TOTAL",
+      "period": "REGULATION_AND_OVERTIME",
+      "home_team": "DEN",
+      "away_team": "SEA",
+      "line": 40.5,
+      "over_american": -110,
+      "under_american": -104,
+      "source_description": "OddsChecker U.S. public NFL listing, full-game 40.5 displayed over -110 and under -104; book/same-book status NOT independently authenticated",
+      "source_url": "https://www.oddschecker.com/us/football/nfl",
+      "collector_observed_utc": "2026-10-13T22:12:13+00:00",
+      "source_quote_origin_utc": null,
+      "bookmaker": null,
+      "account_executable": false,
+      "quote_for_priced_ticket": false
+    }
+  ]
+}
