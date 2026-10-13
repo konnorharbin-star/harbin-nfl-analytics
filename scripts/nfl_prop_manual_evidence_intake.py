@@ -167,6 +167,7 @@ def prepare(raw_entries, forecasts, *, now):
             "source_publication_utc": row.get("source_publication_utc"),
             "player_display_name_transcribed": row["player_display_name"],
             "original_frozen_forecast_sha256": hash_object(f),
+            "original_manual_raw_sha256": hash_object(row),
             "validated_candidate_is_executable": False,
         }
         result["manual_candidate_sha256"] = hash_object(result)
@@ -218,11 +219,45 @@ def run(*, input_path=RAW, output_path=OUT, forecasts_path=FORECASTS,
     if not isinstance(raw,dict) or not isinstance(raw.get("records"),list):
         raise ValueError("manual intake input requires records list")
     entries=raw["records"]
-    if entries:
+    # Existing historical originals need their preserved source hash checked,
+    # NOT their current age revalidated. Otherwise any later scheduled run
+    # fails once the archived game's kickoff has passed.
+    prior_file=Path(output_path)
+    prior=(json.loads(prior_file.read_text(encoding="utf8"))
+           if prior_file.exists() else {"records":[]})
+    if not isinstance(prior,dict) or not isinstance(prior.get("records"),list):
+        raise ValueError("candidate evidence registry format invalid")
+    old={}
+    for saved in prior["records"]:
+        qid=saved["quote_id"]
+        if qid in old:
+            raise ValueError("duplicate prior manual quote ID")
+        if saved.get("manual_candidate_sha256") != hash_object({
+                k:v for k,v in saved.items() if k!="manual_candidate_sha256"}):
+            raise ValueError("prior first-seen manual candidate hash changed")
+        if not saved.get("original_manual_raw_sha256"):
+            raise ValueError("prior candidate lacks original raw evidence hash; audit required")
+        old[qid]=saved
+    fresh_inputs=[]; history_count=0; seen=set()
+    for source in entries:
+        if not isinstance(source,dict) or not isinstance(source.get("quote_id"),str) or not source["quote_id"].strip():
+            raise ValueError("invalid raw source observation identity")
+        qid=source["quote_id"]
+        if qid in seen:
+            raise ValueError("duplicate raw quote ID")
+        seen.add(qid)
+        if qid in old:
+            if hash_object(source)!=old[qid]["original_manual_raw_sha256"]:
+                raise ValueError("historic original manual quote was modified")
+            history_count+=1
+        else:
+            fresh_inputs.append(source)
+    if fresh_inputs:
         forecasts=read_jsonl(forecasts_path)
         catalog=json.loads(Path(catalog_path).read_text(encoding="utf8"))
-        candidates=prepare(entries,forecasts,now=at)
-        # Validate EVERY candidate using the existing prior model/catalog.
+        candidates=prepare(fresh_inputs,forecasts,now=at)
+        # Validate only NEW candidates using the existing prior model/catalog;
+        # old pregame originals remain immutable and verifiable after kickoff.
         create_rows(candidates,forecasts,catalog,now=at)
     else:
         candidates=[]
@@ -230,6 +265,8 @@ def run(*, input_path=RAW, output_path=OUT, forecasts_path=FORECASTS,
     report={
         "version":VERSION,"observed_utc":at.isoformat(),
         "human_observation_rows_in_input":len(entries),
+        "historical_source_observations_verified_without_repricing":history_count,
+        "new_source_observations_eligible_for_current_cutoff":len(fresh_inputs),
         "strict_first_seen_candidates":result,
         "live_odds_fetched":False,"automated_scraping":False,
         "validated_executable_BetMGM_account_prices":0,
