@@ -53,7 +53,7 @@ def _validate_history(drives, *, first_seen):
         key=(game,drive)
         if not game or drive is None or not offense or key in seen: raise ValueError("DUPLICATE_DRIVE_OR_ID")
         seen.add(key)
-        if d.get("official_final_verified") is not True or not d.get("source_sha256"):
+        if d.get("completed_nflverse_schedule_game") is not True or not d.get("source_sha256"):
             raise ValueError("OFFICIAL_DRIVE_SOURCE_UNVERIFIED")
         kickoff=_utc(d.get("kickoff_utc"))
         verified=_utc(d.get("verified_at_utc"))
