@@ -88,8 +88,9 @@ def test_grade_journal_modified_after_freeze_must_fail_sha(tmp_path):
 def test_signed_grade_cannot_rewrite_original_outcome(tmp_path):
     originals,_,path=first_grade(tmp_path)
     changed=read_jsonl(path)
-    changed[0]["official_stat_value"]=100.0
-    changed[0]["grade_record_sha256"]=record_hash(changed[0])
+    fourth=next(x for x in changed if x["synthetic_line"]==4.5)
+    fourth["official_stat_value"]=100.0
+    fourth["grade_record_sha256"]=record_hash(fourth)
     # Changing a signed row is detectable by its mathematical/statistic proof,
     # although external append-only hosting is additionally needed to prove
     # a motivated adversary did not replace both content and the digest.
