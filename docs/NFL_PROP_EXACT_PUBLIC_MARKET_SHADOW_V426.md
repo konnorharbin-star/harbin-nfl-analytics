@@ -15,7 +15,7 @@ Populate [research/nfl_prop_market_quote_candidates_2026.json](../research/nfl_p
 Each original observation requires:
 
 - quote_id, game_id, player_id (**GSIS ID, not ambiguous name**), team, market (receiving_yards, receptions, rushing_yards, passing_yards), kickoff_utc, period=FULL_GAME, bookmaker, book_region, snapshot_id, source_url, source_observed_utc, source_quote_origin_utc (nullable), line (nonnegative integer or half point), sides.
-- sides must contain exactly one OVER and one UNDER with identical line and integral American prices, both from the SAME provider/book snapshot. Model uses the same wrapper snapshot ID; input-source attribution requires independent audit before any acceptance claim.
+- sides must contain exactly one OVER and one UNDER with identical line and integral American prices, both from the SAME provider/book snapshot. EACH side must repeat the identical snapshot_id, bookmaker, source_url, source_observed_utc and source_quote_origin_utc from the parent record; a mixed-source pair fails closed. Input-source attribution still requires independent audit before any acceptance claim.
 - Optional source_origin_timestamp_claimed_verified describes a third party's claim; it does NOT mean independent book certification. It cannot be true if original quote time is null.
 - Explicit account_price_accepted or actual_bet_placed TRUE is rejected in this capture-only pipeline. An actual account ticket must be tracked under a separate manual, authenticated flow and never inferred.
 
