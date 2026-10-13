@@ -1,0 +1,28 @@
+name: NFL historical total reliability diagnostic (research)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/nfl_total_reliability_audit.py'
+      - 'reports/verified_market_bets.csv'
+      - '.github/workflows/nfl-total-reliability-review.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reliability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check historically observed raw model probability calibration
+        run: python -m scripts.nfl_total_reliability_audit
+      - name: Archive reproducible source-stage diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-total-reliability-RESEARCH-ONLY
+          path: reports/total_edge_reliability_audit.json
+          if-no-files-found: error
+          retention-days: 45
