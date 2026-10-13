@@ -1,0 +1,23 @@
+name: Public NFL underdog research
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['scripts/nfl_published_underdog_replication.py']
+permissions:
+  contents: read
+jobs:
+  replication:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m scripts.nfl_published_underdog_replication
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nfl-underdog-source-research
+          path: reports/published_underdog_replication.json
+          if-no-files-found: error
+          retention-days: 45
