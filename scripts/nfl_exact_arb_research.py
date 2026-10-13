@@ -1,6 +1,6 @@
 """Fail-closed two-sided sportsbook price-gap research; NEVER a betting authorization.
 
-No network calls, no sportsbook login, no claimed validated BetMGM odds.
+No network calls, no sportsbook login, no claimed validated sportsbook odds.
 Only matching two-way, half-point *NFL spread* contracts can be considered.
 An observed mathematical gap is not a guaranteed executed return.
 """
@@ -91,8 +91,6 @@ def screen_pair(
         reasons.append("NOT_OPPOSITE_SIDES")
     if not a.get("book") or not b.get("book") or a.get("book") == b.get("book"):
         reasons.append("TWO_DISTINCT_BOOKS_REQUIRED")
-    if "BetMGM" not in {a.get("book"), b.get("book")}:
-        reasons.append("BETMGM_LEG_REQUIRED")
     if a.get("period") != "full_game_including_overtime":
         reasons.append("FULL_GAME_OVERTIME_CONTRACT_REQUIRED")
     for quote in (a, b):
