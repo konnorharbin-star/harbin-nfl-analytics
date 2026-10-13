@@ -1,6 +1,7 @@
 """All examples are synthetic; none are sportsbook quotes or wager advice."""
-from copy import deepcopy
 from datetime import UTC, datetime, timedelta
+
+import pytest
 
 from scripts.nfl_exact_arb_research import screen_pair
 
@@ -128,4 +129,5 @@ def test_low_book_limit_is_respected_and_no_unbounded_stake():
 def test_no_quote_or_utc_reference_does_not_approve_any_bet():
     a, b = pair()
     assert screen_pair(None, b, now=NOW)["wager_authorized"] is False
-    assert screen_pair(a, b, now=NOW.replace(tzinfo=None)) if False else True
+    with pytest.raises(ValueError, match="timezone-aware"):
+        screen_pair(a, b, now=NOW.replace(tzinfo=None))
