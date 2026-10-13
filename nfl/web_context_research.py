@@ -25,6 +25,27 @@ VERSION = "NFL_PUBLIC_WEB_CONTEXT_RESEARCH_V1"
 INJURIES_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries"
 NEWS_URL = "https://news.google.com/rss/search"
 NWS_POINTS = "https://api.weather.gov/points/"
+# Source domains identify established publishers; RSS alone is not fact verification.
+PREFERRED_NEWS_DOMAINS = (
+    "nfl.com", "espn.com", "cbssports.com", "apnews.com",
+    "reuters.com", "nbcsports.com", "foxsports.com",
+)
+
+def preferred_publisher_domain(source_url):
+    """Require an HTTPS publisher hostname, never trust a spoofed source label."""
+    if not isinstance(source_url, str):
+        return None
+    try:
+        parsed = urlparse(source_url)
+        hostname = (parsed.hostname or "").lower().rstrip(".")
+    except ValueError:
+        return None
+    if parsed.scheme != "https" or parsed.username or parsed.password:
+        return None
+    for domain in PREFERRED_NEWS_DOMAINS:
+        if hostname == domain or hostname.endswith("." + domain):
+            return domain
+    return None
 TEAM_NAMES = {
     "ARI":"Arizona Cardinals","ATL":"Atlanta Falcons","BAL":"Baltimore Ravens",
     "BUF":"Buffalo Bills","CAR":"Carolina Panthers","CHI":"Chicago Bears",
@@ -139,7 +160,10 @@ def news_search(team, *, at, fetch_xml=get_xml):
         title=str(node.findtext("title") or "").strip()[:220]
         link=str(node.findtext("link") or "").strip()
         published=str(node.findtext("pubDate") or "").strip()
-        publisher=node.findtext("source")
+        source=node.find("source")
+        publisher=source.text.strip() if source is not None and source.text else None
+        source_url=source.attrib.get("url") if source is not None else None
+        preferred_domain=preferred_publisher_domain(source_url)
         try:
             issued=parsedate_to_datetime(published).astimezone(UTC)
         except (ValueError,TypeError,OverflowError):
@@ -152,13 +176,28 @@ def news_search(team, *, at, fetch_xml=get_xml):
             "headline":title,"original_publication_time_utc":issued.isoformat(),
             "rss_redirect_link":link,
             "publisher_named_in_feed":publisher,
+            "publisher_source_url_in_feed":source_url,
+            "preferred_publisher_domain":preferred_domain,
+            "established_publisher_rss_attribution":preferred_domain is not None,
+            "publisher_attribution_verified_by_article_fetch":False,
             "source_type":"SEARCH_RESULT_LEAD_UNVERIFIED",
             "confirmed_injury_or_qb_status":False,
             "article_body_independently_read":False,
         })
-        if len(items)>=6:
-            break
-    return {"query":query,"search_url":url,"leads":items,
+    # Trusted reporting is prioritized, but an RSS headline remains a lead.
+    items.sort(key=lambda item: (
+        not item["established_publisher_rss_attribution"],
+        -datetime.fromisoformat(item["original_publication_time_utc"]).timestamp(),
+    ))
+    selected=items[:6]
+    return {"query":query,"search_url":url,"leads":selected,
+            "preferred_reported_leads":sum(
+                item["established_publisher_rss_attribution"] for item in selected
+            ),
+            "other_unverified_leads":sum(
+                not item["established_publisher_rss_attribution"] for item in selected
+            ),
+            "source_priority":"ESPN_CBS_NFL_AP_AND_OTHER_ESTABLISHED_OUTLETS",
             "status":"HEADLINE_LEADS_ONLY_NOT_STARTER_VERIFICATION"}
 
 def _nws_forecast(game, *, at, fetch_json=get_json):
