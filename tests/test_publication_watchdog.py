@@ -125,8 +125,9 @@ def test_watchdog_rejects_naive_reference_clock():
 def test_watchdog_workflow_is_read_only_and_does_not_cancel_main_model():
     workflow = (
         Path(__file__).resolve().parents[1]
-        / ".github/workflows/nfl-publication-watchdog.yml"
+        / ".github/disabled-workflows/nfl-publication-watchdog.yml"
     ).read_text(encoding="utf-8")
+    assert not (Path(__file__).resolve().parents[1] / ".github/workflows/nfl-publication-watchdog.yml").exists()
     assert "contents: read" in workflow
     assert "python -m scripts.check_publication_watchdog" in workflow
     assert "ref: main" in workflow

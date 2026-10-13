@@ -1,0 +1,26 @@
+name: Research regression gate (read-only)
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - 'tests/**'
+      - 'nfl/**'
+      - '.github/workflows/research-regression-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install free repository testing dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Test full repository without placing bets or writing history
+        run: python -m pytest -q
