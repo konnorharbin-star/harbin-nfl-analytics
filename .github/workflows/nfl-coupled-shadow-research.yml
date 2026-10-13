@@ -7,6 +7,7 @@ on:
       - 'nfl/coupled_drive_player_shadow.py'
       - 'nfl/coupled_nflverse_asof.py'
       - 'nfl/web_context_research.py'
+      - 'nfl/nflverse_injury_evidence.py'
       - 'scripts/nfl_web_context_research_run.py'
       - 'scripts/nfl_web_conditional_research_run.py'
       - 'nfl/web_conditioned_model.py'
