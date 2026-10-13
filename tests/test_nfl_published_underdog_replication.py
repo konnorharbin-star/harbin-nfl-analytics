@@ -27,7 +27,7 @@ def test_short_dog_rule_and_full_game_result():
     assert result["source_quote_origin_verified"] is False
 
 def test_wrong_orientation_rejected_not_fake_edge():
-    item=row(2024,"A",3,-140,-120,24,21)
+    item=row(2024,"A",3,-120,-140,24,21)
     out=analyze([item])
     assert out["exclusions"]["spread_vs_moneyline_orientation_conflict"]==1
     assert out["distinct_games_included"]==0
