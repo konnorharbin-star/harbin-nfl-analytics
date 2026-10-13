@@ -101,7 +101,7 @@ def test_original_pregame_boundaries_and_duplicate_games():
         collect_web_context([GAME],at=NOW.replace(tzinfo=None))
 
 def test_injuries_belong_to_correct_teams_and_unknown_is_unknown():
-    response=football_feeds("injuries")
+    response=football_feeds("https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries")
     assert len(parse_espn_injuries(response,"PHI"))==1
     assert parse_espn_injuries(response,"CHI")==[]
     with pytest.raises(ValueError,match="MALFORMED"):
