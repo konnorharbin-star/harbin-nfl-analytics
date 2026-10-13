@@ -94,3 +94,67 @@ def test_qb_passing_touchdowns_and_interceptions_use_exact_stat_columns():
     assert "receiving_touchdowns" not in scored
     assert out["counts"]["player_stat_rows_not_eligible"]==2
     assert out["promotion_ready"] is False
+
+def test_real_nflverse_weekly_player_rows_without_game_id_are_scored():
+    s=orig()
+    score=finals()
+    score[0].update({"season":2026,"week":6})
+    rows=[
+        {"player_id":"00-0000001","recent_team":"LA","opponent_team":"BUF",
+         "season":2026,"week":6,"season_type":"REG",
+         "receiving_yards":90,"passing_tds":2,"passing_interceptions":1},
+        {"player_id":"00-0000002","recent_team":"LA","opponent_team":"BUF",
+         "season":2026,"week":6,"season_type":"REG","receptions":4},
+    ]
+    s["games"][0]["distribution"]["LA:00-0000001:passing_touchdowns"]={"mean":1.3}
+    report=grade_snapshot(s,score,rows,at=ASOF)
+    stats={x["stat"]:x for x in report["games"][0]["qualified_player_stat_rows"]}
+    assert len(stats)==3
+    assert stats["receiving_yards"]["actual"]==90
+    assert stats["passing_touchdowns"]["actual"]==2
+    assert stats["receptions"]["actual"]==4
+    assert report["player_join_rule"]=="EXACT_REG_SEASON_WEEK_TEAM_SCHEDULE_ID"
+    assert report["counts"]["player_stat_rows_not_eligible"]==0
+    assert report["promotion_ready"] is False
+
+def test_weekly_results_wrong_opponent_week_or_postseason_cannot_leak():
+    s=orig()
+    actual=finals()
+    actual[0].update({"season":2026,"week":6})
+    cases=(
+      {"season":2026,"week":5,"recent_team":"LA","opponent_team":"BUF"},
+      {"season":2026,"week":6,"recent_team":"LA","opponent_team":"OTHER"},
+      {"season":2026,"week":6,"recent_team":"LA","opponent_team":"BUF",
+       "season_type":"POST"},
+      {"season":2027,"week":6,"recent_team":"LA","opponent_team":"BUF"},
+      {"season":2026,"week":6,"recent_team":"OTHER","opponent_team":"BUF"},
+    )
+    for change in cases:
+        row={"player_id":"00-0000001","receiving_yards":900}
+        row.update(change)
+        result=grade_snapshot(s,actual,[row],at=ASOF)
+        assert len(result["games"][0]["qualified_player_stat_rows"])==0,change
+        assert result["counts"]["player_stat_rows_not_eligible"]==2
+
+def test_multiple_player_rows_same_game_pid_ambiguous_not_double_counted():
+    s=orig()
+    official=finals()
+    official[0].update({"season":2026,"week":6})
+    p={"player_id":"00-0000001","recent_team":"LA",
+       "season":2026,"week":6,"opponent_team":"BUF","receiving_yards":90}
+    result=grade_snapshot(s,official,[p,dict(p)],at=ASOF)
+    assert result["counts"]["graded"]==1
+    assert result["counts"]["player_stat_rows_not_eligible"]==2
+    assert result["games"][0]["qualified_player_stat_rows"]==[]
+
+def test_ambiguous_same_week_team_cannot_join_any_player_row():
+    s=orig()
+    f=finals()
+    f[0].update({"season":2026,"week":6})
+    f.append(dict(f[0],game_id="OTHER_ID",away_team="NYG"))
+    p={"player_id":"00-0000001","recent_team":"LA",
+       "season":2026,"week":6,"opponent_team":"BUF","receiving_yards":90}
+    r=grade_snapshot(s,f,[p],at=ASOF)
+    assert r["counts"]["graded"]==1
+    assert r["weekly_rows_with_uncertain_identity"]==1
+    assert r["games"][0]["qualified_player_stat_rows"]==[]
