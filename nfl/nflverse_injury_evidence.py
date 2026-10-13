@@ -70,3 +70,11 @@ def add_injury_reports(review,rows,*,season,week,captured):
                     player["nflverse_reported_status"]=item["status"]
                     player["nflverse_report_modified_utc"]=item["modified"].isoformat()
                     count+=1
+
+    report["nflverse_injury_source"]={
+        "version":VERSION,"source":"nflreadpy.load_injuries",
+        "season":season,"week":week,"captured_utc":at.isoformat(),
+        "matched_player_statuses":count,"source_rejections":stats,
+        "final_inactives_verified":False,"model_adjusted":False,
+    }
+    return report
