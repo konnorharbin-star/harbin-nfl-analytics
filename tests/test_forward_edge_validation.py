@@ -319,10 +319,9 @@ def test_empty_ledger_outputs_and_research_policy_unchanged(tmp_path):
     assert payload["staking_authorized"] is False
 
 def test_grading_follows_completed_main_model_run_and_reads_latest_commit():
-    workflow = (
-        Path(__file__).resolve().parents[1]
-        / ".github/workflows/live-grade.yml"
-    ).read_text(encoding="utf-8")
+    root = Path(__file__).resolve().parents[1]
+    assert not (root / ".github/workflows/live-grade.yml").exists()
+    workflow = (root / ".github/disabled-workflows/live-grade.yml").read_text(encoding="utf-8")
     assert 'workflows: ["NFL Model + Operations"]' in workflow
     assert "types: [completed]" in workflow
     assert "github.event.workflow_run.conclusion == 'success'" in workflow
