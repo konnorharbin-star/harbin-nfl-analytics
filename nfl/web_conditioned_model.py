@@ -49,11 +49,17 @@ def status_candidates(evidence):
     result=[]
     for team,data in evidence.get("teams",{}).items():
         for p in data.get("players",[]):
+            pid=p.get("player_id")
+            if not isinstance(pid,str) or not pid:continue
+            status=str(p.get("nflverse_reported_status") or "").strip().lower()
+            if (p.get("nflverse_report_evidence")=="SOURCE_DATED_REPORTED_STATUS"
+                and p.get("nflverse_report_modified_utc") and status in PRIORITY):
+                result.append((PRIORITY[status],team,pid,status,"NFLVERSE_WEEKLY_INJURY_REPORT"))
+                continue
             status=str(p.get("espn_reported_status") or "").strip().lower()
             if (p.get("availability_evidence_status")=="ESPN_REPORTED_INJURY_NOT_FINAL_GAME_STATUS"
-                and p.get("espn_athlete_id") and isinstance(p.get("player_id"),str)
-                and status in PRIORITY):
-                result.append((PRIORITY[status],team,p["player_id"],status))
+                and p.get("espn_athlete_id") and status in PRIORITY):
+                result.append((PRIORITY[status],team,pid,status,"ESPN_PUBLIC_INJURY_FEED"))
     return sorted(result)
 
 def generate(original, frozen_inputs, web, *, now, simulate, max_total=28):
@@ -106,7 +112,7 @@ def generate(original, frozen_inputs, web, *, now, simulate, max_total=28):
         if utc(reviewed["kickoff_utc"])!=utc(forecast["kickoff_utc"]):
             raise ValueError("SOURCE_MATCHUP_MISMATCH")
         used=set()
-        for _,team,pid,status in status_candidates(reviewed):
+        for _,team,pid,status,injury_source in status_candidates(reviewed):
             if team in used:continue
             if team not in (forecast["home_team"],forecast["away_team"]):
                 raise ValueError("EVIDENCE_WRONG_TEAM")
@@ -133,7 +139,8 @@ def generate(original, frozen_inputs, web, *, now, simulate, max_total=28):
             used.add(team)
             scenarios.append({
                 "game_id":gid,"team":team,"player_id":pid,
-                "reported_status":status,"source_timestamp_utc":web_at.isoformat(),
+                "reported_status":status,"injury_evidence_source":injury_source,
+                "source_timestamp_utc":web_at.isoformat(),
                 "scenario":"IF_PLAYER_UNAVAILABLE_NOT_CONFIRMED",
                 "baseline_total_mean":expected["TOTAL"]["mean"],
                 "scenario_total_mean":output["TOTAL"]["mean"],
