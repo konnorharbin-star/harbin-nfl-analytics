@@ -55,10 +55,71 @@ def grade_snapshot(snapshot, finals, player_rows, *, at):
         if not gid:continue
         if gid in final_map:raise ValueError("DUPLICATE_FINAL_GAME")
         final_map[gid]=f
+    # Public nflverse load_player_stats(season) is WEEKLY and normally has
+    # NO game_id. Use a strict REG season/week/recent_team -> schedule game
+    # lookup, and only if exactly one valid fixture fits. Preserve original
+    # game_id rows as a supported explicit-source path, with the same identity
+    # checks downstream. Never match by player name or assume missing = zero.
+    team_games={}
+    ambiguous_team_weeks=set()
+    for f in finals:
+        if f.get("game_type")!="REG":
+            continue
+        gid=f.get("game_id")
+        season,week=f.get("season"),f.get("week")
+        # Some provided scoreboard test rows omit season/week; weekly joins
+        # cannot use these without an explicit season/week schedule identity.
+        if not gid or season is None or week is None:
+            continue
+        for team in (f.get("home_team"),f.get("away_team")):
+            if not team:continue
+            key=(str(season),str(week),str(team))
+            if key in team_games and team_games[key]!=gid:
+                ambiguous_team_weeks.add(key)
+            team_games[key]=gid
     player_map={};invalid_players=set()
+    identity_uncertain_rows=0
     for p in player_rows:
-        gid=p.get("game_id");pid=p.get("player_id")
-        if not gid or not pid:continue
+        pid=p.get("player_id")
+        if not pid:continue
+        team=p.get("recent_team") or p.get("team")
+        if not team:continue
+        gid=p.get("game_id")
+        if gid is None:
+            season,week=p.get("season"),p.get("week")
+            if season is None or week is None:
+                identity_uncertain_rows+=1
+                continue
+            match=(str(season),str(week),str(team))
+            if match in ambiguous_team_weeks:
+                identity_uncertain_rows+=1
+                continue
+            gid=team_games.get(match)
+            if gid is None:
+                identity_uncertain_rows+=1
+                continue
+        f=final_map.get(gid)
+        if not f or f.get("game_type")!="REG":
+            identity_uncertain_rows+=1
+            continue
+        if team not in (f.get("home_team"),f.get("away_team")):
+            identity_uncertain_rows+=1
+            continue
+        if p.get("season_type") not in (None,"REG"):
+            identity_uncertain_rows+=1
+            continue
+        if (p.get("season") is not None and f.get("season") is not None
+            and str(p["season"])!=str(f["season"])):
+            identity_uncertain_rows+=1
+            continue
+        if (p.get("week") is not None and f.get("week") is not None
+            and str(p["week"])!=str(f["week"])):
+            identity_uncertain_rows+=1
+            continue
+        opponent=f["away_team"] if team==f["home_team"] else f["home_team"]
+        if p.get("opponent_team") not in (None,opponent):
+            identity_uncertain_rows+=1
+            continue
         key=(str(gid),str(pid))
         if key in player_map:invalid_players.add(key)
         player_map[key]=p
@@ -124,7 +185,7 @@ def grade_snapshot(snapshot, finals, player_rows, *, at):
                 counts["player_stat_rows_not_eligible"]+=1
                 continue
             source_field=PLAYER_STATS[stat]
-            if (p.get("team") or p.get("recent_team"))!=team or p.get(source_field) is None:
+            if (p.get("recent_team") or p.get("team"))!=team or p.get(source_field) is None:
                 counts["player_stat_rows_not_eligible"]+=1
                 continue
             try:
@@ -167,6 +228,9 @@ def grade_snapshot(snapshot, finals, player_rows, *, at):
     return {"spec":SPEC,"status":"RESEARCH_GRADE_NOT_PROFIT_EVIDENCE",
             "asof_utc":now.isoformat(),"original_forecast_capture_utc":captured.isoformat(),
             "counts":counts,"metrics":metrics,"games":rows,
+            "weekly_rows_with_uncertain_identity":identity_uncertain_rows,
+            "player_join_rule":"EXACT_REG_SEASON_WEEK_TEAM_SCHEDULE_ID",
+            "player_grades_are_bet_settlement_evidence":False,
             "promotion_ready":False,"minimum_forward_games":MIN_GAMES_FOR_INDEPENDENT_REVIEW,
             "official_NFL_gamebook_crosscheck_done":False,
             "player_void_rules_verified":False,
