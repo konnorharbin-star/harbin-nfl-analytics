@@ -231,14 +231,14 @@ def simulate_joint(
             if event_supported and (ptd+rtd!=sum(x["points"]==7 for x in rows)
                                     or ptd>co or ints>pa-co):
                 raise AssertionError("SIMULATED_TEAM_SCORE_AND_PASS_EVENTS_MISMATCH")
-            receiving=defaultdict(lambda:{"receptions":0,"receiving_yards":0})
+            receiving=defaultdict(lambda:{"receptions":0,"receiving_yards":0,**({"receiving_touchdowns":0} if event_supported else {})})
             receiver_names=[]
             for yd in _split(py,co,rand):
                 name=_choose(player_weights[team]["target"],rand)
                 receiver_names.append(name)
                 receiving[name]["receptions"]+=1
                 receiving[name]["receiving_yards"]+=yd
-            rushing=defaultdict(lambda:{"carries":0,"rushing_yards":0})
+            rushing=defaultdict(lambda:{"carries":0,"rushing_yards":0,**({"rushing_touchdowns":0} if event_supported else {})})
             rusher_names=[]
             for yd in _split(ry,ru,rand):
                 name=_choose(player_weights[team]["carry"],rand)
@@ -343,7 +343,7 @@ def simulate_joint(
                 team for team in (home,away) if player_weights[team]["qb_pass"]
             ],
             "qb_passing_prop_betting_authorized":False,
-            "source_verified_td_int_drive_classification":event_supported,
+            "source_typed_td_int_drive_classification":event_supported,
             "td_int_model":"PRIOR_REPLAYED_OFFENSIVE_TD_TYPES_AND_INTERCEPTIONS"
                             if event_supported else None,
             "td_int_betting_authorized":False,
