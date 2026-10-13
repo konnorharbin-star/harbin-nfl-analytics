@@ -5,6 +5,7 @@ from pathlib import Path
 import nflreadpy as nfl
 from nfl.web_context_research import collect_web_context
 from nfl.player_evidence_bridge import review_player_evidence
+from nfl.nflverse_injury_evidence import add_injury_reports
 
 def main():
     p=argparse.ArgumentParser()
@@ -44,6 +45,18 @@ def main():
             "official_week_specific_inactives_verified":False,
             "model_fair_score_or_prop_adjusted":False,
             "wager_authorized":False}
+    # Free weekly league-report-derived injury history: only original IDs,
+    # exact same team/week, and source date_modified <= web capture qualify.
+    if report["player_evidence_review"].get("status")=="SOURCE_LINKED_PLAYER_RISKS_RESEARCH_ONLY":
+        try:
+            records=nfl.load_injuries(season).to_dicts()
+            report["player_evidence_review"]=add_injury_reports(
+                report["player_evidence_review"],records,
+                season=season,week=int(source["week"]),captured=at)
+        except Exception as error:
+            report["source_errors"].append({
+                "source":"NFLVERSE_WEEKLY_INJURY_REPORT",
+                "error":type(error).__name__+":"+str(error)[:180]})
     report["paired_original_model_capture_utc"]=source["capture_utc"]
     report["paired_model_artifact_sha256"]=hashlib.sha256(raw).hexdigest()
     a.out.parent.mkdir(parents=True,exist_ok=True)
