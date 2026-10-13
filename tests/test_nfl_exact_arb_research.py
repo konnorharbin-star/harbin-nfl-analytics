@@ -131,3 +131,12 @@ def test_no_quote_or_utc_reference_does_not_approve_any_bet():
     assert screen_pair(None, b, now=NOW)["wager_authorized"] is False
     with pytest.raises(ValueError, match="timezone-aware"):
         screen_pair(a, b, now=NOW.replace(tzinfo=None))
+
+def test_any_two_compatible_legal_bookmakers_are_allowed_for_arithmetic():
+    a, b = pair()
+    a["book"] = "FirstAuthorizedSportsbook"
+    b["book"] = "SecondAuthorizedSportsbook"
+    result = screen_pair(a, b, now=NOW)
+    assert result["status"] == "CONDITIONAL_MATHEMATICAL_GAP_NOT_EXECUTABLE_PROOF"
+    assert "BETMGM_LEG_REQUIRED" not in result["blockers"]
+    assert result["wager_authorized"] is False
