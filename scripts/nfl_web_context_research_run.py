@@ -35,7 +35,7 @@ def main():
         directory=nfl.load_players().to_dicts()
         report["player_evidence_review"]=review_player_evidence(
             source,report,directory,at=at)
-    except (ValueError,RuntimeError,KeyError,TypeError,OSError) as error:
+    except Exception as error:  # Optional external crosswalk is fail-closed.
         report["source_errors"].append({
             "source":"NFLVERSE_ESPN_PLAYER_ID_CROSSWALK",
             "error":type(error).__name__+":"+str(error)[:180]})
