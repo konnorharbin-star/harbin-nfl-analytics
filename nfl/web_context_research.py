@@ -187,7 +187,7 @@ def news_search(team, *, at, fetch_xml=get_xml):
     # Trusted reporting is prioritized, but an RSS headline remains a lead.
     items.sort(key=lambda item: (
         not item["established_publisher_rss_attribution"],
-        item["original_publication_time_utc"],
+        -datetime.fromisoformat(item["original_publication_time_utc"]).timestamp(),
     ))
     selected=items[:6]
     return {"query":query,"search_url":url,"leads":selected,
