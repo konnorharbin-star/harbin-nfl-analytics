@@ -1,5 +1,12 @@
 name: NFL exact public total versus frozen model (research only)
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/nfl-exact-total-public-probe.yml'
+      - 'nfl/exact_total_public_price_probe.py'
+      - 'scripts/nfl_research_exact_total_quote_probe.py'
+      - 'research/public_nfl_total_quote_20261013_oct15.json'
   workflow_dispatch:
     inputs:
       original_research_run_id:
@@ -23,7 +30,7 @@ jobs:
       - name: Download exact original football research inputs
         env:
           GH_TOKEN: ${{ github.token }}
-          SOURCE_RUN_ID: ${{ inputs.original_research_run_id }}
+          SOURCE_RUN_ID: ${{ inputs.original_research_run_id || '38462635402' }}
         run: |
           [[ "$SOURCE_RUN_ID" =~ ^[0-9]+$ ]] || exit 1
           mkdir -p archived
