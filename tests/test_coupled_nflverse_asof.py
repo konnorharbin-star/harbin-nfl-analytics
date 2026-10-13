@@ -73,7 +73,7 @@ def test_source_adapter_generates_genuinely_runnable_football_input():
     assert result["distribution"]["LA:LA_qb:passing_yards"]["mean"]>0
     assert result["distribution"]["BUF:BUF_qb:passing_attempts"]["mean"]>0
     assert result["qb_passing_player_ids_not_confirmed_starters"] is True
-    assert result["source_verified_td_int_drive_classification"] is True
+    assert result["source_typed_td_int_drive_classification"] is True
     assert result["distribution"]["LA:passing_touchdowns"]["mean"]>0
     assert result["distribution"]["LA:passing_interceptions"]["mean"]>0
     assert result["distribution"]["LA:LA_qb:passing_touchdowns"]["mean"]>0
