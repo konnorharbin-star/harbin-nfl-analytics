@@ -146,7 +146,7 @@ def test_typed_drive_score_events_generate_coherent_quarterback_tds_and_picks():
         row["passing_interceptions"]=1 if row["points"]==0 else 0
     out=simulate_joint(forecast(),rows,roles(),asof=NOW,draws=1000,seed=32)
     d=out["distribution"]
-    assert out["source_verified_td_int_drive_classification"] is True
+    assert out["source_typed_td_int_drive_classification"] is True
     assert out["td_int_betting_authorized"] is False
     for team in ("LA","BUF"):
         for stat in ("passing_touchdowns","passing_interceptions"):
