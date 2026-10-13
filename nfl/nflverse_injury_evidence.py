@@ -50,3 +50,23 @@ def add_injury_reports(review,rows,*,season,week,captured):
             conflicts.add(key)
         if prior is None or modified>prior["modified"]:
             found[key]={"modified":modified,"status":status}
+
+    report=deepcopy(review)
+    count=0
+    for game in report.get("games",[]):
+        for team,group in game.get("teams",{}).items():
+            for player in group.get("players",[]):
+                key=(team,player.get("player_id"))
+                player["nflverse_reported_status"]=None
+                player["nflverse_report_modified_utc"]=None
+                player["source_proves_final_inactive"]=False
+                if key in conflicts:
+                    player["nflverse_report_evidence"]="AMBIGUOUS_DATE_STATUS"
+                elif key not in found:
+                    player["nflverse_report_evidence"]="NOT_LISTED_DOES_NOT_PROVE_ACTIVE"
+                else:
+                    item=found[key]
+                    player["nflverse_report_evidence"]="SOURCE_DATED_REPORTED_STATUS"
+                    player["nflverse_reported_status"]=item["status"]
+                    player["nflverse_report_modified_utc"]=item["modified"].isoformat()
+                    count+=1
