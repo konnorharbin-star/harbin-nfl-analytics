@@ -1,6 +1,6 @@
 """NFL correlated-score empirical-residual research only; NOT calibrated, nor a bet."""
 from __future__ import annotations
-import json, math, random
+import json, math, random, re
 from datetime import UTC, datetime, timedelta
 
 MIN_GAMES = 64
@@ -42,8 +42,10 @@ def score_shadow(forecast, history, *, at, seed=20261012, draws=10000,
         raise ValueError("INVALID_SEED")
     if not isinstance(forecast,dict) or forecast.get("record_kind")!="FROZEN_FIRST_SEEN_FORECAST":
         raise ValueError("ORIGINAL_FROZEN_FORECAST_REQUIRED")
-    if forecast.get("league")!="NFL" or not forecast.get("event_id") or not forecast.get("content_sha256"):
+    if forecast.get("league")!="NFL" or not forecast.get("event_id") or not forecast.get("model_version") or not forecast.get("content_sha256"):
         raise ValueError("FORECAST_IDENTITY_MISSING")
+    if not re.fullmatch(r"[0-9a-f]{64}",str(forecast["content_sha256"])):
+        raise ValueError("FROZEN_ORIGINAL_SHA_INVALID")
     first=utc(forecast["captured_utc"]); kick=utc(forecast["kickoff_utc"])
     if not first<kick or not first<=at<kick:
         raise ValueError("FORECAST_NOT_PREKICKOFF_AT_ASOF")
@@ -57,7 +59,7 @@ def score_shadow(forecast, history, *, at, seed=20261012, draws=10000,
         if not isinstance(row,dict) or row.get("game_id") in ids or not row.get("game_id") or row["game_id"]==forecast["event_id"]:
             raise ValueError("HISTORY_ID_INVALID_OR_DUPLICATE")
         ids.add(row["game_id"])
-        if row.get("independent_final_source_verified") is not True or not row.get("original_forecast_sha256") or not row.get("final_source_sha256"):
+        if row.get("independent_final_source_verified") is not True or not all(re.fullmatch(r"[0-9a-f]{64}",str(row.get(k))) for k in ("original_forecast_sha256","final_source_sha256")):
             raise ValueError("UNVERIFIED_HISTORICAL_SOURCE")
         ft=utc(row["forecast_captured_utc"])
         ko=utc(row["kickoff_utc"])
@@ -71,6 +73,8 @@ def score_shadow(forecast, history, *, at, seed=20261012, draws=10000,
         ea=number(row,"actual_away_points",0)-number(row,"forecast_away_points",0)
         if not (number(row,"actual_home_points").is_integer() and number(row,"actual_away_points").is_integer()):
             raise ValueError("INVALID_FINAL_SCORE")
+        if max(number(row,"actual_home_points"),number(row,"actual_away_points"))>100:
+            raise ValueError("IMPOSSIBLE_FINAL_SCORE")
         pairs.append((eh,ea))
     if len(pairs)<MIN_GAMES or len(weeks)<MIN_WEEKS:
         raise ValueError("INSUFFICIENT_VERIFIED_GAMES")
