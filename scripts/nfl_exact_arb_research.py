@@ -91,6 +91,10 @@ def screen_pair(
         reasons.append("NOT_OPPOSITE_SIDES")
     if not a.get("book") or not b.get("book") or a.get("book") == b.get("book"):
         reasons.append("TWO_DISTINCT_BOOKS_REQUIRED")
+    if "BetMGM" not in {a.get("book"), b.get("book")}:
+        reasons.append("BETMGM_LEG_REQUIRED")
+    if a.get("period") != "full_game_including_overtime":
+        reasons.append("FULL_GAME_OVERTIME_CONTRACT_REQUIRED")
     for quote in (a, b):
         for flag in ("account_access_legal_attested", "book_price_account_visible_attested",
                      "rules_compatible_manually_attested"):
@@ -117,6 +121,8 @@ def screen_pair(
             reasons.append("NONPROSPECTIVE_OR_UNVERIFIABLE_QUOTE_TIME")
         if now - capture1 > MAX_AGE or now - capture2 > MAX_AGE:
             reasons.append("STALE_OBSERVED_PRICE")
+        if capture1 - origin1 > MAX_AGE or capture2 - origin2 > MAX_AGE:
+            reasons.append("STALE_PROVIDER_QUOTE_ORIGIN")
         if abs(capture1 - capture2) > MAX_AGE:
             reasons.append("NONCONTEMPORANEOUS_PRICES")
     except (ValueError, TypeError, KeyError, ArithmeticError) as exc:
