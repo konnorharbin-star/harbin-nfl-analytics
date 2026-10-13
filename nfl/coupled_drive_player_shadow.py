@@ -85,7 +85,12 @@ def _validate_history(drives, *, first_seen):
 
 def _role_weights(roles, *, team, kind, first_seen):
     eligible=[r for r in roles if r.get("team")==team and r.get("role") in ("QB","RB","WR","TE","FB")]
-    key="target_share" if kind=="target" else "carry_share"
+    if kind not in ("target","carry","qb_pass"):
+        raise ValueError("UNSUPPORTED_WORKLOAD_FAMILY")
+    if kind=="qb_pass":
+        eligible=[r for r in eligible if r.get("role")=="QB"]
+    key={"target":"target_share","carry":"carry_share",
+         "qb_pass":"qb_pass_share"}[kind]
     weighted=[]
     for r in eligible:
         if not r.get("player_id") or _utc(r.get("observed_at_utc"))>first_seen:
@@ -179,6 +184,7 @@ def simulate_joint(
         player_weights[team]={
             "target":_role_weights(players,team=team,kind="target",first_seen=original),
             "carry":_role_weights(players,team=team,kind="carry",first_seen=original),
+            "qb_pass":_role_weights(players,team=team,kind="qb_pass",first_seen=original),
         }
         if not player_weights[team]["target"] or not player_weights[team]["carry"]:
             raise ValueError("MISSING_TEAM_PLAYER_SHARE_COVERAGE")
@@ -209,6 +215,34 @@ def simulate_joint(
                 name=_choose(player_weights[team]["carry"],rand)
                 rushing[name]["carries"]+=1
                 rushing[name]["rushing_yards"]+=yd
+            # Keep an individual QB's completions <= attempts in each draw,
+            # assigning the SAME team passing-yard events to individual passers.
+            # QB identities and participation remain historical proxies.
+            qb_weights=player_weights[team]["qb_pass"]
+            if qb_weights:
+                qb_events=defaultdict(lambda: {
+                    "passing_attempts":0,"passing_completions":0,
+                    "passing_yards":0,
+                })
+                qb_attempt_ids=[_choose(qb_weights,rand) for _ in range(pa)]
+                completed_positions=set(rand.sample(range(pa),co))
+                completed_yard_chunks=iter(_split(py,co,rand))
+                for attempt_index,passer in enumerate(qb_attempt_ids):
+                    qb_events[passer]["passing_attempts"]+=1
+                    if attempt_index in completed_positions:
+                        qb_events[passer]["passing_completions"]+=1
+                        qb_events[passer]["passing_yards"]+=next(completed_yard_chunks)
+                if (
+                    sum(v["passing_attempts"] for v in qb_events.values())!=pa or
+                    sum(v["passing_completions"] for v in qb_events.values())!=co or
+                    sum(v["passing_yards"] for v in qb_events.values())!=py or
+                    any(v["passing_completions"]>v["passing_attempts"]
+                        for v in qb_events.values())
+                ):
+                    raise AssertionError("QB_PASSING_ACCOUNTING_MISMATCH")
+                for passer,_ in qb_weights:
+                    for stat,value in qb_events[passer].items():
+                        series[f"{team}:{passer}:{stat}"].append(value)
             if sum(p["receptions"] for p in receiving.values())!=co:
                 raise AssertionError("RECEIVING_COUNTS_DO_NOT_RECONCILE")
             if sum(p["receiving_yards"] for p in receiving.values())!=py:
@@ -244,6 +278,12 @@ def simulate_joint(
             "tie":sum(x==0 for x in series["HOME_MARGIN"])/draws,
             "query_thresholds":[],"assumed_pregame_player_activity":"UNVERIFIED",
             "player_stats_conditional_scenarios_only":True,
+            "qb_passing_workload_model":"HISTORICAL_LAST_FOUR_WEEKS_PASS_ATTEMPT_SHARE",
+            "qb_passing_player_ids_not_confirmed_starters":True,
+            "qb_passing_stat_projections_available_for_teams":[
+                team for team in (home,away) if player_weights[team]["qb_pass"]
+            ],
+            "qb_passing_prop_betting_authorized":False,
             "excluded_from_official_forecast":True,"accuracy_improvement_validated":False,
             "source_attestations_independently_authenticated":False,
             "game_model_not_yet_qb_roof_weather_or_ot_validated":True,
