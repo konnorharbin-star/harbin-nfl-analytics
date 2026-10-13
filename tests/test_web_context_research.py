@@ -112,3 +112,41 @@ def test_get_request_blocks_unknown_source_hosts_before_any_io():
     with pytest.raises(ValueError,match="UNAPPROVED_SOURCE_HOST"):
         _request("https://example.com/anything",accept="application/json",
                  allow_hosts={"api.weather.gov"})
+
+def test_prefer_espn_and_cbs_with_real_https_origin_not_spoofed_labels():
+    from nfl.web_context_research import preferred_publisher_domain
+
+    assert preferred_publisher_domain("https://www.espn.com/nfl/") == "espn.com"
+    assert preferred_publisher_domain("https://www.cbssports.com/nfl/") == "cbssports.com"
+    assert preferred_publisher_domain("https://www.nfl.com/news/") == "nfl.com"
+    assert preferred_publisher_domain("http://espn.com/news") is None
+    assert preferred_publisher_domain("https://espn.com.bad.example/news") is None
+    assert preferred_publisher_domain("https://fake.example/espn.com") is None
+
+    from xml.etree import ElementTree
+    def rss(_):
+        return ElementTree.fromstring("""<rss><channel>
+          <item><title>Other unverified football report</title>
+          <link>https://news.google.com/rss/articles/a</link>
+          <pubDate>Tue, 13 Oct 2026 11:00:00 GMT</pubDate>
+          <source url="https://unverified.example">ESPN</source></item>
+          <item><title>CBS Sports football reporting</title>
+          <link>https://news.google.com/rss/articles/b</link>
+          <pubDate>Tue, 13 Oct 2026 10:00:00 GMT</pubDate>
+          <source url="https://www.cbssports.com">CBS Sports</source></item>
+          <item><title>ESPN football reporting</title>
+          <link>https://news.google.com/rss/articles/c</link>
+          <pubDate>Tue, 13 Oct 2026 10:30:00 GMT</pubDate>
+          <source url="https://www.espn.com">ESPN</source></item>
+        </channel></rss>""")
+
+    report = news_search("PHI", at=NOW, fetch_xml=rss)
+    leads = report["leads"]
+    assert [x["preferred_publisher_domain"] for x in leads] == [
+        "espn.com", "cbssports.com", None
+    ]
+    assert report["preferred_reported_leads"] == 2
+    assert report["other_unverified_leads"] == 1
+    assert leads[0]["source_type"] == "SEARCH_RESULT_LEAD_UNVERIFIED"
+    assert leads[0]["confirmed_injury_or_qb_status"] is False
+    assert leads[0]["publisher_attribution_verified_by_article_fetch"] is False
