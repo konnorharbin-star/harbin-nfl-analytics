@@ -4,7 +4,7 @@ import os
 import subprocess
 from pathlib import Path
 
-WORKFLOW_DIR = Path(".github/workflows")
+WORKFLOW_DIR = Path(".github/disabled-workflows")
 ROOT = Path(__file__).resolve().parents[1]
 PUSH_SCRIPT = ROOT / "scripts" / "push_generated_state.sh"
 
@@ -83,7 +83,7 @@ def _clone(remote: Path, path: Path) -> Path:
 
 def _writer_workflows() -> dict[str, str]:
     output: dict[str, str] = {}
-    for path in sorted(WORKFLOW_DIR.glob("*.yml")):
+    for path in (WORKFLOW_DIR / name for name in sorted(EXPECTED_WRITERS)):
         text = path.read_text(encoding="utf-8")
         if "git push" in text or "push_generated_state.sh" in text:
             output[path.name] = text
@@ -93,6 +93,9 @@ def _writer_workflows() -> dict[str, str]:
 def test_all_generated_state_writers_use_reconciler() -> None:
     writers = _writer_workflows()
     assert set(writers) == EXPECTED_WRITERS
+    # No retired writer may be re-enabled in active workflows.
+    for name in EXPECTED_WRITERS:
+        assert not (ROOT / ".github/workflows" / name).exists(), name
     for name, text in writers.items():
         assert "bash scripts/push_generated_state.sh" in text, name
         assert "nfl-generated-state-" not in text, name
