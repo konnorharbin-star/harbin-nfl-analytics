@@ -1,0 +1,50 @@
+name: NFL Exact Player Prop Market Shadow — Research Only
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/nfl_prop_exact_public_market_shadow.py
+      - tests/test_nfl_prop_exact_public_market_shadow.py
+      - research/nfl_prop_market_quote_candidates_2026.json
+      - .github/workflows/nfl-prop-exact-public-market-shadow.yml
+  pull_request:
+    paths:
+      - scripts/nfl_prop_exact_public_market_shadow.py
+      - tests/test_nfl_prop_exact_public_market_shadow.py
+      - research/nfl_prop_market_quote_candidates_2026.json
+      - .github/workflows/nfl-prop-exact-public-market-shadow.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  research-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install original research dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Exact player-market research regression suite
+        run: python -m pytest -q tests/test_nfl_prop_exact_public_market_shadow.py
+      - name: Research-only source-empty example
+        run: |
+          python -m scripts.nfl_prop_exact_public_market_shadow
+          python - <<'PY'
+          import json
+          report=json.load(open('reports/nfl_prop_exact_market_shadow_v1_2026.json'))
+          assert report['candidate_public_quote_observations']==0
+          assert report['first_seen_quote_model_joins']['new']==0
+          assert report['independently_verified_accepted_US_BetMGM_prices']==0
+          assert report['true_ev'] is None and report['decision']=='PASS'
+          assert report['status']=='RESEARCH_ONLY'
+          print('PASS: no invented account quotes, book edge, or wager')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nfl-prop-exact-public-market-shadow-no-bets
+          path: reports/nfl_prop_exact_market_shadow_v1_2026.json
+          retention-days: 90
