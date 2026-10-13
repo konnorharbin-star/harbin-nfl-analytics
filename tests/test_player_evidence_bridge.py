@@ -6,7 +6,7 @@ import pytest
 from nfl.player_evidence_bridge import review_player_evidence
 from nfl.web_context_research import parse_espn_injuries
 
-AT=datetime(2026,10,13,12,utc:=UTC)
+AT=datetime(2026,10,13,12,tzinfo=UTC)
 KICK=AT+timedelta(days=4)
 
 def frozen():
