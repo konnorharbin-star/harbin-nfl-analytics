@@ -25,12 +25,20 @@ def fixture_data():
                 res=("Punt","Field goal","Touchdown")[j%3]
                 pbp.append({"game_id":game,"fixed_drive":drive,
                      "fixed_drive_result":res,"posteam":team,
-                     "play_type":"pass","pass_attempt":1,"complete_pass":1,
-                     "passing_yards":25+j,"rush_attempt":0,"rushing_yards":0})
+                     "play_type":"pass","pass_attempt":1,
+                     "complete_pass":0 if j%3==0 else 1,
+                     "passing_yards":0 if j%3==0 else 25+j,
+                     "rush_attempt":0,"rushing_yards":0,
+                     "pass_touchdown":1 if j%3==2 else 0,
+                     "rush_touchdown":0,
+                     "interception":1 if j%3==0 else 0,
+                     "two_point_attempt":0})
                 pbp.append({"game_id":game,"fixed_drive":drive,
                      "fixed_drive_result":res,"posteam":team,
                      "play_type":"run","pass_attempt":0,"complete_pass":0,
-                     "passing_yards":0,"rush_attempt":1,"rushing_yards":5+j})
+                     "passing_yards":0,"rush_attempt":1,"rushing_yards":5+j,
+                     "pass_touchdown":0,"rush_touchdown":0,
+                     "interception":0,"two_point_attempt":0})
     schedules.append({"season":2026,"week":6,"game_id":"2026_06_BUF_LA",
         "game_type":"REG","gameday":"2026-10-18","gametime":"16:05",
         "home_team":"LA","away_team":"BUF","home_score":None,"away_score":None})
@@ -65,6 +73,13 @@ def test_source_adapter_generates_genuinely_runnable_football_input():
     assert result["distribution"]["LA:LA_qb:passing_yards"]["mean"]>0
     assert result["distribution"]["BUF:BUF_qb:passing_attempts"]["mean"]>0
     assert result["qb_passing_player_ids_not_confirmed_starters"] is True
+    assert result["source_typed_td_int_drive_classification"] is True
+    assert result["distribution"]["LA:passing_touchdowns"]["mean"]>0
+    assert result["distribution"]["LA:passing_interceptions"]["mean"]>0
+    assert result["distribution"]["LA:LA_qb:passing_touchdowns"]["mean"]>0
+    assert result["distribution"]["LA:LA_qb:passing_interceptions"]["mean"]>0
+    assert result["distribution"]["LA:LA_wr:receiving_touchdowns"]["mean"]>0
+    assert result["td_int_betting_authorized"] is False
     assert result["wager_authorized"] is False
 
 def test_malformed_source_kickoff_or_pregame_capture_fails_closed():

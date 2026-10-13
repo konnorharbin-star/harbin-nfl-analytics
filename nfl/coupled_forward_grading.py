@@ -12,7 +12,21 @@ from nfl.coupled_nflverse_asof import kickoff_utc
 
 SPEC="NFL_JOINT_DRIVE_PLAYER_FORWARD_GRADE_RESEARCH_V1"
 MIN_GAMES_FOR_INDEPENDENT_REVIEW=128
-PLAYER_STATS={"receptions","receiving_yards","carries","rushing_yards"}
+# Map research metric names to the actual nflverse weekly player stat fields.
+# Never interpret an absent row or absent column as a zero or prop settlement.
+PLAYER_STATS={
+    "receptions":"receptions",
+    "receiving_yards":"receiving_yards",
+    "receiving_touchdowns":"receiving_tds",
+    "carries":"carries",
+    "rushing_yards":"rushing_yards",
+    "rushing_touchdowns":"rushing_tds",
+    "passing_attempts":"attempts",
+    "passing_completions":"completions",
+    "passing_yards":"passing_yards",
+    "passing_touchdowns":"passing_tds",
+    "passing_interceptions":"passing_interceptions",
+}
 
 def clock(x):
     if not isinstance(x,str):raise ValueError("TIMESTAMP_MISSING")
@@ -109,16 +123,18 @@ def grade_snapshot(snapshot, finals, player_rows, *, at):
             if source_key in invalid_players or p is None:
                 counts["player_stat_rows_not_eligible"]+=1
                 continue
-            if (p.get("team") or p.get("recent_team"))!=team or p.get(stat) is None:
+            source_field=PLAYER_STATS[stat]
+            if (p.get("team") or p.get("recent_team"))!=team or p.get(source_field) is None:
                 counts["player_stat_rows_not_eligible"]+=1
                 continue
             try:
-                actual=num(p[stat])
+                actual=num(p[source_field])
                 forecast_value=num(info["mean"])
             except (ValueError,KeyError,TypeError):
                 counts["player_stat_rows_not_eligible"]+=1
                 continue
             prop_stats.append({"player_id":pid,"team":team,"stat":stat,
+                               "source_field":source_field,
                                "actual":actual,"predicted":forecast_value,
                                "absolute_error":abs(actual-forecast_value),
                                "status":"RESEARCH_SOURCE_ROW_ONLY_NOT_BET_SETTLEMENT"})

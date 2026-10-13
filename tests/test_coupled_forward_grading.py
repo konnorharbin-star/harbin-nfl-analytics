@@ -72,3 +72,25 @@ def test_no_economic_claims_from_synthetic_gains():
     assert result["promotion_ready"] is False
     assert result["official_NFL_gamebook_crosscheck_done"] is False
     assert result["sportsbook_price_and_roi_graded"] is False
+
+def test_qb_passing_touchdowns_and_interceptions_use_exact_stat_columns():
+    snap=orig()
+    stat=snap["games"][0]["distribution"]
+    stat["LA:00-0000001:passing_touchdowns"]={"mean":1.3}
+    stat["LA:00-0000001:passing_interceptions"]={"mean":0.7}
+    stat["LA:00-0000001:passing_completions"]={"mean":22.0}
+    stat["LA:00-0000001:passing_attempts"]={"mean":32.0}
+    stat["LA:00-0000002:receiving_touchdowns"]={"mean":0.2}
+    source=players()
+    source[0].update({"passing_tds":2,"passing_interceptions":1,
+                      "completions":20,"attempts":31})
+    out=grade_snapshot(snap,finals(),source,at=ASOF)
+    scored={x["stat"]:x for x in out["games"][0]["qualified_player_stat_rows"]}
+    assert scored["passing_touchdowns"]["actual"]==2
+    assert scored["passing_touchdowns"]["source_field"]=="passing_tds"
+    assert scored["passing_interceptions"]["actual"]==1
+    assert scored["passing_completions"]["source_field"]=="completions"
+    assert scored["passing_attempts"]["source_field"]=="attempts"
+    assert "receiving_touchdowns" not in scored
+    assert out["counts"]["player_stat_rows_not_eligible"]==2
+    assert out["promotion_ready"] is False

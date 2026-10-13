@@ -47,6 +47,7 @@ def _describe(v):
 def _validate_history(drives, *, first_seen):
     if not isinstance(drives,list): raise ValueError("DRIVES_REQUIRED")
     seen=set();games={};library=[]
+    event_flags=set()
     for d in drives:
         if not isinstance(d,dict): raise ValueError("BAD_DRIVE")
         game=d.get("game_id"); drive=d.get("drive_id"); offense=d.get("team")
@@ -69,11 +70,30 @@ def _validate_history(drives, *, first_seen):
         pa=_int(d.get("pass_attempts")); co=_int(d.get("completions"))
         ya=_int(d.get("passing_yards")); ru=_int(d.get("rush_attempts"))
         ry=int(_number(d.get("rushing_yards")))
+        stat_fields=("pass_touchdowns","rush_touchdowns","passing_interceptions")
+        is_source_events=all(field in d for field in stat_fields)
+        if any(field in d for field in stat_fields) and not is_source_events:
+            raise ValueError("PARTIAL_DRIVE_PASSING_EVENT_PROVENANCE")
+        event_flags.add(is_source_events)
+        if is_source_events:
+            ptd=_int(d["pass_touchdowns"])
+            rtd=_int(d["rush_touchdowns"])
+            interception=_int(d["passing_interceptions"])
+            if (ptd>co or interception>pa-co or
+                ptd+rtd!=(1 if score==7 else 0)):
+                raise ValueError("INVALID_DRIVE_TD_INT_ACCOUNTING")
+        else:
+            ptd=rtd=interception=0
         if co>pa or (co==0 and ya!=0) or pa+ru==0 and score>0:
             raise ValueError("INVALID_DRIVE_PBP_ACCOUNTING")
         library.append({"game":game,"team":offense,"points":score,
                         "pass_attempts":pa,"completions":co,
-                        "passing_yards":ya,"rush_attempts":ru,"rushing_yards":ry})
+                        "passing_yards":ya,"rush_attempts":ru,"rushing_yards":ry,
+                        "pass_touchdowns":ptd,"rush_touchdowns":rtd,
+                        "passing_interceptions":interception})
+    if len(event_flags)>1:
+        raise ValueError("MIXED_DRIVE_EVENT_COVERAGE")
+    event_supported=event_flags=={True}
     weeks={(s,w) for s,w,_ in games.values()}
     if len(games)<MIN_PRIOR_GAMES or len(weeks)<MIN_PRIOR_WEEKS:
         raise ValueError("INSUFFICIENT_VERIFIED_DRIVE_GAMES")
@@ -81,7 +101,7 @@ def _validate_history(drives, *, first_seen):
     for d in library: pergame[d["game"]][d["team"]]+=1
     possible=[v for v in pergame.values() if len(v)==2 and all(4<=n<=30 for n in v.values())]
     if len(possible)<MIN_PRIOR_GAMES: raise ValueError("INCOMPLETE_TWO_TEAM_DRIVE_LIBRARY")
-    return library,[tuple(v.values()) for v in possible],len(games),len(weeks)
+    return library,[tuple(v.values()) for v in possible],len(games),len(weeks),event_supported
 
 def _role_weights(roles, *, team, kind, first_seen):
     eligible=[r for r in roles if r.get("team")==team and r.get("role") in ("QB","RB","WR","TE","FB")]
@@ -177,7 +197,7 @@ def simulate_joint(
         raise ValueError("FORECAST_TOTAL_INCOHERENT")
     if abs(eh-ea-_number(forecast.get("independent_projected_home_margin")))>1e-6:
         raise ValueError("FORECAST_MARGIN_INCOHERENT")
-    lib,pace,n_games,n_weeks=_validate_history(drives,first_seen=original)
+    lib,pace,n_games,n_weeks,event_supported=_validate_history(drives,first_seen=original)
     # Model training never sees the target original score, kickoff or season result.
     by_score_home={}; player_weights={}
     for team in (home,away):
@@ -205,16 +225,31 @@ def simulate_joint(
             py=sum(x["passing_yards"] for x in rows)
             ru=sum(x["rush_attempts"] for x in rows)
             ry=sum(x["rushing_yards"] for x in rows)
-            receiving=defaultdict(lambda:{"receptions":0,"receiving_yards":0})
+            ptd=sum(x["pass_touchdowns"] for x in rows)
+            rtd=sum(x["rush_touchdowns"] for x in rows)
+            ints=sum(x["passing_interceptions"] for x in rows)
+            if event_supported and (ptd+rtd!=sum(x["points"]==7 for x in rows)
+                                    or ptd>co or ints>pa-co):
+                raise AssertionError("SIMULATED_TEAM_SCORE_AND_PASS_EVENTS_MISMATCH")
+            receiving=defaultdict(lambda:{"receptions":0,"receiving_yards":0,**({"receiving_touchdowns":0} if event_supported else {})})
+            receiver_names=[]
             for yd in _split(py,co,rand):
                 name=_choose(player_weights[team]["target"],rand)
+                receiver_names.append(name)
                 receiving[name]["receptions"]+=1
                 receiving[name]["receiving_yards"]+=yd
-            rushing=defaultdict(lambda:{"carries":0,"rushing_yards":0})
+            rushing=defaultdict(lambda:{"carries":0,"rushing_yards":0,**({"rushing_touchdowns":0} if event_supported else {})})
+            rusher_names=[]
             for yd in _split(ry,ru,rand):
                 name=_choose(player_weights[team]["carry"],rand)
+                rusher_names.append(name)
                 rushing[name]["carries"]+=1
                 rushing[name]["rushing_yards"]+=yd
+            if event_supported:
+                for name in rand.sample(receiver_names,ptd):
+                    receiving[name]["receiving_touchdowns"]+=1
+                for name in rand.sample(rusher_names,rtd):
+                    rushing[name]["rushing_touchdowns"]+=1
             # Keep an individual QB's completions <= attempts in each draw,
             # assigning the SAME team passing-yard events to individual passers.
             # QB identities and participation remain historical proxies.
@@ -223,21 +258,36 @@ def simulate_joint(
                 qb_events=defaultdict(lambda: {
                     "passing_attempts":0,"passing_completions":0,
                     "passing_yards":0,
+                    **({"passing_touchdowns":0,"passing_interceptions":0}
+                       if event_supported else {}),
                 })
                 qb_attempt_ids=[_choose(qb_weights,rand) for _ in range(pa)]
                 completed_positions=set(rand.sample(range(pa),co))
                 completed_yard_chunks=iter(_split(py,co,rand))
+                td_positions=(set(rand.sample(sorted(completed_positions),ptd))
+                              if event_supported else set())
+                int_positions=(set(rand.sample(
+                    [i for i in range(pa) if i not in completed_positions],ints))
+                    if event_supported else set())
                 for attempt_index,passer in enumerate(qb_attempt_ids):
                     qb_events[passer]["passing_attempts"]+=1
                     if attempt_index in completed_positions:
                         qb_events[passer]["passing_completions"]+=1
                         qb_events[passer]["passing_yards"]+=next(completed_yard_chunks)
+                    if attempt_index in td_positions:
+                        qb_events[passer]["passing_touchdowns"]+=1
+                    if attempt_index in int_positions:
+                        qb_events[passer]["passing_interceptions"]+=1
                 if (
                     sum(v["passing_attempts"] for v in qb_events.values())!=pa or
                     sum(v["passing_completions"] for v in qb_events.values())!=co or
                     sum(v["passing_yards"] for v in qb_events.values())!=py or
                     any(v["passing_completions"]>v["passing_attempts"]
-                        for v in qb_events.values())
+                        for v in qb_events.values()) or
+                    (event_supported and (
+                        sum(v["passing_touchdowns"] for v in qb_events.values())!=ptd
+                        or sum(v["passing_interceptions"] for v in qb_events.values())!=ints
+                    ))
                 ):
                     raise AssertionError("QB_PASSING_ACCOUNTING_MISMATCH")
                 for passer,share in qb_weights:
@@ -255,6 +305,11 @@ def simulate_joint(
             for k,v in (("points",pts),("pass_attempts",pa),("completions",co),
                         ("passing_yards",py),("rush_attempts",ru),("rushing_yards",ry)):
                 series[f"{team}:{k}"].append(v)
+            if event_supported:
+                for name,value in (("passing_touchdowns",ptd),
+                                   ("rushing_touchdowns",rtd),
+                                   ("passing_interceptions",ints)):
+                    series[f"{team}:{name}"].append(value)
             for player,v in receiving.items():
                 for stat,x in v.items():series[f"{team}:{player}:{stat}"].append(x)
             for player,v in rushing.items():
@@ -263,7 +318,11 @@ def simulate_joint(
             for role in players:
                 if role.get("team")!=team:continue
                 person=role["player_id"]
-                for stat in ("receptions","receiving_yards","carries","rushing_yards"):
+                for stat in (("receptions","receiving_yards","carries",
+                              "rushing_yards","receiving_touchdowns",
+                              "rushing_touchdowns") if event_supported
+                             else ("receptions","receiving_yards",
+                                   "carries","rushing_yards")):
                     key=f"{team}:{person}:{stat}"
                     if len(series[key])<=_:series[key].append(0)
         h,a=perteam[home],perteam[away]
@@ -284,6 +343,10 @@ def simulate_joint(
                 team for team in (home,away) if player_weights[team]["qb_pass"]
             ],
             "qb_passing_prop_betting_authorized":False,
+            "source_typed_td_int_drive_classification":event_supported,
+            "td_int_model":"PRIOR_REPLAYED_OFFENSIVE_TD_TYPES_AND_INTERCEPTIONS"
+                            if event_supported else None,
+            "td_int_betting_authorized":False,
             "excluded_from_official_forecast":True,"accuracy_improvement_validated":False,
             "source_attestations_independently_authenticated":False,
             "game_model_not_yet_qb_roof_weather_or_ot_validated":True,

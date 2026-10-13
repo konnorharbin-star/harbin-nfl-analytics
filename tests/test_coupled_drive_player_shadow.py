@@ -137,3 +137,36 @@ def test_roster_sums_missing_qb_and_availability_block_unsupported_usage():
         simulate_joint(forecast(),history(),[],asof=NOW,draws=1000)
     with pytest.raises(ValueError,match="UNKNOWN"):
         run(queries=[{"metric":"UNKNOWN","line":1.5}])
+
+def test_typed_drive_score_events_generate_coherent_quarterback_tds_and_picks():
+    rows=history()
+    for row in rows:
+        row["pass_touchdowns"]=1 if row["points"]==7 else 0
+        row["rush_touchdowns"]=0
+        row["passing_interceptions"]=1 if row["points"]==0 else 0
+    out=simulate_joint(forecast(),rows,roles(),asof=NOW,draws=1000,seed=32)
+    d=out["distribution"]
+    assert out["source_typed_td_int_drive_classification"] is True
+    assert out["td_int_betting_authorized"] is False
+    for team in ("LA","BUF"):
+        for stat in ("passing_touchdowns","passing_interceptions"):
+            assert d[f"{team}:{team}_qb:{stat}"]["mean"]+d[f"{team}:OTHER:{stat}"]["mean"]==pytest.approx(d[f"{team}:{stat}"]["mean"])
+        assert d[f"{team}:passing_touchdowns"]["mean"]>0
+        assert d[f"{team}:passing_interceptions"]["mean"]>0
+        assert d[f"{team}:rushing_touchdowns"]["mean"]==0
+    assert out["estimated_ev"] is None
+
+def test_typed_drive_events_reject_incoherence_and_mixed_source_coverage():
+    rows=history()
+    for row in rows:
+        row["pass_touchdowns"]=int(row["points"]==7)
+        row["rush_touchdowns"]=0
+        row["passing_interceptions"]=int(row["points"]==0)
+    rows[0]["passing_interceptions"]=5
+    with pytest.raises(ValueError,match="INVALID_DRIVE_TD_INT_ACCOUNTING"):
+        simulate_joint(forecast(),rows,roles(),asof=NOW,draws=1000)
+    rows=history()
+    rows[0].update({"pass_touchdowns":0,"rush_touchdowns":0,
+                    "passing_interceptions":0})
+    with pytest.raises(ValueError,match="MIXED_DRIVE_EVENT_COVERAGE"):
+        simulate_joint(forecast(),rows,roles(),asof=NOW,draws=1000)
