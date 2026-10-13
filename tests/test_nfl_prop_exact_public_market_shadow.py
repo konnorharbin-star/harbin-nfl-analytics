@@ -46,6 +46,10 @@ def fixture():
             {"selection": "UNDER", "line": 75.5, "american_odds": -110},
         ]
     }
+    for side in q["sides"]:
+        for field in ("snapshot_id", "bookmaker", "source_url",
+                      "source_observed_utc", "source_quote_origin_utc"):
+            side[field] = q[field]
     return q, forecast, catalog, iso(capture+timedelta(minutes=1))
 
 
@@ -66,6 +70,8 @@ def test_missing_origin_stays_capture_only_not_current_quote():
     q, f, cat, now = fixture()
     q["source_quote_origin_utc"] = None
     q["source_origin_timestamp_claimed_verified"] = False
+    for side in q["sides"]:
+        side["source_quote_origin_utc"] = q["source_quote_origin_utc"]
     row = create_rows([q], [f], cat, now=now)[0]
     assert row["origin_provenance"] == "CAPTURE_ONLY_ORIGIN_UNKNOWN"
     assert not row["source_origin_independently_authenticated"]
@@ -74,6 +80,8 @@ def test_missing_origin_stays_capture_only_not_current_quote():
 def test_missing_origin_cannot_claim_verified_timestamp():
     q, f, cat, now = fixture()
     q["source_quote_origin_utc"] = None
+    for side in q["sides"]:
+        side["source_quote_origin_utc"] = q["source_quote_origin_utc"]
     with pytest.raises(ValueError, match="missing time"):
         create_rows([q], [f], cat, now=now)
 
@@ -83,6 +91,8 @@ def test_old_source_timestamp_is_blocked_from_freshness_claim():
     q["source_quote_origin_utc"] = (
         datetime.fromisoformat(q["source_observed_utc"]) -
         timedelta(minutes=45)).isoformat()
+    for side in q["sides"]:
+        side["source_quote_origin_utc"] = q["source_quote_origin_utc"]
     row = create_rows([q], [f], cat, now=now)[0]
     assert row["origin_provenance"] == "SOURCE_ORIGIN_STALE_AT_CAPTURE"
 
@@ -92,6 +102,8 @@ def test_offer_issued_before_frozen_forecast_is_not_marked_fresh():
     q["source_quote_origin_utc"] = (
         datetime.fromisoformat(f["first_observed_at_utc"]) -
         timedelta(minutes=1)).isoformat()
+    for side in q["sides"]:
+        side["source_quote_origin_utc"] = q["source_quote_origin_utc"]
     row = create_rows([q], [f], cat, now=now)[0]
     assert row["origin_provenance"] == "ORIGIN_PREDATES_FIRST_FROZEN_FORECAST"
 
@@ -134,6 +146,8 @@ def test_missing_other_side_or_different_line_fail_closed():
 def test_future_book_quote_origin_rejected():
     q, f, cat, now = fixture()
     q["source_quote_origin_utc"] = now
+    for side in q["sides"]:
+        side["source_quote_origin_utc"] = q["source_quote_origin_utc"]
     with pytest.raises(ValueError, match="cannot follow observation"):
         create_rows([q], [f], cat, now=now)
 
@@ -195,3 +209,16 @@ def test_no_input_does_not_create_real_quotes(tmp_path):
     assert report["decision"] == "PASS" and not report["calibrated_edge_found"]
     assert report["true_ev"] is None
     assert not (tmp_path/"journal.jsonl").exists()
+
+def test_mixed_source_snapshots_do_not_create_false_two_sided_hold():
+    q, f, cat, now = fixture()
+    q["sides"][1]["snapshot_id"] = "a-different-snapshot"
+    with pytest.raises(ValueError, match="mismatched provenance"):
+        create_rows([q], [f], cat, now=now)
+
+
+def test_source_origin_field_must_be_explicitly_null_when_unknown():
+    q, f, cat, now = fixture()
+    del q["source_quote_origin_utc"]
+    with pytest.raises(ValueError, match="incomplete"):
+        create_rows([q], [f], cat, now=now)
