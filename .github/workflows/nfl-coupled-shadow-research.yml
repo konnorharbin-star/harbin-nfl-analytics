@@ -1,0 +1,37 @@
+name: Football-first NFL coupled totals and props research (no bets)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'nfl/coupled_drive_player_shadow.py'
+      - 'nfl/coupled_nflverse_asof.py'
+      - 'scripts/nfl_coupled_drive_player_research_run.py'
+      - '.github/workflows/nfl-coupled-shadow-research.yml'
+  schedule:
+    - cron: '11 13 * 9-12 2,4,6'
+permissions:
+  contents: read
+jobs:
+  research:
+    if: ${{ github.event_name != 'schedule' || github.run_id != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install free package dependencies
+        run: python -m pip install -e .
+      - name: Obtain free nflverse and generate independent research forecast artifacts
+        run: |
+          python -m scripts.nfl_coupled_drive_player_research_run --season 2026 --draws 2000 --out reports/coupled_drive_player_shadow.json
+      - name: Archive versioned research artifact, no Git history changes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-free-coupled-score-props-RESEARCH-UNVALIDATED
+          path: reports/coupled_drive_player_shadow.json
+          if-no-files-found: warn
+          retention-days: 45
