@@ -8,6 +8,8 @@ on:
       - 'nfl/coupled_nflverse_asof.py'
       - 'nfl/web_context_research.py'
       - 'scripts/nfl_web_context_research_run.py'
+      - 'scripts/nfl_web_conditional_research_run.py'
+      - 'nfl/web_conditioned_model.py'
       - 'scripts/nfl_coupled_drive_player_research_run.py'
       - '.github/workflows/nfl-coupled-shadow-research.yml'
   schedule:
@@ -33,6 +35,9 @@ jobs:
       - name: Research public NFL injury reports, weather and recent news (no model edits)
         run: |
           python -m scripts.nfl_web_context_research_run --forecast-scan reports/coupled_drive_player_shadow.json --out reports/nfl_web_context_research.json
+      - name: Generate date-stamped conditional injury scenarios (not verified absences)
+        run: |
+          python -m scripts.nfl_web_conditional_research_run --forecast-scan reports/coupled_drive_player_shadow.json --replay-inputs reports/coupled_replay_inputs.json --web-report reports/nfl_web_context_research.json --out reports/nfl_web_conditional_scenarios.json
       - name: Archive versioned research artifact, no Git history changes
         if: always()
         uses: actions/upload-artifact@v4
@@ -41,5 +46,7 @@ jobs:
           path: |
             reports/coupled_drive_player_shadow.json
             reports/nfl_web_context_research.json
+            reports/coupled_replay_inputs.json
+            reports/nfl_web_conditional_scenarios.json
           if-no-files-found: warn
           retention-days: 45
