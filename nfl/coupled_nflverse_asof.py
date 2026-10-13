@@ -10,7 +10,8 @@ from datetime import UTC, datetime, timedelta
 from hashlib import sha256
 import json
 from zoneinfo import ZoneInfo
-from pathlib import Path
+
+import polars as pl
 
 from nfl.coupled_drive_player_shadow import _utc, _number
 from nfl.ratings import fit_pregame_fair_score
@@ -75,14 +76,7 @@ def prepare_asof_source(schedules, pbp, player_stats, *,
     # Force the scoring baseline to fit ONLY source-mature, prior weeks.
     # Do not alter published original scoring forecast files.
     eligible_ids=set(eligible)
-    original_schedule=schedules
-    strict_schedule=original_schedule.filter(
-        original_schedule.get_column("game_id").cast(str).is_in(
-            list(eligible_ids|{game_id})
-        )
-    )
-    # In Polars, .cast(str) is unsupported on some versions; the
-    # originating nflreadpy column is already Utf8.
+    strict_schedule=schedules.filter(pl.col("game_id").cast(pl.String).is_in(list(eligible_ids|{game_id})))
     fair=fit_pregame_fair_score(strict_schedule,season,week)
     projection=fair.project(home,away)
     sha=sha256(json.dumps({
@@ -151,7 +145,7 @@ def prepare_asof_source(schedules, pbp, player_stats, *,
             "season":int(snap["season"]),"week":int(snap["week"]),
             "kickoff_utc":ko.isoformat(),
             "verified_at_utc":at.isoformat(),
-            "official_final_verified":True,
+            "completed_nflverse_schedule_game":True,
             "source_sha256":sha256((gid+"|"+did+"|"+team+"|"+str(pa)+str(co)+str(py)).encode()).hexdigest(),
             "points":points,"pass_attempts":pa,"completions":co,
             "passing_yards":py,"rush_attempts":ra,"rushing_yards":ry,
