@@ -100,6 +100,7 @@ def prepare_asof_source(schedules, pbp, player_stats, *,
         "game_id","fixed_drive","fixed_drive_result","posteam",
         "pass_attempt","complete_pass","passing_yards",
         "rush_attempt","rushing_yards","play_type",
+        "pass_touchdown","rush_touchdown","interception","two_point_attempt",
     }
     if not required.issubset(set(pbp.columns)):
         raise ValueError("PBP_MISSING_DRIVE_COLUMNS:"+str(sorted(required-set(pbp.columns))))
@@ -115,7 +116,7 @@ def prepare_asof_source(schedules, pbp, player_stats, *,
     for (gid,did),plays in bundles.items():
         snap,ko=eligible[gid]
         eligible_plays=[p for p in plays if p.get("play_type") in ("pass","run")
-                        and p.get("posteam")]
+                        and p.get("posteam") and not p.get("two_point_attempt")]
         if not eligible_plays:
             rejects["NO_SCRIMMAGE_OFFENSE"]+=1
             continue
@@ -137,8 +138,22 @@ def prepare_asof_source(schedules, pbp, player_stats, *,
         py=round(count_pass("passing_yards"))
         ra=round(count_pass("rush_attempt"))
         ry=round(count_pass("rushing_yards"))
+        pass_td=round(count_pass("pass_touchdown"))
+        rush_td=round(count_pass("rush_touchdown"))
+        interceptions=round(count_pass("interception"))
         if co>pa or co==0 and py!=0 or py<0 or pa+ra==0:
             rejects["INVALID_DRIVE_PASS_RUSH_ACCOUNTING"]+=1
+            continue
+        if (pass_td<0 or rush_td<0 or interceptions<0 or
+            interceptions>pa-co or pass_td>co or
+            pass_td+rush_td>(1 if points==7 else 0)):
+            rejects["INVALID_DRIVE_TD_INT_ACCOUNTING"]+=1
+            continue
+        if points==7 and pass_td+rush_td!=1:
+            # Avoid counting defensive/special-teams or other TDs
+            # as a passer's touchdown. Score baseline is a known 0/3/7
+            # simplification; exclude unsupported scoring mechanisms.
+            rejects["UNCLASSIFIED_TOUCHDOWN_DRIVE"]+=1
             continue
         library.append({
             "game_id":gid,"drive_id":did,"team":team,
@@ -149,6 +164,8 @@ def prepare_asof_source(schedules, pbp, player_stats, *,
             "source_sha256":sha256((gid+"|"+did+"|"+team+"|"+str(pa)+str(co)+str(py)).encode()).hexdigest(),
             "points":points,"pass_attempts":pa,"completions":co,
             "passing_yards":py,"rush_attempts":ra,"rushing_yards":ry,
+            "pass_touchdowns":pass_td,"rush_touchdowns":rush_td,
+            "passing_interceptions":interceptions,
         })
     # Prior player game-level source rows are read at the same time, not
     # independently-certified active lineups or verified participation.
