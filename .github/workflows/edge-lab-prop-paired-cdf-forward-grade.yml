@@ -5,6 +5,8 @@ on:
     paths:
       - ".github/workflows/edge-lab-prop-paired-cdf-forward-grade.yml"
       - "scripts/nfl_prop_paired_cdf_forward_grader.py"
+      - "scripts/nfl_prop_grade_journal_integrity.py"
+      - "tests/test_nfl_prop_grade_journal_integrity.py"
       - "tests/test_nfl_prop_paired_cdf_forward_grader.py"
       - "scripts/nfl_prop_primary_anchor_score.py"
       - "tests/test_nfl_prop_primary_anchor_score.py"
@@ -41,7 +43,7 @@ jobs:
         run: python -m pip install -e '.[dev]'
       - name: Validate original sources, same-line contracts, 72-hour complete outcome gate
         if: steps.guard.outputs.enabled == 'true'
-        run: python -m pytest -q tests/test_nfl_prop_paired_cdf_forward_grader.py tests/test_nfl_prop_primary_anchor_cohort.py tests/test_nfl_prop_primary_anchor_score.py
+        run: python -m pytest -q tests/test_nfl_prop_paired_cdf_forward_grader.py tests/test_nfl_prop_primary_anchor_cohort.py tests/test_nfl_prop_primary_anchor_score.py tests/test_nfl_prop_grade_journal_integrity.py
       - name: Freeze original same-line probabilities WITHOUT accessing target-game result source
         if: steps.guard.outputs.enabled == 'true'
         run: python -m scripts.nfl_prop_paired_cdf_forward_grader --freeze-only
