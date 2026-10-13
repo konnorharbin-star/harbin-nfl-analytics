@@ -6,6 +6,8 @@ on:
     paths:
       - 'nfl/coupled_drive_player_shadow.py'
       - 'nfl/coupled_nflverse_asof.py'
+      - 'nfl/web_context_research.py'
+      - 'scripts/nfl_web_context_research_run.py'
       - 'scripts/nfl_coupled_drive_player_research_run.py'
       - '.github/workflows/nfl-coupled-shadow-research.yml'
   schedule:
@@ -27,11 +29,16 @@ jobs:
       - name: Obtain free nflverse and generate independent research forecast artifacts
         run: |
           python -m scripts.nfl_coupled_drive_player_research_run --season 2026 --draws 2000 --out reports/coupled_drive_player_shadow.json
+      - name: Research public NFL injury reports, weather and recent news (no model edits)
+        run: |
+          python -m scripts.nfl_web_context_research_run --forecast-scan reports/coupled_drive_player_shadow.json --out reports/nfl_web_context_research.json
       - name: Archive versioned research artifact, no Git history changes
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: nfl-free-coupled-score-props-RESEARCH-UNVALIDATED
-          path: reports/coupled_drive_player_shadow.json
+          path: |
+            reports/coupled_drive_player_shadow.json
+            reports/nfl_web_context_research.json
           if-no-files-found: warn
           retention-days: 45
