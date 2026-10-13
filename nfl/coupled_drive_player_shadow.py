@@ -54,7 +54,7 @@ def _validate_history(drives, *, first_seen):
         if not game or drive is None or not offense or key in seen: raise ValueError("DUPLICATE_DRIVE_OR_ID")
         seen.add(key)
         if d.get("completed_nflverse_schedule_game") is not True or not d.get("source_sha256"):
-            raise ValueError("OFFICIAL_DRIVE_SOURCE_UNVERIFIED")
+            raise ValueError("NFLVERSE_SOURCE_COMPLETION_NOT_ATTESTED")
         kickoff=_utc(d.get("kickoff_utc"))
         verified=_utc(d.get("verified_at_utc"))
         if not (kickoff+timedelta(hours=72)<=verified<=first_seen):
@@ -96,6 +96,7 @@ def _role_weights(roles, *, team, kind, first_seen):
         if weight>1: raise ValueError("PLAYER_SHARE_TOO_LARGE")
         if weight: weighted.append((str(r["player_id"]),weight))
     total=sum(w for _,w in weighted)
+    if total==0: return []
     if total>1.000001: raise ValueError("PLAYER_SHARES_EXCEED_TEAM")
     return weighted+([("OTHER",max(0,1-total))] if total<1 else [])
 
