@@ -42,7 +42,8 @@ def fixture_data():
                 ("te","TE",3,0)]:
                 stats.append({"team":team,"player_id":team+"_"+player,
                               "position":pos,"season":2026,"week":wk,
-                              "targets":targets,"carries":carries})
+                              "targets":targets,"carries":carries,
+                              "attempts":28 if pos=="QB" else 0})
     return pl.DataFrame(schedules),pl.DataFrame(pbp),pl.DataFrame(stats)
 
 def test_source_adapter_generates_genuinely_runnable_football_input():
@@ -59,6 +60,11 @@ def test_source_adapter_generates_genuinely_runnable_football_input():
     result=simulate_joint(f,d,p,asof=AT,draws=1000)
     assert result["status"]=="UNVALIDATED_JOINT_DRIVE_PLAYER_RESEARCH"
     assert result["training_games"]==48
+    assert "LA" in result["qb_passing_stat_projections_available_for_teams"]
+    assert "BUF" in result["qb_passing_stat_projections_available_for_teams"]
+    assert result["distribution"]["LA:LA_qb:passing_yards"]["mean"]>0
+    assert result["distribution"]["BUF:BUF_qb:passing_attempts"]["mean"]>0
+    assert result["qb_passing_player_ids_not_confirmed_starters"] is True
     assert result["wager_authorized"] is False
 
 def test_malformed_source_kickoff_or_pregame_capture_fails_closed():
