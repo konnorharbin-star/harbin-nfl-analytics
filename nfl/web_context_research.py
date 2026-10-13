@@ -141,6 +141,7 @@ def parse_espn_injuries(payload, team):
             details=item.get("details") or {}
             records.append({
                 "player":str(name),
+                "espn_athlete_id":str(person.get("id")) if person.get("id") is not None else None,
                 "position":str(position.get("abbreviation") or "") if isinstance(position,dict) else "",
                 "reported_status":status,
                 "details":str(details.get("detail") or "")[:160] if isinstance(details,dict) else "",
