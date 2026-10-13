@@ -184,3 +184,71 @@ def test_empty_manual_source_creates_no_quotes(tmp_path):
     assert report["live_odds_fetched"] is False
     assert report["decision"]=="PASS" and report["true_ev"] is None
     assert not out.exists()
+
+
+
+def test_manual_original_survives_future_game_kickoff_without_repricing(tmp_path):
+    obs, frozen, catalog, now=example()
+    manual=tmp_path/"manual.json"
+    output=tmp_path/"candidates.json"
+    f=tmp_path/"frozen.jsonl"
+    c=tmp_path/"catalog.json"
+    report=tmp_path/"report.json"
+    manual.write_text(json.dumps({"records":[obs]}))
+    f.write_text(json.dumps(frozen[0])+"\n")
+    c.write_text(json.dumps(catalog))
+    args=dict(input_path=manual,output_path=output,forecasts_path=f,
+              catalog_path=c,report_path=report)
+    first=run(**args,now=now)
+    original=output.read_text()
+    assert first["strict_first_seen_candidates"]["new"]==1
+    assert first["new_source_observations_eligible_for_current_cutoff"]==1
+
+    after=(datetime.fromisoformat(frozen[0]["kickoff_utc"])+
+           timedelta(minutes=1)).isoformat()
+    replay=run(**args,now=after)
+    assert replay["strict_first_seen_candidates"]["new"]==0
+    assert replay["historical_source_observations_verified_without_repricing"]==1
+    assert replay["new_source_observations_eligible_for_current_cutoff"]==0
+    assert output.read_text()==original
+
+
+def test_modified_old_manual_source_rejected_without_changing_saved_record(tmp_path):
+    obs, frozen, catalog, now=example()
+    manual=tmp_path/"manual.json"
+    output=tmp_path/"candidates.json"
+    f=tmp_path/"frozen.jsonl"
+    c=tmp_path/"catalog.json"
+    manual.write_text(json.dumps({"records":[obs]}))
+    f.write_text(json.dumps(frozen[0])+"\n")
+    c.write_text(json.dumps(catalog))
+    args=dict(input_path=manual,output_path=output,forecasts_path=f,
+              catalog_path=c,report_path=tmp_path/"report.json")
+    run(**args,now=now)
+    old=output.read_text()
+    obs["american_odds_under"]=-120
+    manual.write_text(json.dumps({"records":[obs]}))
+    with pytest.raises(ValueError,match="historic original"):
+        run(**args,now=(datetime.fromisoformat(frozen[0]["kickoff_utc"])+
+                        timedelta(hours=1)).isoformat())
+    assert output.read_text()==old
+
+
+def test_new_quote_cannot_be_inserted_after_kickoff_with_old_registered(tmp_path):
+    obs, frozen, catalog, now=example()
+    manual=tmp_path/"manual.json"
+    output=tmp_path/"candidates.json"
+    f=tmp_path/"frozen.jsonl"
+    c=tmp_path/"catalog.json"
+    manual.write_text(json.dumps({"records":[obs]}))
+    f.write_text(json.dumps(frozen[0])+"\n")
+    c.write_text(json.dumps(catalog))
+    args=dict(input_path=manual,output_path=output,forecasts_path=f,
+              catalog_path=c,report_path=tmp_path/"report.json")
+    run(**args,now=now)
+    old=output.read_text()
+    manual.write_text(json.dumps({"records":[obs,{**obs,"quote_id":"new-late-quote"}]}))
+    with pytest.raises(ValueError,match="older than ten minutes"):
+        run(**args,now=(datetime.fromisoformat(frozen[0]["kickoff_utc"])+
+                        timedelta(hours=1)).isoformat())
+    assert output.read_text()==old
