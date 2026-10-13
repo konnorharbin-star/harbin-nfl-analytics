@@ -293,3 +293,40 @@ def test_changed_historical_original_source_fails_even_after_kickoff(tmp_path):
     with pytest.raises(ValueError,match="changed after original"):
         run(**args,now=(datetime.fromisoformat(f["kickoff_utc"])+
                         timedelta(hours=2)).isoformat())
+
+
+
+def test_multiweek_journal_keeps_past_quote_and_accepts_new_upcoming_game(tmp_path):
+    q, f, catalog, now = fixture()
+    inp = tmp_path / "quotes.json"
+    frozen = tmp_path / "frozen.jsonl"
+    cat = tmp_path / "catalog.json"
+    journal = tmp_path / "journal.jsonl"
+    inp.write_text(json.dumps({"records":[q]}))
+    frozen.write_text(json.dumps(f)+"\n")
+    cat.write_text(json.dumps(catalog))
+    args = dict(quotes_path=inp, forecasts_path=frozen, catalog_path=cat,
+                journal_path=journal, report_path=tmp_path/"report.json")
+    run(**args, now=now)
+    old_record=journal.read_text()
+    later=(datetime.fromisoformat(f["kickoff_utc"])+timedelta(hours=1))
+    f2={**f, "game_id":"2026_06_NEW_TEST_GAME",
+        "player_id":"OTHER_GSIS_TEST",
+        "kickoff_utc":(later+timedelta(days=2)).isoformat()}
+    new_quote={**q, "quote_id":"new-future-week-02", "game_id":f2["game_id"],
+        "player_id":f2["player_id"], "kickoff_utc":f2["kickoff_utc"],
+        "snapshot_id":"future-week-snapshot",
+        "source_observed_utc":later.isoformat(),
+        "source_quote_origin_utc":(later-timedelta(minutes=5)).isoformat()}
+    new_quote["sides"]=[{**side, "snapshot_id":new_quote["snapshot_id"],
+        "source_observed_utc":new_quote["source_observed_utc"],
+        "source_quote_origin_utc":new_quote["source_quote_origin_utc"]}
+        for side in q["sides"]]
+    frozen.write_text(json.dumps(f)+"\n"+json.dumps(f2)+"\n")
+    inp.write_text(json.dumps({"records":[q,new_quote]}))
+    report=run(**args,now=(later+timedelta(minutes=1)).isoformat())
+    assert report["historical_pregame_quote_records_reused_by_original_sha"]==1
+    assert report["genuinely_new_quote_candidates"]==1
+    assert report["first_seen_quote_model_joins"]["new"]==1
+    assert journal.read_text().startswith(old_record)
+    assert len(journal.read_text().splitlines())==2
