@@ -1,0 +1,29 @@
+{
+  "schema": "public_expert_official_result_snapshot_v1",
+  "event_id": "2026_05_BAL_ATL",
+  "kickoff_utc": "2026-10-12T00:20:00Z",
+  "verified_utc": "2026-10-13T15:27:35Z",
+  "source_type": "OFFICIAL_NFL_FINAL_AND_PLAYER_GAME_LOG",
+  "official_game_url": "https://www.nfl.com/games/ravens-at-falcons-2026-reg-5",
+  "home_team": "ATL",
+  "away_team": "BAL",
+  "home_score": 23,
+  "away_score": 30,
+  "player_stats": [
+    {
+      "participant": "Derrick Henry",
+      "team": "BAL",
+      "market": "receiving_yards",
+      "value": 18,
+      "source_url": "https://www.nfl.com/players/derrick-henry/stats/logs/"
+    },
+    {
+      "participant": "Drake London",
+      "team": "ATL",
+      "market": "receiving_yards",
+      "value": 118,
+      "source_url": "https://www.nfl.com/players/drake-london/stats/logs/"
+    }
+  ],
+  "provenance": "Manually transcribed official NFL final and Week 5 player game logs. Postgame source observations, never pregame forecasts or BetMGM account settlement. NFL source may later correct statistics; audit subsequent corrections as new records."
+}
