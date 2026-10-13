@@ -240,7 +240,7 @@ def simulate_joint(
                         for v in qb_events.values())
                 ):
                     raise AssertionError("QB_PASSING_ACCOUNTING_MISMATCH")
-                for passer,_ in qb_weights:
+                for passer,share in qb_weights:
                     for stat,value in qb_events[passer].items():
                         series[f"{team}:{passer}:{stat}"].append(value)
             if sum(p["receptions"] for p in receiving.values())!=co:
