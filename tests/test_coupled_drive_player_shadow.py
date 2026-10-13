@@ -28,7 +28,7 @@ def history():
                 records.append({"game_id":f"2025_GAME_{g}","drive_id":f"{t}_{j}",
                   "team":t,"kickoff_utc":ko.isoformat(),
                   "verified_at_utc":(ko+timedelta(days=4)).isoformat(),
-                  "official_final_verified":True,"source_sha256":"c"*64,
+                  "completed_nflverse_schedule_game":True,"source_sha256":"c"*64,
                   "season":2025,"week":g//8+1,
                   "points":pts,"pass_attempts":3+(j%3),"completions":2,
                   "passing_yards":15+(j%4)*4,"rush_attempts":2+(j%2),
@@ -94,7 +94,7 @@ def test_inputs_not_mutated_and_solely_pregame_snapshot():
 
 def test_bad_history_rejected_instead_of_giving_confident_results():
     for change in (
-      {"official_final_verified":False},
+      {"completed_nflverse_schedule_game":False},
       {"verified_at_utc":(NOW+timedelta(days=1)).isoformat()},
       {"source_sha256":None},
       {"completions":9},
