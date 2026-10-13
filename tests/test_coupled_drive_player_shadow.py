@@ -41,7 +41,7 @@ def history():
                 records.append({"game_id":f"2025_GAME_{g}","drive_id":f"{t}_{j}",
                   "team":t,"kickoff_utc":ko.isoformat(),
                   "verified_at_utc":(ko+timedelta(days=4)).isoformat(),
-                  "official_final_verified":True,"source_sha256":"c"*64,
+                  "completed_nflverse_schedule_game":True,"source_sha256":"c"*64,
                   "season":2025,"week":6,
                   "points":(0,3,7)[j%3],"pass_attempts":3,
                   "completions":2,"passing_yards":21,
