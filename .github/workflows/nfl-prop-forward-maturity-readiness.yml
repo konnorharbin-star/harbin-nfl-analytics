@@ -1,0 +1,75 @@
+name: NFL Prospective Player Prop 72h Maturity Readiness — Research Only
+on:
+  pull_request:
+    paths:
+      - "scripts/nfl_prop_forward_maturity_readiness.py"
+      - "tests/test_nfl_prop_forward_maturity_readiness.py"
+      - "docs/NFL_PROP_FORWARD_MATURITY_READINESS_V430.md"
+      - ".github/workflows/nfl-prop-forward-maturity-readiness.yml"
+  push:
+    branches: [main]
+    paths:
+      - "scripts/nfl_prop_forward_maturity_readiness.py"
+      - "tests/test_nfl_prop_forward_maturity_readiness.py"
+      - ".github/workflows/nfl-prop-forward-maturity-readiness.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "5 16 * 9,10,11,12 *"
+permissions:
+  contents: read
+concurrency:
+  group: nfl-prop-2026-maturity-readiness
+  cancel-in-progress: false
+jobs:
+  source-free-calendar-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check scheduled research-year boundary
+        id: guard
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "schedule" && "$(date -u +%Y)" != "2026" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.enabled == 'true'
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.enabled == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install original model dependencies
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pip install -e '.[dev]'
+      - name: Validate time-only eligibility against frozen anchor original
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m pytest -q tests/test_nfl_prop_forward_maturity_readiness.py tests/test_nfl_prop_primary_anchor_cohort.py tests/test_nfl_prop_primary_anchor_score.py
+      - name: Audit actual preregistered 2026 single-anchor population
+        if: steps.guard.outputs.enabled == 'true'
+        run: python -m scripts.nfl_prop_forward_maturity_readiness
+      - name: Assert no official results or bookmaker price inference
+        if: steps.guard.outputs.enabled == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("reports/nfl_prop_forward_maturity_readiness_2026.json"))
+          assert r["original_primary_single_line_anchors"]>=698
+          assert r["original_paired_synthetic_thresholds"]>=4886
+          assert r["looked_up_postgame_scores"] is False
+          assert r["looked_up_player_stats"] is False
+          assert r["queried_bookmaker_prices"] is False
+          assert r["true_betmgm_ev"] is None
+          assert r["wagers"]==0
+          assert r["decision"]=="PASS"
+          assert r["validated_profitable_betmgm_edge"] is False
+          print("No official grades or account bets inferred from maturity alone.")
+          PY
+      - name: Save calendar-only independent game research report
+        if: steps.guard.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-2026-player-prop-time-maturity-calendar
+          path: reports/nfl_prop_forward_maturity_readiness_2026.json
+          retention-days: 90
