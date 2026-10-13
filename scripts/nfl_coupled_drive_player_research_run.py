@@ -18,7 +18,7 @@ from nfl.coupled_drive_player_shadow import simulate_joint
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--season",type=int,default=2026)
-    p.add_argument("--week",type=int,required=True)
+    p.add_argument("--week",type=int)
     p.add_argument("--game-id",default="ALL")
     p.add_argument("--draws",type=int,default=2000)
     p.add_argument("--seed",type=int,default=20261013)
@@ -30,8 +30,17 @@ def main():
     pbp=nfl.load_pbp(seasons)
     stats=nfl.load_player_stats(seasons)
     captured=datetime.now(UTC)
+    all_rows=schedules.to_dicts()
+    if a.week is None:
+        future=[]
+        for r in all_rows:
+            if r.get("season")!=a.season or r.get("game_type")!="REG":continue
+            try: k=kickoff_utc(r)
+            except ValueError:continue
+            if k>captured:future.append((k,int(r["week"])))
+        a.week=min(future)[1] if future else -1
     targets=[]
-    for r in schedules.to_dicts():
+    for r in all_rows:
         if r.get("season")!=a.season or r.get("week")!=a.week or r.get("game_type")!="REG":
             continue
         if a.game_id!="ALL" and r.get("game_id")!=a.game_id:continue
