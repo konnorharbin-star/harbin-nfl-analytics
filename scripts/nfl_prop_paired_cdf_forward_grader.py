@@ -30,6 +30,9 @@ from scripts.nfl_prop_snap_conditional_cdf import (
     VERSION as SNAP_MODEL,bucket
 )
 from scripts.nfl_moneyline_elo_research import _team
+from scripts.nfl_prop_grade_journal_integrity import (
+    validate_grade_journal, stamp, record_hash,
+)
 
 VERSION="NFL_2026_ORIGINAL_VS_SNAP_PROP_CONDITIONAL_CDF_FORWARD_V1"
 MATURE_HOURS=72
@@ -300,30 +303,51 @@ def eligible_grades(frozen,schedules,stats,*,now):
     return records,dict(sorted(blocked.items()))
 
 
-def append_grades(records,path):
+def append_grades(records,path,*,originals=None):
+    """Append only sourced, linked grade revisions; no silent original rewriting."""
     prev=read_jsonl(path)
-    current={}
-    for p in prev:
-        key=line_key(p)
-        if key not in current or p["revision"]>current[key]["revision"]:
+    if originals is not None:
+        # Verify archived grades before even considering a new source update.
+        current=validate_grade_journal(prev,originals)
+    else:
+        current={}
+        for p in prev:
+            key=line_key(p)
+            if p.get("grade_record_sha256")!=record_hash(p):
+                raise ValueError("tampered old grade journal row")
+            if key in current and p["revision"]<=current[key]["revision"]:
+                raise ValueError("duplicate/non-increasing old grade revision")
             current[key]=p
     changed=[];corrected=0
+    seen=set()
     for r in records:
         k=line_key(r)
+        if k in seen:
+            raise ValueError("duplicate new matured grade for same exact contract")
+        seen.add(k)
         old=current.get(k)
+        if old is not None:
+            immutable=("original_row_sha256","model","original_first_seen_utc",
+                       "team","kickoff_utc","p_original","p_snap")
+            if any(old[field]!=r[field] for field in immutable):
+                raise ValueError("provider update attempted to change original frozen forecast")
         if old is None:
             x={**r,"revision":1,"record_type":"ORIGINAL_MATURE_GRADE"}
         elif (old["target_over_given_official_stat_row"]!=r["target_over_given_official_stat_row"]
               or old["official_stat_value"]!=r["official_stat_value"]):
-            if old["original_row_sha256"]!=r["original_row_sha256"]:
-                raise ValueError("cannot rewrite original first-seen pair upon source revision")
             x={**r,"revision":old["revision"]+1,
                "record_type":"APPENDED_OFFICIAL_SOURCE_STAT_CORRECTION",
                "previous_official_stat_value":old["official_stat_value"]}
             corrected+=1
-        else:continue
-        changed.append(x)
-        current[k]=x
+        else:
+            continue
+        signed=stamp(x,old)
+        changed.append(signed)
+        current[k]=signed
+    if originals is not None:
+        # Fail before writing a single row if any new grade violates
+        # the original pregame forecast, binary stat result or SHA chain.
+        validate_grade_journal(prev+changed,originals)
     if changed:
         dest=Path(path);dest.parent.mkdir(parents=True,exist_ok=True)
         with dest.open("a",encoding="utf8") as out:
@@ -408,10 +432,12 @@ def run(*,freeze_only=False):
     cli=NFLDataClient()
     schedules=cli.load_schedules([2026],refresh=True).to_dicts()
     stats=cli.load_player_stats([2026],refresh=True).to_dicts()
-    gradeable,blocks=eligible_grades(read_jsonl(FROZEN_PATH),schedules,stats,now=now)
-    written=append_grades(gradeable,GRADE_PATH)
+    original_paired=read_jsonl(FROZEN_PATH)
+    gradeable,blocks=eligible_grades(original_paired,schedules,stats,now=now)
+    written=append_grades(gradeable,GRADE_PATH,originals=original_paired)
     all_grades=read_jsonl(GRADE_PATH)
-    grade=grade_metrics(all_grades)
+    verified_latest=validate_grade_journal(all_grades,original_paired)
+    grade=grade_metrics(list(verified_latest.values()))
     # The anchor is selected from original BASE probabilities and first-seen
     # before kickoff. Never generate or edit anchors after seeing outcomes.
     original_anchors=read_jsonl(
@@ -420,7 +446,7 @@ def run(*,freeze_only=False):
     if original_anchors:
         from scripts.nfl_prop_primary_anchor_score import anchor_results
         anchor_grade=anchor_results(
-            original_anchors,read_jsonl(FROZEN_PATH),all_grades)
+            original_anchors,original_paired,list(verified_latest.values()))
     report={
         "model":VERSION,"decision":"PASS","first_seen_capture_utc":now,
         "paired_originals":frozen,"source_grading_eligibility":blocks,
