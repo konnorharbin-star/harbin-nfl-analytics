@@ -166,6 +166,7 @@ def create_rows(quotes, forecasts, catalog, *, now):
             "snapshot_id": q["snapshot_id"], "source_url": q["source_url"],
             "source_observed_utc": observed.isoformat(),
             "source_quote_origin_utc": origin.isoformat() if origin else None,
+            "original_input_source_quote_sha256": hash_object(q),
             "source_origin_timestamp_claimed_verified": bool(q.get(
                 "source_origin_timestamp_claimed_verified", False)),
             "origin_provenance": provenance,
@@ -242,17 +243,49 @@ def run(*, quotes_path=INPUT, forecasts_path=FORECASTS,
     if not isinstance(body, dict) or not isinstance(body.get("records"), list):
         raise ValueError("research input must be an object with records array")
     quotes = body["records"]
-    # Empty inputs are NOT fabricated into accepted bookmaker observations.
-    if quotes:
+    # A prospective registry contains old quotes after their games end.
+    # Verify originals by the original input-source SHA and NEVER re-evaluate
+    # them with the present clock (that would invalidate a valid prior record).
+    # Only genuinely new, not-yet-seen quotes face the current kickoff gate.
+    old_rows = read_jsonl(journal_path)
+    indexed = {}
+    for saved_row in old_rows:
+        qid = quote_id(saved_row)
+        if qid in indexed:
+            raise ValueError("duplicate prior first-seen quote journal ID")
+        if saved_row.get("original_row_sha256") != hash_object({
+                k:v for k,v in saved_row.items() if k != "original_row_sha256"}):
+            raise ValueError("old original book research row hash corrupted")
+        if not saved_row.get("original_input_source_quote_sha256"):
+            raise ValueError("prior journal lacks input-source hash; migration audit required")
+        indexed[qid] = saved_row
+    new_quotes, already_registered, input_seen = [], 0, set()
+    for q in quotes:
+        if not isinstance(q, dict) or not isinstance(q.get("quote_id"), str) or not q["quote_id"].strip():
+            raise ValueError("invalid input quote record identity")
+        qid = q["quote_id"]
+        if qid in input_seen:
+            raise ValueError("duplicate source quote ID in candidate input")
+        input_seen.add(qid)
+        old = indexed.get(qid)
+        if old is not None:
+            if old["original_input_source_quote_sha256"] != hash_object(q):
+                raise ValueError("historical source quote changed after original pregame join")
+            already_registered += 1
+        else:
+            new_quotes.append(q)
+    if new_quotes:
         forecasts = read_jsonl(forecasts_path)
         catalog = json.loads(Path(catalog_path).read_text(encoding="utf8"))
-        entries = create_rows(quotes, forecasts, catalog, now=at)
+        entries = create_rows(new_quotes, forecasts, catalog, now=at)
     else:
         entries = []
     saved = append_first_seen(entries, journal_path)
     report = {
         "model": VERSION, "observed_utc": at.isoformat(),
         "candidate_public_quote_observations": len(quotes),
+        "historical_pregame_quote_records_reused_by_original_sha": already_registered,
+        "genuinely_new_quote_candidates": len(new_quotes),
         "first_seen_quote_model_joins": saved,
         "recent_claimed_origin_rows": sum(
             e["origin_provenance"] == "CLAIMED_RECENT_ORIGIN_UNAUTHENTICATED"
