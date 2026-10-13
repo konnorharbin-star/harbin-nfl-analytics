@@ -23,6 +23,7 @@ def main():
     p.add_argument("--draws",type=int,default=2000)
     p.add_argument("--seed",type=int,default=20261013)
     p.add_argument("--out",type=Path,default=Path("reports/coupled_drive_player_shadow.json"))
+    p.add_argument("--replay-inputs",type=Path,default=Path("reports/coupled_replay_inputs.json"))
     a=p.parse_args()
     seasons=[a.season-1,a.season]
     # Source captured once and dated; no inference from sportsbook prices.
@@ -49,6 +50,7 @@ def main():
         if captured<kickoff:
             targets.append((kickoff,str(r["game_id"])))
     results=[]
+    frozen_inputs=[]
     for kickoff,gid in sorted(targets):
         try:
             forecast,drives,roles,provenance=prepare_asof_source(
@@ -56,6 +58,8 @@ def main():
             # All proportions/models are conditional, uncalibrated, football-only.
             result=simulate_joint(forecast,drives,roles,asof=captured,
                                   draws=a.draws,seed=a.seed)
+            frozen_inputs.append({"game_id":gid,"forecast":forecast,"drives":drives,
+                                  "roles":roles,"provenance":provenance})
             result["input_provenance"]=provenance
             result["frozen_football_score_input"]=forecast
             result["source_capture"]="SNAPSHOT_READ_ONLY_NOT_COMMITTED_AS_IMMUTABLE_FORWARDED_PROOF"
@@ -75,11 +79,22 @@ def main():
     a.out.parent.mkdir(parents=True,exist_ok=True)
     data=json.dumps(output,sort_keys=True,indent=2)+"\n"
     a.out.write_text(data,encoding="utf-8")
+    # Immutable-to-this-run training snapshots: later web conditioning must
+    # never silently re-download newer play-by-play or recalculate priors.
+    replay={"spec":"NFL_COUPLED_FROZEN_REPLAY_INPUTS_V1",
+            "capture_utc":captured.isoformat(),"season":a.season,"week":a.week,
+            "status":"RESEARCH_INPUTS_NOT_OFFICIAL_GAMEBOOK",
+            "games":frozen_inputs}
+    a.replay_inputs.parent.mkdir(parents=True,exist_ok=True)
+    replay_data=json.dumps(replay,sort_keys=True,indent=2)+"\n"
+    a.replay_inputs.write_text(replay_data,encoding="utf-8")
     print(json.dumps({"status":output["status"],"asof":output["capture_utc"],
                       "games_seen":len(results),
                       "research_generated":sum(r.get("status")=="UNVALIDATED_JOINT_DRIVE_PLAYER_RESEARCH" for r in results),
                       "blocked":sum(r.get("status")=="SOURCE_OR_MODEL_BLOCKED" for r in results),
                       "artifact":str(a.out),
-                      "artifact_sha256":hashlib.sha256(data.encode()).hexdigest()}))
+                      "artifact_sha256":hashlib.sha256(data.encode()).hexdigest(),
+                      "replay_game_inputs":len(frozen_inputs),
+                      "replay_sha256":hashlib.sha256(replay_data.encode()).hexdigest()}))
 if __name__=="__main__":
     main()
