@@ -1,0 +1,29 @@
+name: NFL archival market residual chronological diagnostic
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/nfl_market_residual_year_split.py'
+      - 'reports/verified_market_bets.csv'
+      - '.github/workflows/nfl-market-residual-year-split.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify earlier-season fit and later-season market comparison
+        run: python -m scripts.nfl_market_residual_year_split
+      - name: Preserve research-only diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfl-market-residual-research-not-profit-proof
+          path: reports/market_residual_year_split_diagnostic.json
+          if-no-files-found: error
+          retention-days: 45
