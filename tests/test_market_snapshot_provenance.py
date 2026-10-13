@@ -2,6 +2,7 @@ import csv
 import json
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
+from zoneinfo import ZoneInfo
 
 import polars as pl
 import pytest
@@ -11,7 +12,8 @@ from nfl.line_history import SNAPSHOT_FIELDS, append_market_snapshots, load_mark
 
 
 def inputs():
-    capture = datetime(2026, 10, 10, 15, tzinfo=UTC)
+    # Archive qualification uses the actual collection time, not a backdated fixture.
+    capture = datetime.now(UTC) - timedelta(minutes=2)
     market = ESPNTwoWayMarket(
         game_id="g",
         market_type="moneyline",
@@ -36,7 +38,7 @@ def inputs():
                 "week": 5,
                 "home_team": "BUF",
                 "away_team": "NE",
-                "gameday": "2026-10-11",
+                "gameday": (datetime.now(ZoneInfo("America/New_York")) + timedelta(days=2)).date().isoformat(),
                 "gametime": "13:00",
             }
         ]
