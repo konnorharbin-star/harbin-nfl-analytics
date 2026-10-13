@@ -57,6 +57,7 @@ def roles():
                                  ("te","TE",.19,.0)):
             rows.append({"team":team,"player_id":team+"_"+pid,
                          "role":role,"target_share":tar,"carry_share":car,
+                         "qb_pass_share":.92 if role=="QB" else 0.0,
                          "observed_at_utc":(CAPTURE-timedelta(hours=3)).isoformat(),
                          "activity":"UNKNOWN"})
     return rows

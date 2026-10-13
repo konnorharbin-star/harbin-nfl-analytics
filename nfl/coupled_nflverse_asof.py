@@ -157,10 +157,10 @@ def prepare_asof_source(schedules, pbp, player_stats, *,
         (player_stats.get_column("week")<week)&
         (player_stats.get_column("week")>=max(1,week-4))
     )
-    required_stats={"team","player_id","position","season","week","targets","carries"}
+    required_stats={"team","player_id","position","season","week","targets","carries","attempts"}
     if not required_stats.issubset(set(previous.columns)):
         raise ValueError("PLAYER_STATS_MISSING_COLUMNS:"+str(sorted(required_stats-set(previous.columns))))
-    role_totals=defaultdict(lambda:[0.,0.])
+    role_totals=defaultdict(lambda:[0.,0.,0.])
     for r in previous.select(sorted(required_stats)).iter_rows(named=True):
         t=r["team"]
         if t not in (home,away) or not r.get("player_id") or r.get("position") not in ("QB","RB","WR","TE","FB"):
@@ -168,22 +168,27 @@ def prepare_asof_source(schedules, pbp, player_stats, *,
         key=(t,str(r["player_id"]),str(r["position"]))
         role_totals[key][0]+=max(0,float(r.get("targets") or 0))
         role_totals[key][1]+=max(0,float(r.get("carries") or 0))
+        if r["position"]=="QB":
+            role_totals[key][2]+=max(0,float(r.get("attempts") or 0))
     roles=[]
     for team in (home,away):
         target_total=sum(v[0] for k,v in role_totals.items() if k[0]==team)
         rush_total=sum(v[1] for k,v in role_totals.items() if k[0]==team)
+        qb_attempt_total=sum(v[2] for k,v in role_totals.items() if k[0]==team and k[2]=="QB")
         if target_total<=0 or rush_total<=0:raise ValueError("NO_VERIFIED_HISTORICAL_ROLE_DENOMINATOR")
-        for (t,p,pos),(tar,car) in role_totals.items():
-            if t!=team or tar==0 and car==0:continue
+        for (t,p,pos),(tar,car,qb_attempts) in role_totals.items():
+            if t!=team or (tar==0 and car==0 and qb_attempts==0):continue
             roles.append({"team":team,"player_id":p,"role":pos,
                           "target_share":tar/target_total,
                           "carry_share":car/rush_total,
+                          "qb_pass_share":qb_attempts/qb_attempt_total if pos=="QB" and qb_attempt_total>0 else 0.0,
                           "observed_at_utc":at.isoformat(),
                           "activity":"UNKNOWN"})
     if not roles:raise ValueError("PLAYER_ROLE_COVERAGE_NONE")
     provenance={"source":"nflreadpy_NFLVERSE_CURRENT_AT_CAPTURE","captured_utc":at.isoformat(),
                 "eligible_schedule_games":len(eligible),"derived_drives":len(library),
                 "derive_drive_rejects":dict(rejects),"role_records":len(roles),
+                "historical_qb_pass_share_source":"PREVIOUS_FOUR_WEEKS_PLAYER_ATTEMPTS_UNVERIFIED_STARTER",
                 "independent_original_provider_publish_time":None,
                 "player_activity_inactive_status":None,
                 "no_historical_first_seen_archives_claimed":True}
