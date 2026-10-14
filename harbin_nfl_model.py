@@ -20,6 +20,11 @@ def main() -> None:
     parser.add_argument("--no-decision-ledger", action="store_true")
     args = parser.parse_args()
 
+    # Publish independent scores and player stats before any market-based audit.
+    # A bookmaker source outage must not erase our price-free forecasts.
+    from run_nfl_predictions import generate
+    independent_output = generate(args.season, args.week)
+
     current, report = run_operational_pipeline(
         args.season,
         args.week,
@@ -79,6 +84,9 @@ def main() -> None:
         "portfolio_audit": portfolio_audit["status"],
         "release_blockers": report["release_gate"].get("blockers", []),
         "outputs": {
+            "independent_forecasts": independent_output,
+            "independent_forecasts_html": "outputs/independent_forecasts.html",
+            "independent_player_predictions": "outputs/independent_player_predictions.csv",
             "json": "outputs/current_model.json",
             "csv": "outputs/current_predictions.csv",
             "health": "outputs/health.json",
