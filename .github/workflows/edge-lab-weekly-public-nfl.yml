@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: quote-capture-by-NFL-week
+  group: nfl-forward-history-writer
   cancel-in-progress: false
 
 jobs:
