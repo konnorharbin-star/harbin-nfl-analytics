@@ -1,0 +1,84 @@
+{
+  "filters": "regulation pass/run; no kneels/spikes; abs score diff<=14; half time>120",
+  "models": {
+    "margin": {
+      "blend": 1.0,
+      "model": {
+        "alpha": 100.0,
+        "beta": [
+          0.6807733866194827,
+          -0.3763866171113103,
+          0.5967019745113131,
+          1.2868925805554936
+        ],
+        "center": [
+          0.0016372419055178853,
+          0.0008168046142630123,
+          -0.0005490597142615062
+        ],
+        "metrics": [
+          "pass_epa",
+          "rush_epa",
+          "success_rate"
+        ],
+        "scale": [
+          0.18280691476177574,
+          0.11861605179069816,
+          0.06101326994996284
+        ],
+        "target": "margin"
+      }
+    },
+    "total": {
+      "blend": 0.0,
+      "model": {
+        "alpha": 10.0,
+        "beta": [
+          0.6865423163479798,
+          -0.31716944820884196,
+          -0.17825464007021083,
+          -0.12771040373426507
+        ],
+        "center": [
+          0.030386067894060634,
+          -0.014411300875060607,
+          0.0018020609786565196
+        ],
+        "metrics": [
+          "pass_epa",
+          "rush_epa",
+          "success_rate"
+        ],
+        "scale": [
+          0.18431921243422558,
+          0.12059656033649796,
+          0.06481829929751495
+        ],
+        "target": "total"
+      }
+    }
+  },
+  "prior_window_games": 8,
+  "shrinkage_plays": 100,
+  "source": {
+    "captured_utc": "2026-10-14T23:23:26.608553+00:00",
+    "normalized_play_sha256": "e2f3509c5e74937e129c8d2bd372921fd8b5c8ccc008273b516e605d6273067e",
+    "normalized_schedule_sha256": "56ab7440f10d2bac2160c8135f464534d5d8ff5f54e35c920f9055279bd5d60e",
+    "replay_snapshot_file": "reports/clean_efficiency_video_study.source.json.gz",
+    "replay_snapshot_sha256": "305cbe77c7bc4573f1446ef445616a48d3d0119b092ea01b191759098992ff0c",
+    "schedule_url": "https://github.com/nflverse/nfldata/blob/master/data/games.csv",
+    "source_publication_vintages_verified": false,
+    "source_urls": [
+      "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2022.parquet",
+      "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2023.parquet",
+      "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.parquet",
+      "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.parquet"
+    ]
+  },
+  "spec": "NFL_CLEAN_EFFICIENCY_RESEARCH_V1",
+  "training_seasons": [
+    2023,
+    2024
+  ],
+  "weights_selected_without_2025": true
+}
