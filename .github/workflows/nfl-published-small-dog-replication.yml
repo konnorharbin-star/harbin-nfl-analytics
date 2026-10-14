@@ -1,0 +1,48 @@
+name: Published close-underdog NFL replication (research only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/nfl_published_small_spread_dog_test.py'
+      - 'scripts/nfl_small_dog_historical_replication.py'
+      - '.github/workflows/nfl-published-small-dog-replication.yml'
+      - 'history/market_snapshots.csv'
+  workflow_dispatch:
+    inputs:
+      season:
+        description: "Season"
+        required: true
+        default: "2026"
+      week:
+        description: "Fixed research week"
+        required: true
+        default: "4"
+permissions:
+  contents: read
+jobs:
+  replicate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install public NFL data tooling
+        run: python -m pip install -e .
+      - name: Falsify historical rule on larger preexisting NFL seasons
+        run: python -m scripts.nfl_small_dog_historical_replication --out reports/nfl_small_dog_historical_replication.json
+      - name: Evaluate original timestamped paired source prices
+        env:
+          SEASON: ${{ inputs.season || '2026' }}
+          WEEK: ${{ inputs.week || '4' }}
+        run: |
+          python -m scripts.nfl_published_small_spread_dog_test --season "$SEASON" --week "$WEEK" --out reports/nfl_published_close_underdog_research.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nfl-small-spread-underdog-RESEARCH-NO-BETS
+          path: |
+            reports/nfl_published_close_underdog_research.json
+            reports/nfl_small_dog_historical_replication.json
+          retention-days: 45
+          if-no-files-found: error
