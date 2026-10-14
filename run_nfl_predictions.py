@@ -20,6 +20,12 @@ def generate(season, week=None, out_dir='outputs', quiet=False):
                    '--scan',str(out/'independent_source_scan.json'),
                    '--replay',str(out/'independent_source_replay.json'),
                    '--out',str(out/'independent_forecasts.json'),'--resolve-names'],cwd=root,check=True,stdout=stdout)
+    web_out = root/'reports' if out == root/'outputs' else out/'web_research'
+    subprocess.run([sys.executable,'-m','scripts.nfl_web_model_intake',
+                    '--predictions',str(out/'independent_forecasts.json'),
+                    '--out',str(web_out/'nfl_web_model_intake.json'),
+                    '--prop-contracts',str(web_out/'nfl_web_prop_contracts.json')],
+                   cwd=root,check=True,stdout=stdout)
     return str(out/'independent_forecasts.json')
 
 

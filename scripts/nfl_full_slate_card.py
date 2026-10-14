@@ -202,6 +202,7 @@ def build_card(scan, replay, games, observations, *, asof, prop_contracts=(), si
         c['research_rank'] = rank
     for row in board:
         row['best_candidate'] = next((c for c in candidates if c['game_id'] == row['game_id']), None)
+        row['best_game_market_candidate'] = next((c for c in candidates if c['game_id'] == row['game_id'] and c['market'] in MARKETS), None)
     return {'spec': 'NFL_FULL_SLATE_CARD_V1', 'generated_utc': at.isoformat(),
             'ranking_basis': 'RAW_CONDITIONAL_EV_PROXY_NOT_VALIDATED_EDGE',
             'target_games': len(games), 'games_accounted_for': len(board),

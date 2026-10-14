@@ -23,6 +23,9 @@ on:
       - 'research/game_state_workload_2024_frozen.json'
       - 'tests/test_game_state_workload.py'
       - 'nfl/overtime_research.py'
+      - 'nfl/web_model_intake.py'
+      - 'scripts/nfl_web_model_intake.py'
+      - 'tests/test_web_model_intake.py'
       - 'nfl/overtime_source.py'
       - 'scripts/nfl_overtime_research_run.py'
       - 'tests/test_overtime_research.py'
@@ -74,6 +77,8 @@ jobs:
       - name: Monitor frozen quarter-state workload challenger (not used for betting)
         continue-on-error: true
         run: python -m scripts.nfl_game_state_workload_run forecast --out reports/game_state_workload_forward.json
+      - name: Search public football pages and capture paired prop prices without keys
+        run: python -m scripts.nfl_web_model_intake
       - name: Monitor separate regulation and overtime score challenger (not used for betting)
         continue-on-error: true
         run: python -m scripts.nfl_overtime_research_run --out reports/overtime_score_challenger.json
@@ -82,7 +87,7 @@ jobs:
           python -m scripts.weekly_public_nfl_odds --season 2026 --hours 192 --max-games 64 --refresh-schedules
       - name: Rank all supported priced contracts and report every target game
         run: |
-          python -m scripts.nfl_full_slate_card
+          python -m scripts.nfl_full_slate_card --prop-contracts reports/nfl_web_prop_contracts.json
           python -m scripts.nfl_full_slate_validation_run freeze --run-id "${{ github.run_id }}" --code-sha "$(git rev-parse HEAD)" --out reports/full_slate_selected_capture.json
           cat reports/nfl_full_slate_card.md >> "$GITHUB_STEP_SUMMARY"
       - name: Research public NFL injury reports, weather and recent news (no model edits)
@@ -98,7 +103,7 @@ jobs:
           SOURCE_CODE_SHA: ${{ github.sha }}
         run: |
           test -f reports/coupled_drive_player_shadow.json
-          python -m scripts.nfl_coupled_journal_run freeze --run-id "$SOURCE_RUN_ID" --code-sha "$(git rev-parse HEAD)" --sidecar reports/nfl_web_context_research.json --sidecar reports/nfl_web_conditional_scenarios.json
+          python -m scripts.nfl_coupled_journal_run freeze --run-id "$SOURCE_RUN_ID" --code-sha "$(git rev-parse HEAD)" --sidecar reports/nfl_web_context_research.json --sidecar reports/nfl_web_conditional_scenarios.json --sidecar reports/nfl_web_model_intake.json --sidecar reports/nfl_web_prop_contracts.json
       - name: Commit append-only originals and grade revisions
         if: always()
         env:
@@ -134,6 +139,9 @@ jobs:
             outputs/independent_player_predictions.csv
             reports/game_state_workload_forward.json
             reports/overtime_score_challenger.json
+            reports/nfl_web_model_intake.json
+            reports/nfl_web_prop_contracts.json
+            reports/web_source_snapshots
             reports/full_slate_selected_grade.json
             reports/full_slate_selected_capture.json
             reports/nfl_full_slate_card.json
