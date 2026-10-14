@@ -12,6 +12,9 @@ on:
       - 'scripts/nfl_web_conditional_research_run.py'
       - 'nfl/web_conditioned_model.py'
       - 'scripts/nfl_coupled_drive_player_research_run.py'
+      - 'scripts/nfl_full_slate_card.py'
+      - 'scripts/weekly_public_nfl_odds.py'
+      - 'tests/test_nfl_full_slate_card.py'
       - 'nfl/coupled_research_journal.py'
       - 'scripts/nfl_coupled_journal_run.py'
       - '.github/workflows/nfl-coupled-shadow-research.yml'
@@ -44,6 +47,13 @@ jobs:
       - name: Obtain free nflverse and generate independent research forecast artifacts
         run: |
           python -m scripts.nfl_coupled_drive_player_research_run --season 2026 --draws 2000 --out reports/coupled_drive_player_shadow.json
+      - name: Capture exact public prices across the upcoming slate
+        run: |
+          python -m scripts.weekly_public_nfl_odds --season 2026 --hours 192 --max-games 64 --refresh-schedules
+      - name: Rank all supported priced contracts and report every target game
+        run: |
+          python -m scripts.nfl_full_slate_card
+          cat reports/nfl_full_slate_card.md >> "$GITHUB_STEP_SUMMARY"
       - name: Research public NFL injury reports, weather and recent news (no model edits)
         run: |
           python -m scripts.nfl_web_context_research_run --forecast-scan reports/coupled_drive_player_shadow.json --out reports/nfl_web_context_research.json
@@ -67,7 +77,7 @@ jobs:
           python -m scripts.nfl_coupled_journal_run check-pregame --run-id "$SOURCE_RUN_ID"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add history/coupled_primary_v1_2026
+          git add history/coupled_primary_v1_2026 history/public_aggregator_quotes_2026.jsonl
           if ! git diff --cached --quiet; then
             git commit -m 'research: preserve coupled NFL first-seen forecasts and source-grade revisions'
             git pull --rebase origin main
@@ -80,6 +90,9 @@ jobs:
         with:
           name: nfl-free-coupled-score-props-RESEARCH-UNVALIDATED
           path: |
+            reports/nfl_full_slate_card.json
+            reports/nfl_full_slate_card.md
+            reports/weekly_public_quote_capture.json
             reports/coupled_drive_player_shadow.json
             reports/nfl_web_context_research.json
             reports/coupled_replay_inputs.json
