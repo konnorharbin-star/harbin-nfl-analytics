@@ -3,7 +3,8 @@ from copy import deepcopy
 from datetime import timedelta
 import json
 import pytest
-from nfl.coupled_research_journal import archive, grade_archive, read_journal
+from nfl.coupled_research_journal import archive, grade_archive, read_journal, _archive_file
+import gzip
 from tests.test_coupled_forward_grading import orig, finals, players, CAP, KICK, ASOF
 
 
@@ -113,3 +114,14 @@ def test_model_revision_cannot_silently_pool_into_registered_cohort(tmp_path):
     freeze(tmp_path, model_sha="a"*64)
     with pytest.raises(ValueError, match="MODEL_CHANGED"):
         freeze(tmp_path, model_sha="c"*64)
+
+
+def test_large_raw_json_source_is_losslessly_compressed_and_idempotent(tmp_path):
+    data=json.dumps({"source_rows":["raw football source"]*250000}).encode()
+    sha=_archive_file(tmp_path,data)
+    path=tmp_path/"snapshots"/(sha+".json.gz")
+    assert path.exists()
+    assert gzip.decompress(path.read_bytes())==data
+    first=path.read_bytes()
+    assert _archive_file(tmp_path,data)==sha
+    assert path.read_bytes()==first

@@ -9,6 +9,7 @@ from __future__ import annotations
 from collections import defaultdict
 from datetime import UTC, datetime
 import hashlib
+import gzip
 import json
 from pathlib import Path
 import random
@@ -57,11 +58,22 @@ def append(path, rows):
 def _archive_file(root, data):
     sha = digest(data)
     path = root / "snapshots" / (sha + ".json")
-    if path.exists() and path.read_bytes() != data:
+    compressed = path.with_suffix(".json.gz")
+    stored = path.read_bytes() if path.exists() else gzip.decompress(compressed.read_bytes()) if compressed.exists() else None
+    if stored is not None and stored != data:
         raise ValueError("ARCHIVE_CONTENT_CONFLICT")
-    if not path.exists():
+    if stored is None:
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(data)
+        # These are raw JSON source/input snapshots, not serialized model
+        # estimators. Lossless compression preserves original source-byte SHA
+        # and avoids future replay inputs hitting GitHub's 100 MB file limit.
+        if len(data) > 4_000_000:
+            payload = gzip.compress(data, mtime=0)
+            if len(payload) > 90_000_000:
+                raise ValueError("SOURCE_ARCHIVE_TOO_LARGE_FOR_FREE_GIT_STORAGE")
+            compressed.write_bytes(payload)
+        else:
+            path.write_bytes(data)
     return sha
 
 
@@ -159,7 +171,7 @@ def archive(root, snapshot_path, replay_path, *, at, run_id, code_sha, sidecars=
 
 def load_verified_snapshot(root, receipt):
     path = Path(root) / "snapshots" / (receipt["snapshot_sha256"] + ".json")
-    data = path.read_bytes()
+    data = path.read_bytes() if path.exists() else gzip.decompress(path.with_suffix(".json.gz").read_bytes())
     if digest(data) != receipt["snapshot_sha256"]:
         raise ValueError("ARCHIVE_SNAPSHOT_HASH_MISMATCH")
     snapshot = json.loads(data)

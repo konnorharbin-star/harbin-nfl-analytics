@@ -159,7 +159,55 @@ player scoring coefficients were introduced.
 
 ## 7. Deployment evidence
 
-The merged PR, cloud CI/run IDs, durable receipt count and canonical document
-readback are recorded in the final live Google Drive change entry and the
-completion follow-up below. Until those writes/runs are verified, this report
-describes tested changes awaiting deployment rather than completed cloud work.
+PR https://github.com/konnorharbin-star/harbin-nfl-analytics/pull/210 merged
+as `004cf5d7ad44ad0db36e903405c1604e0519969e`.
+Premerge full CI
+https://github.com/konnorharbin-star/harbin-nfl-analytics/actions/runs/38494938761
+and postmerge full CI
+https://github.com/konnorharbin-star/harbin-nfl-analytics/actions/runs/38495069586
+both completed SUCCESS. NFL local full suite: 1,362 passed, one skipped;
+unchanged CFB full suite: 499 passed.
+
+Actual postmerge coupled cloud run
+https://github.com/konnorharbin-star/harbin-nfl-analytics/actions/runs/38495069422
+completed SUCCESS, including free-source collection, supplemental web context,
+journal admission, repository commit/push and artifact upload.
+Capture `2026-10-14T01:19:48.031488Z`; durable admission
+`2026-10-14T01:20:29.818123Z`; 14 future Week 6 primary games, zero source/model
+blocks. Web context: one reported external source error, 11 usable kickoff
+weather snapshots, zero qualifying conditional absence scenarios.
+Zero mature coupled outcomes and zero wagers.
+
+Repository readback verified
+`history/coupled_primary_v1_2026/primary.jsonl`: 14 distinct games, all original
+run IDs, code/model fingerprints, before-kickoff timestamps and source hashes.
+Durable commit `1f2bb7e`; original forecast JSON SHA256
+`3f104a3fdddfc4ae1bd0ba9a0f0845925b55d1a84dd7536e5ebae08764a55046`;
+replay SHA256
+`b4ebfb50611baa30e68cd450dc1c7ea1eacf9106c3532f16a2a73486ce5bca37`.
+An initially empty grade stage correctly had zero registered originals before
+this capture; no matured-game grading success is inferred from that run.
+
+The live run exposed a 63.62 MB raw replay JSON. Existing originals remain
+unchanged. Subsequent large raw JSON source snapshots are archived losslessly
+as deterministic gzip, verified against the SHA256 of the original bytes.
+This is source-data storage, not a binary serialized model estimator. The
+reader supports both old plain JSON and compressed source records. A focused
+large-input round-trip/idempotence test verifies retention.
+
+The existing odds collector run
+https://github.com/konnorharbin-star/harbin-nfl-analytics/actions/runs/38494378482
+completed SUCCESS: 14 future games, 293 two-sided public pairs, zero source
+errors, zero bookmaker original update timestamps. Stored observations remain
+research-only with no authenticated account acceptance or positive EV.
+
+Canonical methodology was updated in place to **v4.47.0**:
+https://docs.google.com/document/d/12vooOwxCDrxaSRRXFof2xIXtBYJyqj3pacZeQj8ptYE/edit
+The immutable-in-principle ledger receives separate retrospective correction
+and new pregame cohort records:
+https://docs.google.com/document/d/1hcb2MBOor5O8-48-6wyg43rJ39RKh8cWA5hxSs0dHJk/edit
+Write/readback status is confirmed in the final chat; prior records remain.
+
+**Operational research capture and scheduled grading are deployed and the
+first live capture/persistence path is verified. The full validated betting
+recommendation model remains incomplete. NO VALIDATED EDGE / PASS.**
