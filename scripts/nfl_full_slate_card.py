@@ -233,6 +233,7 @@ def main():
     p.add_argument('--history', type=Path, default=Path('history/public_aggregator_quotes_2026.jsonl'))
     p.add_argument('--prop-contracts', type=Path, help='Optional JSON array of exact source-attributed player-ID contracts')
     p.add_argument('--out', type=Path, default=Path('reports/nfl_full_slate_card.json'))
+    p.add_argument('--workload-sidecar', type=Path, default=Path('reports/game_state_workload_forward.json'))
     a = p.parse_args()
     load = lambda path: json.loads(path.read_text())
     capture = load(a.capture_report)
@@ -240,6 +241,14 @@ def main():
                       [json.loads(s) for s in a.history.read_text().splitlines() if s.strip()] if a.history.exists() else [],
                       asof=datetime.now(UTC).isoformat(), prop_contracts=load(a.prop_contracts) if a.prop_contracts else [])
     card['source_errors'] += capture.get('rejections', [])
+    card['game_state_workload_research'] = {'status': 'SIDECAR_UNAVAILABLE', 'used_for_bet_ranking': False, 'promotion_earned': False}
+    if a.workload_sidecar.exists():
+        workload = load(a.workload_sidecar)
+        if workload.get('spec') != 'NFL_QUARTER_STATE_WORKLOAD_RESEARCH_V1' or stamp(workload['captured_utc']) > stamp(card['generated_utc']):
+            raise ValueError('INVALID_WORKLOAD_SIDECAR_PROVENANCE')
+        card['game_state_workload_research'].update(status=workload['status'], captured_utc=workload['captured_utc'], model_file_sha256=workload.get('model_file_sha256'), errors=workload.get('errors', []))
+        for game in card['games']:
+            game['workload_research'] = [r for r in workload.get('forecasts', []) if r['game_id'] == game['game_id'] and r['team'] in (game['home_team'], game['away_team']) and stamp(r['kickoff_utc']) == stamp(game['kickoff_utc'])]
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(card, indent=2, sort_keys=True, allow_nan=False)+'\n')
     a.out.with_suffix('.md').write_text(markdown(card))

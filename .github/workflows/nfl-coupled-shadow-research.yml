@@ -13,6 +13,10 @@ on:
       - 'nfl/web_conditioned_model.py'
       - 'scripts/nfl_coupled_drive_player_research_run.py'
       - 'scripts/nfl_full_slate_card.py'
+      - 'nfl/game_state_workload.py'
+      - 'scripts/nfl_game_state_workload_run.py'
+      - 'research/game_state_workload_2024_frozen.json'
+      - 'tests/test_game_state_workload.py'
       - 'nfl/full_slate_validation.py'
       - 'scripts/nfl_full_slate_validation_run.py'
       - 'tests/test_full_slate_validation.py'
@@ -54,6 +58,9 @@ jobs:
       - name: Obtain free nflverse and generate independent research forecast artifacts
         run: |
           python -m scripts.nfl_coupled_drive_player_research_run --season 2026 --draws 2000 --out reports/coupled_drive_player_shadow.json
+      - name: Monitor frozen quarter-state workload challenger (not used for betting)
+        continue-on-error: true
+        run: python -m scripts.nfl_game_state_workload_run forecast --out reports/game_state_workload_forward.json
       - name: Capture exact public prices across the upcoming slate
         run: |
           python -m scripts.weekly_public_nfl_odds --season 2026 --hours 192 --max-games 64 --refresh-schedules
@@ -103,6 +110,7 @@ jobs:
         with:
           name: nfl-free-coupled-score-props-RESEARCH-UNVALIDATED
           path: |
+            reports/game_state_workload_forward.json
             reports/full_slate_selected_grade.json
             reports/full_slate_selected_capture.json
             reports/nfl_full_slate_card.json
