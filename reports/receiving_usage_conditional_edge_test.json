@@ -1,0 +1,87 @@
+{
+  "action": "PASS",
+  "betting_authorized": false,
+  "captured_utc": "2026-10-14T01:59:07.061921+00:00",
+  "diagnostic": 2025,
+  "diagnostic_previously_inspected": true,
+  "excluded_long_horizon_groups": 372,
+  "forward_games": 15,
+  "forward_snapshot_sha256": "3d2a068a285d268349e6c59b19563f4ee7fe79f56f84765624dabca0a64bcd6f",
+  "frozen_forward_stat_groups": 540,
+  "horizon_days": 10,
+  "markets": {
+    "receiving_yards": {
+      "brier_baseline": 0.19781760402097698,
+      "brier_delta": -0.003713608775188446,
+      "brier_usage": 0.1941039952457885,
+      "diagnostic_groups": 3296,
+      "distinct_games": 224,
+      "game_cluster_brier_delta_interval_97_5": [
+        -0.0055403758457912245,
+        -0.0019784328585446174
+      ],
+      "game_cluster_mae_delta_interval_97_5": [
+        -0.5520036344464919,
+        -0.28220734202688397
+      ],
+      "mae_baseline": 18.175745500303396,
+      "mae_delta": -0.41450041635804036,
+      "mae_usage": 17.761245083945358,
+      "matched_stat_row_conditional_only": true,
+      "no_market_edge_certified": true,
+      "selected_training_window": 8,
+      "single_synthetic_primary_line_not_actual_book_line": true,
+      "training_groups": 3270,
+      "week_cluster_brier_delta_interval_97_5": [
+        -0.005491474543284728,
+        -0.0018308432496770709
+      ],
+      "week_clusters": 15
+    },
+    "receptions": {
+      "brier_baseline": 0.22861669031953855,
+      "brier_delta": -0.0005767839795991072,
+      "brier_usage": 0.22803990633993945,
+      "diagnostic_groups": 3331,
+      "distinct_games": 224,
+      "game_cluster_brier_delta_interval_97_5": [
+        -0.0016327806082184562,
+        0.0004479332120685293
+      ],
+      "game_cluster_mae_delta_interval_97_5": [
+        -0.012496215403686062,
+        -0.002323335418561224
+      ],
+      "mae_baseline": 1.3478352665866105,
+      "mae_delta": -0.0073109094349253,
+      "mae_usage": 1.3405243571516852,
+      "matched_stat_row_conditional_only": true,
+      "no_market_edge_certified": true,
+      "selected_training_window": 8,
+      "single_synthetic_primary_line_not_actual_book_line": true,
+      "training_groups": 3290,
+      "week_cluster_brier_delta_interval_97_5": [
+        -0.0015671708175797763,
+        0.000236646297931434
+      ],
+      "week_clusters": 15
+    }
+  },
+  "missing_test_stat_groups": 1349,
+  "missing_train_stat_groups": 1389,
+  "normalized_source_sha256": "cd8437003fbeafef6b36ac52e742ffc08887f4b223540df80c5947c84adb6e7b",
+  "real_market_prices_available": false,
+  "source_quality": {
+    "excluded_stat_rows": {
+      "invalid_player_team_or_position": 28334
+    },
+    "player_rows": 13842
+  },
+  "sources": [
+    "https://github.com/nflverse/nflverse-data/releases",
+    "https://nflreadr.nflverse.com/articles/dictionary_player_stats.html"
+  ],
+  "spec": "NFL_RECEIVING_USAGE_CONDITIONAL_FIXED_TEST_V1",
+  "status": "UNPRICED_RESEARCH_ONLY",
+  "training": 2024
+}

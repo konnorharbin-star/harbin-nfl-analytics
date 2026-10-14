@@ -1,0 +1,31 @@
+{
+  "betting_authorized": false,
+  "classification": "TWO_ROW_RETROSPECTIVE_CASE_SANITY_CHECK_NOT_EDGE_PROOF",
+  "real_betting_roi": null,
+  "rows": [
+    {
+      "actual_receiving_yards_crossmatched": 76.0,
+      "game_id": "2026_04_LAC_SEA",
+      "original_quote_timestamp": null,
+      "over_outcome": 0,
+      "publisher_archived_line": 95.5,
+      "publisher_price_text": "-110; selection side not independently authenticated",
+      "usage_brier": 0.40005013300210635,
+      "usage_mean": 118.21678321678324,
+      "usage_p_over_conditional": 0.632495164410058
+    },
+    {
+      "actual_receiving_yards_crossmatched": 102.0,
+      "game_id": "2026_05_SF_SEA",
+      "original_quote_timestamp": null,
+      "over_outcome": 1,
+      "publisher_archived_line": 95.5,
+      "publisher_price_text": "-110; selection side not independently authenticated",
+      "usage_brier": 0.2060258538302902,
+      "usage_mean": 106.7048181818182,
+      "usage_p_over_conditional": 0.5460992907801419
+    }
+  ],
+  "sample_selection": "current research player, not unbiased historical universe",
+  "source_url": "https://www.covers.com/sport/football/nfl/players/196870/jaxon-smith-njigba"
+}
