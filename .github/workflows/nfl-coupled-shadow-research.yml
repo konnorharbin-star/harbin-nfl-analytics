@@ -22,6 +22,10 @@ on:
       - 'scripts/nfl_game_state_workload_run.py'
       - 'research/game_state_workload_2024_frozen.json'
       - 'tests/test_game_state_workload.py'
+      - 'nfl/overtime_research.py'
+      - 'nfl/overtime_source.py'
+      - 'scripts/nfl_overtime_research_run.py'
+      - 'tests/test_overtime_research.py'
       - 'nfl/full_slate_validation.py'
       - 'scripts/nfl_full_slate_validation_run.py'
       - 'tests/test_full_slate_validation.py'
@@ -70,6 +74,9 @@ jobs:
       - name: Monitor frozen quarter-state workload challenger (not used for betting)
         continue-on-error: true
         run: python -m scripts.nfl_game_state_workload_run forecast --out reports/game_state_workload_forward.json
+      - name: Monitor separate regulation and overtime score challenger (not used for betting)
+        continue-on-error: true
+        run: python -m scripts.nfl_overtime_research_run --out reports/overtime_score_challenger.json
       - name: Capture exact public prices across the upcoming slate
         run: |
           python -m scripts.weekly_public_nfl_odds --season 2026 --hours 192 --max-games 64 --refresh-schedules
@@ -126,6 +133,7 @@ jobs:
             outputs/independent_game_predictions.csv
             outputs/independent_player_predictions.csv
             reports/game_state_workload_forward.json
+            reports/overtime_score_challenger.json
             reports/full_slate_selected_grade.json
             reports/full_slate_selected_capture.json
             reports/nfl_full_slate_card.json
