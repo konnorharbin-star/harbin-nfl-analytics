@@ -5,7 +5,7 @@ import subprocess
 import sys
 
 
-def generate(season, week=None, out_dir='outputs'):
+def generate(season, week=None, out_dir='outputs', quiet=False):
     root = Path(__file__).resolve().parent
     out = Path(out_dir)
     if not out.is_absolute():
@@ -14,11 +14,12 @@ def generate(season, week=None, out_dir='outputs'):
            '--out',str(out/'independent_source_scan.json'),'--replay-inputs',str(out/'independent_source_replay.json')]
     if week is not None:
         cmd += ['--week',str(week)]
-    subprocess.run(cmd,cwd=root,check=True)
+    stdout = subprocess.DEVNULL if quiet else None
+    subprocess.run(cmd,cwd=root,check=True,stdout=stdout)
     subprocess.run([sys.executable,'-m','scripts.nfl_independent_predictions',
                    '--scan',str(out/'independent_source_scan.json'),
                    '--replay',str(out/'independent_source_replay.json'),
-                   '--out',str(out/'independent_forecasts.json'),'--resolve-names'],cwd=root,check=True)
+                   '--out',str(out/'independent_forecasts.json'),'--resolve-names'],cwd=root,check=True,stdout=stdout)
     return str(out/'independent_forecasts.json')
 
 
