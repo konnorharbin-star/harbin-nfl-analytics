@@ -1,0 +1,182 @@
+{
+  "action": "PASS_RESEARCH_ONLY",
+  "betting_authorized": false,
+  "bookmaker_and_account_executable_offer_verified": false,
+  "by_season": {
+    "2022": {
+      "spread_gt_3_le_7": {
+        "betting_authorized": false,
+        "games": 98,
+        "independent_executable_bookmaker_quotes_confirmed": false,
+        "pushes": 1,
+        "roi": -0.06918367346938777,
+        "units": -6.780000000000001,
+        "week_cluster_bootstrap95": [
+          -0.32000000000000006,
+          0.1910843373493976
+        ],
+        "week_clusters": 18,
+        "wins": 31
+      },
+      "spread_le_3": {
+        "betting_authorized": false,
+        "games": 106,
+        "independent_executable_bookmaker_quotes_confirmed": false,
+        "pushes": 1,
+        "roi": -0.004716981132075474,
+        "units": -0.5000000000000002,
+        "week_cluster_bootstrap95": [
+          -0.1803738317757009,
+          0.17599999999999996
+        ],
+        "week_clusters": 18,
+        "wins": 46
+      }
+    },
+    "2023": {
+      "spread_gt_3_le_7": {
+        "betting_authorized": false,
+        "games": 97,
+        "independent_executable_bookmaker_quotes_confirmed": false,
+        "pushes": 0,
+        "roi": 0.005257731958762898,
+        "units": 0.5100000000000011,
+        "week_cluster_bootstrap95": [
+          -0.22793478260869568,
+          0.22793478260869568
+        ],
+        "week_clusters": 18,
+        "wins": 33
+      },
+      "spread_le_3": {
+        "betting_authorized": false,
+        "games": 105,
+        "independent_executable_bookmaker_quotes_confirmed": false,
+        "pushes": 0,
+        "roi": -0.21304761904761907,
+        "units": -22.37,
+        "week_cluster_bootstrap95": [
+          -0.3641237113402062,
+          -0.05039215686274508
+        ],
+        "week_clusters": 18,
+        "wins": 37
+      }
+    },
+    "2024": {
+      "spread_gt_3_le_7": {
+        "betting_authorized": false,
+        "games": 119,
+        "independent_executable_bookmaker_quotes_confirmed": false,
+        "pushes": 0,
+        "roi": -0.38663865546218484,
+        "units": -46.01,
+        "week_cluster_bootstrap95": [
+          -0.6468749999999999,
+          -0.11866141732283467
+        ],
+        "week_clusters": 18,
+        "wins": 24
+      },
+      "spread_le_3": {
+        "betting_authorized": false,
+        "games": 94,
+        "independent_executable_bookmaker_quotes_confirmed": false,
+        "pushes": 0,
+        "roi": -0.17244680851063826,
+        "units": -16.209999999999997,
+        "week_cluster_bootstrap95": [
+          -0.4121904761904763,
+          0.059756097560975635
+        ],
+        "week_clusters": 18,
+        "wins": 35
+      }
+    },
+    "2025": {
+      "spread_gt_3_le_7": {
+        "betting_authorized": false,
+        "games": 111,
+        "independent_executable_bookmaker_quotes_confirmed": false,
+        "pushes": 1,
+        "roi": 0.04414414414414416,
+        "units": 4.900000000000001,
+        "week_cluster_bootstrap95": [
+          -0.16083333333333333,
+          0.26185840707964597
+        ],
+        "week_clusters": 18,
+        "wins": 39
+      },
+      "spread_le_3": {
+        "betting_authorized": false,
+        "games": 85,
+        "independent_executable_bookmaker_quotes_confirmed": false,
+        "pushes": 0,
+        "roi": -0.03505882352941177,
+        "units": -2.98,
+        "week_cluster_bootstrap95": [
+          -0.24584269662921343,
+          0.17205128205128206
+        ],
+        "week_clusters": 18,
+        "wins": 37
+      }
+    }
+  },
+  "economic_betting_edge_validated": false,
+  "historical_source_price_offer_time_authenticated": false,
+  "later_years_known_to_researchers_not_untouched_forward_confirmation": true,
+  "published_research": "https://doi.org/10.5750/jpm.v19i2.2325",
+  "rules": {
+    "comparison": "3 < spread <=7",
+    "fixed_unit_stake": 1,
+    "home_and_away_underdogs_included": true,
+    "main": "0 < spread <=3",
+    "spread_is_absolute_magnitude": true,
+    "tie_return_assumed_stake_refund_not_verified_book_rule": true,
+    "underdog_must_have_positive_moneyline": true
+  },
+  "season_window": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "source": "https://github.com/nflverse/nfldata/blob/master/data/games.csv",
+  "source_capture_utc": "2026-10-14T01:17:12.562469+00:00",
+  "source_input_snapshot_path": "research/nfl_small_dog_source_2022_2025.csv",
+  "source_input_snapshot_sha256": "16552b583f29fb8a56a6f62cf2b7bc2ba9d0180b56d868076f91607e9f009f2e",
+  "source_schedule_rows": 1139,
+  "spec": "PUBLISHED_NFL_SMALL_SPREAD_UNDERDOG_FALSIFICATION_V1",
+  "total": {
+    "spread_gt_3_le_7": {
+      "betting_authorized": false,
+      "games": 425,
+      "independent_executable_bookmaker_quotes_confirmed": false,
+      "pushes": 2,
+      "roi": -0.11148235294117648,
+      "units": -47.38,
+      "week_cluster_bootstrap95": [
+        -0.24079646017699122,
+        0.015276497695852528
+      ],
+      "week_clusters": 72,
+      "wins": 127
+    },
+    "spread_le_3": {
+      "betting_authorized": false,
+      "games": 390,
+      "independent_executable_bookmaker_quotes_confirmed": false,
+      "pushes": 1,
+      "roi": -0.10784615384615383,
+      "units": -42.059999999999995,
+      "week_cluster_bootstrap95": [
+        -0.20902676399026762,
+        -0.010362116991643437
+      ],
+      "week_clusters": 72,
+      "wins": 155
+    }
+  }
+}
