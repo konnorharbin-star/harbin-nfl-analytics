@@ -388,7 +388,10 @@ python run_verified_market_backtest.py --start-season 2022 --end-season 2025
 python run_policy_calibration.py
 python run_market_edge_shrinkage.py
 
-# canonical NCAA-style NFL operational run + weekly board
+# independent score, spread, total and named-player forecasts (no odds required)
+python run_nfl_predictions.py 2026
+
+# canonical NCAA-style operational run (also publishes the independent bundle first)
 python harbin_nfl_model.py 2026 --refresh
 
 # forward evidence utilities
