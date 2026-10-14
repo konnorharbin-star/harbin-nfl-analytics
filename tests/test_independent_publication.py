@@ -99,3 +99,11 @@ def test_command_always_generates_game_and_player_bundle(monkeypatch,tmp_path):
     assert 'scripts.nfl_independent_predictions' in calls[1][0]
     assert '--resolve-names' in calls[1][0]
     assert all(c[1]['check'] for c in calls)
+
+
+def test_canonical_command_can_preserve_single_json_stdout(monkeypatch,tmp_path):
+    import subprocess
+    calls=[]
+    monkeypatch.setattr('run_nfl_predictions.subprocess.run',lambda command,**kwargs:calls.append(kwargs))
+    generate(2026,6,tmp_path,quiet=True)
+    assert all(c['stdout']==subprocess.DEVNULL for c in calls)

@@ -23,7 +23,7 @@ def main() -> None:
     # Publish independent scores and player stats before any market-based audit.
     # A bookmaker source outage must not erase our price-free forecasts.
     from run_nfl_predictions import generate
-    independent_output = generate(args.season, args.week)
+    independent_output = generate(args.season, args.week, quiet=True)
 
     current, report = run_operational_pipeline(
         args.season,
