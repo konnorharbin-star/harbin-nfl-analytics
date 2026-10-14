@@ -13,6 +13,9 @@ on:
       - 'nfl/web_conditioned_model.py'
       - 'scripts/nfl_coupled_drive_player_research_run.py'
       - 'scripts/nfl_full_slate_card.py'
+      - 'nfl/full_slate_validation.py'
+      - 'scripts/nfl_full_slate_validation_run.py'
+      - 'tests/test_full_slate_validation.py'
       - 'scripts/weekly_public_nfl_odds.py'
       - 'tests/test_nfl_full_slate_card.py'
       - 'nfl/coupled_research_journal.py'
@@ -34,6 +37,8 @@ jobs:
       - name: Enforce separately reviewed 2026 model lineage
         run: test "$(date -u +%Y)" = "2026"
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -44,6 +49,8 @@ jobs:
       - name: Grade durable first-seen forecasts with mature free outcomes
         id: grade
         run: python -m scripts.nfl_coupled_journal_run grade --out reports/coupled_durable_grade.json
+      - name: Grade frozen exact-contract selections with mature finals
+        run: python -m scripts.nfl_full_slate_validation_run grade --out reports/full_slate_selected_grade.json
       - name: Obtain free nflverse and generate independent research forecast artifacts
         run: |
           python -m scripts.nfl_coupled_drive_player_research_run --season 2026 --draws 2000 --out reports/coupled_drive_player_shadow.json
@@ -53,6 +60,7 @@ jobs:
       - name: Rank all supported priced contracts and report every target game
         run: |
           python -m scripts.nfl_full_slate_card
+          python -m scripts.nfl_full_slate_validation_run freeze --run-id "${{ github.run_id }}" --code-sha "$(git rev-parse HEAD)" --out reports/full_slate_selected_capture.json
           cat reports/nfl_full_slate_card.md >> "$GITHUB_STEP_SUMMARY"
       - name: Research public NFL injury reports, weather and recent news (no model edits)
         run: |
@@ -67,7 +75,7 @@ jobs:
           SOURCE_CODE_SHA: ${{ github.sha }}
         run: |
           test -f reports/coupled_drive_player_shadow.json
-          python -m scripts.nfl_coupled_journal_run freeze --run-id "$SOURCE_RUN_ID" --code-sha "$SOURCE_CODE_SHA" --sidecar reports/nfl_web_context_research.json --sidecar reports/nfl_web_conditional_scenarios.json
+          python -m scripts.nfl_coupled_journal_run freeze --run-id "$SOURCE_RUN_ID" --code-sha "$(git rev-parse HEAD)" --sidecar reports/nfl_web_context_research.json --sidecar reports/nfl_web_conditional_scenarios.json
       - name: Commit append-only originals and grade revisions
         if: always()
         env:
@@ -75,13 +83,18 @@ jobs:
         run: |
           test -f reports/coupled_durable_status.json
           python -m scripts.nfl_coupled_journal_run check-pregame --run-id "$SOURCE_RUN_ID"
+          python -m scripts.nfl_full_slate_validation_run check-pregame --run-id "$SOURCE_RUN_ID"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add history/coupled_primary_v1_2026 history/public_aggregator_quotes_2026.jsonl
+          if [ -d history/full_slate_selected_v1_2026 ]; then
+            git add history/full_slate_selected_v1_2026
+          fi
           if ! git diff --cached --quiet; then
             git commit -m 'research: preserve coupled NFL first-seen forecasts and source-grade revisions'
             git pull --rebase origin main
             python -m scripts.nfl_coupled_journal_run check-pregame --run-id "$SOURCE_RUN_ID"
+            python -m scripts.nfl_full_slate_validation_run check-pregame --run-id "$SOURCE_RUN_ID"
             git push origin HEAD:main
           fi
       - name: Archive supplemental diagnostic reports
@@ -90,6 +103,8 @@ jobs:
         with:
           name: nfl-free-coupled-score-props-RESEARCH-UNVALIDATED
           path: |
+            reports/full_slate_selected_grade.json
+            reports/full_slate_selected_capture.json
             reports/nfl_full_slate_card.json
             reports/nfl_full_slate_card.md
             reports/weekly_public_quote_capture.json

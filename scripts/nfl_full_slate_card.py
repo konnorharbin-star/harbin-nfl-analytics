@@ -60,9 +60,9 @@ def contracts(entry):
         except (KeyError, TypeError, ValueError):
             yield {'error': 'INVALID_PAIRED_CONTRACT'}
             continue
-        for side, line, price in zip((a, b), lines, prices):
+        for index, (side, line, price) in enumerate(zip((a, b), lines, prices)):
             yield dict(game_id=entry['event_id'], market=market, side=side,
-                       line=line, american_odds=price, book=book,
+                       line=line, american_odds=price, opposite_american_odds=prices[1-index], book=book,
                        observed_utc=entry['collector_observed_utc'],
                        source_url=entry['source_url'],
                        offer_origin_utc=q.get('source_original_book_offer_update_utc'),
