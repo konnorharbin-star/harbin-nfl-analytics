@@ -1,0 +1,140 @@
+{
+  "2025_truly_untouched_confirmatory_holdout": false,
+  "action": "PASS_RESEARCH_ONLY",
+  "betting_authorized": false,
+  "claimed_profitable_edge": false,
+  "estimated_true_ev": null,
+  "familywise_multiplicity_adjusted": false,
+  "input_archive_path": "reports/verified_market_bets.csv",
+  "input_archive_sha256": "06d66c7d403c3a2e3e6d1779a1dc2fb36aa30fc8e6600acdd9e516bb79aaed3c",
+  "markets": {
+    "moneyline": {
+      "betting_authorized": false,
+      "diagnostic_games": 271,
+      "diagnostic_year": 2025,
+      "distinct_independent_forward_games": 0,
+      "fixed_candidate_weights": [
+        -0.5,
+        -0.25,
+        -0.1,
+        0.0,
+        0.1,
+        0.25,
+        0.5
+      ],
+      "genuinely_out_of_sample_in_2026": false,
+      "later_year": {
+        "games": 271,
+        "market_brier": 0.21536389365472755,
+        "market_log_loss": 0.6189004340044185,
+        "market_minus_model_brier": 0.0003107083747591727,
+        "market_minus_model_log_loss": 0.0012117005048790275,
+        "model_brier": 0.2150531852799684,
+        "model_log_loss": 0.6176887334995395
+      },
+      "later_year_cluster_uncertainty": {
+        "brier_lift_interval_95": [
+          -0.0018984040367046818,
+          0.0025081377188448323
+        ],
+        "cluster_bootstrap_repetitions": 4000,
+        "distinct_week_clusters": 18,
+        "multiplicity_adjusted": false
+      },
+      "positive_market_lift_statistically_established": false,
+      "train_year": 2024,
+      "training_candidate_brier": 0.2039294143466369,
+      "training_games": 272,
+      "training_market_brier": 0.2044586823496845,
+      "weight_selected_from_training_only": -0.25
+    },
+    "spread": {
+      "betting_authorized": false,
+      "diagnostic_games": 269,
+      "diagnostic_year": 2025,
+      "distinct_independent_forward_games": 0,
+      "fixed_candidate_weights": [
+        -0.5,
+        -0.25,
+        -0.1,
+        0.0,
+        0.1,
+        0.25,
+        0.5
+      ],
+      "genuinely_out_of_sample_in_2026": false,
+      "later_year": {
+        "games": 269,
+        "market_brier": 0.25137716021610357,
+        "market_log_loss": 0.6959083572845624,
+        "market_minus_model_brier": 0.0,
+        "market_minus_model_log_loss": 0.0,
+        "model_brier": 0.25137716021610357,
+        "model_log_loss": 0.6959083572845624
+      },
+      "later_year_cluster_uncertainty": {
+        "brier_lift_interval_95": [
+          0.0,
+          0.0
+        ],
+        "cluster_bootstrap_repetitions": 4000,
+        "distinct_week_clusters": 18,
+        "multiplicity_adjusted": false
+      },
+      "positive_market_lift_statistically_established": false,
+      "train_year": 2024,
+      "training_candidate_brier": 0.25022842141094315,
+      "training_games": 263,
+      "training_market_brier": 0.25022842141094315,
+      "weight_selected_from_training_only": 0.0
+    },
+    "total": {
+      "betting_authorized": false,
+      "diagnostic_games": 272,
+      "diagnostic_year": 2025,
+      "distinct_independent_forward_games": 0,
+      "fixed_candidate_weights": [
+        -0.5,
+        -0.25,
+        -0.1,
+        0.0,
+        0.1,
+        0.25,
+        0.5
+      ],
+      "genuinely_out_of_sample_in_2026": false,
+      "later_year": {
+        "games": 272,
+        "market_brier": 0.24983459913831,
+        "market_log_loss": 0.6928122834553653,
+        "market_minus_model_brier": 0.00012253742709740744,
+        "market_minus_model_log_loss": 0.0002450326460487125,
+        "model_brier": 0.24971206171121257,
+        "model_log_loss": 0.6925672508093166
+      },
+      "later_year_cluster_uncertainty": {
+        "brier_lift_interval_95": [
+          -0.0009161701967442345,
+          0.0011618659051651624
+        ],
+        "cluster_bootstrap_repetitions": 4000,
+        "distinct_week_clusters": 18,
+        "multiplicity_adjusted": false
+      },
+      "positive_market_lift_statistically_established": false,
+      "train_year": 2024,
+      "training_candidate_brier": 0.24978864586854652,
+      "training_games": 272,
+      "training_market_brier": 0.24982460058979494,
+      "weight_selected_from_training_only": -0.1
+    }
+  },
+  "model_family": "ARCHIVED_2024_2025_CONDITIONAL_STUDENT_T",
+  "new_2026_joint_drive_family_validated": false,
+  "original_quote_publication_timestamp_verified": false,
+  "promoted_family_count": 0,
+  "source": "ARCHIVED_PROVIDER_LABELED_OPEN_NOT_ACCEPTED_QUOTE",
+  "spec": "NFL_ARCHIVED_MARKET_RESIDUAL_DIAGNOSTIC_V1",
+  "status": "REJECT_MARKET_RESIDUAL_AS_PROVEN_EDGE",
+  "years_already_consulted_in_prior_research": true
+}
