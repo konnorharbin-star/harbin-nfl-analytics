@@ -51,7 +51,9 @@ def freeze(root, card, *, at, run_id, code_sha, model_sha):
         if gid in seen:
             repeat += 1
             continue
-        c = game.get('best_candidate')
+        # Preserve the original game-market selection population when public
+        # player props are added to the informational card.
+        c = game.get('best_game_market_candidate', game.get('best_candidate'))
         if c is None or num(c['raw_conditional_ev_proxy']) <= 0:
             rejected.append({'game_id': gid, 'reason': 'NO_POSITIVE_PRICED_CANDIDATE'})
             continue

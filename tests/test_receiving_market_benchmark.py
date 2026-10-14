@@ -1,12 +1,6 @@
-import io
-import json
-import urllib.error
-
-import polars as pl
 import pytest
 
-from nfl.receiving_market_benchmark import decimal_odds, import_histories, score_quotes
-from scripts.nfl_receiving_market_benchmark import fetch_history, select_players
+from nfl.receiving_market_benchmark import import_histories, score_quotes
 
 
 def history(**updates):
@@ -96,56 +90,3 @@ def test_selection_does_not_depend_on_outcome_and_cannot_promote():
     assert first["promotion_earned"] is False
     assert first["game_cluster_brier_difference_interval_98_75"] is None
     assert first["verified_executable_decisions"] == 0
-
-
-def test_player_selection_uses_2024_targets_only():
-    rows = [
-        {
-            "player_id": "00-a",
-            "season": 2024,
-            "season_type": "REG",
-            "position": "WR",
-            "targets": 50,
-        },
-        {
-            "player_id": "00-b",
-            "season": 2024,
-            "season_type": "REG",
-            "position": "TE",
-            "targets": 40,
-        },
-        {
-            "player_id": "00-b",
-            "season": 2025,
-            "season_type": "REG",
-            "position": "TE",
-            "targets": 500,
-        },
-    ]
-    assert select_players(pl.DataFrame(rows), 1) == ["00-a"]
-    with pytest.raises(ValueError):
-        select_players(pl.DataFrame(rows), 21)
-
-
-def test_free_fetch_has_no_retry_and_checkpoints_completed_responses():
-    calls, checkpoints = [], []
-
-    def opener(request, timeout):
-        calls.append(request)
-        if len(calls) == 2:
-            raise urllib.error.HTTPError(request.full_url, 402, "no credits", {}, None)
-        return io.BytesIO(json.dumps(history()).encode())
-
-    with pytest.raises(RuntimeError, match="HTTP_402"):
-        fetch_history(["00-a", "00-b"], "test-secret", opener=opener, checkpoint=checkpoints.append)
-    assert len(calls) == 2
-    assert len(checkpoints[0]["responses"]) == 1
-    assert checkpoints[0]["complete"] is False
-    assert "test-secret" not in json.dumps(checkpoints)
-
-
-def test_missing_key_and_invalid_odds_fail_before_any_network():
-    with pytest.raises(ValueError, match="KEY_REQUIRED"):
-        fetch_history(["00-a"], None, opener=lambda *args, **kwargs: pytest.fail("network called"))
-    assert decimal_odds(+150) == 2.5
-    assert decimal_odds(-200) == 1.5

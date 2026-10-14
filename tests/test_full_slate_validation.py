@@ -35,6 +35,16 @@ def test_capture_is_first_seen_and_hash_checked(tmp_path):
     with pytest.raises(ValueError, match='HASH_MISMATCH'):
         grade(tmp_path,[final()],at=MATURE)
 
+def test_public_props_do_not_change_game_market_primary_population(tmp_path):
+    c = card()
+    game_candidate = deepcopy(c['games'][0]['best_candidate'])
+    prop = dict(game_candidate, market='receiving_yards', side='over', line=91.5)
+    c['ranked_candidates'] = [prop, game_candidate]
+    c['games'][0]['best_candidate'] = prop
+    c['games'][0]['best_game_market_candidate'] = game_candidate
+    assert capture(tmp_path, c)['new_primary_games'] == 1
+    assert read_journal(tmp_path/'primary.jsonl')[0]['candidate']['market'] == 'spread'
+
 def test_no_immature_outcome_or_economic_profit(tmp_path):
     capture(tmp_path)
     result=grade(tmp_path,[final()],at=AT)
