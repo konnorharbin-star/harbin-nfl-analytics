@@ -24,7 +24,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: nfl-coupled-primary-journal
+  group: nfl-forward-history-writer
   cancel-in-progress: false
 jobs:
   research:
