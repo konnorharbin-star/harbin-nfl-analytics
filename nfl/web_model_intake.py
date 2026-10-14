@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import math
 import re
 from datetime import UTC, datetime
 from html.parser import HTMLParser
@@ -204,14 +205,26 @@ def parse_props(html, players, games, *, url, observed):
             for cls, side in (("other-over-odds", "over"), ("other-under-odds", "under")):
                 nodes = row.find(cls=cls)
                 text = clean(nodes[0].text()) if len(nodes) == 1 else ""
-                match = re.fullmatch(r"([ou])(\d+(?:\.\d+)?)\s+([+-]\d+)", text)
-                if match is None or match[1] != side[0] or abs(int(match[3])) < 100:
+                text = text.replace("\u2212", "-")
+                match = re.fullmatch(r"([ou])(\d+(?:\.\d+)?)\s+([+-]\d+|\d+(?:\.\d+)?%)", text)
+                if match is None or match[1] != side[0]:
                     break
-                sides.append((side, float(match[2]), int(match[3])))
-            if not book or len(sides) != 2 or sides[0][1] != sides[1][1]:
+                if not math.isfinite(float(match[2])):
+                    break
+                percent = match[3].endswith("%")
+                value = float(match[3][:-1]) / 100 if percent else int(match[3])
+                if (percent and not 0 < value < 1) or (not percent and abs(value) < 100):
+                    break
+                sides.append((side, float(match[2]), value, percent))
+            if (
+                not book
+                or len(sides) != 2
+                or sides[0][1] != sides[1][1]
+                or sides[0][3] != sides[1][3]
+            ):
                 excluded += 1
                 continue
-            for index, (side, line, odds) in enumerate(sides):
+            for index, (side, line, odds, percent) in enumerate(sides):
                 contracts.append(
                     {
                         "game_id": game["game_id"],
@@ -221,8 +234,15 @@ def parse_props(html, players, games, *, url, observed):
                         "market": metric,
                         "side": side,
                         "line": line,
-                        "american_odds": odds,
-                        "opposite_american_odds": sides[1 - index][2],
+                        "quote_format": "DISPLAYED_PERCENT_REFERENCE"
+                        if percent
+                        else "AMERICAN_ODDS",
+                        "american_odds": None if percent else odds,
+                        "opposite_american_odds": None if percent else sides[1 - index][2],
+                        "displayed_probability": odds if percent else None,
+                        "opposite_displayed_probability": sides[1 - index][2] if percent else None,
+                        "fees_known": False,
+                        "bid_ask_side_known": False,
                         "book": book,
                         "observed_utc": observed.isoformat(),
                         "source_url": url,

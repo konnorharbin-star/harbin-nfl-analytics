@@ -95,6 +95,7 @@ def build_card(scan, replay, games, observations, *, asof, prop_contracts=(), si
         raise ValueError('duplicate target game')
     latest = {}
     errors = []
+    displayed_references = []
     for entry in observations:
         try:
             observed = stamp(entry['collector_observed_utc'])
@@ -129,8 +130,10 @@ def build_card(scan, replay, games, observations, *, asof, prop_contracts=(), si
                     raise ValueError('POSTKICKOFF_PRICE')
                 if entry and c['market'] in MARKETS and stamp(entry['kickoff_utc']) != stamp(game['kickoff_utc']):
                     raise ValueError('QUOTE_SCHEDULE_IDENTITY_MISMATCH')
-                price = number(c['american_odds'])
-                if abs(price) < 100 or not c.get('book') or not c.get('source_url', '').startswith('https://'):
+                percent_reference = c.get('quote_format') == 'DISPLAYED_PERCENT_REFERENCE'
+                price = number(c['displayed_probability'] if percent_reference else c['american_odds'])
+                price_valid = 0 < price < 1 if percent_reference else abs(price) >= 100
+                if not price_valid or not c.get('book') or not c.get('source_url', '').startswith('https://'):
                     raise ValueError('INCOMPLETE_EXACT_PRICE')
                 if c['market'] != 'moneyline':
                     c['line'] = number(c['line'])
@@ -138,9 +141,12 @@ def build_card(scan, replay, games, observations, *, asof, prop_contracts=(), si
                 valid.append((c, metric, threshold, side))
             except (KeyError, ValueError, TypeError) as exc:
                 row['errors'].append(str(exc))
-        row['priced_contracts'] = len(valid)
+        row['priced_contracts'] = sum(c.get('quote_format') != 'DISPLAYED_PERCENT_REFERENCE' for c, *_ in valid)
+        row['displayed_reference_contracts'] = len(valid) - row['priced_contracts']
         row['missing_game_markets'] = [m for m in MARKETS if not any(c['market'] == m for c, *_ in valid)]
-        row['prop_price_coverage'] = 'PARTIAL' if any(c['market'] in PROPS for c, *_ in valid) else 'NONE'
+        actual_props = any(c['market'] in PROPS and c.get('quote_format') != 'DISPLAYED_PERCENT_REFERENCE' for c, *_ in valid)
+        reference_props = any(c['market'] in PROPS and c.get('quote_format') == 'DISPLAYED_PERCENT_REFERENCE' for c, *_ in valid)
+        row['prop_price_coverage'] = 'PARTIAL' if actual_props else ('DISPLAYED_REFERENCE_ONLY' if reference_props else 'NONE')
         if not valid:
             continue
         original, source = originals.get(gid), inputs.get(gid)
@@ -166,12 +172,25 @@ def build_card(scan, replay, games, observations, *, asof, prop_contracts=(), si
                 raise ValueError('REPLAY_DOES_NOT_MATCH_ORIGINAL_FORECAST')
             probabilities = {(p['metric'], p['line']): p for p in result['query_thresholds']}
             game_candidates = []
+            game_references = []
             for c, metric, threshold, side in supported:
                 p = probabilities[(metric, threshold)]
                 win, push = number(p[side]), number(p['push'])
                 loss = number(p['under' if side == 'over' else 'over'])
                 if min(win, push, loss) < 0 or abs(win+push+loss-1) > 1e-8:
                     raise ValueError('INVALID_PROBABILITY_MASS')
+                if c.get('quote_format') == 'DISPLAYED_PERCENT_REFERENCE':
+                    game_references.append({**c, 'model_capture_utc': original['asof_utc'],
+                        'model_forecast_sha256': original['forecast_sha256'],
+                        'raw_conditional_win_probability': win, 'raw_push_probability': push,
+                        'raw_loss_probability': loss,
+                        'raw_probability_minus_displayed_reference': win-number(c['displayed_probability']),
+                        'raw_conditional_ev_proxy': None, 'estimated_validated_ev': None,
+                        'decision': 'PASS', 'qualification': 'DISPLAYED_REFERENCE_ONLY',
+                        'blockers': ['MODEL_UNCALIBRATED', 'DISPLAYED_QUOTE_NOT_EXECUTABLE_PRICE',
+                                     'FEES_BID_ASK_AND_SETTLEMENT_UNKNOWN', 'PLAYER_PARTICIPATION_UNVERIFIED']})
+                    row['evaluated_contracts'] += 1
+                    continue
                 odds = number(c['american_odds'])
                 payout = odds/100 if odds > 0 else 100/-odds
                 candidate = {**c, 'model_capture_utc': original['asof_utc'],
@@ -192,6 +211,7 @@ def build_card(scan, replay, games, observations, *, asof, prop_contracts=(), si
                 game_candidates.append(candidate)
                 row['evaluated_contracts'] += 1
             candidates.extend(game_candidates)
+            displayed_references.extend(game_references)
             row['status'] = 'RESEARCH_EVALUATED'
         except (ValueError, KeyError, TypeError, RuntimeError) as exc:
             row['evaluated_contracts'] = 0
@@ -209,6 +229,7 @@ def build_card(scan, replay, games, observations, *, asof, prop_contracts=(), si
             'qualified_bets': [], 'qualified_bet_count': 0,
             'positive_research_candidates': sum(c['raw_conditional_ev_proxy'] > 0 for c in candidates),
             'automatic_betting_enabled': False, 'games': board, 'ranked_candidates': candidates,
+            'displayed_market_probability_comparisons': displayed_references,
             'source_errors': errors}
 
 
@@ -223,6 +244,13 @@ def markdown(card):
         lines.append(f"| {g['away_team']} @ {g['home_team']} | {g['status']} | {label} | {ev} | PASS |")
     lines += ['', 'Prop prices are incomplete; unavailable contracts are never assigned synthetic prices.',
               'Exact prices, raw probabilities, capture times, provenance and blockers appear in the JSON card.']
+    refs = card.get('displayed_market_probability_comparisons', [])
+    if refs:
+        lines += ['', '## Displayed market references — uncalibrated comparisons, EV unknown', '',
+                  '| Player | Market/side | Line | Raw model | Displayed reference | Decision |',
+                  '|---|---|---:|---:|---:|---|']
+        for c in sorted(refs, key=lambda r: -abs(r['raw_probability_minus_displayed_reference']))[:20]:
+            lines.append(f"| {c.get('player_name', c['player_id'])} | {c['market']} {c['side']} | {c['line']} | {c['raw_conditional_win_probability']:.1%} | {c['displayed_probability']:.1%} ({c['book']}) | PASS |")
     return '\n'.join(lines)+'\n'
 
 

@@ -72,6 +72,23 @@ def test_exact_prop_contract_supported_without_fake_prices():
     assert 'PLAYER_PARTICIPATION_UNVERIFIED' in next(c for c in card['ranked_candidates'] if c['market']=='receiving_yards')['blockers']
 
 
+def test_percentage_reference_is_compared_without_ev_or_betting_rank():
+    scan, replay, entry, sim = fixture()
+    prop = dict(game_id='g', market='receiving_yards', team='SEA', player_id='p', side='over',
+                line=89.5, american_odds=None, quote_format='DISPLAYED_PERCENT_REFERENCE',
+                displayed_probability=.55, opposite_displayed_probability=.52,
+                book='Kalshi Sports', observed_utc='2026-10-14T01:59:00Z', source_url='https://source.example')
+    result = build_card(scan, replay, [GAME], [entry], asof=NOW, prop_contracts=[prop], simulator=sim)
+    assert len(result['ranked_candidates']) == 2
+    assert len(result['displayed_market_probability_comparisons']) == 1
+    reference = result['displayed_market_probability_comparisons'][0]
+    assert reference['raw_conditional_win_probability'] == .65
+    assert reference['raw_probability_minus_displayed_reference'] == pytest.approx(.1)
+    assert reference['raw_conditional_ev_proxy'] is None
+    assert reference['american_odds'] is None
+    assert result['games'][0]['prop_price_coverage'] == 'DISPLAYED_REFERENCE_ONLY'
+    assert result['qualified_bet_count'] == 0
+
 def test_missing_model_and_duplicate_game_are_explicit():
     scan, replay, entry, sim = fixture()
     scan['games'] = []
