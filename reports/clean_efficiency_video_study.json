@@ -1,0 +1,171 @@
+{
+  "blocks": {
+    "diagnostic": "previously inspected 2025 weeks5-18",
+    "fit": "2023 weeks5-18",
+    "tune": "2024 weeks5-18"
+  },
+  "clv": null,
+  "coefficients_from_video": false,
+  "diagnostic_games": 208,
+  "diagnostic_is_untouched": false,
+  "errors": [],
+  "exclusions": {
+    "missing_required_value": 19986,
+    "non_neutral_state": 31497,
+    "non_scrimmage_or_clock_play": 25182,
+    "unmatched_game_team": 19373
+  },
+  "market_accuracy_proven": false,
+  "probability_calibration": null,
+  "production_action": "PASS",
+  "results": {
+    "margin": {
+      "baseline_mae": 10.611497134074783,
+      "baseline_rmse": 13.203070719188268,
+      "challenger_mae": 10.622172088426863,
+      "challenger_rmse": 13.270146698719353,
+      "game_bootstrap_mae_delta_interval_975": [
+        -0.2308092951223041,
+        0.25346474697974924
+      ],
+      "mae_delta": 0.010674954352083628,
+      "selected": {
+        "alpha": 100.0,
+        "blend": 1.0,
+        "tuning_mae": 9.926779219972644
+      },
+      "tuning_candidates": [
+        {
+          "alpha": 10.0,
+          "blend": 0.0,
+          "tuning_mae": 9.975612529384508
+        },
+        {
+          "alpha": 10.0,
+          "blend": 0.25,
+          "tuning_mae": 9.946326722929586
+        },
+        {
+          "alpha": 10.0,
+          "blend": 0.5,
+          "tuning_mae": 9.930828233000723
+        },
+        {
+          "alpha": 10.0,
+          "blend": 1.0,
+          "tuning_mae": 9.938858975511
+        },
+        {
+          "alpha": 100.0,
+          "blend": 0.0,
+          "tuning_mae": 9.975612529384508
+        },
+        {
+          "alpha": 100.0,
+          "blend": 0.25,
+          "tuning_mae": 9.952329461390224
+        },
+        {
+          "alpha": 100.0,
+          "blend": 0.5,
+          "tuning_mae": 9.933396315516612
+        },
+        {
+          "alpha": 100.0,
+          "blend": 1.0,
+          "tuning_mae": 9.926779219972644
+        }
+      ],
+      "week_cluster_mae_delta_interval_975": [
+        -0.2306589686163533,
+        0.22835793360572376
+      ]
+    },
+    "total": {
+      "baseline_mae": 10.486214763843858,
+      "baseline_rmse": 13.310291469732652,
+      "challenger_mae": 10.486214763843858,
+      "challenger_rmse": 13.310291469732652,
+      "game_bootstrap_mae_delta_interval_975": [
+        0.0,
+        0.0
+      ],
+      "mae_delta": 0.0,
+      "selected": {
+        "alpha": 10.0,
+        "blend": 0.0,
+        "tuning_mae": 10.127803386794906
+      },
+      "tuning_candidates": [
+        {
+          "alpha": 10.0,
+          "blend": 0.0,
+          "tuning_mae": 10.127803386794906
+        },
+        {
+          "alpha": 10.0,
+          "blend": 0.25,
+          "tuning_mae": 10.1551872929323
+        },
+        {
+          "alpha": 10.0,
+          "blend": 0.5,
+          "tuning_mae": 10.246993538822647
+        },
+        {
+          "alpha": 10.0,
+          "blend": 1.0,
+          "tuning_mae": 10.572885712475465
+        },
+        {
+          "alpha": 100.0,
+          "blend": 0.0,
+          "tuning_mae": 10.127803386794906
+        },
+        {
+          "alpha": 100.0,
+          "blend": 0.25,
+          "tuning_mae": 10.15033018456294
+        },
+        {
+          "alpha": 100.0,
+          "blend": 0.5,
+          "tuning_mae": 10.203514655968295
+        },
+        {
+          "alpha": 100.0,
+          "blend": 1.0,
+          "tuning_mae": 10.403878600403988
+        }
+      ],
+      "week_cluster_mae_delta_interval_975": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "roi": null,
+  "source": {
+    "captured_utc": "2026-10-14T23:23:26.608553+00:00",
+    "normalized_play_sha256": "e2f3509c5e74937e129c8d2bd372921fd8b5c8ccc008273b516e605d6273067e",
+    "normalized_schedule_sha256": "56ab7440f10d2bac2160c8135f464534d5d8ff5f54e35c920f9055279bd5d60e",
+    "replay_snapshot_file": "reports/clean_efficiency_video_study.source.json.gz",
+    "replay_snapshot_sha256": "305cbe77c7bc4573f1446ef445616a48d3d0119b092ea01b191759098992ff0c",
+    "schedule_url": "https://github.com/nflverse/nfldata/blob/master/data/games.csv",
+    "source_publication_vintages_verified": false,
+    "source_urls": [
+      "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2022.parquet",
+      "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2023.parquet",
+      "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.parquet",
+      "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.parquet"
+    ]
+  },
+  "source_vintages_verified": false,
+  "spec": "NFL_CLEAN_EFFICIENCY_RESEARCH_V1",
+  "train_games": 208,
+  "tune_games": 208,
+  "used_for_bet_ranking": false,
+  "validated_edges": 0,
+  "video_evidence": "Publisher description and chapter outline; transcript unavailable",
+  "video_url": "https://www.youtube.com/watch?v=LzcTB0lOF74"
+}

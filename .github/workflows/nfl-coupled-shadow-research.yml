@@ -19,6 +19,10 @@ on:
       - 'harbin_nfl_model.py'
       - 'tests/test_independent_publication.py'
       - 'nfl/game_state_workload.py'
+      - 'nfl/clean_efficiency_research.py'
+      - 'scripts/nfl_clean_efficiency_run.py'
+      - 'research/clean_efficiency_frozen.json'
+      - 'tests/test_clean_efficiency_research.py'
       - 'scripts/nfl_game_state_workload_run.py'
       - 'research/game_state_workload_2024_frozen.json'
       - 'tests/test_game_state_workload.py'
@@ -77,6 +81,9 @@ jobs:
       - name: Monitor frozen quarter-state workload challenger (not used for betting)
         continue-on-error: true
         run: python -m scripts.nfl_game_state_workload_run forecast --out reports/game_state_workload_forward.json
+      - name: Monitor video-inspired clean EPA and success-rate challenger
+        continue-on-error: true
+        run: python -m scripts.nfl_clean_efficiency_run forecast --out reports/clean_efficiency_forward.json
       - name: Search public football pages and capture paired prop prices without keys
         run: python -m scripts.nfl_web_model_intake
       - name: Monitor separate regulation and overtime score challenger (not used for betting)
@@ -138,6 +145,8 @@ jobs:
             outputs/independent_game_predictions.csv
             outputs/independent_player_predictions.csv
             reports/game_state_workload_forward.json
+            reports/clean_efficiency_forward.json
+            reports/clean_efficiency_forward.source.json.gz
             reports/overtime_score_challenger.json
             reports/nfl_web_model_intake.json
             reports/nfl_web_prop_contracts.json
