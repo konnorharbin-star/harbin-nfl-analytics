@@ -92,12 +92,13 @@ def vector(vectors, row):
     return specific if len(specific) >= 80 else vectors[(row["market"], "ALL")]
 
 
-def clustered(records, field, reps=3000):
+def clustered(records, field, reps=3000, by_week=False):
     by_game = defaultdict(list)
     for row in records:
-        by_game[row["game_id"]].append(row[field])
+        key="_".join(row["game_id"].split("_")[:2]) if by_week else row["game_id"]
+        by_game[key].append(row[field])
     groups = list(by_game.values())
-    if len(groups) < 20:
+    if len(groups) < (8 if by_week else 20):
         return None
     rng = random.Random(20261014)
     draws = []
@@ -171,6 +172,7 @@ def run_study(games, stats):
             **{field: sum(r[field] for r in scored)/n for field in (
                 "mae_usage", "mae_baseline", "mae_delta", "brier_usage", "brier_baseline", "brier_delta")},
             "game_cluster_brier_delta_interval_97_5": clustered(scored, "brier_delta"),
+            "week_cluster_brier_delta_interval_97_5": clustered(scored, "brier_delta", by_week=True),
             "game_cluster_mae_delta_interval_97_5": clustered(scored, "mae_delta"),
             "matched_stat_row_conditional_only": True,
             "single_synthetic_primary_line_not_actual_book_line": True,

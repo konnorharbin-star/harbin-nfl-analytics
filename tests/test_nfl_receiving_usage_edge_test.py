@@ -51,3 +51,10 @@ def test_residual_pool_respects_position_sample_requirement():
     assert research.vector(catalogs,row)==[1]*160
     catalogs[("receptions","WR")].append(9)
     assert research.vector(catalogs,row)==[9]*80
+
+
+def test_week_cluster_sensitivity_requires_multiple_independent_weeks():
+    one_week=[{"game_id":f"2025_01_{i}","brier_delta":-.01} for i in range(100)]
+    assert research.clustered(one_week,"brier_delta",reps=100,by_week=True) is None
+    eight_weeks=[{"game_id":f"2025_{w:02d}_A_B","brier_delta":-.01} for w in range(1,9)]
+    assert research.clustered(eight_weeks,"brier_delta",reps=100,by_week=True)==pytest.approx([-.01,-.01])

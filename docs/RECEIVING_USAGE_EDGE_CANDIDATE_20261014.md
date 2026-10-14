@@ -27,6 +27,9 @@ lookback is eight games for both families. Training matched groups: 3,270
 receiving yards and 3,290 receptions. Missing target stat groups:
 1,389 in 2024 and 1,349 in 2025 across the two markets, excluded rather than
 treated as zero/DNP/void. Removing them changes the evaluation population.
+The 15-week-cluster sensitivity interval for receiving-yard Brier change is
+-0.00549147 to -0.00183084; the receptions interval is -0.00156717 to +0.00023665.
+Thus the receiving-yard sign survives both game and week clustering.
 Results apply conditional on a recorded source stat row, not to every player
 or sportsbook participation/settlement rule.
 

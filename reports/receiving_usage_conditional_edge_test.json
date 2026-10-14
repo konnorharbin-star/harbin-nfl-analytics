@@ -31,7 +31,12 @@
       "no_market_edge_certified": true,
       "selected_training_window": 8,
       "single_synthetic_primary_line_not_actual_book_line": true,
-      "training_groups": 3270
+      "training_groups": 3270,
+      "week_cluster_brier_delta_interval_97_5": [
+        -0.005491474543284728,
+        -0.0018308432496770709
+      ],
+      "week_clusters": 15
     },
     "receptions": {
       "brier_baseline": 0.22861669031953855,
@@ -54,7 +59,12 @@
       "no_market_edge_certified": true,
       "selected_training_window": 8,
       "single_synthetic_primary_line_not_actual_book_line": true,
-      "training_groups": 3290
+      "training_groups": 3290,
+      "week_cluster_brier_delta_interval_97_5": [
+        -0.0015671708175797763,
+        0.000236646297931434
+      ],
+      "week_clusters": 15
     }
   },
   "missing_test_stat_groups": 1349,
