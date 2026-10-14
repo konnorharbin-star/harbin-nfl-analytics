@@ -1,0 +1,19 @@
+{
+  "action": "PASS_RESEARCH_ONLY",
+  "blocked": [],
+  "count": 0,
+  "dated_web_context_sha256": "d7b10aa3e2ef1ca291a87f85d3b1fdb669e838004f2cfb1688fc8168b68f4e86",
+  "estimated_ev": null,
+  "evidence_capture_utc": "2026-10-14T01:20:10.652801+00:00",
+  "frozen_replay_sha256": "b4ebfb50611baa30e68cd450dc1c7ea1eacf9106c3532f16a2a73486ce5bca37",
+  "injury_absence_probability": null,
+  "original_capture_utc": "2026-10-14T01:19:48.031488+00:00",
+  "original_forecast_modified": false,
+  "paired_model_sha256": "3f104a3fdddfc4ae1bd0ba9a0f0845925b55d1a84dd7536e5ebae08764a55046",
+  "scenarios": [],
+  "score_coefficients_changed": false,
+  "spec": "NFL_WEB_CONDITIONED_PLAYER_RESEARCH_V1",
+  "status": "WEB_CONDITIONAL_RESEARCH_ONLY",
+  "unvalidated_weather_effect_applied": false,
+  "wager_authorized": false
+}
