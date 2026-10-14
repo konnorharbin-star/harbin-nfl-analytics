@@ -155,7 +155,19 @@ def collect(
         report["source_errors"].append({"source_url": BOARD, "error": type(error).__name__})
     for game in report["games"]:
         count = sum(p["game_id"] == game["game_id"] for p in report["prop_contracts"])
-        game.update(paired_prop_sides=count, prop_price_coverage="PARTIAL" if count else "MISSING")
+        american = sum(
+            p["game_id"] == game["game_id"]
+            and p.get("quote_format") != "DISPLAYED_PERCENT_REFERENCE"
+            for p in report["prop_contracts"]
+        )
+        game.update(
+            paired_prop_sides=count,
+            american_price_sides=american,
+            displayed_reference_sides=count - american,
+            prop_price_coverage="PARTIAL"
+            if american
+            else ("DISPLAYED_REFERENCE_ONLY" if count else "MISSING"),
+        )
     report["collection_started_utc"] = report["capture_utc"]
     report["capture_utc"] = now().isoformat()
     return report

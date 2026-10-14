@@ -49,6 +49,21 @@ def test_exact_game_player_same_book_both_sides_are_required():
     )
 
 
+def test_percentage_reference_retains_literal_quote_without_inventing_odds():
+    html = HTML.replace("-114", "55%").replace("FanDuel", "Kalshi Sports")
+    contracts, excluded = parse(html)
+    assert excluded == 0 and len(contracts) == 2
+    assert all(
+        c["american_odds"] is None and c["opposite_american_odds"] is None for c in contracts
+    )
+    assert all(c["displayed_probability"] == 0.55 and not c["fees_known"] for c in contracts)
+
+
+def test_mixed_quote_formats_are_not_complementary_prices():
+    html = HTML.replace("u91.5 <span>-114</span>", "u91.5 <span>55%</span>")
+    assert parse(html)[0] == []
+
+
 @pytest.mark.parametrize("replacement", ["", "u90.5 -114", "u91.5 +50"])
 def test_missing_mismatched_invalid_other_side_cannot_create_pair(replacement):
     html = HTML.replace("u91.5 <span>-114</span>", replacement)

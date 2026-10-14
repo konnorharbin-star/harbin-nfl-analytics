@@ -71,3 +71,10 @@ diagnostic. Actual-line Brier/log loss/ECE and nominal-return proxies do not
 establish executable profitability or a verified forward record. Broad historical
 two-sided web price evidence remains incomplete; no false default -110 price or
 synthetic threshold is substituted. Proven-edge count remains zero.
+
+Some public pages display prediction-market percentages. These are retained as
+literal displayed references, with American odds left null. The card compares
+our raw conditional probabilities at that same threshold in a separate section;
+EV remains unknown. Displayed references do not enter EV rankings, bet selections
+or game-market primary receipts. Fees, bid/ask meaning and settlement are unknown;
+no sportsbook odds, payout or profitable edge is inferred from a percentage.
