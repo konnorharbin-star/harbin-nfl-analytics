@@ -165,6 +165,7 @@ def main():
     else:
         result=collect([],lambda *args: ([],now,{}),observed=now)
         result["rejections"].append({"reason":"NO_ELIGIBLE_FUTURE_GAME"})
+    result["target_game_rows"] = selected
     args.report.parent.mkdir(parents=True,exist_ok=True)
     args.report.write_text(json.dumps(result,indent=2,sort_keys=True,default=str)+"\n")
     print(json.dumps({
