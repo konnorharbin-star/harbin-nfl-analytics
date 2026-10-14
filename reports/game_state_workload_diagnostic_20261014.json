@@ -1,0 +1,92 @@
+{
+  "captured_utc": "2026-10-14T13:11:28.975615+00:00",
+  "core_coupled_predictions_changed": false,
+  "diagnostic_block": "2025 weeks5-18 previously inspected season",
+  "diagnostic_distinct_games": 208,
+  "diagnostic_team_games": 414,
+  "estimated_ev": null,
+  "example_errors": [
+    {
+      "game_id": "2024_05_NYG_SEA",
+      "reason": "INSUFFICIENT_PRIOR_TEAM_GAMES",
+      "team": "SEA"
+    },
+    {
+      "game_id": "2025_05_DEN_PHI",
+      "reason": "INSUFFICIENT_PRIOR_TEAM_GAMES",
+      "team": "DEN"
+    },
+    {
+      "game_id": "2025_05_DET_CIN",
+      "reason": "INSUFFICIENT_PRIOR_TEAM_GAMES",
+      "team": "CIN"
+    }
+  ],
+  "game_cluster_brier_delta_interval_95": [
+    -0.00030511740958817055,
+    0.00018200260148688958
+  ],
+  "interpretation": "Regulation dropbacks include sacks and scrambles; not an official passing-attempt prop distribution. Quarter state predictions use own pregame fair margin, not realized target score or market spread.",
+  "market_profitability_verified": false,
+  "metrics": {
+    "baseline_brier": 0.24095779312298318,
+    "baseline_dropback_mae": 6.663969404186795,
+    "baseline_log_loss": 0.6750506057489377,
+    "brier_delta": -6.643849516538365e-05,
+    "challenger_brier": 0.2408913546278178,
+    "challenger_dropback_mae": 6.693654024454568,
+    "challenger_log_loss": 0.674906794114608
+  },
+  "normalized_play_source_sha256": "3651298574f9db0ce1e33fb4ccc083fee39b1001f31af6f32d7457e8dce5be7b",
+  "production_action": "PASS",
+  "retrospective_source_publication_vintages_verified": false,
+  "schedule_source_sha256": "d1b7f54f9d9b0abd7ef8beaf6b36c62e10c5279868a95afb52a15b5cf20b9d7a",
+  "selected": {
+    "blend": 1.0,
+    "strength": 32.0,
+    "tuning_brier": 0.23731422663826143
+  },
+  "source_exclusions": {
+    "kneel_spike_or_nonregulation": 1487,
+    "unmatched_game_team": 9709
+  },
+  "spec": "NFL_QUARTER_STATE_WORKLOAD_RESEARCH_V1",
+  "sportsbook_prices_used": false,
+  "status": "CONDITIONAL_WORKLOAD_RESEARCH_NOT_MARKET_EDGE",
+  "train_block": "2024 weeks5-12",
+  "training_team_games": 229,
+  "tuning_block": "2024 weeks13-18",
+  "tuning_candidates": [
+    {
+      "blend": 0.0,
+      "strength": 32.0,
+      "tuning_brier": 0.23756672762449477
+    },
+    {
+      "blend": 0.5,
+      "strength": 32.0,
+      "tuning_brier": 0.23740777225361595
+    },
+    {
+      "blend": 1.0,
+      "strength": 32.0,
+      "tuning_brier": 0.23731422663826143
+    },
+    {
+      "blend": 0.0,
+      "strength": 128.0,
+      "tuning_brier": 0.23756672762449477
+    },
+    {
+      "blend": 0.5,
+      "strength": 128.0,
+      "tuning_brier": 0.23751132411375475
+    },
+    {
+      "blend": 1.0,
+      "strength": 128.0,
+      "tuning_brier": 0.2374686788548133
+    }
+  ],
+  "tuning_team_games": 186
+}
