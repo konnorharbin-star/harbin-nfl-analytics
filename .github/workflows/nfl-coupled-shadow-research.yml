@@ -1,6 +1,12 @@
 name: NFL MODEL — Our Scores, Spreads, Totals and Player Props
 on:
   workflow_dispatch:
+    inputs:
+      include_experimental_diagnostics:
+        description: 'Include unvalidated experimental comparisons (slower)'
+        type: boolean
+        required: false
+        default: false
   push:
     branches: [main]
     paths:
@@ -9,8 +15,6 @@ on:
       - 'nfl/web_context_research.py'
       - 'nfl/nflverse_injury_evidence.py'
       - 'scripts/nfl_web_context_research_run.py'
-      - 'scripts/nfl_web_conditional_research_run.py'
-      - 'nfl/web_conditioned_model.py'
       - 'scripts/nfl_coupled_drive_player_research_run.py'
       - 'scripts/nfl_full_slate_card.py'
       - 'nfl/independent_publication.py'
@@ -18,21 +22,9 @@ on:
       - 'run_nfl_predictions.py'
       - 'harbin_nfl_model.py'
       - 'tests/test_independent_publication.py'
-      - 'nfl/game_state_workload.py'
-      - 'nfl/clean_efficiency_research.py'
-      - 'scripts/nfl_clean_efficiency_run.py'
-      - 'research/clean_efficiency_frozen.json'
-      - 'tests/test_clean_efficiency_research.py'
-      - 'scripts/nfl_game_state_workload_run.py'
-      - 'research/game_state_workload_2024_frozen.json'
-      - 'tests/test_game_state_workload.py'
-      - 'nfl/overtime_research.py'
       - 'nfl/web_model_intake.py'
       - 'scripts/nfl_web_model_intake.py'
       - 'tests/test_web_model_intake.py'
-      - 'nfl/overtime_source.py'
-      - 'scripts/nfl_overtime_research_run.py'
-      - 'tests/test_overtime_research.py'
       - 'nfl/full_slate_validation.py'
       - 'scripts/nfl_full_slate_validation_run.py'
       - 'tests/test_full_slate_validation.py'
@@ -53,6 +45,8 @@ jobs:
   research:
     runs-on: ubuntu-latest
     timeout-minutes: 35
+    env:
+      EXPERIMENTAL_DIAGNOSTICS: ${{ github.event_name == 'workflow_dispatch' && inputs.include_experimental_diagnostics }}
     steps:
       - name: Enforce separately reviewed 2026 model lineage
         run: test "$(date -u +%Y)" = "2026"
@@ -64,6 +58,26 @@ jobs:
           python-version: '3.12'
       - name: Install free package dependencies
         run: python -m pip install -e '.[dev]'
+      - name: Record active default model and optional research scope
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          enabled = os.environ['EXPERIMENTAL_DIAGNOSTICS'] == 'true'
+          report = {
+              'experimental_diagnostics_enabled': enabled,
+              'experimental_steps': ['quarter_state_workload', 'clean_efficiency', 'overtime_score', 'conditional_injury_scenarios'],
+              'experimental_steps_used_for_bet_ranking': False,
+              'core_forecasts_changed_by_this_cleanup': False,
+              'accuracy_improvement_claimed': False,
+              'default_pipeline': ['independent_scores_and_player_stats', 'public_web_evidence', 'public_game_and_prop_prices', 'exact_contract_comparison', 'immutable_capture_and_mature_grading'],
+          }
+          Path('reports').mkdir(exist_ok=True)
+          Path('reports/nfl_run_scope.json').write_text(json.dumps(report, indent=2) + '\n')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('Experimental comparisons: ' + ('explicitly enabled' if enabled else 'OFF by default') + '\n\n')
+              summary.write('Own forecasts, public evidence/prices, contract comparison and forward grading remain active. This cleanup does not claim improved accuracy.\n\n')
+          PY
       - name: Check chronological journal and source integrity
         run: python -m pytest -q tests/test_coupled_research_journal.py tests/test_coupled_forward_grading.py
       - name: Grade durable first-seen forecasts with mature free outcomes
@@ -79,14 +93,17 @@ jobs:
           python -m scripts.nfl_independent_predictions --resolve-names
           cat outputs/independent_forecasts.md >> "$GITHUB_STEP_SUMMARY"
       - name: Monitor frozen quarter-state workload challenger (not used for betting)
+        if: env.EXPERIMENTAL_DIAGNOSTICS == 'true'
         continue-on-error: true
         run: python -m scripts.nfl_game_state_workload_run forecast --out reports/game_state_workload_forward.json
       - name: Monitor video-inspired clean EPA and success-rate challenger
+        if: env.EXPERIMENTAL_DIAGNOSTICS == 'true'
         continue-on-error: true
         run: python -m scripts.nfl_clean_efficiency_run forecast --out reports/clean_efficiency_forward.json
       - name: Search public football pages and capture paired prop prices without keys
         run: python -m scripts.nfl_web_model_intake
       - name: Monitor separate regulation and overtime score challenger (not used for betting)
+        if: env.EXPERIMENTAL_DIAGNOSTICS == 'true'
         continue-on-error: true
         run: python -m scripts.nfl_overtime_research_run --out reports/overtime_score_challenger.json
       - name: Capture exact public prices across the upcoming slate
@@ -101,6 +118,7 @@ jobs:
         run: |
           python -m scripts.nfl_web_context_research_run --forecast-scan reports/coupled_drive_player_shadow.json --out reports/nfl_web_context_research.json
       - name: Generate date-stamped conditional injury scenarios (not verified absences)
+        if: env.EXPERIMENTAL_DIAGNOSTICS == 'true'
         run: |
           python -m scripts.nfl_web_conditional_research_run --forecast-scan reports/coupled_drive_player_shadow.json --replay-inputs reports/coupled_replay_inputs.json --web-report reports/nfl_web_context_research.json --out reports/nfl_web_conditional_scenarios.json
       - name: Freeze originals in a durable separate first-seen cohort
@@ -110,7 +128,11 @@ jobs:
           SOURCE_CODE_SHA: ${{ github.sha }}
         run: |
           test -f reports/coupled_drive_player_shadow.json
-          python -m scripts.nfl_coupled_journal_run freeze --run-id "$SOURCE_RUN_ID" --code-sha "$(git rev-parse HEAD)" --sidecar reports/nfl_web_context_research.json --sidecar reports/nfl_web_conditional_scenarios.json --sidecar reports/nfl_web_model_intake.json --sidecar reports/nfl_web_prop_contracts.json
+          sidecar_args=(--sidecar reports/nfl_run_scope.json --sidecar reports/nfl_web_context_research.json --sidecar reports/nfl_web_model_intake.json --sidecar reports/nfl_web_prop_contracts.json)
+          if [ "$EXPERIMENTAL_DIAGNOSTICS" = 'true' ]; then
+            sidecar_args+=(--sidecar reports/nfl_web_conditional_scenarios.json)
+          fi
+          python -m scripts.nfl_coupled_journal_run freeze --run-id "$SOURCE_RUN_ID" --code-sha "$(git rev-parse HEAD)" "${sidecar_args[@]}"
       - name: Commit append-only originals and grade revisions
         if: always()
         env:
@@ -138,6 +160,7 @@ jobs:
         with:
           name: nfl-free-coupled-score-props-RESEARCH-UNVALIDATED
           path: |
+            reports/nfl_run_scope.json
             outputs/independent_forecasts.json
             outputs/independent_forecasts.md
             outputs/independent_forecasts.html
