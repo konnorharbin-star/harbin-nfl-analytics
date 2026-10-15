@@ -101,7 +101,9 @@ jobs:
         continue-on-error: true
         run: python -m scripts.nfl_clean_efficiency_run forecast --out reports/clean_efficiency_forward.json
       - name: Search public football pages and capture paired prop prices without keys
-        run: python -m scripts.nfl_web_model_intake
+        run: |
+          python -m scripts.nfl_web_model_intake
+          cat reports/nfl_web_model_intake.md >> "$GITHUB_STEP_SUMMARY"
       - name: Monitor separate regulation and overtime score challenger (not used for betting)
         if: env.EXPERIMENTAL_DIAGNOSTICS == 'true'
         continue-on-error: true
@@ -172,6 +174,7 @@ jobs:
             reports/clean_efficiency_forward.source.json.gz
             reports/overtime_score_challenger.json
             reports/nfl_web_model_intake.json
+            reports/nfl_web_model_intake.md
             reports/nfl_web_prop_contracts.json
             reports/web_source_snapshots
             reports/full_slate_selected_grade.json

@@ -26,9 +26,25 @@ SOURCE_DOMAINS = (
     "foxsports.com",
     "nbcsports.com",
 )
-TOPICS = {
+SITUATIONAL_TOPICS = {
     "football": "roster depth chart injuries inactive quarterback team statistics",
-    "conditions": "stadium weather wind travel rest",
+    "quarterback": "starting quarterback availability backup injury practice status",
+    "conditions": "game time stadium weather forecast wind gusts precipitation temperature",
+    "venue": "stadium roof dome playing surface altitude home field venue change",
+    "rest": "rest days short week bye week Thursday Monday schedule fatigue",
+    "travel": "travel distance time zones international game road trip arrival",
+    "kickoff_body_clock": "kickoff local time early start time zone body clock",
+    "schedule_spot": "consecutive road games look ahead next opponent schedule sandwich spot",
+    "matchup": "offensive defensive line injuries pressure protection coverage run pass matchup",
+    "coaching": "head coach coordinator scheme changes play calling pace personnel tendencies",
+    "player_workload": "player snaps routes targets carries red zone usage workload role changes",
+    "recent_form": "recent form opponent strength efficiency turnovers fumble recovery variance",
+    "motivation": "division rivalry playoff standings motivation coach player comments",
+    "officiating": "assigned referee officiating crew penalties tendencies",
+    "market_sentiment": "opening current line movement public betting tickets money percentages",
+}
+TOPICS = {
+    **SITUATIONAL_TOPICS,
     "markets": "spread total player props odds receiving yards",
     "history": "historical player prop lines odds results",
 }
