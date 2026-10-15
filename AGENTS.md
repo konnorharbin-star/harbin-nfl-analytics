@@ -60,3 +60,8 @@
 - Remove or disable components when evidence does not justify their use; adding features is not itself progress toward an edge.
 - Main NFL MODEL runs default to experimental diagnostics OFF. Explicit manual research runs may enable the retained comparisons. Keep independent forecasts, public evidence/price capture and forward grading active.
 - Do not claim accuracy improved when only zero-weight sidecars or workflow overhead were removed. Core feature removal requires chronological ablation evidence and preservation of predictive cohort lineage.
+
+## Current workload forecast lineage — 2026-10-14
+- The default published/compared forecast is workload-v2: eight-observation, 50% own-history reception/carry routing shrinkage selected on 2024 tuning data. It preserves the original joint team production, scores and passing engine; active lineups remain unverified.
+- Keep v1 originals unchanged. New v2 originals and selected contracts use separate `player_workload_v2_2026` and `full_slate_workload_v2_2026` history roots; never pool the same games across model families as independent evidence.
+- Historical workload error reductions are exploratory diagnostics on an inspected 2025 season, not market superiority or betting qualification. See `docs/PLAYER_WORKLOAD_IMPROVEMENT_V2.md`; all prior betting and source gates remain active.

@@ -93,12 +93,13 @@ def test_command_always_generates_game_and_player_bundle(monkeypatch,tmp_path):
     calls=[]
     monkeypatch.setattr('run_nfl_predictions.subprocess.run',lambda command,**kwargs:calls.append((command,kwargs)))
     generate(2026,6,tmp_path)
-    assert len(calls)==3
+    assert len(calls)==4
     assert 'scripts.nfl_coupled_drive_player_research_run' in calls[0][0]
     assert '--week' in calls[0][0]
-    assert 'scripts.nfl_independent_predictions' in calls[1][0]
-    assert '--resolve-names' in calls[1][0]
-    assert 'scripts.nfl_web_model_intake' in calls[2][0]
+    assert 'scripts.nfl_player_workload_upgrade' in calls[1][0]
+    assert 'scripts.nfl_independent_predictions' in calls[2][0]
+    assert '--resolve-names' in calls[2][0]
+    assert 'scripts.nfl_web_model_intake' in calls[3][0]
     assert all(c[1]['check'] for c in calls)
 
 
