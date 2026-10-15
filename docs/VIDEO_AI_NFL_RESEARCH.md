@@ -55,6 +55,10 @@ actual ROI and CLV remain unavailable. It did not establish market superiority.
 
 ## Every main GitHub model run
 
+Update: experimental monitoring is now disabled by default. Enable the manual
+`include_experimental_diagnostics` option to run it; see
+[default model simplification](DEFAULT_MODEL_SIMPLIFICATION.md).
+
 The NFL MODEL workflow now emits `reports/clean_efficiency_forward.json` with
 prior-game IDs, sample counts, baseline/challenger margin and total, exclusion
 counts, capture time and frozen-model hash. A compressed football-only source
