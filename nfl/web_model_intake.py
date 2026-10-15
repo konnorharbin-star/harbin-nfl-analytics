@@ -282,10 +282,12 @@ def search_game(game, topic, *, fetch=fetch_page):
     )
     query = " ".join(
         (
-            TEAM_NAMES[game["away_team"]],
-            TEAM_NAMES[game["home_team"]],
+            "NFL",
+            '"' + TEAM_NAMES[game["away_team"]] + '"',
+            '"' + TEAM_NAMES[game["home_team"]] + '"',
             game_date,
             TOPICS[topic],
+            "(" + " OR ".join("site:" + domain for domain in SOURCE_DOMAINS) + ")",
         )
     )
     url = "https://www.bing.com/search?" + urlencode({"format": "rss", "q": query})

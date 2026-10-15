@@ -107,6 +107,8 @@ def test_search_keeps_trusted_leads_without_declaring_verified_facts():
     assert len(result["leads"]) == 1
     assert result["search_results_are_verified_facts"] is False
     assert "2026-10-15" in result["query"]
+    assert '"Seattle Seahawks"' in result["query"]
+    assert "site:espn.com" in result["query"]
 
 
 def test_all_source_failures_leave_game_coverage_and_empty_contracts():
