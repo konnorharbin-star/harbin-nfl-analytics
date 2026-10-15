@@ -1,0 +1,276 @@
+{
+  "games": 208,
+  "unchanged_scores_and_passing": true,
+  "results": {
+    "receptions": {
+      "n": 4092,
+      "baseline_mae": 1.182787145650049,
+      "new_mae": 1.1323625366568915,
+      "delta_ci_99167_six_family": [
+        -0.06295685718296218,
+        -0.036837118931707546
+      ]
+    },
+    "receiving_yards": {
+      "n": 4092,
+      "baseline_mae": 15.236125244379275,
+      "new_mae": 15.007575635386118,
+      "delta_ci_99167_six_family": [
+        -0.37756840257493435,
+        -0.0779622696218526
+      ]
+    },
+    "carries": {
+      "n": 4092,
+      "baseline_mae": 1.2435200391006844,
+      "new_mae": 1.2240854105571846,
+      "delta_ci_99167_six_family": [
+        -0.03812132130883679,
+        -0.003239190919676011
+      ]
+    },
+    "rushing_yards": {
+      "n": 4092,
+      "baseline_mae": 7.379701857282503,
+      "new_mae": 7.238357649071358,
+      "delta_ci_99167_six_family": [
+        -0.22308965452079724,
+        -0.06266915794815496
+      ]
+    },
+    "receiving_touchdowns": {
+      "n": 4092,
+      "baseline_mae": 0.2198874633431085,
+      "new_mae": 0.220189027370479,
+      "delta_ci_99167_six_family": [
+        -0.0006370731042228189,
+        0.0012191192735883385
+      ]
+    },
+    "rushing_touchdowns": {
+      "n": 4092,
+      "baseline_mae": 0.13054899804496578,
+      "new_mae": 0.13088306451612902,
+      "delta_ci_99167_six_family": [
+        -0.0002170383250797851,
+        0.0009479337905936473
+      ]
+    }
+  },
+  "prior_position_groups": {
+    "WR_TE_receiving_yards": {
+      "n": 2528,
+      "before_mae": 19.81642108386076,
+      "after_mae": 19.371590189873416
+    },
+    "WR_TE_receptions": {
+      "n": 2528,
+      "before_mae": 1.4478601661392405,
+      "after_mae": 1.3721048259493671
+    },
+    "RB_FB_rushing_yards": {
+      "n": 1112,
+      "before_mae": 19.97399010791367,
+      "after_mae": 19.557079586330936
+    }
+  },
+  "spec": "NFL_PLAYER_WORKLOAD_SHRINKAGE_V2",
+  "tuning": "2024 weeks13-18, own rolling histories, fixed windows3/5/8 and blends0/.5/1; zero eligible",
+  "evaluation": "Previously inspected 2025 weeks5-18; retrospective exploratory diagnostic, not pristine holdout",
+  "tuning_details": {
+    "receiving": {
+      "selected": {
+        "window": 8,
+        "blend": 0.5,
+        "tuning_loss": 0.9642057424755118
+      },
+      "choices": [
+        {
+          "window": 3,
+          "blend": 0.0,
+          "tuning_loss": 0.9857882381889763
+        },
+        {
+          "window": 3,
+          "blend": 0.5,
+          "tuning_loss": 0.9794253845444586
+        },
+        {
+          "window": 3,
+          "blend": 1.0,
+          "tuning_loss": 1.0011499964195496
+        },
+        {
+          "window": 5,
+          "blend": 0.0,
+          "tuning_loss": 0.9857882381889763
+        },
+        {
+          "window": 5,
+          "blend": 0.5,
+          "tuning_loss": 0.968115944227837
+        },
+        {
+          "window": 5,
+          "blend": 1.0,
+          "tuning_loss": 0.9786866842868778
+        },
+        {
+          "window": 8,
+          "blend": 0.0,
+          "tuning_loss": 0.9857882381889763
+        },
+        {
+          "window": 8,
+          "blend": 0.5,
+          "tuning_loss": 0.9642057424755118
+        },
+        {
+          "window": 8,
+          "blend": 1.0,
+          "tuning_loss": 0.977598848787598
+        }
+      ],
+      "diagnostic": {
+        "receptions": {
+          "n": 4092,
+          "baseline_mae": 1.182787145650049,
+          "candidate_mae": 1.1320019052940695,
+          "delta_ci_9875": [
+            -0.0627783905278073,
+            -0.03849066221822804
+          ]
+        },
+        "receiving_yards": {
+          "n": 4092,
+          "baseline_mae": 15.236125244379275,
+          "candidate_mae": 15.010740620122354,
+          "delta_ci_9875": [
+            -0.3675226779520929,
+            -0.08032524667010645
+          ]
+        }
+      }
+    },
+    "rushing": {
+      "selected": {
+        "window": 8,
+        "blend": 0.5,
+        "tuning_loss": 1.0351451145333275
+      },
+      "choices": [
+        {
+          "window": 3,
+          "blend": 0.0,
+          "tuning_loss": 1.050804836895388
+        },
+        {
+          "window": 3,
+          "blend": 0.5,
+          "tuning_loss": 1.0466852614533482
+        },
+        {
+          "window": 3,
+          "blend": 1.0,
+          "tuning_loss": 1.0495584369181854
+        },
+        {
+          "window": 5,
+          "blend": 0.0,
+          "tuning_loss": 1.050804836895388
+        },
+        {
+          "window": 5,
+          "blend": 0.5,
+          "tuning_loss": 1.037943409638327
+        },
+        {
+          "window": 5,
+          "blend": 1.0,
+          "tuning_loss": 1.0419639123625721
+        },
+        {
+          "window": 8,
+          "blend": 0.0,
+          "tuning_loss": 1.050804836895388
+        },
+        {
+          "window": 8,
+          "blend": 0.5,
+          "tuning_loss": 1.0351451145333275
+        },
+        {
+          "window": 8,
+          "blend": 1.0,
+          "tuning_loss": 1.0475670083564836
+        }
+      ],
+      "diagnostic": {
+        "carries": {
+          "n": 4092,
+          "baseline_mae": 1.2435200391006844,
+          "candidate_mae": 1.2243991206528066,
+          "delta_ci_9875": [
+            -0.03703117457382558,
+            -0.002868006581870715
+          ]
+        },
+        "rushing_yards": {
+          "n": 4092,
+          "baseline_mae": 7.379701857282503,
+          "candidate_mae": 7.23892124811575,
+          "delta_ci_9875": [
+            -0.22038606695988816,
+            -0.06853947415406882
+          ]
+        }
+      }
+    }
+  },
+  "quarterback_candidate": {
+    "2024": {
+      "predicted": {
+        "n": 446,
+        "mae": 71.52539237668162,
+        "rmse": 93.75150482814983,
+        "bias": -20.65070179372197
+      },
+      "candidate_1": {
+        "n": 446,
+        "mae": 68.12738720358075,
+        "rmse": 90.61863867784894,
+        "bias": -8.674600438370994
+      },
+      "candidate_2": {
+        "n": 446,
+        "mae": 70.1825851619913,
+        "rmse": 92.54259216543052,
+        "bias": -14.492110713466719
+      }
+    },
+    "2025": {
+      "predicted": {
+        "n": 439,
+        "mae": 68.36697266514807,
+        "rmse": 90.85661975734112,
+        "bias": -15.839
+      },
+      "candidate_1": {
+        "n": 439,
+        "mae": 65.66789491226199,
+        "rmse": 88.15913431910815,
+        "bias": -2.133639918868359
+      },
+      "candidate_2": {
+        "n": 439,
+        "mae": 67.90988988302274,
+        "rmse": 89.37465317702106,
+        "bias": -9.026397729598179
+      }
+    }
+  },
+  "stat_rows_matched_only": true,
+  "unmatched_outcomes_not_assumed_zero": true,
+  "market_edge_proven": false,
+  "betting_authorized": false
+}

@@ -1,0 +1,12 @@
+{
+  "spec": "NFL_PLAYER_WORKLOAD_SHRINKAGE_V2",
+  "settings": {
+    "receiving": {"window": 8, "blend": 0.5},
+    "rushing": {"window": 8, "blend": 0.5}
+  },
+  "tuning": "2024 REG weeks 13-18; prior-only rolling player history; zero blend eligible",
+  "diagnostic": "2025 REG weeks 5-18 previously inspected, not pristine holdout",
+  "lineups_verified": false,
+  "market_superiority_proven": false,
+  "betting_authorized": false
+}

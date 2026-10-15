@@ -127,6 +127,7 @@ def build_bundle(scan, replay, *, at, names=None):
     return dict(spec='NFL_INDEPENDENT_FORECAST_PUBLICATION_V1',
         generated_utc=at.astimezone(UTC).isoformat(), model_capture_utc=scan['capture_utc'],
         season=scan['season'], week=scan['week'], games=games, player_props=players,
+        predictive_family=scan.get('predictive_family', 'NFL_JOINT_DRIVE_PLAYER_RESEARCH_V1'),
         games_requested=len(games), games_forecast=sum(g['predicted_score'] is not None for g in games),
         named_player_rows=sum(not p['is_unallocated_bucket'] for p in players),
         prop_metric_forecasts=sum(len(p['projections']) for p in players if not p['is_unallocated_bucket']),

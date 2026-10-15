@@ -16,9 +16,15 @@ def generate(season, week=None, out_dir='outputs', quiet=False):
         cmd += ['--week',str(week)]
     stdout = subprocess.DEVNULL if quiet else None
     subprocess.run(cmd,cwd=root,check=True,stdout=stdout)
-    subprocess.run([sys.executable,'-m','scripts.nfl_independent_predictions',
+    subprocess.run([sys.executable,'-m','scripts.nfl_player_workload_upgrade',
                    '--scan',str(out/'independent_source_scan.json'),
                    '--replay',str(out/'independent_source_replay.json'),
+                   '--out',str(out/'independent_workload_v2_scan.json'),
+                   '--out-replay',str(out/'independent_workload_v2_replay.json')],
+                   cwd=root,check=True,stdout=stdout)
+    subprocess.run([sys.executable,'-m','scripts.nfl_independent_predictions',
+                   '--scan',str(out/'independent_workload_v2_scan.json'),
+                   '--replay',str(out/'independent_workload_v2_replay.json'),
                    '--out',str(out/'independent_forecasts.json'),'--resolve-names'],cwd=root,check=True,stdout=stdout)
     web_out = root/'reports' if out == root/'outputs' else out/'web_research'
     subprocess.run([sys.executable,'-m','scripts.nfl_web_model_intake',
