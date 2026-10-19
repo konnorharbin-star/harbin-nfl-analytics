@@ -12,7 +12,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from threading import Lock
 
-from nfl.public_article_dates import publisher_issue_time, bind_publication_to_game
+from nfl.public_article_dates import bind_publication_to_game, publisher_issue_time
+from nfl.public_game_inputs import input_contract, scoreboard_url, verify_game_snapshot
 from nfl.web_model_intake import (
     BOARD,
     SITUATIONAL_TOPICS,
@@ -251,8 +252,64 @@ def collect(
             if american
             else ("DISPLAYED_REFERENCE_ONLY" if count else "MISSING"),
         )
+    # One bounded, no-key structured request per game date; search prose is
+    # never promoted to a fact just because it came from an approved publisher.
+    event_snapshots = {}
+    for source_game, view in zip(games, report["games"], strict=True):
+        url = None
+        try:
+            url = scoreboard_url(source_game)
+            if url not in event_snapshots:
+                try:
+                    raw = get(url)
+                    event_snapshots[url] = (
+                        json.loads(raw),
+                        hashlib.sha256(raw).hexdigest(),
+                        now(),
+                    )
+                except Exception as error:
+                    event_snapshots[url] = error
+            snapshot = event_snapshots[url]
+            if isinstance(snapshot, Exception):
+                raise snapshot
+            payload, digest, captured = snapshot
+            observation = verify_game_snapshot(
+                payload,
+                source_game,
+                source_url=url,
+                snapshot_sha256=digest,
+                captured=captured,
+                asof=now(),
+            )
+        except Exception as error:
+            report["source_errors"].append(
+                {
+                    "game_id": source_game["game_id"],
+                    "source_url": url,
+                    "topic": "structured_game_inputs",
+                    "error": type(error).__name__,
+                }
+            )
+            observation = {
+                "status": "REJECTED",
+                "reasons": ["STRUCTURED_GAME_SOURCE_UNAVAILABLE"],
+                "source_url": url,
+                "captured_utc": None,
+                "facts": {},
+            }
+        view["structured_game_observation"] = observation
     report["collection_started_utc"] = report["capture_utc"]
     report["capture_utc"] = now().isoformat()
+    for source_game, view in zip(games, report["games"], strict=True):
+        view["input_data_contract"] = input_contract(
+            view["structured_game_observation"],
+            asof=report["capture_utc"],
+            game=source_game,
+        )
+    report["game_bindings_verified"] = sum(
+        view["input_data_contract"]["event_binding_passed"] for view in report["games"]
+    )
+    report["context_adjusted_predictions_ready"] = 0
     report["situational_factor_status_counts"] = dict(
         Counter(
             factor["status"]
@@ -284,6 +341,24 @@ def coverage_markdown(report):
             f["status"] in ("SEARCH_UNAVAILABLE", "NO_TRUSTED_RESULTS") for f in factors
         )
         lines.append(f"| {game['game_id']} | {len(factors)} | {pages} | {unavailable} | 0 |")
+    lines += [
+        "",
+        "## Structured input checks",
+        "",
+        "Provider game observations require exact home/away teams, kickoff, scheduled status, "
+        "a raw snapshot hash and a pregame capture no older than six hours. Capture time is "
+        "not a publication timestamp. These checks do not verify player roles or weather.",
+        "",
+        "| Game | Event binding | Accepted fields | Blockers / missing inputs |",
+        "| --- | --- | --- | --- |",
+    ]
+    for game in report["games"]:
+        contract = game["input_data_contract"]
+        missing = contract["blocking_reasons"] + contract["missing_required_inputs"]
+        lines.append(
+            f"| {game['game_id']} | {contract['status']} | "
+            f"{', '.join(contract['verified_fields']) or 'None'} | {', '.join(missing)} |"
+        )
     return "\n".join(lines) + "\n"
 
 
@@ -327,6 +402,8 @@ def main():
                 "source_errors": len(report["source_errors"]),
                 "api_keys_required": False,
                 "situational_searches_attempted": report["situational_searches_attempted"],
+                "game_bindings_verified": report["game_bindings_verified"],
+                "context_adjusted_predictions_ready": report["context_adjusted_predictions_ready"],
                 "validated_edges": 0,
             }
         )

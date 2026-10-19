@@ -148,7 +148,7 @@ def test_collect_imports_page_price_and_records_raw_snapshots():
     )
     assert len(result["prop_contracts"]) == 2
     assert result["games"][0]["prop_price_coverage"] == "PARTIAL"
-    assert len(captures) == len(TOPICS) + 4
+    assert len(captures) == len(TOPICS) + 5
     assert all(
         f["status"] == "NO_TRUSTED_RESULTS"
         for f in result["games"][0]["situational_factors"].values()
