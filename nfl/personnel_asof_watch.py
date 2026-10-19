@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 from hashlib import sha256
+from math import isfinite
 import json
 from pathlib import Path
 
@@ -111,16 +112,15 @@ def watch(bundle, research, *, captured, bundle_sha, research_sha, run_id):
                     "nflverse_report_evidence": row.get("nflverse_report_evidence"),
                     "nflverse_reported_status": injury,
                     "nflverse_report_modified_utc": modified,
-                    "es pn_reported_status": row.get("espn_reported_status"),
+                    "espn_reported_status": row.get("espn_reported_status"),
                     "official_starting_qb_verified": False,
                     "official_game_day_active_verified": False,
                     "point_adjustment": None,
                 }
-                # Drop the ESPN typo-safe key below to preserve documented schema.
-                item["espn_reported_status"] = item.pop("es pn_reported_status")
                 personnel.append(item)
                 if historical is not None:
-                    if isinstance(historical, bool) or not isinstance(historical, (int, float)):
+                    if (isinstance(historical, bool) or not isinstance(historical, (int, float))
+                            or not isfinite(historical) or historical < 0):
                         raise ValueError("INVALID_HISTORICAL_PASS_VOLUME")
                     qb_proxies.append({
                         "player_id": pid,
