@@ -96,3 +96,26 @@ def test_missing_model_and_duplicate_game_are_explicit():
     assert card['games'][0]['status'] == 'MODEL_OR_SOURCE_MISSING'
     with pytest.raises(ValueError, match='duplicate'):
         build_card(scan, replay, [GAME, GAME], [entry], asof=NOW, simulator=sim)
+
+
+
+def test_qb_passing_price_is_not_ranked_when_starter_unverified():
+    """Historical QB pass shares do not constitute pregame starter confirmation."""
+    scan, replay, entry, sim = fixture()
+    scan["games"][0]["distribution"]["SEA:p:passing_yards"] = {}
+    quoted = dict(
+        game_id="g", market="passing_yards", team="SEA", player_id="p",
+        side="over", line=160.5, american_odds=-110, book="PublicBook",
+        observed_utc="2026-10-14T01:59:00Z", source_url="https://source.example",
+    )
+    card = build_card(
+        scan, replay, [GAME], [entry], asof=NOW,
+        prop_contracts=[quoted], simulator=sim,
+    )
+    assert len(card["ranked_candidates"]) == 2
+    assert all(x["market"] != "passing_yards" for x in card["ranked_candidates"])
+    game = card["games"][0]
+    assert game["qb_passing_contracts_excluded_unverified_starter"] == 1
+    assert "QB_STARTER_UNVERIFIED_PASSING_CONTRACT_EXCLUDED" in game["errors"]
+    assert game["decision"] == "PASS"
+    assert not card["qualified_bets"]
