@@ -9,6 +9,7 @@ AT=datetime(2026,10,13,20,tzinfo=UTC)
 def source():
     return {"status":"SOURCE_LINKED_PLAYER_RISKS_RESEARCH_ONLY",
       "games":[{"game_id":"2026_06_BUF_LA",
+         "kickoff_utc": "2026-10-18T20:25:00+00:00",
          "teams":{"LA":{"players":[
              {"player_id":"00-0034211","espn_reported_status":None,
               "availability_evidence_status":"NOT_LISTED_IN_SNAPSHOT_NOT_CONFIRMED_HEALTHY"}]},
@@ -58,3 +59,31 @@ def test_latest_eligible_status_wins_without_asof_leak():
     assert p["nflverse_reported_status"]=="questionable"
     assert p["nflverse_report_modified_utc"]==(AT-timedelta(hours=1)).isoformat()
     assert p["source_proves_final_inactive"] is False
+
+
+def test_kickoff_missing_fail_closed_without_guessing_report_vintage():
+    review=source()
+    del review["games"][0]["kickoff_utc"]
+    report=add_injury_reports(review,[entry()],season=2026,week=6,captured=AT)
+    p=report["games"][0]["teams"]["LA"]["players"][0]
+    assert p["nflverse_report_evidence"]=="MISSING_KICKOFF_FAIL_CLOSED"
+    assert p["nflverse_reported_status"] is None
+    assert report["nflverse_injury_source"]["source_rejections"]["missing_game_kickoff"]==1
+
+
+def test_postkickoff_capture_cannot_be_backfilled_into_pregame_approval():
+    late=AT+timedelta(days=6)
+    report=add_injury_reports(source(),[entry()],season=2026,week=6,captured=late)
+    p=report["games"][0]["teams"]["LA"]["players"][0]
+    assert p["nflverse_report_evidence"]=="POSTKICKOFF_CAPTURE_NOT_PREGAME"
+    assert p["nflverse_reported_status"] is None
+    assert report["nflverse_injury_source"]["source_rejections"]["postkickoff_capture"]==1
+    assert report["nflverse_injury_source"]["starting_qbs_verified"] is False
+
+
+def test_explicit_unknown_injuries_never_reclassify_qb_as_starting():
+    report=add_injury_reports(source(),[entry("Out")],season=2026,week=6,captured=AT)
+    p=report["games"][0]["teams"]["LA"]["players"][0]
+    assert p["source_proves_final_inactive"] is False
+    assert p["source_proves_starting_qb"] is False
+    assert report["nflverse_injury_source"]["date_modified_not_original_publication_proof"]
