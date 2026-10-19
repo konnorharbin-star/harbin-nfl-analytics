@@ -1,0 +1,40 @@
+name: NFL Frozen Pregame Score Capture
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */4 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nfl-frozen-score-capture
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Capture only truly pre-kickoff predictions
+        shell: bash
+        run: |
+          test -s outputs/suggested_bets.csv
+          python scripts/nfl_frozen_score_capture.py --source outputs/suggested_bets.csv --ledger outputs/frozen_score_forecasts.csv
+      - name: Persist newly captured snapshots
+        shell: bash
+        run: |
+          if git status --porcelain -- outputs/frozen_score_forecasts.csv | grep -q .; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add outputs/frozen_score_forecasts.csv
+            git commit -m "data: capture immutable NFL pregame score forecasts [skip ci]"
+            git push origin HEAD:main
+          fi
