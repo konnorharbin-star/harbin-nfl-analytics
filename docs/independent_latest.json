@@ -34,7 +34,7 @@
       "draws": 2000,
       "fair_away_spread": 8.127,
       "fair_home_spread": -8.127,
-      "forecast_sha256": "7dcaa197b5dca635693b8b9dc25924ffb54ed5ea921b3fc84757625beb3268cf",
+      "forecast_sha256": "ab65f7fadb580a74499c559e1b1e7b4ab60ddec5d68bb977be6bed69d6aa7f62",
       "game_id": "2026_06_WAS_SF",
       "home_team": "SF",
       "independent_power_rating_baseline": {
@@ -42,7 +42,7 @@
         "home_points": 28.82988977127533
       },
       "kickoff_utc": "2026-10-20T00:15:00+00:00",
-      "model_capture_utc": "2026-10-19T22:19:59.357329+00:00",
+      "model_capture_utc": "2026-10-19T22:34:13.452648+00:00",
       "player_rows": 33,
       "predicted_home_margin": 8.127,
       "predicted_score": {
@@ -63,9 +63,9 @@
   ],
   "games_forecast": 1,
   "games_requested": 1,
-  "generated_utc": "2026-10-19T22:20:00.977571+00:00",
+  "generated_utc": "2026-10-19T22:34:15.589679+00:00",
   "limits": "Own conditional research forecasts. Historical roles are not confirmed active lineups. Raw p10/p90 are simulation percentiles, not calibrated intervals. Full-game overtime/unusual scoring and market superiority remain unvalidated.",
-  "model_capture_utc": "2026-10-19T22:19:59.357329+00:00",
+  "model_capture_utc": "2026-10-19T22:34:13.452648+00:00",
   "named_player_rows": 33,
   "overtime_validated": false,
   "player_props": [
@@ -2052,8 +2052,8 @@
   "qualified_bets": 0,
   "season": 2026,
   "source_errors": [],
-  "source_replay_sha256": "03000df10a2433670adec101b2f19f7f40df700d94ba74d15f87644062dca06b",
-  "source_scan_sha256": "1eb118ba4de740c5949f1c926b440ff84103d7e01004ef53e63a93f86b3d642b",
+  "source_replay_sha256": "8068166e9466896c45e0095a704f8e3c4e828f143f630a6fa64cfa6bebb31824",
+  "source_scan_sha256": "26cc0043ac81263941d29ff5a64f2f8eb50a4b818fe8b908b0154af21c56ebca",
   "spec": "NFL_INDEPENDENT_FORECAST_PUBLICATION_V1",
   "sportsbook_prices_used": false,
   "spread_definition": "NEGATIVE_EXPECTED_HOME_MARGIN_NOT_A_CALIBRATED_50_PERCENT_COVER_LINE",
