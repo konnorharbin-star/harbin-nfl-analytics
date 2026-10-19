@@ -7,6 +7,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 import hashlib
 import json
+import gzip
 
 from nfl.coupled_forward_grading import clock
 from nfl.personnel_asof_watch import watch, append, read_journal
@@ -38,6 +39,19 @@ def main():
                    research_sha=hashlib.sha256(context_bytes).hexdigest(),
                    run_id=a.run_id)
     archive = append(report, a.journal)
+    # Store original bytes under content-addressed immutable names for replay.
+    if archive["new_observations"]:
+        directory = a.journal.parent / "sources"
+        directory.mkdir(parents=True, exist_ok=True)
+        for raw in (forecast_bytes, context_bytes):
+            sha = hashlib.sha256(raw).hexdigest()
+            target = directory / (sha + ".json.gz")
+            if target.exists():
+                if hashlib.sha256(gzip.decompress(target.read_bytes())).hexdigest() != sha:
+                    raise ValueError("PERSONNEL_ARCHIVED_SOURCE_HASH_MISMATCH")
+            else:
+                target.write_bytes(gzip.compress(raw, mtime=0))
+    report["source_original_bytes_archived_when_new"] = bool(archive["new_observations"])
     report["immutable_journal"] = str(a.journal)
     report["append_receipt"] = archive
     a.out.parent.mkdir(parents=True, exist_ok=True)
