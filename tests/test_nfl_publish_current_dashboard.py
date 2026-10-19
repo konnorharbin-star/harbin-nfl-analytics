@@ -88,6 +88,8 @@ def test_previously_published_newer_bundle_cannot_be_replaced():
 
 def test_started_games_are_archived_and_not_live(tmp_path):
     b = sample()
+    # A Thursday pregame capture can still include Sunday's now-started games.
+    b["model_capture_utc"] = "2026-10-17T11:50:00Z"
     old = dict(b["games"][0])
     old["game_id"], old["kickoff_utc"] = "OLD", "2026-10-18T17:00:00Z"
     b["games"].insert(0, old)
