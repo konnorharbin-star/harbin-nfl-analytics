@@ -1,14 +1,14 @@
 {
-  "dashboard_published_utc": "2026-10-19T22:34:35.634809+00:00",
+  "dashboard_published_utc": "2026-10-19T22:40:18.410966+00:00",
   "games_forecast": 1,
-  "generated_utc": "2026-10-19T22:34:15.589679+00:00",
+  "generated_utc": "2026-10-19T22:39:56.347740+00:00",
   "legacy_market_board_preserved": true,
   "market_superiority": "UNPROVEN",
-  "model_capture_utc": "2026-10-19T22:34:13.452648+00:00",
+  "model_capture_utc": "2026-10-19T22:39:54.814526+00:00",
   "model_lineage": "NFL_PLAYER_WORKLOAD_SHRINKAGE_V2",
   "qualified_bets": 0,
   "season": 2026,
-  "source_json_sha256": "bda5f73c551d294585f208d668764abfff12b4c5037e86a0ec98e52f1d28a91d",
+  "source_json_sha256": "8db77e928d78ab5233092fd5b68f3a79bcbbe943465aca5dbf0c4fea4b5a0c79",
   "spec": "NFL_PAGES_INDEPENDENT_DASHBOARD_V1",
   "upcoming_games": 1,
   "week": 6
