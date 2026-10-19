@@ -12,6 +12,10 @@ from pathlib import Path
 from nfl.coupled_drive_player_shadow import simulate_joint
 
 MARKETS = ('moneyline', 'spread', 'total')
+# Until a pre-kickoff first-party starter is verified, historical multi-QB
+# passing allocation must never become a priced/EV-ranked player contract.
+QB_UNVERIFIED_PASSING_MARKETS = frozenset(('passing_yards', 'passing_attempts',
+    'passing_completions', 'passing_touchdowns', 'passing_interceptions'))
 PROPS = ('passing_yards', 'passing_attempts', 'passing_completions', 'passing_touchdowns',
          'passing_interceptions', 'receiving_yards', 'receptions',
          'receiving_touchdowns', 'rushing_yards', 'carries', 'rushing_touchdowns')
@@ -113,6 +117,7 @@ def build_card(scan, replay, games, observations, *, asof, prop_contracts=(), si
         row = {**game, 'decision': 'PASS', 'best_candidate': None,
                'priced_contracts': 0, 'evaluated_contracts': 0,
                'missing_game_markets': list(MARKETS), 'prop_price_coverage': 'NONE',
+               'qb_passing_contracts_excluded_unverified_starter': 0,
                'status': 'NO_USABLE_PRICES', 'errors': []}
         board.append(row)
         entry = latest.get(gid)
@@ -138,6 +143,12 @@ def build_card(scan, replay, games, observations, *, asof, prop_contracts=(), si
                 if c['market'] != 'moneyline':
                     c['line'] = number(c['line'])
                 metric, threshold, side = query(c)
+                if c['market'] in QB_UNVERIFIED_PASSING_MARKETS:
+                    # No currently integrated first-party, kickoff-dated starter proof.
+                    # This is a refusal to rank a misleading raw EV, not 0% probability.
+                    row['qb_passing_contracts_excluded_unverified_starter'] += 1
+                    row['errors'].append('QB_STARTER_UNVERIFIED_PASSING_CONTRACT_EXCLUDED')
+                    continue
                 valid.append((c, metric, threshold, side))
             except (KeyError, ValueError, TypeError) as exc:
                 row['errors'].append(str(exc))

@@ -109,3 +109,21 @@ def test_canonical_command_can_preserve_single_json_stdout(monkeypatch,tmp_path)
     monkeypatch.setattr('run_nfl_predictions.subprocess.run',lambda command,**kwargs:calls.append(kwargs))
     generate(2026,6,tmp_path,quiet=True)
     assert all(c['stdout']==subprocess.DEVNULL for c in calls)
+
+
+
+def test_unconfirmed_qb_role_is_disclosed_in_publication_without_changing_scores(tmp_path):
+    scan, replay = fixture()
+    replay["games"][0]["roles"][0]["role"] = "QB"
+    b = build_bundle(scan, replay, at=AT, names={"DENp": "Research QB"})
+    qb = next(p for p in b["player_props"] if p["player_name"] == "Research QB")
+    assert qb["participation"] == "UNVERIFIED_QB_STARTER_HISTORICAL_PASS_SPLIT"
+    assert b["games"][0]["qb_starting_player_verified"] is False
+    assert b["games"][0]["qb_passing_prop_rank_eligible"] is False
+    assert b["games"][0]["predicted_score"] == {"home": 23.125, "away": 20.375}
+    out = tmp_path / "independent_forecasts.json"
+    write_bundle(b, out)
+    html = out.with_suffix(".html").read_text()
+    assert "QB passing workload can be split" in html
+    assert "unreliable" in html
+    assert b["qualified_bets"] == 0
