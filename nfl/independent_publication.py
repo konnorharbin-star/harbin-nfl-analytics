@@ -103,7 +103,9 @@ def build_bundle(scan, replay, *, at, names=None):
                 game_players.append(dict(game_id=gid, team=team, player_id=pid,
                     player_name='Unallocated production' if pid == 'OTHER' else names.get(pid, pid),
                     position=role.get('role'), is_unallocated_bucket=pid == 'OTHER',
-                    participation='UNVERIFIED_HISTORICAL_ROLE_PROXY',
+                    participation=('UNVERIFIED_QB_STARTER_HISTORICAL_PASS_SPLIT'
+                                   if role.get('role') == 'QB'
+                                   else 'UNVERIFIED_HISTORICAL_ROLE_PROXY'),
                     projections=stats, unavailable_metrics=[s for s in PROP_METRICS if s not in stats],
                     calibrated_prop_probability=None, sportsbook_line=None, estimated_ev=None))
             games.append(dict(game_id=gid, season=f['season'], week=f['week'],
@@ -117,7 +119,10 @@ def build_bundle(scan, replay, *, at, names=None):
                 independent_power_rating_baseline=dict(home_points=f['independent_home_points'],
                     away_points=f['independent_away_points']),
                 player_rows=len(game_players), forecast_sha256=raw['forecast_sha256'],
-                model_capture_utc=raw['asof_utc'], draws=raw['draws'], seed=raw['seed']))
+                model_capture_utc=raw['asof_utc'], draws=raw['draws'], seed=raw['seed'],
+                qb_starting_player_verified=False,
+                qb_passing_prop_rank_eligible=False,
+                qb_player_splits_use_unconfirmed_historical_pass_volume=True))
             players.extend(game_players)
         except (ValueError, KeyError, TypeError) as exc:
             rejected.append(dict(game_id=gid, reason=str(exc)))
@@ -137,7 +142,7 @@ def build_bundle(scan, replay, *, at, names=None):
         supported_player_metrics=list(PROP_METRICS),
         unsupported_markets=['field_goals', 'kicking_points', 'longest_play', 'defensive_props', 'first_scorer'],
         automatic_betting_enabled=False, qualified_bets=0,
-        limits='Own conditional research forecasts. Historical roles are not confirmed active lineups. Raw p10/p90 are simulation percentiles, not calibrated intervals. Full-game overtime/unusual scoring and market superiority remain unvalidated.')
+        limits='Own conditional research forecasts. Historical roles are not confirmed active lineups. QB passing workload can be split among historical QB proxies: individual passing props are unreliable, not ranked for bets. Raw p10/p90 are simulation percentiles, not calibrated intervals. Full-game overtime/unusual scoring and market superiority remain unvalidated.')
 
 
 def markdown(bundle):
