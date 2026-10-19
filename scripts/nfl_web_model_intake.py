@@ -12,6 +12,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from threading import Lock
 
+from nfl.public_article_dates import publisher_issue_time, bind_publication_to_game
 from nfl.web_model_intake import (
     BOARD,
     SITUATIONAL_TOPICS,
@@ -121,14 +122,19 @@ def collect(
     for url in list(dict.fromkeys(article_urls + fallback_urls))[:max_articles]:
         try:
             raw = get(url)
-            body = clean(Page(raw.decode("utf-8", errors="replace")).root.text())
+            observed = now()
+            page_text = raw.decode("utf-8", errors="replace")
+            body = clean(Page(page_text).root.text())
+            dated = publisher_issue_time(page_text, observed=observed)
             report["articles"].append(
                 {
                     "source_url": url,
-                    "captured_utc": now().isoformat(),
+                    "captured_utc": observed.isoformat(),
                     "snapshot_sha256": hashlib.sha256(raw).hexdigest(),
                     "body_excerpt": body[:16000],
                     "body_excerpt_truncated": len(body) > 16000,
+                    **dated,
+                    "publisher_issue_time_not_proof_unmodified_content": True,
                     "structured_facts_verified": False,
                 }
             )
@@ -147,7 +153,12 @@ def collect(
                     "page_read": lead["url"] in articles,
                     "page_capture_utc": articles.get(lead["url"], {}).get("captured_utc"),
                     "page_sha256": articles.get(lead["url"], {}).get("snapshot_sha256"),
-                    "source_publication_utc": None,
+                    **bind_publication_to_game(
+                        articles.get(lead["url"]),
+                        kickoff_utc=next(
+                            g["kickoff_utc"] for g in games if g["game_id"] == game["game_id"]
+                        ),
+                    ),
                 }
                 for lead in search.get("leads", [])
             ]
