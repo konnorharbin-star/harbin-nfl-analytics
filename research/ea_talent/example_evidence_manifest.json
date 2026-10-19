@@ -1,0 +1,25 @@
+{
+  "ratings_archive": {
+    "verified": false,
+    "path": "",
+    "snapshot_at": "",
+    "acquired_at": ""
+  },
+  "roster_crosswalk": {
+    "verified": false,
+    "path": ""
+  },
+  "pregame_lineups": {
+    "verified": false,
+    "path": ""
+  },
+  "immutable_forecast_log": {
+    "verified": false,
+    "path": ""
+  },
+  "independent_holdout": {
+    "verified": false,
+    "path": ""
+  },
+  "minimum_holdout_games": 100
+}

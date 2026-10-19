@@ -1,0 +1,33 @@
+name: EA Player Talent Research Tests
+
+on:
+  push:
+    branches:
+      - research/ea-player-talent-v1
+    paths:
+      - "research/ea_talent/**"
+      - ".github/workflows/ea-player-talent-research-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run all EA player talent adapters and replacement tests
+        run: |
+          PYTHONPATH=research/ea_talent \
+          python -m unittest discover -v \
+            -s research/ea_talent \
+            -p "test_*.py"
+      - name: Research status
+        run: |
+          echo "EA player ratings remain research-only." >> "$GITHUB_STEP_SUMMARY"
+          echo "No production score or bet modifications." >> "$GITHUB_STEP_SUMMARY"
