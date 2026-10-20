@@ -30,6 +30,12 @@ on:
       - 'tests/test_nfl_publish_current_dashboard.py'
       - 'nfl/web_model_intake.py'
       - 'nfl/public_article_dates.py'
+      - 'nfl/public_game_inputs.py'
+      - 'tests/test_public_game_inputs.py'
+      - 'nfl/public_context_inputs.py'
+      - 'nfl/public_input_quality.py'
+      - 'tests/test_public_context_inputs.py'
+      - 'tests/test_public_input_quality.py'
       - 'nfl/personnel_asof_watch.py'
       - 'scripts/nfl_personnel_asof_watch.py'
       - 'tests/test_personnel_asof_watch.py'
@@ -119,7 +125,7 @@ jobs:
         continue-on-error: true
         run: python -m scripts.nfl_clean_efficiency_run forecast --out reports/clean_efficiency_forward.json
       - name: Test per-game injury and publisher issue-time chronology
-        run: python -m pytest -q tests/test_nflverse_injury_evidence.py tests/test_public_article_dates.py
+        run: python -m pytest -q tests/test_nflverse_injury_evidence.py tests/test_public_article_dates.py tests/test_public_game_inputs.py tests/test_public_context_inputs.py tests/test_public_input_quality.py tests/test_web_model_intake.py
       - name: Search public football pages and capture paired prop prices without keys
         run: |
           python -m scripts.nfl_web_model_intake
@@ -211,7 +217,8 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add docs/index.html docs/independent_latest.html docs/independent_latest.json \
             docs/independent_latest.png docs/independent_game_predictions.csv \
-            docs/independent_player_predictions.csv docs/independent_latest_meta.json
+            docs/independent_player_predictions.csv docs/independent_latest_meta.json \
+            docs/independent_input_quality.json
           if [ -f docs/legacy_market_week5.html ]; then
             git add docs/legacy_market_week5.html
           fi
@@ -238,6 +245,7 @@ jobs:
             reports/workload_v2_grade.json
             reports/workload_v2_selected_grade.json
             outputs/independent_forecasts.json
+            outputs/independent_input_quality.json
             outputs/independent_forecasts.md
             outputs/independent_forecasts.html
             outputs/independent_forecasts.png
