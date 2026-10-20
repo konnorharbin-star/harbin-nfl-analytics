@@ -84,3 +84,12 @@ def test_fixed_roof_weather_is_not_suppressed_for_open_sided_indoor_false_venue(
     assert result["outdoor_weather_required"] is True
     observation["facts"]["venue_reported_indoor"] = True
     assert roof_evidence(snapshot, observation, GAME, asof=AT)["outdoor_weather_required"] is False
+
+
+def test_missing_venue_on_both_sources_does_not_count_as_an_exact_match():
+    observation, _, _ = fixture()
+    observation["facts"].pop("venue_name")
+    snapshot = schedule_snapshot([{**ROW, "stadium": None}], captured=AT)
+    result = roof_evidence(snapshot, observation, GAME, asof=AT)
+    assert result["operating_position_required"] is None
+    assert result["reason"] == "SCHEDULE_VENUE_NOT_VERIFIED"

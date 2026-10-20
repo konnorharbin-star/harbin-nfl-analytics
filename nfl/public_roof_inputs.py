@@ -63,12 +63,17 @@ def roof_evidence(snapshot, observation, game, *, asof):
         if len(matches) != 1:
             raise ValueError("NO_UNIQUE_SCHEDULE_GAME")
         row = matches[0]
+        venue = observation["facts"].get("venue_name")
+        if not isinstance(row.get("stadium"), str) or not row["stadium"].strip() or not venue:
+            raise ValueError("SCHEDULE_VENUE_NOT_VERIFIED")
         source_event = str(row.get("espn"))
         if re.fullmatch(r"[0-9]+\.0", source_event):
             source_event = source_event[:-2]
         if (
             row.get("home_team") != game["home_team"]
             or row.get("away_team") != game["away_team"]
+            or str(row.get("season")) != game["game_id"].split("_")[0]
+            or int(row.get("week")) != int(game["game_id"].split("_")[1])
             or kickoff_utc(row) != kickoff
             or _venue_key(row.get("stadium")) != _venue_key(observation["facts"].get("venue_name"))
             or source_event != observation.get("provider_event_id")
