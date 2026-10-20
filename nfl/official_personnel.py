@@ -220,6 +220,10 @@ def personnel_from_articles(articles, game, players, *, asof):
                     continue
                 if re.search(r"\b(next week|last week|next season|last season)\b", text, re.I):
                     continue
+                mentioned_weeks = {int(w) for w in re.findall(r"\bweek\s+(\d+)\b", text, re.I)}
+                target_week = int(game.get("week") or game["game_id"].split("_")[1])
+                if mentioned_weeks and mentioned_weeks != {target_week}:
+                    continue
                 normalized = key(text)
                 for player in model:
                     if owner not in ("NFL", player["team"]):

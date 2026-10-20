@@ -80,6 +80,7 @@ def test_explicit_statements_and_inactive_lists_are_separate_from_inferred_activ
         "<p>It is not true that Home Quarterback will start for the 49ers.</p>",
         "<p>Home Quarterback will start for the 49ers?</p>",
         "<p>The depth chart lists Home Quarterback first.</p>",
+        "<p>Home Quarterback will start in Week 7 for the 49ers.</p>",
         "<h3>NINERS</h3><ul><li>QB Home Backup</li></ul>",
     ],
 )
