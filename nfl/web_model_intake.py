@@ -12,6 +12,7 @@ from urllib.request import Request, urlopen
 from xml.etree import ElementTree
 from zoneinfo import ZoneInfo
 
+from .official_sources import CLUB_DOMAINS, official_publisher
 from .web_context_research import TEAM_NAMES
 
 BOARD = "https://www.covers.com/sport/football/nfl/player-props"
@@ -44,6 +45,8 @@ SITUATIONAL_TOPICS = {
     "market_sentiment": "opening current line movement public betting tickets money percentages",
 }
 TOPICS = {
+    "official_inactives": "official final game day inactive list",
+    "official_starter": "confirmed starting quarterback will start named starter",
     **SITUATIONAL_TOPICS,
     "markets": "spread total player props odds receiving yards",
     "history": "historical player prop lines odds results",
@@ -67,11 +70,13 @@ def approved_url(url, *, search=False):
     return (
         host == "www.bing.com"
         if search
-        else any(host == d or host.endswith("." + d) for d in SOURCE_DOMAINS)
+        else any(
+            host == d or host.endswith("." + d) for d in (*SOURCE_DOMAINS, *CLUB_DOMAINS.values())
+        )
     )
 
 
-def fetch_page(url, *, search=False, exact_source=False):
+def fetch_page(url, *, search=False, exact_source=False, publisher_bound=False):
     if not approved_url(url, search=search):
         raise ValueError("UNAPPROVED_PUBLIC_SOURCE")
     request = Request(
@@ -82,6 +87,11 @@ def fetch_page(url, *, search=False, exact_source=False):
             raise ValueError("UNAPPROVED_REDIRECT")
         if exact_source and response.geturl() != url:
             raise ValueError("UNEXPECTED_STRUCTURED_SOURCE_REDIRECT")
+        if publisher_bound and (
+            official_publisher(url) is None
+            or official_publisher(response.geturl()) != official_publisher(url)
+        ):
+            raise ValueError("CROSS_PUBLISHER_OFFICIAL_REDIRECT")
         raw = response.read(5_000_001)
     if len(raw) > 5_000_000:
         raise ValueError("SOURCE_TOO_LARGE")
@@ -282,6 +292,9 @@ def search_game(game, topic, *, fetch=fetch_page):
         .date()
         .isoformat()
     )
+    domains = SOURCE_DOMAINS
+    if topic in ("official_inactives", "official_starter"):
+        domains = ("nfl.com", CLUB_DOMAINS[game["away_team"]], CLUB_DOMAINS[game["home_team"]])
     query = " ".join(
         (
             "NFL",
@@ -289,7 +302,7 @@ def search_game(game, topic, *, fetch=fetch_page):
             '"' + TEAM_NAMES[game["home_team"]] + '"',
             game_date,
             TOPICS[topic],
-            "(" + " OR ".join("site:" + domain for domain in SOURCE_DOMAINS) + ")",
+            "(" + " OR ".join("site:" + domain for domain in domains) + ")",
         )
     )
     url = "https://www.bing.com/search?" + urlencode({"format": "rss", "q": query})

@@ -9,7 +9,9 @@ import re
 from collections import Counter
 from datetime import timedelta
 
+from nfl.official_personnel import personnel_from_articles
 from nfl.public_game_inputs import clock, input_contract, verify_game_snapshot
+from nfl.public_roof_inputs import roof_evidence
 from nfl.weather import KNOWN_NEUTRAL_VENUES, TEAM_HOME, _venue_key
 
 SUMMARY = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event="
@@ -349,6 +351,14 @@ def context_contract(observation, context, game, *, asof, players=None):
     """Publish only evidence still eligible at the actual consumption clock."""
     result = input_contract(observation, asof=asof, game=game)
     result.update(reported_injury_statuses_verified=0, outdoor_weather_verified=False)
+    result.update(
+        confirmed_starting_qb_teams=[],
+        official_inactive_teams=[],
+        explicit_player_designations_verified=0,
+        roof_operating_position_required=None,
+        roof_status="ROOF_CLASSIFICATION_UNVERIFIED",
+        outdoor_weather_required=True,
+    )
     if not result["event_binding_passed"]:
         return result
     availability = context.get("availability", {})
@@ -408,11 +418,37 @@ def context_contract(observation, context, game, *, asof, players=None):
         result["verified_fields"].append("dated_reported_player_statuses")
     if result["outdoor_weather_verified"]:
         result["verified_fields"].append("outdoor_kickoff_weather_forecast")
-    result["missing_required_inputs"] = [
-        "confirmed_starting_qbs",
-        "final_game_specific_player_availability",
-        "game_day_roof_position",
-    ]
-    if not result["outdoor_weather_verified"]:
+    official = personnel_from_articles(
+        context.get("official_articles", []), game, players or [], asof=asof
+    )
+    result["confirmed_starting_qb_teams"] = sorted(official["starters"])
+    result["official_inactive_teams"] = sorted(
+        t
+        for t, r in official["inactive_reports"].items()
+        if r["status"] == "OFFICIAL_GAME_DAY_INACTIVE_LIST"
+    )
+    result["explicit_player_designations_verified"] = official["confirmed_player_designations"]
+    result["model_players_needing_availability"] = max(
+        0, official["model_players_reviewed"] - official["confirmed_player_designations"]
+    )
+    roof = roof_evidence(context.get("roof_schedule_snapshot"), observation, game, asof=asof)
+    result["roof_operating_position_required"] = roof["operating_position_required"]
+    result["roof_status"] = roof["status"]
+    result["outdoor_weather_required"] = roof["outdoor_weather_required"]
+    result["missing_required_inputs"] = []
+    if len(result["confirmed_starting_qb_teams"]) != 2:
+        result["missing_required_inputs"].append("confirmed_starting_qbs")
+    if not official["model_players_reviewed"] or result["model_players_needing_availability"]:
+        result["missing_required_inputs"].append("final_game_specific_player_availability")
+    if roof["operating_position_required"] is not False:
+        result["missing_required_inputs"].append("game_day_roof_position")
+    if not result["outdoor_weather_verified"] and roof["outdoor_weather_required"]:
         result["missing_required_inputs"].append("venue_bound_kickoff_weather_forecast")
+    if result["confirmed_starting_qb_teams"]:
+        result["verified_fields"].append("explicit_official_starting_quarterback_announcements")
+    if result["official_inactive_teams"]:
+        result["verified_fields"].append("official_game_day_inactive_lists")
+    if roof["operating_position_required"] is False:
+        result["verified_fields"].append("roof_operating_position_not_applicable")
+    result["essential_context_inputs_complete"] = not result["missing_required_inputs"]
     return result

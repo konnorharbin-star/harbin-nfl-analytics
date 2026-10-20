@@ -118,8 +118,9 @@ def dashboard(bundle, *, at, input_quality=None):
             "forecasts do not confirm roof position.</p>"
             "<p><a href='independent_input_quality.json'>"
             "Dated input evidence and source hashes</a></p>"
-            "<table><thead><tr><th>Matchup</th><th>Game binding</th><th>Dated injury statuses</th>"
-            "<th>Outdoor weather</th><th>Missing or blocked</th></tr></thead><tbody>"
+            "<div class='input-checks'><table><thead><tr><th>Matchup</th><th>Game binding</th>"
+            "<th>Personnel checks</th><th>Outdoor weather</th><th>Roof</th>"
+            "<th>Missing or blocked</th></tr></thead><tbody>"
         )
         for item in quality["games"]:
             contract = item["contract"]
@@ -133,17 +134,34 @@ def dashboard(bundle, *, at, input_quality=None):
                 "venue_bound_kickoff_weather_forecast": "Weather forecast at kickoff",
             }
             missing = [labels.get(value, "Game or source verification") for value in missing]
+            roof_label = {
+                "OUTDOOR_ROOF_POSITION_NOT_APPLICABLE": "Not applicable — outdoor venue",
+                "FIXED_ROOF_POSITION_NOT_APPLICABLE": "Not applicable — fixed roof",
+                "RETRACTABLE_ROOF_POSITION_UNCONFIRMED": "Retractable roof: position unconfirmed",
+            }.get(contract.get("roof_status"), "Not verified")
+            personnel = (
+                f"Starters: {len(contract.get('confirmed_starting_qb_teams', []))}/2; "
+                f"inactive reports: {len(contract.get('official_inactive_teams', []))}/2; "
+                "explicit availability: "
+                f"{contract.get('explicit_player_designations_verified', 0)}; "
+                f"dated injury statuses: {contract['reported_injury_statuses_verified']}"
+            )
             cells = [
                 item["away_team"] + " @ " + item["home_team"],
                 "Passed" if contract["event_binding_passed"] else "Blocked",
-                str(contract["reported_injury_statuses_verified"]),
-                "Verified forecast" if contract["outdoor_weather_verified"] else "Unavailable",
+                personnel,
+                "Verified forecast"
+                if contract["outdoor_weather_verified"]
+                else "Not needed for fixed roof"
+                if not contract.get("outdoor_weather_required", True)
+                else "Unavailable",
+                roof_label,
                 ", ".join(missing),
             ]
             quality_html += (
                 "<tr>" + "".join("<td>" + html.escape(c) + "</td>" for c in cells) + "</tr>"
             )
-        quality_html += "</tbody></table>"
+        quality_html += "</tbody></table></div>"
     return (
         "<!doctype html><html lang='en'><head><meta charset='utf-8'>"
         "<meta name='viewport' content='width=device-width, initial-scale=1'>"
@@ -154,11 +172,12 @@ def dashboard(bundle, *, at, input_quality=None):
         "border-bottom:1px solid #383d47;text-align:left}th{color:#9ca7b9}"
         "tr:nth-child(even){background:#1c2028}.warn{color:#e5bb6e}"
         ".links a{margin-right:17px}.score{max-width:100%;height:auto}"
+        ".input-checks{overflow-x:auto}"
         "</style></head><body>"
         f"<h1>Our NFL predictions · Week {int(bundle['week'])}</h1>"
         "<p class='warn'><strong>RESEARCH ONLY · NO APPROVED BETS.</strong> "
         "Scores, spreads and totals are independent conditional forecasts. "
-        "Lineups, injuries, overtime, calibration and market superiority are unverified.</p>"
+        "Complete lineups, overtime, calibration and market superiority are unverified.</p>"
         f"<p>Model captured (UTC): {cap} · Bundle created (UTC): {gen}</p>"
         f"<p>Upcoming matchups at publication: {len(future)}. "
         "Started games are historical forecasts, not live betting signals.</p>"
