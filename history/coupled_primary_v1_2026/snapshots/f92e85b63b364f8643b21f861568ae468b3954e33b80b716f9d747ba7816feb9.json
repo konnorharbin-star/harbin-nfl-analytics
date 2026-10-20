@@ -1,0 +1,20 @@
+{
+  "predictive_family": "NFL_PLAYER_WORKLOAD_SHRINKAGE_V2",
+  "experimental_diagnostics_enabled": false,
+  "experimental_steps": [
+    "quarter_state_workload",
+    "clean_efficiency",
+    "overtime_score",
+    "conditional_injury_scenarios"
+  ],
+  "experimental_steps_used_for_bet_ranking": false,
+  "core_forecasts_changed_by_this_cleanup": false,
+  "accuracy_improvement_claimed": false,
+  "default_pipeline": [
+    "independent_scores_and_player_stats",
+    "public_web_evidence",
+    "public_game_and_prop_prices",
+    "exact_contract_comparison",
+    "immutable_capture_and_mature_grading"
+  ]
+}
