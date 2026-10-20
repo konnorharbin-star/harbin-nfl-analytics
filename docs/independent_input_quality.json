@@ -1,0 +1,510 @@
+{
+  "captured_utc": "2026-10-20T00:11:43.460473+00:00",
+  "forecast_values_changed": false,
+  "games": [
+    {
+      "away_team": "WAS",
+      "contract": {
+        "blocking_reasons": [],
+        "event_binding_passed": true,
+        "forecast_effect": "NO_WEB_CONTEXT_ADJUSTMENT",
+        "missing_required_inputs": [
+          "confirmed_starting_qbs",
+          "final_game_specific_player_availability",
+          "game_day_roof_position"
+        ],
+        "outdoor_weather_verified": true,
+        "ready_for_context_adjusted_prediction": false,
+        "reported_injury_statuses_verified": 1,
+        "status": "PARTIAL_VERIFIED_INPUTS",
+        "verified_fields": [
+          "away_team",
+          "home_team",
+          "kickoff_utc",
+          "neutral_site",
+          "venue_id",
+          "venue_name",
+          "venue_reported_indoor",
+          "dated_reported_player_statuses",
+          "outdoor_kickoff_weather_forecast"
+        ]
+      },
+      "game_id": "2026_06_WAS_SF",
+      "home_team": "SF"
+    }
+  ],
+  "source_evidence": {
+    "captured_utc": "2026-10-20T00:11:43.460473+00:00",
+    "collection_started_utc": "2026-10-20T00:11:37.085999+00:00",
+    "forecast_values_changed": false,
+    "games": [
+      {
+        "away_team": "WAS",
+        "game_id": "2026_06_WAS_SF",
+        "home_team": "SF",
+        "input_data_contract": {
+          "blocking_reasons": [],
+          "event_binding_passed": true,
+          "forecast_effect": "NO_WEB_CONTEXT_ADJUSTMENT",
+          "missing_required_inputs": [
+            "confirmed_starting_qbs",
+            "final_game_specific_player_availability",
+            "game_day_roof_position"
+          ],
+          "outdoor_weather_verified": true,
+          "ready_for_context_adjusted_prediction": false,
+          "reported_injury_statuses_verified": 1,
+          "status": "PARTIAL_VERIFIED_INPUTS",
+          "verified_fields": [
+            "away_team",
+            "home_team",
+            "kickoff_utc",
+            "neutral_site",
+            "venue_id",
+            "venue_name",
+            "venue_reported_indoor",
+            "dated_reported_player_statuses",
+            "outdoor_kickoff_weather_forecast"
+          ]
+        },
+        "kickoff_utc": "2026-10-20T00:15:00+00:00",
+        "structured_game_observation": {
+          "captured_utc": "2026-10-20T00:11:42.951191+00:00",
+          "eligible_for_historical_backfill": false,
+          "facts": {
+            "away_team": "WAS",
+            "home_team": "SF",
+            "kickoff_utc": "2026-10-20T00:15:00+00:00",
+            "neutral_site": false,
+            "venue_id": "4738",
+            "venue_name": "Levi's Stadium",
+            "venue_reported_indoor": false
+          },
+          "model_adjustment": null,
+          "provider_event_id": "401873008",
+          "reasons": [],
+          "snapshot_sha256": "d8afd7642d0a6f10bf7907b3a4ced2a788830a6d130b9d231f677972f6d67b2c",
+          "source_kind": "ESPN_CURRENT_EVENT_SNAPSHOT",
+          "source_publication_utc": null,
+          "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20261019&limit=100",
+          "status": "SOURCE_BOUND_CURRENT_OBSERVATION",
+          "used_as_calibrated_feature": false
+        },
+        "verified_context_inputs": {
+          "availability": {
+            "dated_reported_statuses": 1,
+            "final_game_availability_verified": false,
+            "players": [
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "16002",
+                "model_adjustment": null,
+                "player_id": "00-0029892",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "16731",
+                "model_adjustment": null,
+                "player_id": "00-0031236",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "16737",
+                "model_adjustment": null,
+                "player_id": "00-0031408",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "3043116",
+                "model_adjustment": null,
+                "player_id": "00-0032775",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "3117251",
+                "model_adjustment": null,
+                "player_id": "00-0033280",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "3040151",
+                "model_adjustment": null,
+                "player_id": "00-0033288",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "3047876",
+                "model_adjustment": null,
+                "player_id": "00-0034854",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "3126486",
+                "model_adjustment": null,
+                "player_id": "00-0035719",
+                "reported_status": "Out",
+                "source_update_utc": "2026-10-19T22:56:00+00:00",
+                "status": "DATED_EVENT_REPORTED_STATUS",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4040612",
+                "model_adjustment": null,
+                "player_id": "00-0036887",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4241464",
+                "model_adjustment": null,
+                "player_id": "00-0036972",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4361741",
+                "model_adjustment": null,
+                "player_id": "00-0037834",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4575665",
+                "model_adjustment": null,
+                "player_id": "00-0039365",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4431466",
+                "model_adjustment": null,
+                "player_id": "00-0040172",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4685397",
+                "model_adjustment": null,
+                "player_id": "00-0040177",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4696044",
+                "model_adjustment": null,
+                "player_id": "00-0041052",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "SF"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "2976212",
+                "model_adjustment": null,
+                "player_id": "00-0031588",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "2576980",
+                "model_adjustment": null,
+                "player_id": "00-0032268",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "3068267",
+                "model_adjustment": null,
+                "player_id": "00-0033699",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4421446",
+                "model_adjustment": null,
+                "player_id": "00-0035567",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "3121422",
+                "model_adjustment": null,
+                "player_id": "00-0035659",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4361577",
+                "model_adjustment": null,
+                "player_id": "00-0036626",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4048228",
+                "model_adjustment": null,
+                "player_id": "00-0036628",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4697815",
+                "model_adjustment": null,
+                "player_id": "00-0037256",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4567156",
+                "model_adjustment": null,
+                "player_id": "00-0037742",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4360635",
+                "model_adjustment": null,
+                "player_id": "00-0037809",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4361088",
+                "model_adjustment": null,
+                "player_id": "00-0039686",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4426348",
+                "model_adjustment": null,
+                "player_id": "00-0039910",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4690923",
+                "model_adjustment": null,
+                "player_id": "00-0039912",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4602667",
+                "model_adjustment": null,
+                "player_id": "00-0040164",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4575131",
+                "model_adjustment": null,
+                "player_id": "00-0040242",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "5081432",
+                "model_adjustment": null,
+                "player_id": "00-0041040",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4685246",
+                "model_adjustment": null,
+                "player_id": "00-0041096",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              },
+              {
+                "confirmed_active": false,
+                "confirmed_starting_qb": false,
+                "espn_athlete_id": "4432722",
+                "model_adjustment": null,
+                "player_id": "00-0041117",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "team": "WAS"
+              }
+            ],
+            "rejections": [],
+            "source": {
+              "captured_utc": "2026-10-20T00:11:43.121521+00:00",
+              "snapshot_sha256": "4fe7f5eed790ec10dfa46375d98e98312e76e9c043dbe3f27a69dc3bde3eeef9",
+              "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873008"
+            },
+            "starting_qbs_verified": false,
+            "status": "SOURCE_BOUND_REPORTED_STATUSES_ONLY"
+          },
+          "source_errors": [],
+          "status": "PARTIAL_CONTEXT_ONLY",
+          "weather": {
+            "coordinate_source": "EXACT_EVENT_VENUE_NAME_EXISTING_APPROXIMATE_REGISTRY",
+            "forecast_source": {
+              "captured_utc": "2026-10-20T00:11:43.459918+00:00",
+              "snapshot_sha256": "1f53160dbd0adf1d6d22aae3963cd9ebd59252f04847b577a320e493fa5c4725",
+              "source_url": "https://api.weather.gov/gridpoints/MTR/97,86/forecast/hourly"
+            },
+            "issued_utc": "2026-10-19T20:47:14+00:00",
+            "latitude": 37.403,
+            "longitude": -121.97,
+            "model_adjustment": null,
+            "on_field_conditions_verified": false,
+            "period_end_utc": "2026-10-20T01:00:00+00:00",
+            "period_start_utc": "2026-10-20T00:00:00+00:00",
+            "point_source": {
+              "captured_utc": "2026-10-20T00:11:43.334791+00:00",
+              "snapshot_sha256": "dee5c53a86df7c32923caeaf432464a6317b4c5b45f0c5817efe80a53678e3c2",
+              "source_url": "https://api.weather.gov/points/37.4030,-121.9700"
+            },
+            "precipitation_probability_percent": 0,
+            "roof_position_verified": false,
+            "status": "VENUE_BOUND_NWS_KICKOFF_FORECAST",
+            "temperature_f": 64.0,
+            "venue_name": "Levi's Stadium",
+            "wind_mph_max": 13,
+            "wind_mph_min": 13
+          }
+        }
+      }
+    ],
+    "source_forecast_generated_utc": "2026-10-20T00:11:35.725838+00:00",
+    "source_forecast_model_capture_utc": "2026-10-20T00:11:34.143665+00:00",
+    "source_forecast_sha256": "cb5bb017d6382ad0140517f02e50027f1c2848dfebac6fe66359e25f323031a4",
+    "spec": "NFL_SUPPLEMENTAL_PUBLIC_INPUT_QUALITY_V1",
+    "supplemental_after_forecast": true
+  },
+  "status": "SUPPLEMENTAL_INPUT_CHECKS_AVAILABLE"
+}

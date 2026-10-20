@@ -3,9 +3,9 @@
     "betting_authorized": false,
     "new_observations": 1,
     "repeat_observations": 0,
-    "total_observations": 2
+    "total_observations": 3
   },
-  "asof_utc": "2026-10-19T22:40:12.425636+00:00",
+  "asof_utc": "2026-10-20T00:11:49.329433+00:00",
   "betting_authorized": false,
   "eligible_pregame_games": 1,
   "game_day_inactives_confirmed": 0,
@@ -13,14 +13,14 @@
     {
       "away_team": "WAS",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "cc315fed0bfa181e28bc3a6eb8eaa224d02b97c7afa3c74b8fa0630ccab0834d",
+      "forecast_sha256": "743d6f9a39b5d7c3906f0cffbde29984b8b5e4b7a10e35ddf9fa7b1b7d922f9c",
       "game_id": "2026_06_WAS_SF",
       "home_team": "SF",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-10-20T00:15:00+00:00",
-      "model_capture_utc": "2026-10-19T22:39:54.814526+00:00",
+      "model_capture_utc": "2026-10-20T00:11:34.143665+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-19T22:40:12.425636+00:00",
+      "observed_utc": "2026-10-20T00:11:49.329433+00:00",
       "our_frozen_at_capture_projection": {
         "home_spread": -8.127,
         "predicted_score": {
@@ -31,9 +31,9 @@
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "8db77e928d78ab5233092fd5b68f3a79bcbbe943465aca5dbf0c4fea4b5a0c79",
-      "source_run_id": "39336466801",
-      "source_web_context_sha256": "7e17a859be3a30389964a6b7a3f34832f4106778378121be374d924d7e7a9e5b",
+      "source_bundle_sha256": "cb5bb017d6382ad0140517f02e50027f1c2848dfebac6fe66359e25f323031a4",
+      "source_run_id": "39346111500",
+      "source_web_context_sha256": "bfdaae0b9290d37c0b0340f968ca28d4fe6dadb6c8c3295e58439b45a3b3660a",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -549,17 +549,17 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-19T22:40:07.609546+00:00",
+      "web_context_observed_utc": "2026-10-20T00:11:46.979735+00:00",
       "week": 6
     }
   ],
   "immutable_journal": "history/personnel_asof_v1_2026/observations.jsonl",
   "model_predictions_changed": false,
-  "original_bundle_sha256": "8db77e928d78ab5233092fd5b68f3a79bcbbe943465aca5dbf0c4fea4b5a0c79",
+  "original_bundle_sha256": "cb5bb017d6382ad0140517f02e50027f1c2848dfebac6fe66359e25f323031a4",
   "research_only": true,
   "source_context_games_missing": 0,
   "source_original_bytes_archived_when_new": true,
   "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
   "starting_qbs_confirmed": 0,
-  "supplemental_context_sha256": "7e17a859be3a30389964a6b7a3f34832f4106778378121be374d924d7e7a9e5b"
+  "supplemental_context_sha256": "bfdaae0b9290d37c0b0340f968ca28d4fe6dadb6c8c3295e58439b45a3b3660a"
 }

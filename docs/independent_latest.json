@@ -34,7 +34,7 @@
       "draws": 2000,
       "fair_away_spread": 8.127,
       "fair_home_spread": -8.127,
-      "forecast_sha256": "cc315fed0bfa181e28bc3a6eb8eaa224d02b97c7afa3c74b8fa0630ccab0834d",
+      "forecast_sha256": "743d6f9a39b5d7c3906f0cffbde29984b8b5e4b7a10e35ddf9fa7b1b7d922f9c",
       "game_id": "2026_06_WAS_SF",
       "home_team": "SF",
       "independent_power_rating_baseline": {
@@ -42,7 +42,7 @@
         "home_points": 28.82988977127533
       },
       "kickoff_utc": "2026-10-20T00:15:00+00:00",
-      "model_capture_utc": "2026-10-19T22:39:54.814526+00:00",
+      "model_capture_utc": "2026-10-20T00:11:34.143665+00:00",
       "player_rows": 33,
       "predicted_home_margin": 8.127,
       "predicted_score": {
@@ -66,14 +66,22 @@
   ],
   "games_forecast": 1,
   "games_requested": 1,
-  "generated_utc": "2026-10-19T22:39:56.347740+00:00",
+  "generated_utc": "2026-10-20T00:11:35.725838+00:00",
   "limits": "Own conditional research forecasts. Historical roles are not confirmed active lineups. QB passing workload can be split among historical QB proxies: individual passing props are unreliable, not ranked for bets. Raw p10/p90 are simulation percentiles, not calibrated intervals. Full-game overtime/unusual scoring and market superiority remain unvalidated.",
-  "model_capture_utc": "2026-10-19T22:39:54.814526+00:00",
+  "model_capture_utc": "2026-10-20T00:11:34.143665+00:00",
   "named_player_rows": 33,
   "overtime_validated": false,
+  "player_identity_crosswalk": {
+    "captured_utc": "2026-10-20T00:11:35.696297+00:00",
+    "mapping_sha256": "fef5bc2a6f1999588ff4cc1158dc6ea63a9fbfa7a203d1846cce2b4a26de0623",
+    "source": "nflreadpy.load_players",
+    "status": "ONE_TO_ONE_SOURCE_DIRECTORY_IDS",
+    "unique_mappings": 16588
+  },
   "player_props": [
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "16002",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -131,6 +139,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "16731",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -188,6 +197,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "16737",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -245,6 +255,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "3043116",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -302,6 +313,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "3117251",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -359,6 +371,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "3040151",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -416,6 +429,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "3047876",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -473,6 +487,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "3126486",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -530,6 +545,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4040612",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -587,6 +603,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4241464",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -644,6 +661,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4361741",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -725,6 +743,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4575665",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -782,6 +801,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4431466",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -839,6 +859,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4685397",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -896,6 +917,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4696044",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -953,6 +975,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "2976212",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1010,6 +1033,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "2576980",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1091,6 +1115,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "3068267",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1148,6 +1173,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4421446",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1205,6 +1231,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "3121422",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1262,6 +1289,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4361577",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1319,6 +1347,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4048228",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1376,6 +1405,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4697815",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1433,6 +1463,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4567156",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1490,6 +1521,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4360635",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1547,6 +1579,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4361088",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1604,6 +1637,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4426348",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1685,6 +1719,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4690923",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1742,6 +1777,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4602667",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1799,6 +1835,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4575131",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1856,6 +1893,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "5081432",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1913,6 +1951,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4685246",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -1970,6 +2009,7 @@
     },
     {
       "calibrated_prop_probability": null,
+      "espn_athlete_id": "4432722",
       "estimated_ev": null,
       "game_id": "2026_06_WAS_SF",
       "is_unallocated_bucket": false,
@@ -2055,8 +2095,8 @@
   "qualified_bets": 0,
   "season": 2026,
   "source_errors": [],
-  "source_replay_sha256": "4b2a61e10d38e972e94a52013e869e4f92eca31b18930139aeeb90bd2719a8fa",
-  "source_scan_sha256": "ffced14ed2eaa0b5510d2c081a6729c42e9065853a2d686fd9f621734f9d2cc8",
+  "source_replay_sha256": "16a9e376a8eb2e2117c9aa5bc4dfb8ba0e15d7c11356e30375aa0c7f288b526d",
+  "source_scan_sha256": "ad6141231f1c84a0cfe1d8fccf4609d4afb0c66478439f23dfdbe9694efcf7fa",
   "spec": "NFL_INDEPENDENT_FORECAST_PUBLICATION_V1",
   "sportsbook_prices_used": false,
   "spread_definition": "NEGATIVE_EXPECTED_HOME_MARGIN_NOT_A_CALIBRATED_50_PERCENT_COVER_LINE",
