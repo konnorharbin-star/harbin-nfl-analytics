@@ -34,15 +34,15 @@
       "draws": 2000,
       "fair_away_spread": -0.5205,
       "fair_home_spread": 0.5205,
-      "forecast_sha256": "e8027cb8bd1a65419d56dc8e19d7a29abeae64e9262b0287a7e82e4cd414800a",
+      "forecast_sha256": "41f643d2cd290724960a01ac11828c34597c65cd71085775bba1642910a0163a",
       "game_id": "2026_07_NE_CHI",
       "home_team": "CHI",
       "independent_power_rating_baseline": {
-        "away_points": 22.2475451420696,
-        "home_points": 21.939698895113764
+        "away_points": 22.24754514206942,
+        "home_points": 21.939698895113754
       },
       "kickoff_utc": "2026-10-23T00:15:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 27,
       "predicted_home_margin": -0.5205,
       "predicted_score": {
@@ -94,15 +94,15 @@
       "draws": 2000,
       "fair_away_spread": -2.146,
       "fair_home_spread": 2.146,
-      "forecast_sha256": "565ce9ac5d7e47136d03301b89e8e8ecaff7344a4b7e635cf7d9ad39b2b9aacb",
+      "forecast_sha256": "a5951454993bd1c8d1dfaa2bc6506182b62c5076b5db7c0ed9d5e9898e311a57",
       "game_id": "2026_07_PIT_NO",
       "home_team": "NO",
       "independent_power_rating_baseline": {
-        "away_points": 24.588639215210293,
-        "home_points": 22.465020894408845
+        "away_points": 24.5886392152101,
+        "home_points": 22.46502089440884
       },
       "kickoff_utc": "2026-10-25T13:30:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 27,
       "predicted_home_margin": -2.146,
       "predicted_score": {
@@ -154,15 +154,15 @@
       "draws": 2000,
       "fair_away_spread": 1.591,
       "fair_home_spread": -1.591,
-      "forecast_sha256": "7e61346aa553aa1fc46ce203ab98cb638023607e081b6ca2a40563b619819ef0",
+      "forecast_sha256": "d1806524895a3ca7fb27d659189200c8e3dd7699a7b61caff1effb4c346d3882",
       "game_id": "2026_07_CIN_BAL",
       "home_team": "BAL",
       "independent_power_rating_baseline": {
-        "away_points": 24.49483647838189,
+        "away_points": 24.494836478381703,
         "home_points": 25.858276125597715
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 25,
       "predicted_home_margin": 1.591,
       "predicted_score": {
@@ -214,15 +214,15 @@
       "draws": 2000,
       "fair_away_spread": -2.6015,
       "fair_home_spread": 2.6015,
-      "forecast_sha256": "64441afa4cc4290bd67bc8ccba87d821de7d5dfff1d35abc3181cd17fd6ff4cc",
+      "forecast_sha256": "164be60d266f11b8741d75f60d1324169e963802a8370428fca7099eaf0cfd01",
       "game_id": "2026_07_CLE_TEN",
       "home_team": "TEN",
       "independent_power_rating_baseline": {
-        "away_points": 21.137635304822886,
-        "home_points": 18.664544709799173
+        "away_points": 21.1376353048227,
+        "home_points": 18.66454470979915
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 27,
       "predicted_home_margin": -2.6015,
       "predicted_score": {
@@ -274,15 +274,15 @@
       "draws": 2000,
       "fair_away_spread": 3.444,
       "fair_home_spread": -3.444,
-      "forecast_sha256": "54ba4366b5fb4fce86d87f95e4a7d05b33d8543eabfd5f29dadefae5b440843a",
+      "forecast_sha256": "85ef42bc202c062f4844d350b09532d3f24ff67c4ea0d2f40dfb792ae2fcc33e",
       "game_id": "2026_07_IND_MIN",
       "home_team": "MIN",
       "independent_power_rating_baseline": {
-        "away_points": 20.259921629982685,
-        "home_points": 24.163283495523594
+        "away_points": 20.259921629982493,
+        "home_points": 24.163283495523597
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 27,
       "predicted_home_margin": 3.444,
       "predicted_score": {
@@ -334,15 +334,15 @@
       "draws": 2000,
       "fair_away_spread": 2.6145,
       "fair_home_spread": -2.6145,
-      "forecast_sha256": "07da6e448b3df7a6e5d0a6c3da1beae4d8fd4ec7aa4e857316ea88fae03164a8",
+      "forecast_sha256": "7019aab1d6858c29b4cbcbfdb2160ab0ca7ad8933b5a674420c2b94116ccae1d",
       "game_id": "2026_07_MIA_NYJ",
       "home_team": "NYJ",
       "independent_power_rating_baseline": {
-        "away_points": 19.21846014336603,
-        "home_points": 22.23658560157539
+        "away_points": 19.218460143365842,
+        "home_points": 22.236585601575385
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 24,
       "predicted_home_margin": 2.6145,
       "predicted_score": {
@@ -394,15 +394,15 @@
       "draws": 2000,
       "fair_away_spread": 2.249,
       "fair_home_spread": -2.249,
-      "forecast_sha256": "a04aad7c9a3d2366c34a0ee8c16d76dddfba08a195270a032a2c5db5960c1531",
+      "forecast_sha256": "c9ddd91f529c9ddfd3b9aab5e04e2153bca934d0402fc6ac1cc0b10d1bdb7c45",
       "game_id": "2026_07_NYG_HOU",
       "home_team": "HOU",
       "independent_power_rating_baseline": {
-        "away_points": 20.46564049967293,
-        "home_points": 22.580049489382514
+        "away_points": 20.465640499672737,
+        "home_points": 22.58004948938251
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 30,
       "predicted_home_margin": 2.249,
       "predicted_score": {
@@ -454,15 +454,15 @@
       "draws": 2000,
       "fair_away_spread": -4.388,
       "fair_home_spread": 4.388,
-      "forecast_sha256": "ca36a63264121a4fbbdd6cc948c36d028480e020cdc93d744a38bcce9d0f9835",
+      "forecast_sha256": "d7fb1d903124fa19a09ca792ea7d3184068dd854cfb717c8cf94442cecfcafcf",
       "game_id": "2026_07_SF_ATL",
       "home_team": "ATL",
       "independent_power_rating_baseline": {
-        "away_points": 25.912414993790954,
-        "home_points": 21.796867038690998
+        "away_points": 25.912414993790758,
+        "home_points": 21.796867038691005
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 22,
       "predicted_home_margin": -4.388,
       "predicted_score": {
@@ -514,15 +514,15 @@
       "draws": 2000,
       "fair_away_spread": 1.488,
       "fair_home_spread": -1.488,
-      "forecast_sha256": "f640b0325fa6f443b5c05cb8458dd287b8a381bc5dda3a4cbdee93d5c0a02e99",
+      "forecast_sha256": "1f46464215ebd1b758ff34b36831412136e8dac45da881ee12aa5ec11c1ff695",
       "game_id": "2026_07_TB_CAR",
       "home_team": "CAR",
       "independent_power_rating_baseline": {
-        "away_points": 22.62228172880758,
-        "home_points": 24.751626861118336
+        "away_points": 22.622281728807376,
+        "home_points": 24.75162686111833
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 27,
       "predicted_home_margin": 1.488,
       "predicted_score": {
@@ -574,15 +574,15 @@
       "draws": 2000,
       "fair_away_spread": -3.816,
       "fair_home_spread": 3.816,
-      "forecast_sha256": "ddb20820501f4949fa9c8a6184551b321924d6dfd330fbb527512ac2b649d2b4",
+      "forecast_sha256": "e82c1841e8ad5b4c100ca48e1baea523760a8570f1a24dcd2de2011b95441010",
       "game_id": "2026_07_DEN_ARI",
       "home_team": "ARI",
       "independent_power_rating_baseline": {
-        "away_points": 25.189860575150306,
-        "home_points": 21.13604118138743
+        "away_points": 25.189860575150117,
+        "home_points": 21.136041181387437
       },
       "kickoff_utc": "2026-10-25T20:05:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 27,
       "predicted_home_margin": -3.816,
       "predicted_score": {
@@ -634,15 +634,15 @@
       "draws": 2000,
       "fair_away_spread": 2.553,
       "fair_home_spread": -2.553,
-      "forecast_sha256": "49e2d70142b0a93ac1c141f61a5e228cf1bc65047dbdc120842d7a7b9be665e6",
+      "forecast_sha256": "aa78bc2a2c01b426e65b99b7ce057f2b208061143770b311f07a9c2003dfb2e3",
       "game_id": "2026_07_GB_DET",
       "home_team": "DET",
       "independent_power_rating_baseline": {
-        "away_points": 24.517026443178967,
-        "home_points": 26.67158149660447
+        "away_points": 24.51702644317878,
+        "home_points": 26.671581496604468
       },
       "kickoff_utc": "2026-10-25T20:25:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 24,
       "predicted_home_margin": 2.553,
       "predicted_score": {
@@ -694,15 +694,15 @@
       "draws": 2000,
       "fair_away_spread": -1.8875,
       "fair_home_spread": 1.8875,
-      "forecast_sha256": "229e8638780012307ffc74ccbd07b91cc22b62ba58d068de07a2adc85ab42552",
+      "forecast_sha256": "f1d7d777caf5dff768f8516366e8a6ca70b3713961677c60c7c71a05c6f55a36",
       "game_id": "2026_07_LA_LV",
       "home_team": "LV",
       "independent_power_rating_baseline": {
-        "away_points": 25.510443733411343,
-        "home_points": 23.431500471613926
+        "away_points": 25.510443733411144,
+        "home_points": 23.431500471613933
       },
       "kickoff_utc": "2026-10-25T20:25:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 27,
       "predicted_home_margin": -1.8875,
       "predicted_score": {
@@ -754,15 +754,15 @@
       "draws": 2000,
       "fair_away_spread": 0.5715,
       "fair_home_spread": -0.5715,
-      "forecast_sha256": "3e77aa141707c5d7c2548a0051120adb0a94fe52783f11753c00a4a0eda6a009",
+      "forecast_sha256": "fa7c84372b0efd83f1e73734d930bbb0b3ef14051064ca83709589726c28b77c",
       "game_id": "2026_07_KC_SEA",
       "home_team": "SEA",
       "independent_power_rating_baseline": {
-        "away_points": 22.579490390317943,
-        "home_points": 23.21029957190831
+        "away_points": 22.57949039031776,
+        "home_points": 23.210299571908305
       },
       "kickoff_utc": "2026-10-26T00:20:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 26,
       "predicted_home_margin": 0.5715,
       "predicted_score": {
@@ -814,15 +814,15 @@
       "draws": 2000,
       "fair_away_spread": -0.168,
       "fair_home_spread": 0.168,
-      "forecast_sha256": "7caf61e8ca87fce0292a6f170216ef0060b2af1d35c10ed4d51453e8b1145662",
+      "forecast_sha256": "5e1ae377834fdb2fb49fb5b3ac11557051d8d87c1616f1fbe78055bc92c4a5f5",
       "game_id": "2026_07_DAL_PHI",
       "home_team": "PHI",
       "independent_power_rating_baseline": {
-        "away_points": 24.029520841757687,
-        "home_points": 24.24154294189414
+        "away_points": 24.02952084175749,
+        "home_points": 24.241542941894142
       },
       "kickoff_utc": "2026-10-27T00:15:00+00:00",
-      "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+      "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
       "player_rows": 28,
       "predicted_home_margin": -0.168,
       "predicted_score": {
@@ -846,13 +846,13 @@
   ],
   "games_forecast": 14,
   "games_requested": 14,
-  "generated_utc": "2026-10-20T00:37:46.097851+00:00",
+  "generated_utc": "2026-10-20T17:57:40.085365+00:00",
   "limits": "Own conditional research forecasts. Historical roles are not confirmed active lineups. QB passing workload can be split among historical QB proxies: individual passing props are unreliable, not ranked for bets. Raw p10/p90 are simulation percentiles, not calibrated intervals. Full-game overtime/unusual scoring and market superiority remain unvalidated.",
-  "model_capture_utc": "2026-10-20T00:37:24.648346+00:00",
+  "model_capture_utc": "2026-10-20T17:57:29.832615+00:00",
   "named_player_rows": 368,
   "overtime_validated": false,
   "player_identity_crosswalk": {
-    "captured_utc": "2026-10-20T00:37:45.684858+00:00",
+    "captured_utc": "2026-10-20T17:57:39.872202+00:00",
     "mapping_sha256": "fef5bc2a6f1999588ff4cc1158dc6ea63a9fbfa7a203d1846cce2b4a26de0623",
     "source": "nflreadpy.load_players",
     "status": "ONE_TO_ONE_SOURCE_DIRECTORY_IDS",
@@ -13681,19 +13681,19 @@
           "p90": 0.0
         },
         "receiving_touchdowns": {
-          "mean": 0.1,
+          "mean": 0.112,
           "median": 0.0,
           "p10": 0.0,
-          "p90": 0.0
+          "p90": 1.0
         },
         "receiving_yards": {
-          "mean": 12.8415,
-          "median": 6.0,
+          "mean": 14.562,
+          "median": 8.0,
           "p10": 0.0,
-          "p90": 36.0
+          "p90": 39.0
         },
         "receptions": {
-          "mean": 1.181,
+          "mean": 1.3215,
           "median": 1.0,
           "p10": 0.0,
           "p90": 3.0
@@ -13743,19 +13743,19 @@
           "p90": 0.0
         },
         "receiving_touchdowns": {
-          "mean": 0.0705,
+          "mean": 0.0715,
           "median": 0.0,
           "p10": 0.0,
           "p90": 0.0
         },
         "receiving_yards": {
-          "mean": 9.7745,
+          "mean": 9.996,
           "median": 2.0,
           "p10": 0.0,
-          "p90": 29.0
+          "p90": 30.0
         },
         "receptions": {
-          "mean": 0.828,
+          "mean": 0.8465,
           "median": 1.0,
           "p10": 0.0,
           "p90": 2.0
@@ -13805,22 +13805,22 @@
           "p90": 0.0
         },
         "receiving_touchdowns": {
-          "mean": 0.5055,
+          "mean": 0.451,
           "median": 0.0,
           "p10": 0.0,
           "p90": 1.0
         },
         "receiving_yards": {
-          "mean": 66.77,
-          "median": 60.0,
-          "p10": 20.0,
-          "p90": 123.0
+          "mean": 59.7425,
+          "median": 54.0,
+          "p10": 16.0,
+          "p90": 113.0
         },
         "receptions": {
-          "mean": 5.938,
-          "median": 6.0,
-          "p10": 3.0,
-          "p90": 10.0
+          "mean": 5.302,
+          "median": 5.0,
+          "p10": 2.0,
+          "p90": 9.0
         },
         "rushing_touchdowns": {
           "mean": 0.0,
@@ -13861,40 +13861,40 @@
       "position": "RB",
       "projections": {
         "carries": {
-          "mean": 12.7695,
-          "median": 12.0,
+          "mean": 13.0815,
+          "median": 13.0,
           "p10": 7.0,
           "p90": 19.0
         },
         "receiving_touchdowns": {
-          "mean": 0.337,
+          "mean": 0.4175,
           "median": 0.0,
           "p10": 0.0,
           "p90": 1.0
         },
         "receiving_yards": {
-          "mean": 43.036,
-          "median": 37.0,
-          "p10": 6.0,
-          "p90": 86.0
+          "mean": 53.18,
+          "median": 48.0,
+          "p10": 12.0,
+          "p90": 104.0
         },
         "receptions": {
-          "mean": 3.7775,
+          "mean": 4.693,
           "median": 4.0,
-          "p10": 1.0,
-          "p90": 7.0
+          "p10": 2.0,
+          "p90": 8.0
         },
         "rushing_touchdowns": {
-          "mean": 0.5155,
+          "mean": 0.526,
           "median": 0.0,
           "p10": 0.0,
           "p90": 1.0
         },
         "rushing_yards": {
-          "mean": 58.6165,
-          "median": 55.0,
-          "p10": 25.0,
-          "p90": 98.0
+          "mean": 60.0195,
+          "median": 56.0,
+          "p10": 26.0,
+          "p90": 100.0
         }
       },
       "source_player_names": [
@@ -13929,19 +13929,19 @@
           "p90": 0.0
         },
         "receiving_touchdowns": {
-          "mean": 0.4035,
+          "mean": 0.41,
           "median": 0.0,
           "p10": 0.0,
           "p90": 1.0
         },
         "receiving_yards": {
-          "mean": 54.199,
-          "median": 48.0,
-          "p10": 12.0,
-          "p90": 106.0
+          "mean": 55.466,
+          "median": 49.0,
+          "p10": 13.0,
+          "p90": 105.0
         },
         "receptions": {
-          "mean": 4.8755,
+          "mean": 4.9885,
           "median": 5.0,
           "p10": 2.0,
           "p90": 8.0
@@ -13985,40 +13985,40 @@
       "position": "WR",
       "projections": {
         "carries": {
-          "mean": 2.044,
+          "mean": 1.735,
           "median": 2.0,
           "p10": 0.0,
           "p90": 4.0
         },
         "receiving_touchdowns": {
-          "mean": 0.2405,
+          "mean": 0.2055,
           "median": 0.0,
           "p10": 0.0,
           "p90": 1.0
         },
         "receiving_yards": {
-          "mean": 32.0975,
-          "median": 27.0,
-          "p10": 2.0,
-          "p90": 70.0
+          "mean": 27.58,
+          "median": 22.0,
+          "p10": 0.0,
+          "p90": 63.0
         },
         "receptions": {
-          "mean": 2.829,
-          "median": 3.0,
-          "p10": 1.0,
+          "mean": 2.4275,
+          "median": 2.0,
+          "p10": 0.0,
           "p90": 5.0
         },
         "rushing_touchdowns": {
-          "mean": 0.095,
+          "mean": 0.0855,
           "median": 0.0,
           "p10": 0.0,
           "p90": 0.0
         },
         "rushing_yards": {
-          "mean": 9.37,
-          "median": 7.0,
+          "mean": 7.9855,
+          "median": 5.0,
           "p10": 0.0,
-          "p90": 22.0
+          "p90": 20.0
         }
       },
       "source_player_names": [
@@ -14053,19 +14053,19 @@
           "p90": 0.0
         },
         "receiving_touchdowns": {
-          "mean": 0.0445,
+          "mean": 0.0355,
           "median": 0.0,
           "p10": 0.0,
           "p90": 0.0
         },
         "receiving_yards": {
-          "mean": 5.5695,
+          "mean": 4.0405,
           "median": 0.0,
           "p10": 0.0,
-          "p90": 21.0
+          "p90": 15.0
         },
         "receptions": {
-          "mean": 0.491,
+          "mean": 0.3665,
           "median": 0.0,
           "p10": 0.0,
           "p90": 1.0
@@ -14109,10 +14109,10 @@
       "position": "QB",
       "projections": {
         "carries": {
-          "mean": 5.336,
+          "mean": 5.115,
           "median": 5.0,
           "p10": 2.0,
-          "p90": 9.0
+          "p90": 8.0
         },
         "passing_attempts": {
           "mean": 34.7915,
@@ -14163,16 +14163,16 @@
           "p90": 0.0
         },
         "rushing_touchdowns": {
-          "mean": 0.2245,
+          "mean": 0.214,
           "median": 0.0,
           "p10": 0.0,
           "p90": 1.0
         },
         "rushing_yards": {
-          "mean": 24.8515,
-          "median": 22.0,
-          "p10": 6.0,
-          "p90": 47.0
+          "mean": 23.788,
+          "median": 21.0,
+          "p10": 5.0,
+          "p90": 45.0
         }
       },
       "source_player_names": [
@@ -14195,37 +14195,37 @@
       "position": "WR",
       "projections": {
         "carries": {
-          "mean": 0.2615,
+          "mean": 0.232,
           "median": 0.0,
           "p10": 0.0,
           "p90": 1.0
         },
         "receiving_touchdowns": {
-          "mean": 0.067,
+          "mean": 0.05,
           "median": 0.0,
           "p10": 0.0,
           "p90": 0.0
         },
         "receiving_yards": {
-          "mean": 9.4365,
-          "median": 2.0,
+          "mean": 6.979,
+          "median": 0.0,
           "p10": 0.0,
-          "p90": 29.0
+          "p90": 24.0
         },
         "receptions": {
-          "mean": 0.8315,
-          "median": 1.0,
+          "mean": 0.6165,
+          "median": 0.0,
           "p10": 0.0,
           "p90": 2.0
         },
         "rushing_touchdowns": {
-          "mean": 0.009,
+          "mean": 0.011,
           "median": 0.0,
           "p10": 0.0,
           "p90": 0.0
         },
         "rushing_yards": {
-          "mean": 1.2365,
+          "mean": 1.0985,
           "median": 0.0,
           "p10": 0.0,
           "p90": 4.0
@@ -14263,19 +14263,19 @@
           "p90": 0.0
         },
         "receiving_touchdowns": {
-          "mean": 0.0415,
+          "mean": 0.046,
           "median": 0.0,
           "p10": 0.0,
           "p90": 0.0
         },
         "receiving_yards": {
-          "mean": 5.967,
+          "mean": 6.626,
           "median": 0.0,
           "p10": 0.0,
-          "p90": 22.0
+          "p90": 23.0
         },
         "receptions": {
-          "mean": 0.532,
+          "mean": 0.589,
           "median": 0.0,
           "p10": 0.0,
           "p90": 2.0
@@ -14319,40 +14319,40 @@
       "position": "RB",
       "projections": {
         "carries": {
-          "mean": 6.33,
+          "mean": 6.5775,
           "median": 6.0,
           "p10": 3.0,
           "p90": 10.0
         },
         "receiving_touchdowns": {
-          "mean": 0.0215,
+          "mean": 0.0325,
           "median": 0.0,
           "p10": 0.0,
           "p90": 0.0
         },
         "receiving_yards": {
-          "mean": 2.8175,
+          "mean": 4.337,
           "median": 0.0,
           "p10": 0.0,
-          "p90": 10.0
+          "p90": 16.0
         },
         "receptions": {
-          "mean": 0.2495,
+          "mean": 0.382,
           "median": 0.0,
           "p10": 0.0,
           "p90": 1.0
         },
         "rushing_touchdowns": {
-          "mean": 0.281,
+          "mean": 0.2885,
           "median": 0.0,
           "p10": 0.0,
           "p90": 1.0
         },
         "rushing_yards": {
-          "mean": 29.5125,
-          "median": 26.0,
-          "p10": 8.0,
-          "p90": 54.0
+          "mean": 30.6955,
+          "median": 27.0,
+          "p10": 9.0,
+          "p90": 56.0
         }
       },
       "source_player_names": [
@@ -24616,8 +24616,8 @@
   "qualified_bets": 0,
   "season": 2026,
   "source_errors": [],
-  "source_replay_sha256": "4024d7cdecbdfeb7d0c9d757f38c5faafb2185c3cda58d8b69e727a2b2c78d06",
-  "source_scan_sha256": "213d6b60d6d78a08fb53e7db0804dfa201c69759824ef9d9e4ac0bdb028eccad",
+  "source_replay_sha256": "e9af6ae999af18406ea6bd2de171f96a9e04e586f3515b38bef5e93986293e89",
+  "source_scan_sha256": "2df3b1f3bb3dceff0e71c0903101acc77e98341c7c9228ed5d71b55534d03da1",
   "spec": "NFL_INDEPENDENT_FORECAST_PUBLICATION_V1",
   "sportsbook_prices_used": false,
   "spread_definition": "NEGATIVE_EXPECTED_HOME_MARGIN_NOT_A_CALIBRATED_50_PERCENT_COVER_LINE",
