@@ -71,7 +71,7 @@ def approved_url(url, *, search=False):
     )
 
 
-def fetch_page(url, *, search=False):
+def fetch_page(url, *, search=False, exact_source=False):
     if not approved_url(url, search=search):
         raise ValueError("UNAPPROVED_PUBLIC_SOURCE")
     request = Request(
@@ -80,6 +80,8 @@ def fetch_page(url, *, search=False):
     with urlopen(request, timeout=6) as response:
         if not approved_url(response.geturl(), search=search):
             raise ValueError("UNAPPROVED_REDIRECT")
+        if exact_source and response.geturl() != url:
+            raise ValueError("UNEXPECTED_STRUCTURED_SOURCE_REDIRECT")
         raw = response.read(5_000_001)
     if len(raw) > 5_000_000:
         raise ValueError("SOURCE_TOO_LARGE")

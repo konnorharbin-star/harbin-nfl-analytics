@@ -13,7 +13,8 @@ from pathlib import Path
 from threading import Lock
 
 from nfl.public_article_dates import bind_publication_to_game, publisher_issue_time
-from nfl.public_game_inputs import input_contract, scoreboard_url, verify_game_snapshot
+from nfl.public_context_inputs import collect_context_inputs, context_contract
+from nfl.public_game_inputs import scoreboard_url, verify_game_snapshot
 from nfl.web_model_intake import (
     BOARD,
     SITUATIONAL_TOPICS,
@@ -83,6 +84,9 @@ def collect(
     for game in games:
         view = {
             "game_id": game["game_id"],
+            "home_team": game["home_team"],
+            "away_team": game["away_team"],
+            "kickoff_utc": game["kickoff_utc"],
             "searches": [],
             "paired_prop_sides": 0,
             "prop_price_coverage": "MISSING",
@@ -261,7 +265,7 @@ def collect(
             url = scoreboard_url(source_game)
             if url not in event_snapshots:
                 try:
-                    raw = get(url)
+                    raw = get(url, exact_source=True)
                     event_snapshots[url] = (
                         json.loads(raw),
                         hashlib.sha256(raw).hexdigest(),
@@ -298,18 +302,60 @@ def collect(
                 "facts": {},
             }
         view["structured_game_observation"] = observation
+    context_sources = {}
+
+    def read_context(url):
+        if url not in context_sources:
+            try:
+                raw = get(url, exact_source=True)
+                payload = json.loads(raw)
+                if not isinstance(payload, dict):
+                    raise ValueError("INVALID_STRUCTURED_SOURCE_DOCUMENT")
+                context_sources[url] = {
+                    "source_url": url,
+                    "snapshot_sha256": hashlib.sha256(raw).hexdigest(),
+                    "captured_utc": now().isoformat(),
+                    "payload": payload,
+                }
+            except Exception as error:
+                context_sources[url] = error
+        source = context_sources[url]
+        if isinstance(source, Exception):
+            raise source
+        return source
+
+    for source_game, view in zip(games, report["games"], strict=True):
+        view["verified_context_inputs"] = collect_context_inputs(
+            source_game,
+            view["structured_game_observation"],
+            players,
+            read=read_context,
+            now=now,
+        )
+        report["source_errors"].extend(
+            {"game_id": source_game["game_id"], **error}
+            for error in view["verified_context_inputs"]["source_errors"]
+        )
     report["collection_started_utc"] = report["capture_utc"]
     report["capture_utc"] = now().isoformat()
     for source_game, view in zip(games, report["games"], strict=True):
-        view["input_data_contract"] = input_contract(
+        view["input_data_contract"] = context_contract(
             view["structured_game_observation"],
+            view["verified_context_inputs"],
+            source_game,
             asof=report["capture_utc"],
-            game=source_game,
+            players=players,
         )
     report["game_bindings_verified"] = sum(
         view["input_data_contract"]["event_binding_passed"] for view in report["games"]
     )
     report["context_adjusted_predictions_ready"] = 0
+    report["dated_player_statuses_verified"] = sum(
+        g["input_data_contract"]["reported_injury_statuses_verified"] for g in report["games"]
+    )
+    report["outdoor_weather_forecasts_verified"] = sum(
+        g["input_data_contract"]["outdoor_weather_verified"] for g in report["games"]
+    )
     report["situational_factor_status_counts"] = dict(
         Counter(
             factor["status"]
@@ -347,7 +393,8 @@ def coverage_markdown(report):
         "",
         "Provider game observations require exact home/away teams, kickoff, scheduled status, "
         "a raw snapshot hash and a pregame capture no older than six hours. Capture time is "
-        "not a publication timestamp. These checks do not verify player roles or weather.",
+        "not a publication timestamp. Dated reported injuries and venue-bound outdoor forecasts "
+        "are checked separately; neither confirms starters, final actives or roof position.",
         "",
         "| Game | Event binding | Accepted fields | Blockers / missing inputs |",
         "| --- | --- | --- | --- |",
@@ -371,6 +418,9 @@ def main():
     )
     p.add_argument("--max-players", type=int, default=60)
     p.add_argument("--max-articles", type=int, default=32)
+    p.add_argument(
+        "--input-quality", type=Path, help="Supplemental quality output beside forecasts"
+    )
     a = p.parse_args()
     snapshots = a.out.parent / "web_source_snapshots"
     snapshots.mkdir(parents=True, exist_ok=True)
@@ -380,8 +430,10 @@ def main():
         if not path.exists():
             path.write_bytes(gzip.compress(raw, mtime=0))
 
+    forecast_raw = a.predictions.read_bytes()
+    forecast = json.loads(forecast_raw)
     report = collect(
-        json.loads(a.predictions.read_text()),
+        forecast,
         max_players=a.max_players,
         max_articles=a.max_articles,
         save_raw=save_raw,
@@ -389,6 +441,12 @@ def main():
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     a.out.with_suffix(".md").write_text(coverage_markdown(report))
+    from nfl.public_input_quality import quality_report
+
+    quality = quality_report(report, forecast, hashlib.sha256(forecast_raw).hexdigest())
+    quality_path = a.input_quality or a.predictions.with_name("independent_input_quality.json")
+    quality_path.parent.mkdir(parents=True, exist_ok=True)
+    quality_path.write_text(json.dumps(quality, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     a.prop_contracts.parent.mkdir(parents=True, exist_ok=True)
     a.prop_contracts.write_text(
         json.dumps(report["prop_contracts"], indent=2, sort_keys=True) + "\n"

@@ -28,13 +28,51 @@ The JSON and Markdown reports expose these checks in every existing default
 web-intake entrypoint. A provider assertion passing these checks is not a
 guarantee of external factual accuracy or complete situational coverage.
 
-This change completes event/venue source binding, not automatic extraction
-of every situational fact. Article prose stays unverified. The existing
-forecast still runs before supplemental collection; no old or current
-forecast is retroactively context-adjusted. `ready_for_context_adjusted_prediction`
-remains false until the remaining input adapters and a tested consumption
-path exist. This contract does not change coefficients, qualify bets, or
-demonstrate an accuracy or profitability gain.
+## Player status and weather observations
+
+The default forecast export includes a one-to-one GSIS/ESPN player-ID
+crosswalk from `nflreadpy.load_players`, with collection time and a hash of
+the normalized mapping. Ambiguous IDs are omitted; names never establish
+identity. Game-specific ESPN summaries must independently match the verified
+event ID, home/away teams, kickoff and scheduled pregame status. Only recognized
+injury statuses with a source update no later than capture and no older than
+seven days are retained. Conflicting latest statuses, wrong teams, unknown
+IDs, undated rows and future updates remain unknown. The injury snapshot
+must be fresh within six hours when consumed. These are verified reported
+statuses, not official final actives or confirmed QBs. Not being listed never
+means healthy or active.
+
+NWS lookup uses the actual event venue name and the existing approximate
+stadium-coordinate registry. Home venues additionally require a matching
+home team and an explicitly non-neutral event; shared LA/NY venues allow
+either tenant. Registered neutral venues require a neutral event. Unknown
+venues and locations outside NWS coverage remain unavailable; no nominal-home-only
+coordinate fallback exists. One hourly period must contain kickoff. Forecast
+issue and capture must be pregame, not future and fresh within six hours.
+Temperature, wind and precipitation units are checked; missing precipitation
+stays missing. An outdoor forecast does not establish roof position or
+on-field weather. Requests are shared by source URL within a run, hashed and
+archived through the existing snapshot store. Structured requests reject
+redirects to a different resource, even to another approved publisher.
+
+## Publication and remaining gaps
+
+The intake writes `outputs/independent_input_quality.json` alongside the
+forecast by default, or beside a custom predictions path. It contains no
+bookmaker prices. The current dashboard validates its exact original forecast
+byte hash, generation/capture chronology, game coverage, teams and kickoff,
+then rechecks source age and player identity. Missing, stale, malformed or
+mismatched reports are shown as unavailable and replace any older quality
+artifact. Original forecast JSON/CSV/image values and first-seen history are
+not rewritten. Supplemental evidence and its hash are published separately
+and archived with the workflow artifacts.
+
+Article prose stays unverified. The forecast still precedes supplemental
+collection; no forecast is retroactively context-adjusted.
+`ready_for_context_adjusted_prediction` stays false because confirmed QBs,
+final availability and on-field/roof conditions remain unresolved. Tested
+feature consumption and predictive weights require separate evidence. This
+change does not qualify bets or demonstrate improved accuracy or profitability.
 
 Windows installations now explicitly include the IANA timezone database
 needed by the existing and new Eastern-date checks.

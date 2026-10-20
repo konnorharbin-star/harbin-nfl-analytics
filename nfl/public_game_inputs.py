@@ -4,6 +4,7 @@ The collection clock is provenance for a live observation, not a publisher
 timestamp and not permission to backfill an earlier forecast.
 """
 
+import re
 from datetime import UTC, datetime, timedelta
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
@@ -26,7 +27,9 @@ def scoreboard_url(game):
     return SCOREBOARD + "?" + urlencode({"dates": day.strftime("%Y%m%d"), "limit": 100})
 
 
-def verify_game_snapshot(payload, game, *, source_url, snapshot_sha256, captured, asof):
+def verify_game_snapshot(
+    payload, game, *, source_url, snapshot_sha256, captured, asof, summary_event_id=None
+):
     """Bind one structured provider event to exact teams/time, failing closed.
 
     Acceptance verifies the provenance and event binding of provider assertions;
@@ -54,6 +57,16 @@ def verify_game_snapshot(payload, game, *, source_url, snapshot_sha256, captured
         kickoff, observed, decision = map(clock, (game["kickoff_utc"], captured, asof))
         result["captured_utc"] = observed.isoformat()
         expected_url = scoreboard_url(game)
+        if summary_event_id is not None:
+            if not isinstance(summary_event_id, str) or not re.fullmatch(
+                r"[0-9]+", summary_event_id
+            ):
+                return reject("INVALID_EXPECTED_SUMMARY_EVENT_ID")
+            expected_url = (
+                "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event="
+                + summary_event_id
+            )
+            result["source_kind"] = "ESPN_CURRENT_GAME_SUMMARY"
     except (KeyError, TypeError, ValueError):
         return reject("INVALID_GAME_OR_CAPTURE_CLOCK")
     if source_url != expected_url:
@@ -109,6 +122,8 @@ def verify_game_snapshot(payload, game, *, source_url, snapshot_sha256, captured
     event_id = event.get("id")
     if not isinstance(event_id, str) or not event_id.isascii() or not event_id.isdigit():
         return reject("MISSING_PROVIDER_EVENT_ID")
+    if summary_event_id is not None and event_id != summary_event_id:
+        return reject("SUMMARY_EVENT_IDENTITY_MISMATCH")
     status = event.get("status")
     state = status.get("type") if isinstance(status, dict) else None
     if (

@@ -172,3 +172,24 @@ def test_unavailable_feed_is_visible_and_does_not_erase_game_coverage():
         "STRUCTURED_GAME_SOURCE_UNAVAILABLE"
         in result["games"][0]["input_data_contract"]["blocking_reasons"]
     )
+
+
+def test_structured_source_redirect_to_another_approved_publisher_is_rejected(monkeypatch):
+    from nfl.web_model_intake import fetch_page
+
+    class Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def geturl(self):
+            return "https://www.espn.com/other-resource"
+
+        def read(self, limit):
+            raise AssertionError("Redirected content must not be read as the requested feed")
+
+    monkeypatch.setattr("nfl.web_model_intake.urlopen", lambda *a, **k: Response())
+    with pytest.raises(ValueError, match="STRUCTURED_SOURCE_REDIRECT"):
+        fetch_page(scoreboard_url(GAME), exact_source=True)
