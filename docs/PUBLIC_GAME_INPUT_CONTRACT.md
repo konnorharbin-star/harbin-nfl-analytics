@@ -32,7 +32,7 @@ guarantee of external factual accuracy or complete situational coverage.
 
 The default forecast export includes a one-to-one GSIS/ESPN player-ID
 crosswalk from `nflreadpy.load_players`, with collection time and a hash of
-the normalized mapping. Ambiguous IDs are omitted; names never establish
+the normalized mapping. Ambiguous IDs are omitted; names alone never establish
 identity. Game-specific ESPN summaries must independently match the verified
 event ID, home/away teams, kickoff and scheduled pregame status. Only recognized
 injury statuses with a source update no later than capture and no older than
@@ -69,10 +69,48 @@ and archived with the workflow artifacts.
 
 Article prose stays unverified. The forecast still precedes supplemental
 collection; no forecast is retroactively context-adjusted.
-`ready_for_context_adjusted_prediction` stays false because confirmed QBs,
-final availability and on-field/roof conditions remain unresolved. Tested
-feature consumption and predictive weights require separate evidence. This
-change does not qualify bets or demonstrate improved accuracy or profitability.
+`ready_for_context_adjusted_prediction` stays false because tested feature
+consumption and predictive weights require separate evidence. Source checks
+do not qualify bets or demonstrate improved accuracy or profitability.
+
+## Explicit official personnel and roof applicability
+
+Two targeted searches now precede general research queries: official game-day
+inactive lists and explicit starting-QB announcements, restricted to NFL.com
+and the two clubs' domains. They share the existing article request budget.
+Official-page redirects must stay within the same publisher. Dates support
+one unambiguous JSON-LD NewsArticle/Article as well as publisher meta tags;
+future or contradictory issue/modification times are rejected. Only main
+article blocks are parsed, not navigation, related headlines or RSS snippets.
+All pages retain raw snapshot hashes and capture times.
+
+Announcements require correct teams/week, recent publication and pregame
+capture. Club pages can confirm starters only for their own team. Starter
+confirmation requires a unique model QB explicitly named in a definite
+statement such as "will start"; conditional wording, depth-chart order, pass
+leaders and backup inactives are insufficient. Prose names are linked by exact
+team plus a unique normalized name from the player directory's explicit name
+variants. The composite binding method and model player ID are preserved;
+ambiguous or unmatched names stay unresolved.
+
+Game-day inactive lists require same-day publication and explicit team sections,
+or the matching club's own report. League omnibus reports bind same-day team
+lists through the independently verified schedule/week. Explicitly reported
+actives are separate from inactive lists. Omitted players never become active.
+Emergency-QB annotations are retained; listed-inactive status does not guarantee
+zero emergency participation. Conflicting designations remain unknown. The
+dashboard shows starter/list coverage and explicit player designations separately.
+Official evidence is checked again at publication, including capture order.
+
+The intake captures normalized nflverse schedule rows once, preserving their
+hash and collection time. A row must match game ID, teams, kickoff, ESPN event
+ID and actual venue. `outdoors` means an operating roof position is not
+applicable; `dome` means a fixed roof, with outdoor weather waived only when
+the event source also reports an indoor venue. `open`/`closed` schedule values
+never by themselves confirm a retractable roof's game-day position. Missing,
+stale, changed or mismatched rows stay unknown. These are source classification
+assertions, not on-field measurements. Each resolved blocker clears separately;
+predictive calibration and betting gates remain independent of source completeness.
 
 Windows installations now explicitly include the IANA timezone database
 needed by the existing and new Eastern-date checks.

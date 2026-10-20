@@ -89,6 +89,8 @@ def publication_quality(report, forecast, *, forecast_sha256, at):
                 context.get("availability", {}).get("source", {}),
                 context.get("weather", {}).get("point_source", {}),
                 context.get("weather", {}).get("forecast_source", {}),
+                context.get("roof_schedule_snapshot") or {},
+                *context.get("official_articles", []),
             ]
             for record in sources:
                 if record.get("captured_utc") is not None:

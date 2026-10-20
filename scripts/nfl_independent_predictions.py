@@ -18,6 +18,7 @@ def main():
     p.add_argument("--resolve-names", action="store_true")
     a = p.parse_args()
     names, name_errors, espn_ids = {}, [], {}
+    source_names = {}
     identity_source = {"source": "nflreadpy.load_players", "status": "UNAVAILABLE"}
     if a.resolve_names:
         try:
@@ -38,6 +39,14 @@ def main():
                 name = r.get("display_name") or r.get("football_name") or r.get("full_name")
                 if pid and name:
                     names[str(pid)] = str(name)
+                if pid in espn_ids:
+                    source_names[pid] = sorted(
+                        {
+                            str(r[k])
+                            for k in ("display_name", "football_name", "full_name")
+                            if r.get(k)
+                        }
+                    )
             if not names:
                 raise ValueError("NO_SOURCE_PLAYER_NAMES_AVAILABLE")
         except Exception as exc:
@@ -54,6 +63,7 @@ def main():
     for player in bundle["player_props"]:
         # Supplemental source identity only; never infer active status from a name.
         player["espn_athlete_id"] = espn_ids.get(player["player_id"])
+        player["source_player_names"] = source_names.get(player["player_id"], [])
     bundle["source_scan_sha256"] = hashlib.sha256(a.scan.read_bytes()).hexdigest()
     bundle["source_replay_sha256"] = hashlib.sha256(a.replay.read_bytes()).hexdigest()
     outputs = write_bundle(bundle, a.out)

@@ -12,9 +12,16 @@ from datetime import UTC, datetime
 from pathlib import Path
 from threading import Lock
 
+from nfl.official_personnel import (
+    article_content,
+    official_article_records,
+    personnel_from_articles,
+)
+from nfl.official_sources import official_publisher
 from nfl.public_article_dates import bind_publication_to_game, publisher_issue_time
 from nfl.public_context_inputs import collect_context_inputs, context_contract
 from nfl.public_game_inputs import scoreboard_url, verify_game_snapshot
+from nfl.public_roof_inputs import roof_evidence, schedule_snapshot
 from nfl.web_model_intake import (
     BOARD,
     SITUATIONAL_TOPICS,
@@ -36,6 +43,7 @@ def collect(
     max_players=60,
     max_articles=32,
     save_raw=None,
+    schedules=None,
     now=lambda: datetime.now(UTC),
 ):
     if not 1 <= max_players <= 100 or not 0 <= max_articles <= 32:
@@ -126,7 +134,7 @@ def collect(
                 article_urls.append(queue.pop(0))
     for url in list(dict.fromkeys(article_urls + fallback_urls))[:max_articles]:
         try:
-            raw = get(url)
+            raw = get(url, publisher_bound=official_publisher(url) is not None)
             observed = now()
             page_text = raw.decode("utf-8", errors="replace")
             body = clean(Page(page_text).root.text())
@@ -139,6 +147,7 @@ def collect(
                     "body_excerpt": body[:16000],
                     "body_excerpt_truncated": len(body) > 16000,
                     **dated,
+                    "official_article": article_content(page_text),
                     "publisher_issue_time_not_proof_unmodified_content": True,
                     "structured_facts_verified": False,
                 }
@@ -332,11 +341,23 @@ def collect(
             read=read_context,
             now=now,
         )
+        context = view["verified_context_inputs"]
+        context["official_articles"] = official_article_records(report["articles"], source_game)
+        context["official_personnel"] = personnel_from_articles(
+            context["official_articles"], source_game, players, asof=now()
+        )
+        context["roof"] = roof_evidence(
+            schedules, view["structured_game_observation"], source_game, asof=now()
+        )
+        if schedules:
+            context["roof_schedule_snapshot"] = schedules
         report["source_errors"].extend(
             {"game_id": source_game["game_id"], **error}
             for error in view["verified_context_inputs"]["source_errors"]
         )
     report["collection_started_utc"] = report["capture_utc"]
+    if schedules and schedules.get("captured_utc"):
+        report["collection_started_utc"] = min(report["capture_utc"], schedules["captured_utc"])
     report["capture_utc"] = now().isoformat()
     for source_game, view in zip(games, report["games"], strict=True):
         view["input_data_contract"] = context_contract(
@@ -355,6 +376,13 @@ def collect(
     )
     report["outdoor_weather_forecasts_verified"] = sum(
         g["input_data_contract"]["outdoor_weather_verified"] for g in report["games"]
+    )
+    report["official_inactive_team_reports_verified"] = sum(
+        len(g["input_data_contract"].get("official_inactive_teams", [])) for g in report["games"]
+    )
+    report["starting_qbs_confirmed"] = sum(
+        len(g["input_data_contract"].get("confirmed_starting_qb_teams", []))
+        for g in report["games"]
     )
     report["situational_factor_status_counts"] = dict(
         Counter(
@@ -432,12 +460,26 @@ def main():
 
     forecast_raw = a.predictions.read_bytes()
     forecast = json.loads(forecast_raw)
+    schedules, schedule_error = None, None
+    try:
+        import nflreadpy as nfl
+
+        targets = {g["game_id"] for g in forecast["games"]}
+        rows = [
+            r for r in nfl.load_schedules(forecast["season"]).to_dicts() if r["game_id"] in targets
+        ]
+        schedules = schedule_snapshot(rows, captured=datetime.now(UTC))
+    except Exception as error:
+        schedule_error = {"source": "NFLVERSE_ROOF_SCHEDULE", "error": type(error).__name__}
     report = collect(
         forecast,
         max_players=a.max_players,
         max_articles=a.max_articles,
         save_raw=save_raw,
+        schedules=schedules,
     )
+    if schedule_error:
+        report["source_errors"].append(schedule_error)
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     a.out.with_suffix(".md").write_text(coverage_markdown(report))
