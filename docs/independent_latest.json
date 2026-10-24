@@ -34,15 +34,15 @@
       "draws": 2000,
       "fair_away_spread": -1.6505,
       "fair_home_spread": 1.6505,
-      "forecast_sha256": "32ba4e0817ce625ccfd937d70692ecee42390d2cc4d9c0ed6bfba5de335083da",
+      "forecast_sha256": "f90378d93ee4fa6ceae68b9c0b541217e0fff8ddd2be3b6f5e3c50c84cde95e1",
       "game_id": "2026_07_PIT_NO",
       "home_team": "NO",
       "independent_power_rating_baseline": {
-        "away_points": 25.093367738239074,
-        "home_points": 22.869070895922516
+        "away_points": 25.09336773823923,
+        "home_points": 22.869070895922512
       },
       "kickoff_utc": "2026-10-25T13:30:00+00:00",
-      "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+      "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
       "player_rows": 27,
       "predicted_home_margin": -1.6505,
       "predicted_score": {
@@ -94,15 +94,15 @@
       "draws": 2000,
       "fair_away_spread": 0.7445,
       "fair_home_spread": -0.7445,
-      "forecast_sha256": "c45b956b1c1ca6e08ff30a4d6383e6571f6b217b394cf4b4ddd618d963e61836",
+      "forecast_sha256": "395a3c0019faaf147efd1e00fa9685a011e78221ccee64a40bdf3755502e6843",
       "game_id": "2026_07_CIN_BAL",
       "home_team": "BAL",
       "independent_power_rating_baseline": {
-        "away_points": 23.962390336095645,
-        "home_points": 24.701011056975346
+        "away_points": 23.96239033609581,
+        "home_points": 24.701011056975343
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+      "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
       "player_rows": 25,
       "predicted_home_margin": 0.7445,
       "predicted_score": {
@@ -154,15 +154,15 @@
       "draws": 2000,
       "fair_away_spread": -2.0645,
       "fair_home_spread": 2.0645,
-      "forecast_sha256": "59d2258006b1f60ace4b39d18622e9b5904745002d2be136a4c3cd67eb3e2b7b",
+      "forecast_sha256": "089c81be7fc9d707e13df79a2428ce1be5656cf18901c2f1ed67baa6fc9ab996",
       "game_id": "2026_07_CLE_TEN",
       "home_team": "TEN",
       "independent_power_rating_baseline": {
-        "away_points": 20.360803556646886,
-        "home_points": 17.866024091005315
+        "away_points": 20.36080355664704,
+        "home_points": 17.86602409100532
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+      "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
       "player_rows": 27,
       "predicted_home_margin": -2.0645,
       "predicted_score": {
@@ -214,15 +214,15 @@
       "draws": 2000,
       "fair_away_spread": 4.2645,
       "fair_home_spread": -4.2645,
-      "forecast_sha256": "f28b76e3d2981e2ee7ea011c0fa7bc4d2cc90ff56df21413ec12e88d1d653098",
+      "forecast_sha256": "e4490afd13665d011bb4214f04184cdbcc47ae1c558e5ed71daad019f72b4d92",
       "game_id": "2026_07_IND_MIN",
       "home_team": "MIN",
       "independent_power_rating_baseline": {
-        "away_points": 20.080015876914324,
-        "home_points": 24.385488066994846
+        "away_points": 20.080015876914487,
+        "home_points": 24.38548806699484
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+      "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
       "player_rows": 27,
       "predicted_home_margin": 4.2645,
       "predicted_score": {
@@ -274,15 +274,15 @@
       "draws": 2000,
       "fair_away_spread": 2.802,
       "fair_home_spread": -2.802,
-      "forecast_sha256": "e78ce34ae0c702dbdf03e330e025902e3b176eb0cd2a46c04685af285d20cfdb",
+      "forecast_sha256": "ee87cf42b62f0f8cf49677b33645489331dc76d239bbb6f4ee768ed9f7d84748",
       "game_id": "2026_07_MIA_NYJ",
       "home_team": "NYJ",
       "independent_power_rating_baseline": {
-        "away_points": 19.530895472765458,
-        "home_points": 22.25534457681421
+        "away_points": 19.530895472765625,
+        "home_points": 22.255344576814206
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+      "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
       "player_rows": 24,
       "predicted_home_margin": 2.802,
       "predicted_score": {
@@ -334,15 +334,15 @@
       "draws": 2000,
       "fair_away_spread": 3.0855,
       "fair_home_spread": -3.0855,
-      "forecast_sha256": "798054381fd70677b3c7a0b87ea2b4c5ccd20513694a4b05ad079269f464284b",
+      "forecast_sha256": "dfe992f9d32ba53fc2206a8e7f67bcab0662e749eac7f1ea85d1f009eb5057bf",
       "game_id": "2026_07_NYG_HOU",
       "home_team": "HOU",
       "independent_power_rating_baseline": {
-        "away_points": 21.314866293758563,
-        "home_points": 24.133051623026596
+        "away_points": 21.314866293758726,
+        "home_points": 24.133051623026585
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+      "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
       "player_rows": 30,
       "predicted_home_margin": 3.0855,
       "predicted_score": {
@@ -394,15 +394,15 @@
       "draws": 2000,
       "fair_away_spread": -4.0795,
       "fair_home_spread": 4.0795,
-      "forecast_sha256": "f72fa0f0c47295306649b26a2a35d261849496c1847603a3131e2429472143c9",
+      "forecast_sha256": "7448921c96c15280be1e85b317e7d6927c9991340ff36e66d44bab46f2587367",
       "game_id": "2026_07_SF_ATL",
       "home_team": "ATL",
       "independent_power_rating_baseline": {
-        "away_points": 26.120390908723735,
-        "home_points": 21.587666186451447
+        "away_points": 26.1203909087239,
+        "home_points": 21.587666186451433
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+      "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
       "player_rows": 22,
       "predicted_home_margin": -4.0795,
       "predicted_score": {
@@ -454,15 +454,15 @@
       "draws": 2000,
       "fair_away_spread": 2.163,
       "fair_home_spread": -2.163,
-      "forecast_sha256": "30f03647034d6638a339180bf44e79133b2413a73e1c76adc1d98d4768b3ea6e",
+      "forecast_sha256": "bee7504e4f72a42f381b8b40750b545fcd374e708b2abe4885567ba0b9bd3aee",
       "game_id": "2026_07_TB_CAR",
       "home_team": "CAR",
       "independent_power_rating_baseline": {
-        "away_points": 22.1078042246331,
-        "home_points": 24.972581069350458
+        "away_points": 22.107804224633274,
+        "home_points": 24.972581069350447
       },
       "kickoff_utc": "2026-10-25T17:00:00+00:00",
-      "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+      "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
       "player_rows": 27,
       "predicted_home_margin": 2.163,
       "predicted_score": {
@@ -514,15 +514,15 @@
       "draws": 2000,
       "fair_away_spread": -3.4805,
       "fair_home_spread": 3.4805,
-      "forecast_sha256": "85c003d4318c26579e0eeb43b068af302bb307e4178f47f77ae09003325676f7",
+      "forecast_sha256": "1a1a41b5208633c5927373806c279ec5f1fdfb6680312dd211de4b47ccd202f1",
       "game_id": "2026_07_DEN_ARI",
       "home_team": "ARI",
       "independent_power_rating_baseline": {
-        "away_points": 24.650015222277663,
-        "home_points": 20.788724699059582
+        "away_points": 24.650015222277837,
+        "home_points": 20.78872469905957
       },
       "kickoff_utc": "2026-10-25T20:05:00+00:00",
-      "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+      "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
       "player_rows": 27,
       "predicted_home_margin": -3.4805,
       "predicted_score": {
@@ -574,15 +574,15 @@
       "draws": 2000,
       "fair_away_spread": 1.37,
       "fair_home_spread": -1.37,
-      "forecast_sha256": "e1d0fbab9db17c32db67de6a583a6cc0e25bd4c56e0074fbd8cb1c2cebb1f8ea",
+      "forecast_sha256": "43871b052d64c6e8ef8f7a9b95d451aec92b60403de09f4b7da0c8be56015e4e",
       "game_id": "2026_07_GB_DET",
       "home_team": "DET",
       "independent_power_rating_baseline": {
-        "away_points": 24.381252800934003,
-        "home_points": 25.828447465196213
+        "away_points": 24.381252800934163,
+        "home_points": 25.828447465196202
       },
       "kickoff_utc": "2026-10-25T20:25:00+00:00",
-      "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+      "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
       "player_rows": 24,
       "predicted_home_margin": 1.37,
       "predicted_score": {
@@ -634,15 +634,15 @@
       "draws": 2000,
       "fair_away_spread": -1.9545,
       "fair_home_spread": 1.9545,
-      "forecast_sha256": "60fcdda7b4a9732ee9dfed30b5fddf4f19f8a5fb4576a4693ad92d71b3ba15a3",
+      "forecast_sha256": "6f470069767f739ed7927281362a218e3cd7d6cf5fc473812f7ced704a94284c",
       "game_id": "2026_07_LA_LV",
       "home_team": "LV",
       "independent_power_rating_baseline": {
-        "away_points": 25.1226593623987,
-        "home_points": 23.38177708221221
+        "away_points": 25.122659362398867,
+        "home_points": 23.3817770822122
       },
       "kickoff_utc": "2026-10-25T20:25:00+00:00",
-      "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+      "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
       "player_rows": 27,
       "predicted_home_margin": -1.9545,
       "predicted_score": {
@@ -694,15 +694,15 @@
       "draws": 2000,
       "fair_away_spread": -0.437,
       "fair_home_spread": 0.437,
-      "forecast_sha256": "23b7056179f9a74be9bd7beaf5f10f09d5566d5f155a662fe49bc052b874710c",
+      "forecast_sha256": "cf74c970c60eb56db724a6d1151cfbca836a1de765d4dee5d95e43eb81b80df5",
       "game_id": "2026_07_KC_SEA",
       "home_team": "SEA",
       "independent_power_rating_baseline": {
-        "away_points": 22.504581215986907,
-        "home_points": 22.284350494776064
+        "away_points": 22.504581215987066,
+        "home_points": 22.284350494776053
       },
       "kickoff_utc": "2026-10-26T00:20:00+00:00",
-      "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+      "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
       "player_rows": 26,
       "predicted_home_margin": -0.437,
       "predicted_score": {
@@ -754,15 +754,15 @@
       "draws": 2000,
       "fair_away_spread": -0.008,
       "fair_home_spread": 0.008,
-      "forecast_sha256": "96dfb6703c6537b5b17f381c6b4811c175965748995cb67c6600885552f9fc77",
+      "forecast_sha256": "ce5b71ed0d5e609e32ed6631426880a1cade107f1e952c56fcd7e2d793d4390e",
       "game_id": "2026_07_DAL_PHI",
       "home_team": "PHI",
       "independent_power_rating_baseline": {
-        "away_points": 23.487921817870333,
+        "away_points": 23.487921817870482,
         "home_points": 23.4020186064356
       },
       "kickoff_utc": "2026-10-27T00:15:00+00:00",
-      "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+      "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
       "player_rows": 28,
       "predicted_home_margin": -0.008,
       "predicted_score": {
@@ -786,13 +786,13 @@
   ],
   "games_forecast": 13,
   "games_requested": 13,
-  "generated_utc": "2026-10-23T17:52:26.533748+00:00",
+  "generated_utc": "2026-10-24T16:34:38.931259+00:00",
   "limits": "Own conditional research forecasts. Historical roles are not confirmed active lineups. QB passing workload can be split among historical QB proxies: individual passing props are unreliable, not ranked for bets. Raw p10/p90 are simulation percentiles, not calibrated intervals. Full-game overtime/unusual scoring and market superiority remain unvalidated.",
-  "model_capture_utc": "2026-10-23T17:52:13.151369+00:00",
+  "model_capture_utc": "2026-10-24T16:34:21.122752+00:00",
   "named_player_rows": 341,
   "overtime_validated": false,
   "player_identity_crosswalk": {
-    "captured_utc": "2026-10-23T17:52:26.255251+00:00",
+    "captured_utc": "2026-10-24T16:34:38.530896+00:00",
     "mapping_sha256": "b811ff14e1e1c344751fa1d473d17944e66d101c34eeb7a99f074e978de81b78",
     "source": "nflreadpy.load_players",
     "status": "ONE_TO_ONE_SOURCE_DIRECTORY_IDS",
@@ -22762,8 +22762,8 @@
   "qualified_bets": 0,
   "season": 2026,
   "source_errors": [],
-  "source_replay_sha256": "15a438e2c6dc85763edca709c27bcf2bc8d9d48ad401438b10428758906cca82",
-  "source_scan_sha256": "a6918fde1cd92f54035aafc443742a2e4e179be4090bd8ac2354b2c05f713291",
+  "source_replay_sha256": "1d3b8e03eb5a8401ec9c29ca1da80653d00e72e015882a4bbaf9efac86e4c9e8",
+  "source_scan_sha256": "79bb1b193cceed135eb9dcad63038ccd6ab695e87618130a452353b28d3b8d96",
   "spec": "NFL_INDEPENDENT_FORECAST_PUBLICATION_V1",
   "sportsbook_prices_used": false,
   "spread_definition": "NEGATIVE_EXPECTED_HOME_MARGIN_NOT_A_CALIBRATED_50_PERCENT_COVER_LINE",
