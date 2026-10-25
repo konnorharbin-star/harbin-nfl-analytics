@@ -34,7 +34,7 @@
       "draws": 2000,
       "fair_away_spread": -3.4805,
       "fair_home_spread": 3.4805,
-      "forecast_sha256": "97c591e9ec4d9f0696566f479a5c03bed0ff361eefcda3bb1abb8579207978a8",
+      "forecast_sha256": "a21176d597b5e5931b35edaa5e0a2a7249c2d985ecf407682aacd02e279009e9",
       "game_id": "2026_07_DEN_ARI",
       "home_team": "ARI",
       "independent_power_rating_baseline": {
@@ -42,7 +42,7 @@
         "home_points": 20.788724699059582
       },
       "kickoff_utc": "2026-10-25T20:05:00+00:00",
-      "model_capture_utc": "2026-10-25T17:03:04.701918+00:00",
+      "model_capture_utc": "2026-10-25T19:03:05.183090+00:00",
       "player_rows": 27,
       "predicted_home_margin": -3.4805,
       "predicted_score": {
@@ -94,7 +94,7 @@
       "draws": 2000,
       "fair_away_spread": 1.37,
       "fair_home_spread": -1.37,
-      "forecast_sha256": "c3cd849e47ce83362e9f99e987b92ed123020a093ced4d819a31f8be45faa072",
+      "forecast_sha256": "06166ec7cca70601702b221f0d3f5a6b39cfd155b9413fce4e25ad7e15a35c28",
       "game_id": "2026_07_GB_DET",
       "home_team": "DET",
       "independent_power_rating_baseline": {
@@ -102,7 +102,7 @@
         "home_points": 25.828447465196213
       },
       "kickoff_utc": "2026-10-25T20:25:00+00:00",
-      "model_capture_utc": "2026-10-25T17:03:04.701918+00:00",
+      "model_capture_utc": "2026-10-25T19:03:05.183090+00:00",
       "player_rows": 24,
       "predicted_home_margin": 1.37,
       "predicted_score": {
@@ -154,7 +154,7 @@
       "draws": 2000,
       "fair_away_spread": -1.9545,
       "fair_home_spread": 1.9545,
-      "forecast_sha256": "48f7bfa1b370742fea3d11c7b61a491f9443fa90e7712485fc2d494b68b47ad1",
+      "forecast_sha256": "e2a29123f7f05955af056b15d739c762f66a1e1e16b4faa2d37ba6779ad31839",
       "game_id": "2026_07_LA_LV",
       "home_team": "LV",
       "independent_power_rating_baseline": {
@@ -162,7 +162,7 @@
         "home_points": 23.38177708221221
       },
       "kickoff_utc": "2026-10-25T20:25:00+00:00",
-      "model_capture_utc": "2026-10-25T17:03:04.701918+00:00",
+      "model_capture_utc": "2026-10-25T19:03:05.183090+00:00",
       "player_rows": 27,
       "predicted_home_margin": -1.9545,
       "predicted_score": {
@@ -214,7 +214,7 @@
       "draws": 2000,
       "fair_away_spread": -0.437,
       "fair_home_spread": 0.437,
-      "forecast_sha256": "814bb77cedce9f3400f0b2795efcbfbc8043f06409ac30cab7c57ae53d250e49",
+      "forecast_sha256": "8326dfe88eb824bec8cd959f26c12fff670ef8f1399a3e0278d7e9bfa4c285dc",
       "game_id": "2026_07_KC_SEA",
       "home_team": "SEA",
       "independent_power_rating_baseline": {
@@ -222,7 +222,7 @@
         "home_points": 22.284350494776064
       },
       "kickoff_utc": "2026-10-26T00:20:00+00:00",
-      "model_capture_utc": "2026-10-25T17:03:04.701918+00:00",
+      "model_capture_utc": "2026-10-25T19:03:05.183090+00:00",
       "player_rows": 26,
       "predicted_home_margin": -0.437,
       "predicted_score": {
@@ -274,7 +274,7 @@
       "draws": 2000,
       "fair_away_spread": -0.008,
       "fair_home_spread": 0.008,
-      "forecast_sha256": "22322726d32e5dc87f604fc8c6d397c04b1becfcbb64fa1719542490791c969e",
+      "forecast_sha256": "3e5b9db7ffc41297f23697cfba188aeb7fde705b62194b628de247565075d204",
       "game_id": "2026_07_DAL_PHI",
       "home_team": "PHI",
       "independent_power_rating_baseline": {
@@ -282,7 +282,7 @@
         "home_points": 23.4020186064356
       },
       "kickoff_utc": "2026-10-27T00:15:00+00:00",
-      "model_capture_utc": "2026-10-25T17:03:04.701918+00:00",
+      "model_capture_utc": "2026-10-25T19:03:05.183090+00:00",
       "player_rows": 28,
       "predicted_home_margin": -0.008,
       "predicted_score": {
@@ -306,13 +306,13 @@
   ],
   "games_forecast": 5,
   "games_requested": 5,
-  "generated_utc": "2026-10-25T17:03:10.537946+00:00",
+  "generated_utc": "2026-10-25T19:03:10.994925+00:00",
   "limits": "Own conditional research forecasts. Historical roles are not confirmed active lineups. QB passing workload can be split among historical QB proxies: individual passing props are unreliable, not ranked for bets. Raw p10/p90 are simulation percentiles, not calibrated intervals. Full-game overtime/unusual scoring and market superiority remain unvalidated.",
-  "model_capture_utc": "2026-10-25T17:03:04.701918+00:00",
+  "model_capture_utc": "2026-10-25T19:03:05.183090+00:00",
   "named_player_rows": 132,
   "overtime_validated": false,
   "player_identity_crosswalk": {
-    "captured_utc": "2026-10-25T17:03:10.397174+00:00",
+    "captured_utc": "2026-10-25T19:03:10.867982+00:00",
     "mapping_sha256": "b811ff14e1e1c344751fa1d473d17944e66d101c34eeb7a99f074e978de81b78",
     "source": "nflreadpy.load_players",
     "status": "ONE_TO_ONE_SOURCE_DIRECTORY_IDS",
@@ -8820,8 +8820,8 @@
   "qualified_bets": 0,
   "season": 2026,
   "source_errors": [],
-  "source_replay_sha256": "fe2ac2b36044cd0900ab8821b325f497f4511a75fa7723cd44019aa9070dfe53",
-  "source_scan_sha256": "4f1bd9314507d1a799bf0acca0f2201d77993d306e668fe03e3ffa0560b8d775",
+  "source_replay_sha256": "08b3dedd4e2bcee2559cbc32983fa432b8029951126435776584dee4eae716f2",
+  "source_scan_sha256": "e64ca32c4290e73fde9e74045a0f3f8053ab08844c806e362b2c7492c5e2a535",
   "spec": "NFL_INDEPENDENT_FORECAST_PUBLICATION_V1",
   "sportsbook_prices_used": false,
   "spread_definition": "NEGATIVE_EXPECTED_HOME_MARGIN_NOT_A_CALIBRATED_50_PERCENT_COVER_LINE",
