@@ -1,9 +1,9 @@
 {
-  "captured_utc": "2026-10-25T21:47:20.860913+00:00",
+  "captured_utc": "2026-10-26T19:14:11.266515+00:00",
   "forecast_values_changed": false,
   "games": [
     {
-      "away_team": "KC",
+      "away_team": "DAL",
       "contract": {
         "blocking_reasons": [],
         "confirmed_starting_qb_teams": [],
@@ -15,7 +15,7 @@
           "confirmed_starting_qbs",
           "final_game_specific_player_availability"
         ],
-        "model_players_needing_availability": 26,
+        "model_players_needing_availability": 28,
         "official_inactive_teams": [],
         "outdoor_weather_required": true,
         "outdoor_weather_verified": true,
@@ -37,57 +37,19 @@
           "roof_operating_position_not_applicable"
         ]
       },
-      "game_id": "2026_07_KC_SEA",
-      "home_team": "SEA"
-    },
-    {
-      "away_team": "DAL",
-      "contract": {
-        "blocking_reasons": [],
-        "confirmed_starting_qb_teams": [],
-        "essential_context_inputs_complete": false,
-        "event_binding_passed": true,
-        "explicit_player_designations_verified": 0,
-        "forecast_effect": "NO_WEB_CONTEXT_ADJUSTMENT",
-        "missing_required_inputs": [
-          "confirmed_starting_qbs",
-          "final_game_specific_player_availability"
-        ],
-        "model_players_needing_availability": 28,
-        "official_inactive_teams": [],
-        "outdoor_weather_required": true,
-        "outdoor_weather_verified": true,
-        "ready_for_context_adjusted_prediction": false,
-        "reported_injury_statuses_verified": 1,
-        "roof_operating_position_required": false,
-        "roof_status": "OUTDOOR_ROOF_POSITION_NOT_APPLICABLE",
-        "status": "PARTIAL_VERIFIED_INPUTS",
-        "verified_fields": [
-          "away_team",
-          "home_team",
-          "kickoff_utc",
-          "neutral_site",
-          "venue_id",
-          "venue_name",
-          "venue_reported_indoor",
-          "dated_reported_player_statuses",
-          "outdoor_kickoff_weather_forecast",
-          "roof_operating_position_not_applicable"
-        ]
-      },
       "game_id": "2026_07_DAL_PHI",
       "home_team": "PHI"
     }
   ],
   "source_evidence": {
-    "captured_utc": "2026-10-25T21:47:20.860913+00:00",
-    "collection_started_utc": "2026-10-25T21:47:09.961447+00:00",
+    "captured_utc": "2026-10-26T19:14:11.266515+00:00",
+    "collection_started_utc": "2026-10-26T19:14:04.316783+00:00",
     "forecast_values_changed": false,
     "games": [
       {
-        "away_team": "KC",
-        "game_id": "2026_07_KC_SEA",
-        "home_team": "SEA",
+        "away_team": "DAL",
+        "game_id": "2026_07_DAL_PHI",
+        "home_team": "PHI",
         "input_data_contract": {
           "blocking_reasons": [],
           "confirmed_starting_qb_teams": [],
@@ -99,7 +61,7 @@
             "confirmed_starting_qbs",
             "final_game_specific_player_availability"
           ],
-          "model_players_needing_availability": 26,
+          "model_players_needing_availability": 28,
           "official_inactive_teams": [],
           "outdoor_weather_required": true,
           "outdoor_weather_verified": true,
@@ -121,472 +83,9 @@
             "roof_operating_position_not_applicable"
           ]
         },
-        "kickoff_utc": "2026-10-26T00:20:00+00:00",
-        "structured_game_observation": {
-          "captured_utc": "2026-10-25T21:47:19.960018+00:00",
-          "eligible_for_historical_backfill": false,
-          "facts": {
-            "away_team": "KC",
-            "home_team": "SEA",
-            "kickoff_utc": "2026-10-26T00:20:00+00:00",
-            "neutral_site": false,
-            "venue_id": "3673",
-            "venue_name": "Lumen Field",
-            "venue_reported_indoor": false
-          },
-          "model_adjustment": null,
-          "provider_event_id": "401873022",
-          "reasons": [],
-          "snapshot_sha256": "bf14c5ebc16a306a1c5aa063b62fdb643106b63be36320fc14ff378197560fc0",
-          "source_kind": "ESPN_CURRENT_EVENT_SNAPSHOT",
-          "source_publication_utc": null,
-          "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20261025&limit=100",
-          "status": "SOURCE_BOUND_CURRENT_OBSERVATION",
-          "used_as_calibrated_feature": false
-        },
-        "verified_context_inputs": {
-          "availability": {
-            "dated_reported_statuses": 2,
-            "final_game_availability_verified": false,
-            "players": [
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "15847",
-                "model_adjustment": null,
-                "player_id": "00-0030506",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "KC"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "3139477",
-                "model_adjustment": null,
-                "player_id": "00-0033873",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "KC"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4240472",
-                "model_adjustment": null,
-                "player_id": "00-0036637",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "KC"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4362921",
-                "model_adjustment": null,
-                "player_id": "00-0038104",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "KC"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4567048",
-                "model_adjustment": null,
-                "player_id": "00-0038134",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "KC"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4428331",
-                "model_adjustment": null,
-                "player_id": "00-0039067",
-                "reported_status": "Out",
-                "source_update_utc": "2026-10-23T17:04:00+00:00",
-                "status": "DATED_EVENT_REPORTED_STATUS",
-                "team": "KC"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4683062",
-                "model_adjustment": null,
-                "player_id": "00-0039894",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "KC"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4596602",
-                "model_adjustment": null,
-                "player_id": "00-0040078",
-                "reported_status": "Injured Reserve",
-                "source_update_utc": "2026-10-24T18:05:00+00:00",
-                "status": "DATED_EVENT_REPORTED_STATUS",
-                "team": "KC"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4431196",
-                "model_adjustment": null,
-                "player_id": "00-0040081",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "KC"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "5093923",
-                "model_adjustment": null,
-                "player_id": "00-0040298",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "KC"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "5082630",
-                "model_adjustment": null,
-                "player_id": "00-0040646",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "KC"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4912218",
-                "model_adjustment": null,
-                "player_id": "00-0040890",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "KC"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4832955",
-                "model_adjustment": null,
-                "player_id": "00-0041013",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "KC"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "2975863",
-                "model_adjustment": null,
-                "player_id": "00-0033576",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "SEA"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "2977187",
-                "model_adjustment": null,
-                "player_id": "00-0033908",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "SEA"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "3912547",
-                "model_adjustment": null,
-                "player_id": "00-0034869",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "SEA"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4032473",
-                "model_adjustment": null,
-                "player_id": "00-0037545",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "SEA"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4035693",
-                "model_adjustment": null,
-                "player_id": "00-0037745",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "SEA"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4243176",
-                "model_adjustment": null,
-                "player_id": "00-0038488",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "SEA"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4430878",
-                "model_adjustment": null,
-                "player_id": "00-0038543",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "SEA"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4887558",
-                "model_adjustment": null,
-                "player_id": "00-0038797",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "SEA"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4429835",
-                "model_adjustment": null,
-                "player_id": "00-0039299",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "SEA"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4576297",
-                "model_adjustment": null,
-                "player_id": "00-0039793",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "SEA"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4597703",
-                "model_adjustment": null,
-                "player_id": "00-0040648",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "SEA"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4678006",
-                "model_adjustment": null,
-                "player_id": "00-0040739",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "SEA"
-              },
-              {
-                "confirmed_active": false,
-                "confirmed_starting_qb": false,
-                "espn_athlete_id": "4685512",
-                "model_adjustment": null,
-                "player_id": "00-0041512",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
-                "team": "SEA"
-              }
-            ],
-            "rejections": [],
-            "source": {
-              "captured_utc": "2026-10-25T21:47:20.121993+00:00",
-              "snapshot_sha256": "8ce438de85ba83a47e698a835d509d181f94f21e33d1e9a6c78614fc3a7bdfc1",
-              "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873022"
-            },
-            "starting_qbs_verified": false,
-            "status": "SOURCE_BOUND_REPORTED_STATUSES_ONLY"
-          },
-          "official_articles": [],
-          "official_personnel": {
-            "confirmed_player_designations": 0,
-            "conflicting_player_designations": [],
-            "explicit_active_players": [],
-            "game_id": "2026_07_KC_SEA",
-            "inactive_reports": {},
-            "model_adjustment": null,
-            "model_players_reviewed": 26,
-            "not_listed_does_not_prove_active": true,
-            "rejections": [],
-            "starters": {},
-            "status": "EXPLICIT_OFFICIAL_PERSONNEL_EVIDENCE"
-          },
-          "roof": {
-            "model_adjustment": null,
-            "operating_position_required": false,
-            "outdoor_weather_required": true,
-            "reported_roof": "outdoors",
-            "source": {
-              "captured_utc": "2026-10-25T21:47:09.961447+00:00",
-              "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
-              "snapshot_sha256": "6d5b2fe2234a462ccca4ad5b26e57e2f6e8085d513f50a97cef8db1cdcc7fc29",
-              "source_method": "nflreadpy.load_schedules"
-            },
-            "source_row": {
-              "away_team": "KC",
-              "espn": "401873022",
-              "game_id": "2026_07_KC_SEA",
-              "gameday": "2026-10-25",
-              "gametime": "20:20",
-              "home_team": "SEA",
-              "roof": "outdoors",
-              "season": 2026,
-              "stadium": "Lumen Field",
-              "week": 7
-            },
-            "status": "OUTDOOR_ROOF_POSITION_NOT_APPLICABLE"
-          },
-          "roof_schedule_snapshot": {
-            "captured_utc": "2026-10-25T21:47:09.961447+00:00",
-            "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
-            "records": [
-              {
-                "away_team": "KC",
-                "espn": "401873022",
-                "game_id": "2026_07_KC_SEA",
-                "gameday": "2026-10-25",
-                "gametime": "20:20",
-                "home_team": "SEA",
-                "roof": "outdoors",
-                "season": 2026,
-                "stadium": "Lumen Field",
-                "week": 7
-              },
-              {
-                "away_team": "DAL",
-                "espn": "401873009",
-                "game_id": "2026_07_DAL_PHI",
-                "gameday": "2026-10-26",
-                "gametime": "20:15",
-                "home_team": "PHI",
-                "roof": "outdoors",
-                "season": 2026,
-                "stadium": "Lincoln Financial Field",
-                "week": 7
-              }
-            ],
-            "snapshot_sha256": "6d5b2fe2234a462ccca4ad5b26e57e2f6e8085d513f50a97cef8db1cdcc7fc29",
-            "source_method": "nflreadpy.load_schedules"
-          },
-          "source_errors": [],
-          "status": "PARTIAL_CONTEXT_ONLY",
-          "weather": {
-            "coordinate_source": "EXACT_EVENT_VENUE_NAME_EXISTING_APPROXIMATE_REGISTRY",
-            "forecast_source": {
-              "captured_utc": "2026-10-25T21:47:20.538324+00:00",
-              "snapshot_sha256": "1ad779ed921abe1d9178cb328a93e9de240d16aca3a3e6dfacf96b493709edd6",
-              "source_url": "https://api.weather.gov/gridpoints/SEW/125,67/forecast/hourly"
-            },
-            "issued_utc": "2026-10-25T19:45:51+00:00",
-            "latitude": 47.5952,
-            "longitude": -122.3316,
-            "model_adjustment": null,
-            "on_field_conditions_verified": false,
-            "period_end_utc": "2026-10-26T01:00:00+00:00",
-            "period_start_utc": "2026-10-26T00:00:00+00:00",
-            "point_source": {
-              "captured_utc": "2026-10-25T21:47:20.314573+00:00",
-              "snapshot_sha256": "1139e8531c3161264ad91ffa173aa07628b7495e7d2ebf5857cd5725a60c9012",
-              "source_url": "https://api.weather.gov/points/47.5952,-122.3316"
-            },
-            "precipitation_probability_percent": 52,
-            "roof_position_verified": false,
-            "status": "VENUE_BOUND_NWS_KICKOFF_FORECAST",
-            "temperature_f": 53.0,
-            "venue_name": "Lumen Field",
-            "wind_mph_max": 2,
-            "wind_mph_min": 2
-          }
-        }
-      },
-      {
-        "away_team": "DAL",
-        "game_id": "2026_07_DAL_PHI",
-        "home_team": "PHI",
-        "input_data_contract": {
-          "blocking_reasons": [],
-          "confirmed_starting_qb_teams": [],
-          "essential_context_inputs_complete": false,
-          "event_binding_passed": true,
-          "explicit_player_designations_verified": 0,
-          "forecast_effect": "NO_WEB_CONTEXT_ADJUSTMENT",
-          "missing_required_inputs": [
-            "confirmed_starting_qbs",
-            "final_game_specific_player_availability"
-          ],
-          "model_players_needing_availability": 28,
-          "official_inactive_teams": [],
-          "outdoor_weather_required": true,
-          "outdoor_weather_verified": true,
-          "ready_for_context_adjusted_prediction": false,
-          "reported_injury_statuses_verified": 1,
-          "roof_operating_position_required": false,
-          "roof_status": "OUTDOOR_ROOF_POSITION_NOT_APPLICABLE",
-          "status": "PARTIAL_VERIFIED_INPUTS",
-          "verified_fields": [
-            "away_team",
-            "home_team",
-            "kickoff_utc",
-            "neutral_site",
-            "venue_id",
-            "venue_name",
-            "venue_reported_indoor",
-            "dated_reported_player_statuses",
-            "outdoor_kickoff_weather_forecast",
-            "roof_operating_position_not_applicable"
-          ]
-        },
         "kickoff_utc": "2026-10-27T00:15:00+00:00",
         "structured_game_observation": {
-          "captured_utc": "2026-10-25T21:47:20.054586+00:00",
+          "captured_utc": "2026-10-26T19:14:11.051362+00:00",
           "eligible_for_historical_backfill": false,
           "facts": {
             "away_team": "DAL",
@@ -600,7 +99,7 @@
           "model_adjustment": null,
           "provider_event_id": "401873009",
           "reasons": [],
-          "snapshot_sha256": "8c7774a57a7a5d7d687d81ae3e5fba6142ead345f6204a2b2e2c383064c98d4b",
+          "snapshot_sha256": "8ab2521c508297f46a24d447a23af1d348b8f86e335c59f4809d99ca7d218bcf",
           "source_kind": "ESPN_CURRENT_EVENT_SNAPSHOT",
           "source_publication_utc": null,
           "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20261026&limit=100",
@@ -609,7 +108,7 @@
         },
         "verified_context_inputs": {
           "availability": {
-            "dated_reported_statuses": 1,
+            "dated_reported_statuses": 2,
             "final_game_availability_verified": false,
             "players": [
               {
@@ -794,9 +293,9 @@
                 "espn_athlete_id": "3929630",
                 "model_adjustment": null,
                 "player_id": "00-0034844",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "reported_status": "Questionable",
+                "source_update_utc": "2026-10-26T13:22:00+00:00",
+                "status": "DATED_EVENT_REPORTED_STATUS",
                 "team": "PHI"
               },
               {
@@ -923,8 +422,8 @@
             ],
             "rejections": [],
             "source": {
-              "captured_utc": "2026-10-25T21:47:20.590063+00:00",
-              "snapshot_sha256": "60d4fa2ea331ebe34c59a643f69316b31c70e084727b0bbddec9d92b217edf07",
+              "captured_utc": "2026-10-26T19:14:11.114818+00:00",
+              "snapshot_sha256": "4af5d64139a5026ef503f56b9c99d8009f0f3e89132f5913677cb5da87641962",
               "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873009"
             },
             "starting_qbs_verified": false,
@@ -950,9 +449,9 @@
             "outdoor_weather_required": true,
             "reported_roof": "outdoors",
             "source": {
-              "captured_utc": "2026-10-25T21:47:09.961447+00:00",
+              "captured_utc": "2026-10-26T19:14:04.316783+00:00",
               "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
-              "snapshot_sha256": "6d5b2fe2234a462ccca4ad5b26e57e2f6e8085d513f50a97cef8db1cdcc7fc29",
+              "snapshot_sha256": "eaf3e9d9d4b64dffe635a9d8e060fe3672de3109891e2b23fcc64491b50c0e14",
               "source_method": "nflreadpy.load_schedules"
             },
             "source_row": {
@@ -970,21 +469,9 @@
             "status": "OUTDOOR_ROOF_POSITION_NOT_APPLICABLE"
           },
           "roof_schedule_snapshot": {
-            "captured_utc": "2026-10-25T21:47:09.961447+00:00",
+            "captured_utc": "2026-10-26T19:14:04.316783+00:00",
             "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
             "records": [
-              {
-                "away_team": "KC",
-                "espn": "401873022",
-                "game_id": "2026_07_KC_SEA",
-                "gameday": "2026-10-25",
-                "gametime": "20:20",
-                "home_team": "SEA",
-                "roof": "outdoors",
-                "season": 2026,
-                "stadium": "Lumen Field",
-                "week": 7
-              },
               {
                 "away_team": "DAL",
                 "espn": "401873009",
@@ -998,7 +485,7 @@
                 "week": 7
               }
             ],
-            "snapshot_sha256": "6d5b2fe2234a462ccca4ad5b26e57e2f6e8085d513f50a97cef8db1cdcc7fc29",
+            "snapshot_sha256": "eaf3e9d9d4b64dffe635a9d8e060fe3672de3109891e2b23fcc64491b50c0e14",
             "source_method": "nflreadpy.load_schedules"
           },
           "source_errors": [],
@@ -1006,11 +493,11 @@
           "weather": {
             "coordinate_source": "EXACT_EVENT_VENUE_NAME_EXISTING_APPROXIMATE_REGISTRY",
             "forecast_source": {
-              "captured_utc": "2026-10-25T21:47:20.860203+00:00",
-              "snapshot_sha256": "aa91cf33f448ab73141f7dc8e5f9450f412b455ea0f199449bdcb436034ac5ac",
+              "captured_utc": "2026-10-26T19:14:11.265551+00:00",
+              "snapshot_sha256": "21ff7848063c195e59a61ad2d8fec29721fc4215b830af9367625e58318b68ce",
               "source_url": "https://api.weather.gov/gridpoints/PHI/50,76/forecast/hourly"
             },
-            "issued_utc": "2026-10-25T20:09:42+00:00",
+            "issued_utc": "2026-10-26T18:19:59+00:00",
             "latitude": 39.9008,
             "longitude": -75.1675,
             "model_adjustment": null,
@@ -1018,14 +505,14 @@
             "period_end_utc": "2026-10-27T01:00:00+00:00",
             "period_start_utc": "2026-10-27T00:00:00+00:00",
             "point_source": {
-              "captured_utc": "2026-10-25T21:47:20.689563+00:00",
-              "snapshot_sha256": "d50259c3ae02c34e9e5c55ded21329fd8e7caa8e5057f666f8c1d0bce8220f20",
+              "captured_utc": "2026-10-26T19:14:11.184655+00:00",
+              "snapshot_sha256": "c6b59c4f95367d0b5858801f8d2c130611a15142d47ba7104010f5f57d12fc5f",
               "source_url": "https://api.weather.gov/points/39.9008,-75.1675"
             },
             "precipitation_probability_percent": 0,
             "roof_position_verified": false,
             "status": "VENUE_BOUND_NWS_KICKOFF_FORECAST",
-            "temperature_f": 61.0,
+            "temperature_f": 59.0,
             "venue_name": "Lincoln Financial Field",
             "wind_mph_max": 5,
             "wind_mph_min": 5
@@ -1033,9 +520,9 @@
         }
       }
     ],
-    "source_forecast_generated_utc": "2026-10-25T21:47:07.650867+00:00",
-    "source_forecast_model_capture_utc": "2026-10-25T21:47:03.910347+00:00",
-    "source_forecast_sha256": "27681f84629436133c3c84112ffb4aab7da2584dc1449518b93273609cffa51a",
+    "source_forecast_generated_utc": "2026-10-26T19:14:02.090246+00:00",
+    "source_forecast_model_capture_utc": "2026-10-26T19:13:59.773733+00:00",
+    "source_forecast_sha256": "f016c35c77e6aebe9ccd2edd583c3f1d204d0f380591ca73df07da6f0b84cac0",
     "spec": "NFL_SUPPLEMENTAL_PUBLIC_INPUT_QUALITY_V1",
     "supplemental_after_forecast": true
   },
