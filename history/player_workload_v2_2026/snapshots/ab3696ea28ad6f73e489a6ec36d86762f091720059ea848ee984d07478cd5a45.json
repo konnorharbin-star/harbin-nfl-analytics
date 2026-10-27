@@ -1,0 +1,5290 @@
+{
+  "captured_utc": "2026-10-27T18:40:29.812784+00:00",
+  "excluded_missing_player_or_team_rows": 7,
+  "games": [
+    {
+      "game_id": "2026_08_CAR_GB",
+      "players": [
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0031610",
+          "prior_mean": 2.3333333333333335,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033589",
+          "prior_mean": 0.25,
+          "team": "CAR"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036265",
+          "prior_mean": null,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036555",
+          "prior_mean": 2.5,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037005",
+          "prior_mean": 2.6666666666666665,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037614",
+          "prior_mean": 1.8,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038840",
+          "prior_mean": 1.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039150",
+          "prior_mean": 0.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040124",
+          "prior_mean": 6.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040187",
+          "prior_mean": 1.3333333333333333,
+          "team": "CAR"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040265",
+          "prior_mean": null,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040394",
+          "prior_mean": 0.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039491",
+          "prior_mean": 5.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040644",
+          "prior_mean": null,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038102",
+          "prior_mean": 0.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033858",
+          "prior_mean": 1.5,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036264",
+          "prior_mean": 0.0,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037091",
+          "prior_mean": 0.7142857142857143,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0038090",
+          "prior_mean": null,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038124",
+          "prior_mean": 4.857142857142857,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0038685",
+          "prior_mean": null,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038996",
+          "prior_mean": 4.142857142857143,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039811",
+          "prior_mean": 1.7142857142857142,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040142",
+          "prior_mean": 0.16666666666666666,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040598",
+          "prior_mean": null,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040667",
+          "prior_mean": 5.142857142857143,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040948",
+          "prior_mean": 0.5,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0028118",
+          "prior_mean": null,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0038098",
+          "prior_mean": null,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040009",
+          "prior_mean": null,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0035700",
+          "prior_mean": null,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0031610",
+          "prior_mean": 0.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033589",
+          "prior_mean": 0.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036265",
+          "prior_mean": null,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036555",
+          "prior_mean": 16.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037005",
+          "prior_mean": 0.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037614",
+          "prior_mean": 0.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038840",
+          "prior_mean": 0.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039150",
+          "prior_mean": 1.6666666666666667,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040124",
+          "prior_mean": 0.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040187",
+          "prior_mean": 0.16666666666666666,
+          "team": "CAR"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040265",
+          "prior_mean": null,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040394",
+          "prior_mean": 1.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039491",
+          "prior_mean": 0.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040644",
+          "prior_mean": null,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038102",
+          "prior_mean": 1.0,
+          "team": "CAR"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033858",
+          "prior_mean": 0.0,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036264",
+          "prior_mean": 1.5714285714285714,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037091",
+          "prior_mean": 0.0,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0038090",
+          "prior_mean": null,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038124",
+          "prior_mean": 0.0,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0038685",
+          "prior_mean": null,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038996",
+          "prior_mean": 0.2857142857142857,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039811",
+          "prior_mean": 7.714285714285714,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040142",
+          "prior_mean": 4.666666666666667,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040598",
+          "prior_mean": null,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040667",
+          "prior_mean": 0.14285714285714285,
+          "team": "GB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040948",
+          "prior_mean": 0.0,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0028118",
+          "prior_mean": null,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0038098",
+          "prior_mean": null,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040009",
+          "prior_mean": null,
+          "team": "GB"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0035700",
+          "prior_mean": null,
+          "team": "GB"
+        }
+      ]
+    },
+    {
+      "game_id": "2026_08_ARI_DAL",
+      "players": [
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033119",
+          "prior_mean": 0.14285714285714285,
+          "team": "ARI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0037004",
+          "prior_mean": null,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037263",
+          "prior_mean": 2.2857142857142856,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037744",
+          "prior_mean": 8.428571428571429,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038559",
+          "prior_mean": 5.285714285714286,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038640",
+          "prior_mean": 0.8333333333333334,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039041",
+          "prior_mean": 2.3333333333333335,
+          "team": "ARI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0039849",
+          "prior_mean": null,
+          "team": "ARI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0041027",
+          "prior_mean": null,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033307",
+          "prior_mean": 4.166666666666667,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037157",
+          "prior_mean": 1.25,
+          "team": "ARI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0037277",
+          "prior_mean": null,
+          "team": "ARI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0041070",
+          "prior_mean": null,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033077",
+          "prior_mean": 0.0,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036358",
+          "prior_mean": 7.571428571428571,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036997",
+          "prior_mean": 2.7142857142857144,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037120",
+          "prior_mean": 0.5,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037247",
+          "prior_mean": 5.285714285714286,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037801",
+          "prior_mean": 0.6666666666666666,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038041",
+          "prior_mean": 2.4285714285714284,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038738",
+          "prior_mean": 0.6666666666666666,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039062",
+          "prior_mean": 0.6,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039410",
+          "prior_mean": 3.857142857142857,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039530",
+          "prior_mean": 1.2857142857142858,
+          "team": "DAL"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0038547",
+          "prior_mean": null,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033119",
+          "prior_mean": 3.7142857142857144,
+          "team": "ARI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0037004",
+          "prior_mean": null,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037263",
+          "prior_mean": 8.714285714285714,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037744",
+          "prior_mean": 0.0,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038559",
+          "prior_mean": 0.2857142857142857,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038640",
+          "prior_mean": 0.0,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039041",
+          "prior_mean": 0.0,
+          "team": "ARI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0039849",
+          "prior_mean": null,
+          "team": "ARI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0041027",
+          "prior_mean": null,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033307",
+          "prior_mean": 0.0,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037157",
+          "prior_mean": 6.25,
+          "team": "ARI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0037277",
+          "prior_mean": null,
+          "team": "ARI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0041070",
+          "prior_mean": null,
+          "team": "ARI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033077",
+          "prior_mean": 2.2857142857142856,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036358",
+          "prior_mean": 0.2857142857142857,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036997",
+          "prior_mean": 15.714285714285714,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037120",
+          "prior_mean": 5.25,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037247",
+          "prior_mean": 0.0,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037801",
+          "prior_mean": 0.3333333333333333,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038041",
+          "prior_mean": 0.0,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038738",
+          "prior_mean": 0.6666666666666666,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039062",
+          "prior_mean": 0.0,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039410",
+          "prior_mean": 0.0,
+          "team": "DAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039530",
+          "prior_mean": 0.0,
+          "team": "DAL"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0038547",
+          "prior_mean": null,
+          "team": "DAL"
+        }
+      ]
+    },
+    {
+      "game_id": "2026_08_ATL_TB",
+      "players": [
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0032392",
+          "prior_mean": 1.6,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035208",
+          "prior_mean": 0.6666666666666666,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036429",
+          "prior_mean": 0.5,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036463",
+          "prior_mean": 0.16666666666666666,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036970",
+          "prior_mean": 2.857142857142857,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037238",
+          "prior_mean": 5.428571428571429,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037741",
+          "prior_mean": 1.7142857142857142,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037746",
+          "prior_mean": 0.8333333333333334,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038542",
+          "prior_mean": 3.5714285714285716,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039917",
+          "prior_mean": 0.0,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041044",
+          "prior_mean": 1.4285714285714286,
+          "team": "ATL"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036212",
+          "prior_mean": null,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037317",
+          "prior_mean": 0.4,
+          "team": "ATL"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036906",
+          "prior_mean": null,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033921",
+          "prior_mean": 3.857142857142857,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036919",
+          "prior_mean": 1.7142857142857142,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038129",
+          "prior_mean": 2.7142857142857144,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038951",
+          "prior_mean": 0.0,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039361",
+          "prior_mean": 2.5714285714285716,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039589",
+          "prior_mean": 0.14285714285714285,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040129",
+          "prior_mean": 4.666666666666667,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040237",
+          "prior_mean": 1.2857142857142858,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041048",
+          "prior_mean": 1.8333333333333333,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041094",
+          "prior_mean": 0.16666666666666666,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041251",
+          "prior_mean": 0.2,
+          "team": "TB"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0039050",
+          "prior_mean": null,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0034855",
+          "prior_mean": 0.0,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0032392",
+          "prior_mean": 0.0,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035208",
+          "prior_mean": 0.0,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036429",
+          "prior_mean": 0.25,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036463",
+          "prior_mean": 0.0,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036970",
+          "prior_mean": 0.0,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037238",
+          "prior_mean": 0.2857142857142857,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037741",
+          "prior_mean": 0.0,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037746",
+          "prior_mean": 8.833333333333334,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038542",
+          "prior_mean": 18.714285714285715,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039917",
+          "prior_mean": 2.4,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041044",
+          "prior_mean": 0.14285714285714285,
+          "team": "ATL"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036212",
+          "prior_mean": null,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037317",
+          "prior_mean": 0.0,
+          "team": "ATL"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036906",
+          "prior_mean": null,
+          "team": "ATL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033921",
+          "prior_mean": 0.42857142857142855,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036919",
+          "prior_mean": 4.714285714285714,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038129",
+          "prior_mean": 0.0,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038951",
+          "prior_mean": 5.0,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039361",
+          "prior_mean": 17.142857142857142,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039589",
+          "prior_mean": 0.0,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040129",
+          "prior_mean": 0.3333333333333333,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040237",
+          "prior_mean": 0.42857142857142855,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041048",
+          "prior_mean": 0.0,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041094",
+          "prior_mean": 0.0,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041251",
+          "prior_mean": 4.4,
+          "team": "TB"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0039050",
+          "prior_mean": null,
+          "team": "TB"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0034855",
+          "prior_mean": 3.0,
+          "team": "TB"
+        }
+      ]
+    },
+    {
+      "game_id": "2026_08_BAL_BUF",
+      "players": [
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0032764",
+          "prior_mean": 1.4285714285714286,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0034753",
+          "prior_mean": 3.7142857142857144,
+          "team": "BAL"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0034796",
+          "prior_mean": null,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0034975",
+          "prior_mean": 1.8571428571428572,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035993",
+          "prior_mean": 0.0,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036550",
+          "prior_mean": 2.5714285714285716,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039064",
+          "prior_mean": 6.666666666666667,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039792",
+          "prior_mean": 0.8,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040075",
+          "prior_mean": 0.5714285714285714,
+          "team": "BAL"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040876",
+          "prior_mean": null,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040879",
+          "prior_mean": 1.25,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040887",
+          "prior_mean": 1.8,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039796",
+          "prior_mean": 0.0,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040870",
+          "prior_mean": 2.6666666666666665,
+          "team": "BAL"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0034827",
+          "prior_mean": null,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0034857",
+          "prior_mean": 0.16666666666666666,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035537",
+          "prior_mean": 3.0,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035689",
+          "prior_mean": 1.3333333333333333,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036988",
+          "prior_mean": 1.0,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037248",
+          "prior_mean": 1.6666666666666667,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037261",
+          "prior_mean": 3.6666666666666665,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038933",
+          "prior_mean": 3.8333333333333335,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039875",
+          "prior_mean": 0.6,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039901",
+          "prior_mean": 3.1666666666666665,
+          "team": "BUF"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0041443",
+          "prior_mean": null,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0032764",
+          "prior_mean": 21.0,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0034753",
+          "prior_mean": 0.0,
+          "team": "BAL"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0034796",
+          "prior_mean": null,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0034975",
+          "prior_mean": 3.0,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035993",
+          "prior_mean": 4.5,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036550",
+          "prior_mean": 0.0,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039064",
+          "prior_mean": 0.5,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039792",
+          "prior_mean": 0.0,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040075",
+          "prior_mean": 0.0,
+          "team": "BAL"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040876",
+          "prior_mean": null,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040879",
+          "prior_mean": 0.0,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040887",
+          "prior_mean": 0.0,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039796",
+          "prior_mean": 0.6666666666666666,
+          "team": "BAL"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040870",
+          "prior_mean": 0.0,
+          "team": "BAL"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0034827",
+          "prior_mean": null,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0034857",
+          "prior_mean": 8.0,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035537",
+          "prior_mean": 0.5,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035689",
+          "prior_mean": 0.16666666666666666,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036988",
+          "prior_mean": 0.0,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037248",
+          "prior_mean": 19.5,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037261",
+          "prior_mean": 0.0,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038933",
+          "prior_mean": 0.0,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039875",
+          "prior_mean": 1.0,
+          "team": "BUF"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039901",
+          "prior_mean": 0.0,
+          "team": "BUF"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0041443",
+          "prior_mean": null,
+          "team": "BUF"
+        }
+      ]
+    },
+    {
+      "game_id": "2026_08_CLE_PIT",
+      "players": [
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033537",
+          "prior_mean": 0.0,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036407",
+          "prior_mean": 2.6666666666666665,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038710",
+          "prior_mean": 0.75,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038794",
+          "prior_mean": 0.8,
+          "team": "CLE"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040466",
+          "prior_mean": null,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040663",
+          "prior_mean": 3.5714285714285716,
+          "team": "CLE"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040782",
+          "prior_mean": null,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040784",
+          "prior_mean": 3.1666666666666665,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041037",
+          "prior_mean": 2.857142857142857,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041547",
+          "prior_mean": 4.285714285714286,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0031595",
+          "prior_mean": 0.0,
+          "team": "CLE"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036630",
+          "prior_mean": null,
+          "team": "CLE"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0039373",
+          "prior_mean": null,
+          "team": "CLE"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040162",
+          "prior_mean": null,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0023459",
+          "prior_mean": 0.0,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035594",
+          "prior_mean": 0.0,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035640",
+          "prior_mean": 4.571428571428571,
+          "team": "PIT"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036252",
+          "prior_mean": null,
+          "team": "PIT"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036862",
+          "prior_mean": null,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036894",
+          "prior_mean": 3.2857142857142856,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037228",
+          "prior_mean": 3.4285714285714284,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038409",
+          "prior_mean": 0.0,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038558",
+          "prior_mean": 2.2857142857142856,
+          "team": "PIT"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0039739",
+          "prior_mean": null,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041489",
+          "prior_mean": 4.5,
+          "team": "PIT"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0034771",
+          "prior_mean": null,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036139",
+          "prior_mean": 3.25,
+          "team": "PIT"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036775",
+          "prior_mean": null,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033537",
+          "prior_mean": 6.857142857142857,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036407",
+          "prior_mean": 0.0,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038710",
+          "prior_mean": 0.0,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038794",
+          "prior_mean": 2.2,
+          "team": "CLE"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040466",
+          "prior_mean": null,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040663",
+          "prior_mean": 0.0,
+          "team": "CLE"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040782",
+          "prior_mean": null,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040784",
+          "prior_mean": 15.0,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041037",
+          "prior_mean": 0.0,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041547",
+          "prior_mean": 1.2857142857142858,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0031595",
+          "prior_mean": 0.3333333333333333,
+          "team": "CLE"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036630",
+          "prior_mean": null,
+          "team": "CLE"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0039373",
+          "prior_mean": null,
+          "team": "CLE"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040162",
+          "prior_mean": null,
+          "team": "CLE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0023459",
+          "prior_mean": 1.7142857142857142,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035594",
+          "prior_mean": 1.0,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035640",
+          "prior_mean": 0.14285714285714285,
+          "team": "PIT"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036252",
+          "prior_mean": null,
+          "team": "PIT"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036862",
+          "prior_mean": null,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036894",
+          "prior_mean": 0.42857142857142855,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037228",
+          "prior_mean": 14.571428571428571,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038409",
+          "prior_mean": 0.4,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038558",
+          "prior_mean": 0.0,
+          "team": "PIT"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0039739",
+          "prior_mean": null,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041489",
+          "prior_mean": 0.16666666666666666,
+          "team": "PIT"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0034771",
+          "prior_mean": null,
+          "team": "PIT"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036139",
+          "prior_mean": 7.75,
+          "team": "PIT"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036775",
+          "prior_mean": null,
+          "team": "PIT"
+        }
+      ]
+    },
+    {
+      "game_id": "2026_08_IND_JAX",
+      "players": [
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0032951",
+          "prior_mean": 2.142857142857143,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035021",
+          "prior_mean": 1.0,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035710",
+          "prior_mean": 0.0,
+          "team": "IND"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036182",
+          "prior_mean": null,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036223",
+          "prior_mean": 2.4285714285714284,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037292",
+          "prior_mean": 0.6,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038997",
+          "prior_mean": 3.7142857142857144,
+          "team": "IND"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040128",
+          "prior_mean": null,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041125",
+          "prior_mean": 0.5714285714285714,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041132",
+          "prior_mean": 0.8,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0030279",
+          "prior_mean": 4.833333333333333,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033217",
+          "prior_mean": 1.0,
+          "team": "IND"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0033439",
+          "prior_mean": null,
+          "team": "IND"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0038394",
+          "prior_mean": null,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0034960",
+          "prior_mean": 3.3333333333333335,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036971",
+          "prior_mean": 0.0,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038606",
+          "prior_mean": 4.333333333333333,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038611",
+          "prior_mean": 0.16666666666666666,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038935",
+          "prior_mean": 4.333333333333333,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039893",
+          "prior_mean": 1.5,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040238",
+          "prior_mean": 0.4,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040719",
+          "prior_mean": 2.1666666666666665,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041100",
+          "prior_mean": 1.3333333333333333,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041503",
+          "prior_mean": 1.2,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0032951",
+          "prior_mean": 0.0,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035021",
+          "prior_mean": 0.0,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035710",
+          "prior_mean": 3.0,
+          "team": "IND"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036182",
+          "prior_mean": null,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036223",
+          "prior_mean": 20.0,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037292",
+          "prior_mean": 0.0,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038997",
+          "prior_mean": 0.14285714285714285,
+          "team": "IND"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040128",
+          "prior_mean": null,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041125",
+          "prior_mean": 4.571428571428571,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041132",
+          "prior_mean": 0.6,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0030279",
+          "prior_mean": 0.0,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033217",
+          "prior_mean": 0.0,
+          "team": "IND"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0033439",
+          "prior_mean": null,
+          "team": "IND"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0038394",
+          "prior_mean": null,
+          "team": "IND"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0034960",
+          "prior_mean": 0.16666666666666666,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036971",
+          "prior_mean": 2.8333333333333335,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038606",
+          "prior_mean": 0.16666666666666666,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038611",
+          "prior_mean": 6.5,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038935",
+          "prior_mean": 0.0,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039893",
+          "prior_mean": 0.0,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040238",
+          "prior_mean": 0.2,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040719",
+          "prior_mean": 15.666666666666666,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041100",
+          "prior_mean": 0.0,
+          "team": "JAX"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041503",
+          "prior_mean": 0.0,
+          "team": "JAX"
+        }
+      ]
+    },
+    {
+      "game_id": "2026_08_LV_NYJ",
+      "players": [
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0029604",
+          "prior_mean": 0.0,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0034365",
+          "prior_mean": 1.25,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035891",
+          "prior_mean": 1.1428571428571428,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037093",
+          "prior_mean": 0.4,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037304",
+          "prior_mean": 0.2857142857142857,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038563",
+          "prior_mean": 4.142857142857143,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039066",
+          "prior_mean": 4.428571428571429,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039338",
+          "prior_mean": 6.8,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039407",
+          "prior_mean": 0.5714285714285714,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040122",
+          "prior_mean": 4.857142857142857,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040878",
+          "prior_mean": 0.42857142857142855,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040894",
+          "prior_mean": 0.2857142857142857,
+          "team": "LV"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0037487",
+          "prior_mean": null,
+          "team": "LV"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0041562",
+          "prior_mean": null,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037291",
+          "prior_mean": 1.6,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0030565",
+          "prior_mean": 0.0,
+          "team": "NYJ"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0032385",
+          "prior_mean": null,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0034959",
+          "prior_mean": 0.0,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037740",
+          "prior_mean": 5.285714285714286,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037755",
+          "prior_mean": 0.8,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039451",
+          "prior_mean": 1.5714285714285714,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039794",
+          "prior_mean": 2.142857142857143,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039798",
+          "prior_mean": 0.8333333333333334,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041032",
+          "prior_mean": 2.2857142857142856,
+          "team": "NYJ"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0033375",
+          "prior_mean": null,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040736",
+          "prior_mean": 3.5,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041511",
+          "prior_mean": 4.0,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039890",
+          "prior_mean": 3.0,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0029604",
+          "prior_mean": 2.142857142857143,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0034365",
+          "prior_mean": 0.0,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035891",
+          "prior_mean": 0.0,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037093",
+          "prior_mean": 0.0,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037304",
+          "prior_mean": 0.5714285714285714,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038563",
+          "prior_mean": 0.2857142857142857,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039066",
+          "prior_mean": 0.0,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039338",
+          "prior_mean": 0.0,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039407",
+          "prior_mean": 0.7142857142857143,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040122",
+          "prior_mean": 15.142857142857142,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040878",
+          "prior_mean": 5.714285714285714,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040894",
+          "prior_mean": 0.14285714285714285,
+          "team": "LV"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0037487",
+          "prior_mean": null,
+          "team": "LV"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0041562",
+          "prior_mean": null,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037291",
+          "prior_mean": 0.0,
+          "team": "LV"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0030565",
+          "prior_mean": 3.142857142857143,
+          "team": "NYJ"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0032385",
+          "prior_mean": null,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0034959",
+          "prior_mean": 0.3333333333333333,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037740",
+          "prior_mean": 0.0,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037755",
+          "prior_mean": 0.0,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039451",
+          "prior_mean": 0.42857142857142855,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039794",
+          "prior_mean": 13.0,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039798",
+          "prior_mean": 1.6666666666666667,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041032",
+          "prior_mean": 0.14285714285714285,
+          "team": "NYJ"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0033375",
+          "prior_mean": null,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040736",
+          "prior_mean": 0.0,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041511",
+          "prior_mean": 0.0,
+          "team": "NYJ"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039890",
+          "prior_mean": 0.0,
+          "team": "NYJ"
+        }
+      ]
+    },
+    {
+      "game_id": "2026_08_MIN_DET",
+      "players": [
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033106",
+          "prior_mean": 0.0,
+          "team": "DET"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036754",
+          "prior_mean": null,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036963",
+          "prior_mean": 7.666666666666667,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037240",
+          "prior_mean": 3.8333333333333335,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039065",
+          "prior_mean": 4.666666666666667,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039139",
+          "prior_mean": 5.333333333333333,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039364",
+          "prior_mean": 0.6666666666666666,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040669",
+          "prior_mean": 1.6666666666666667,
+          "team": "DET"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0034270",
+          "prior_mean": null,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033293",
+          "prior_mean": 2.1666666666666665,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035228",
+          "prior_mean": 0.0,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035229",
+          "prior_mean": 4.5,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036259",
+          "prior_mean": 0.8,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036425",
+          "prior_mean": 0.6666666666666666,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038994",
+          "prior_mean": 2.6,
+          "team": "MIN"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0039710",
+          "prior_mean": null,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040154",
+          "prior_mean": 0.75,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040215",
+          "prior_mean": 2.3333333333333335,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040506",
+          "prior_mean": 0.8333333333333334,
+          "team": "MIN"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0041104",
+          "prior_mean": null,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036322",
+          "prior_mean": 4.6,
+          "team": "MIN"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040509",
+          "prior_mean": null,
+          "team": "MIN"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0037525",
+          "prior_mean": null,
+          "team": "MIN"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0041081",
+          "prior_mean": null,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033106",
+          "prior_mean": 2.0,
+          "team": "DET"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036754",
+          "prior_mean": null,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036963",
+          "prior_mean": 0.16666666666666666,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037240",
+          "prior_mean": 0.0,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039065",
+          "prior_mean": 0.0,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039139",
+          "prior_mean": 22.333333333333332,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039364",
+          "prior_mean": 2.6666666666666665,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040669",
+          "prior_mean": 0.0,
+          "team": "DET"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0034270",
+          "prior_mean": null,
+          "team": "DET"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033293",
+          "prior_mean": 17.5,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035228",
+          "prior_mean": 5.0,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035229",
+          "prior_mean": 0.0,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036259",
+          "prior_mean": 0.0,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036425",
+          "prior_mean": 0.5,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038994",
+          "prior_mean": 0.4,
+          "team": "MIN"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0039710",
+          "prior_mean": null,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040154",
+          "prior_mean": 0.0,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040215",
+          "prior_mean": 0.0,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040506",
+          "prior_mean": 0.16666666666666666,
+          "team": "MIN"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0041104",
+          "prior_mean": null,
+          "team": "MIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036322",
+          "prior_mean": 0.2,
+          "team": "MIN"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040509",
+          "prior_mean": null,
+          "team": "MIN"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0037525",
+          "prior_mean": null,
+          "team": "MIN"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0041081",
+          "prior_mean": null,
+          "team": "MIN"
+        }
+      ]
+    },
+    {
+      "game_id": "2026_08_TEN_CIN",
+      "players": [
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033526",
+          "prior_mean": 1.1666666666666667,
+          "team": "CIN"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0034613",
+          "prior_mean": null,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0034829",
+          "prior_mean": 2.6,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036410",
+          "prior_mean": 5.5,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036442",
+          "prior_mean": 0.0,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036900",
+          "prior_mean": 5.333333333333333,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038597",
+          "prior_mean": 4.666666666666667,
+          "team": "CIN"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0038839",
+          "prior_mean": null,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040785",
+          "prior_mean": 2.1666666666666665,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035631",
+          "prior_mean": 1.75,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039814",
+          "prior_mean": 2.6666666666666665,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040208",
+          "prior_mean": 0.0,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0034837",
+          "prior_mean": 1.0,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035261",
+          "prior_mean": 1.5714285714285714,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038115",
+          "prior_mean": 0.8571428571428571,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038117",
+          "prior_mean": 4.142857142857143,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039032",
+          "prior_mean": 2.5,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040170",
+          "prior_mean": 1.4285714285714286,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040584",
+          "prior_mean": 2.0,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040676",
+          "prior_mean": 0.0,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040705",
+          "prior_mean": 0.8571428571428571,
+          "team": "TEN"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040886",
+          "prior_mean": null,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041438",
+          "prior_mean": 4.857142857142857,
+          "team": "TEN"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036876",
+          "prior_mean": null,
+          "team": "TEN"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040205",
+          "prior_mean": null,
+          "team": "TEN"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036924",
+          "prior_mean": null,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033526",
+          "prior_mean": 5.166666666666667,
+          "team": "CIN"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0034613",
+          "prior_mean": null,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0034829",
+          "prior_mean": 0.0,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036410",
+          "prior_mean": 0.0,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036442",
+          "prior_mean": 2.8333333333333335,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036900",
+          "prior_mean": 0.0,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038597",
+          "prior_mean": 13.666666666666666,
+          "team": "CIN"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0038839",
+          "prior_mean": null,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040785",
+          "prior_mean": 0.16666666666666666,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035631",
+          "prior_mean": 0.0,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039814",
+          "prior_mean": 0.0,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040208",
+          "prior_mean": 0.75,
+          "team": "CIN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0034837",
+          "prior_mean": 0.0,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035261",
+          "prior_mean": 16.0,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038115",
+          "prior_mean": 0.0,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038117",
+          "prior_mean": 0.14285714285714285,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039032",
+          "prior_mean": 3.0,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040170",
+          "prior_mean": 0.0,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040584",
+          "prior_mean": 0.0,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040676",
+          "prior_mean": 2.7142857142857144,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040705",
+          "prior_mean": 0.0,
+          "team": "TEN"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040886",
+          "prior_mean": null,
+          "team": "TEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041438",
+          "prior_mean": 0.0,
+          "team": "TEN"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036876",
+          "prior_mean": null,
+          "team": "TEN"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040205",
+          "prior_mean": null,
+          "team": "TEN"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036924",
+          "prior_mean": null,
+          "team": "TEN"
+        }
+      ]
+    },
+    {
+      "game_id": "2026_08_LAC_LA",
+      "players": [
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0026498",
+          "prior_mean": 0.0,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0031381",
+          "prior_mean": 5.0,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033110",
+          "prior_mean": 4.333333333333333,
+          "team": "LA"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036849",
+          "prior_mean": null,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037840",
+          "prior_mean": 4.571428571428571,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039074",
+          "prior_mean": 1.4285714285714286,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039075",
+          "prior_mean": 9.0,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039738",
+          "prior_mean": 1.4285714285714286,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039751",
+          "prior_mean": 0.5,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040590",
+          "prior_mean": 1.5,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036244",
+          "prior_mean": 2.3333333333333335,
+          "team": "LA"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0034272",
+          "prior_mean": null,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036355",
+          "prior_mean": 0.0,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038454",
+          "prior_mean": 2.0,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038544",
+          "prior_mean": 1.6,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038573",
+          "prior_mean": 0.16666666666666666,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039391",
+          "prior_mean": 1.4,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039915",
+          "prior_mean": 2.6,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040189",
+          "prior_mean": 2.0,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040666",
+          "prior_mean": 1.5,
+          "team": "LAC"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040727",
+          "prior_mean": null,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038046",
+          "prior_mean": 2.25,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039489",
+          "prior_mean": 0.3333333333333333,
+          "team": "LAC"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040311",
+          "prior_mean": null,
+          "team": "LAC"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040184",
+          "prior_mean": null,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0026498",
+          "prior_mean": 2.0,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0031381",
+          "prior_mean": 0.0,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033110",
+          "prior_mean": 0.0,
+          "team": "LA"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036849",
+          "prior_mean": null,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037840",
+          "prior_mean": 13.714285714285714,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039074",
+          "prior_mean": 0.14285714285714285,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039075",
+          "prior_mean": 1.0,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039738",
+          "prior_mean": 9.142857142857142,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039751",
+          "prior_mean": 0.0,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040590",
+          "prior_mean": 0.0,
+          "team": "LA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036244",
+          "prior_mean": 0.0,
+          "team": "LA"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0034272",
+          "prior_mean": null,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036355",
+          "prior_mean": 4.833333333333333,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038454",
+          "prior_mean": 5.833333333333333,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038544",
+          "prior_mean": 0.4,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038573",
+          "prior_mean": 0.16666666666666666,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039391",
+          "prior_mean": 4.2,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039915",
+          "prior_mean": 0.0,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040189",
+          "prior_mean": 0.16666666666666666,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040666",
+          "prior_mean": 13.333333333333334,
+          "team": "LAC"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040727",
+          "prior_mean": null,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038046",
+          "prior_mean": 0.0,
+          "team": "LAC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039489",
+          "prior_mean": 0.0,
+          "team": "LAC"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040311",
+          "prior_mean": null,
+          "team": "LAC"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040184",
+          "prior_mean": null,
+          "team": "LAC"
+        }
+      ]
+    },
+    {
+      "game_id": "2026_08_KC_DEN",
+      "players": [
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033881",
+          "prior_mean": 1.8571428571428572,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0034348",
+          "prior_mean": 2.2857142857142856,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036158",
+          "prior_mean": 1.1428571428571428,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036422",
+          "prior_mean": 0.6666666666666666,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036613",
+          "prior_mean": 3.7142857142857144,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036727",
+          "prior_mean": 0.16666666666666666,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037085",
+          "prior_mean": 1.2,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038976",
+          "prior_mean": 1.4,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039732",
+          "prior_mean": 0.0,
+          "team": "DEN"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040134",
+          "prior_mean": null,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040730",
+          "prior_mean": 4.166666666666667,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035406",
+          "prior_mean": 0.6666666666666666,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039868",
+          "prior_mean": 0.8333333333333334,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041496",
+          "prior_mean": 1.6666666666666667,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0030506",
+          "prior_mean": 4.0,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033873",
+          "prior_mean": 0.0,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036637",
+          "prior_mean": 2.0,
+          "team": "KC"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0038104",
+          "prior_mean": null,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038134",
+          "prior_mean": 3.0,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039894",
+          "prior_mean": 4.0,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040646",
+          "prior_mean": 0.8333333333333334,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040890",
+          "prior_mean": 0.75,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041013",
+          "prior_mean": 1.5,
+          "team": "KC"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040298",
+          "prior_mean": null,
+          "team": "KC"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0034386",
+          "prior_mean": null,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033881",
+          "prior_mean": 0.0,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0034348",
+          "prior_mean": 0.0,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036158",
+          "prior_mean": 12.428571428571429,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036422",
+          "prior_mean": 0.0,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036613",
+          "prior_mean": 0.2857142857142857,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036727",
+          "prior_mean": 0.16666666666666666,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037085",
+          "prior_mean": 1.2,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038976",
+          "prior_mean": 0.4,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039732",
+          "prior_mean": 4.142857142857143,
+          "team": "DEN"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040134",
+          "prior_mean": null,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040730",
+          "prior_mean": 4.0,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035406",
+          "prior_mean": 0.0,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039868",
+          "prior_mean": 0.16666666666666666,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041496",
+          "prior_mean": 6.333333333333333,
+          "team": "DEN"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0030506",
+          "prior_mean": 0.0,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033873",
+          "prior_mean": 3.1666666666666665,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036637",
+          "prior_mean": 0.0,
+          "team": "KC"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0038104",
+          "prior_mean": null,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038134",
+          "prior_mean": 20.0,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039894",
+          "prior_mean": 0.0,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040646",
+          "prior_mean": 0.0,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040890",
+          "prior_mean": 0.0,
+          "team": "KC"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041013",
+          "prior_mean": 3.1666666666666665,
+          "team": "KC"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040298",
+          "prior_mean": null,
+          "team": "KC"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0034386",
+          "prior_mean": null,
+          "team": "KC"
+        }
+      ]
+    },
+    {
+      "game_id": "2026_08_NE_MIA",
+      "players": [
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0037666",
+          "prior_mean": null,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038128",
+          "prior_mean": 0.0,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039874",
+          "prior_mean": 0.0,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039880",
+          "prior_mean": 4.333333333333333,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040198",
+          "prior_mean": 1.2,
+          "team": "MIA"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0041524",
+          "prior_mean": null,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041525",
+          "prior_mean": 1.3333333333333333,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041529",
+          "prior_mean": 1.0,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037252",
+          "prior_mean": 3.6,
+          "team": "MIA"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0041579",
+          "prior_mean": null,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041523",
+          "prior_mean": 3.0,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033090",
+          "prior_mean": 3.7142857142857144,
+          "team": "NE"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0033555",
+          "prior_mean": null,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036875",
+          "prior_mean": 2.857142857142857,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037816",
+          "prior_mean": 2.3333333333333335,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038621",
+          "prior_mean": 3.2857142857142856,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039851",
+          "prior_mean": 0.0,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040131",
+          "prior_mean": 0.8571428571428571,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040556",
+          "prior_mean": 0.2857142857142857,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040563",
+          "prior_mean": 1.6666666666666667,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040734",
+          "prior_mean": 0.8333333333333334,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041395",
+          "prior_mean": 2.0,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035676",
+          "prior_mean": 3.0,
+          "team": "NE"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0037666",
+          "prior_mean": null,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038128",
+          "prior_mean": 5.833333333333333,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039874",
+          "prior_mean": 4.0,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039880",
+          "prior_mean": 1.3333333333333333,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040198",
+          "prior_mean": 14.4,
+          "team": "MIA"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0041524",
+          "prior_mean": null,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041525",
+          "prior_mean": 0.16666666666666666,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041529",
+          "prior_mean": 0.0,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037252",
+          "prior_mean": 0.0,
+          "team": "MIA"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0041579",
+          "prior_mean": null,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041523",
+          "prior_mean": 0.0,
+          "team": "MIA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033090",
+          "prior_mean": 0.0,
+          "team": "NE"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0033555",
+          "prior_mean": null,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036875",
+          "prior_mean": 11.0,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037816",
+          "prior_mean": 0.0,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038621",
+          "prior_mean": 0.0,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039851",
+          "prior_mean": 5.428571428571429,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040131",
+          "prior_mean": 0.0,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040556",
+          "prior_mean": 5.0,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040563",
+          "prior_mean": 0.16666666666666666,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040734",
+          "prior_mean": 8.666666666666666,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041395",
+          "prior_mean": 0.0,
+          "team": "NE"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035676",
+          "prior_mean": 0.0,
+          "team": "NE"
+        }
+      ]
+    },
+    {
+      "game_id": "2026_08_PHI_WAS",
+      "players": [
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0030061",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033246",
+          "prior_mean": 0.8,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0034844",
+          "prior_mean": 1.2,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036389",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038393",
+          "prior_mean": 3.1666666666666665,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0038555",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0039746",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040024",
+          "prior_mean": 1.2857142857142858,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040867",
+          "prior_mean": 3.5714285714285716,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0034351",
+          "prior_mean": 4.4,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037258",
+          "prior_mean": 2.3333333333333335,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0039325",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036912",
+          "prior_mean": 6.5,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036980",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0038400",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0035662",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0036567",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0041483",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0031588",
+          "prior_mean": 4.8,
+          "team": "WAS"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0032268",
+          "prior_mean": null,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033699",
+          "prior_mean": 1.3333333333333333,
+          "team": "WAS"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0035567",
+          "prior_mean": null,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036626",
+          "prior_mean": 1.5,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037742",
+          "prior_mean": 1.8,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037809",
+          "prior_mean": 3.75,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039686",
+          "prior_mean": 0.3333333333333333,
+          "team": "WAS"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040242",
+          "prior_mean": null,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041040",
+          "prior_mean": 3.0,
+          "team": "WAS"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0041096",
+          "prior_mean": null,
+          "team": "WAS"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0041117",
+          "prior_mean": null,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0035659",
+          "prior_mean": 3.0,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036628",
+          "prior_mean": 1.25,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037256",
+          "prior_mean": 2.8,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039355",
+          "prior_mean": 0.0,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039910",
+          "prior_mean": 0.0,
+          "team": "WAS"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0033955",
+          "prior_mean": null,
+          "team": "WAS"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0030061",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033246",
+          "prior_mean": 0.0,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0034844",
+          "prior_mean": 8.6,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036389",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038393",
+          "prior_mean": 0.0,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0038555",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0039746",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040024",
+          "prior_mean": 0.0,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040867",
+          "prior_mean": 0.14285714285714285,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0034351",
+          "prior_mean": 0.0,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037258",
+          "prior_mean": 12.333333333333334,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0039325",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036912",
+          "prior_mean": 0.0,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036980",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0038400",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0035662",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0036567",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0041483",
+          "prior_mean": null,
+          "team": "PHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0031588",
+          "prior_mean": 0.0,
+          "team": "WAS"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0032268",
+          "prior_mean": null,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033699",
+          "prior_mean": 2.6666666666666665,
+          "team": "WAS"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0035567",
+          "prior_mean": null,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036626",
+          "prior_mean": 0.0,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037742",
+          "prior_mean": 0.0,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037809",
+          "prior_mean": 0.0,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039686",
+          "prior_mean": 0.0,
+          "team": "WAS"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040242",
+          "prior_mean": null,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041040",
+          "prior_mean": 0.0,
+          "team": "WAS"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0041096",
+          "prior_mean": null,
+          "team": "WAS"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0041117",
+          "prior_mean": null,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0035659",
+          "prior_mean": 0.0,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036628",
+          "prior_mean": 0.0,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037256",
+          "prior_mean": 7.2,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039355",
+          "prior_mean": 0.0,
+          "team": "WAS"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039910",
+          "prior_mean": 6.25,
+          "team": "WAS"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0033955",
+          "prior_mean": null,
+          "team": "WAS"
+        }
+      ]
+    },
+    {
+      "game_id": "2026_08_CHI_SEA",
+      "players": [
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0032464",
+          "prior_mean": 3.7142857142857144,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036275",
+          "prior_mean": 3.142857142857143,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0036290",
+          "prior_mean": 1.4285714285714286,
+          "team": "CHI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0038416",
+          "prior_mean": null,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039021",
+          "prior_mean": 1.6,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039919",
+          "prior_mean": 3.4285714285714284,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040126",
+          "prior_mean": 3.7142857142857144,
+          "team": "CHI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040236",
+          "prior_mean": null,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040735",
+          "prior_mean": 5.0,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041051",
+          "prior_mean": 0.8333333333333334,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0041558",
+          "prior_mean": 0.6,
+          "team": "CHI"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0028986",
+          "prior_mean": null,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040277",
+          "prior_mean": 0.25,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039918",
+          "prior_mean": 0.0,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033576",
+          "prior_mean": 0.42857142857142855,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0033908",
+          "prior_mean": 2.5714285714285716,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0034869",
+          "prior_mean": 0.0,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037545",
+          "prior_mean": 2.2857142857142856,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038543",
+          "prior_mean": 8.285714285714286,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0038797",
+          "prior_mean": 0.8571428571428571,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039299",
+          "prior_mean": 1.7142857142857142,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0039793",
+          "prior_mean": 2.7142857142857144,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0040648",
+          "prior_mean": 1.25,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "receiving",
+          "player_id": "00-0037745",
+          "prior_mean": 0.3333333333333333,
+          "team": "SEA"
+        },
+        {
+          "fallback": true,
+          "family": "receiving",
+          "player_id": "00-0040739",
+          "prior_mean": null,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0032464",
+          "prior_mean": 0.14285714285714285,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036275",
+          "prior_mean": 16.571428571428573,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0036290",
+          "prior_mean": 0.0,
+          "team": "CHI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0038416",
+          "prior_mean": null,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039021",
+          "prior_mean": 4.8,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039919",
+          "prior_mean": 0.0,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040126",
+          "prior_mean": 0.0,
+          "team": "CHI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040236",
+          "prior_mean": null,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040735",
+          "prior_mean": 1.1428571428571428,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041051",
+          "prior_mean": 0.16666666666666666,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0041558",
+          "prior_mean": 0.0,
+          "team": "CHI"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0028986",
+          "prior_mean": null,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040277",
+          "prior_mean": 0.0,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039918",
+          "prior_mean": 6.0,
+          "team": "CHI"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033576",
+          "prior_mean": 0.0,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0033908",
+          "prior_mean": 0.0,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0034869",
+          "prior_mean": 1.5,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037545",
+          "prior_mean": 0.5714285714285714,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038543",
+          "prior_mean": 0.42857142857142855,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0038797",
+          "prior_mean": 15.857142857142858,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039299",
+          "prior_mean": 5.142857142857143,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0039793",
+          "prior_mean": 0.5714285714285714,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0040648",
+          "prior_mean": 0.0,
+          "team": "SEA"
+        },
+        {
+          "fallback": false,
+          "family": "rushing",
+          "player_id": "00-0037745",
+          "prior_mean": 3.0,
+          "team": "SEA"
+        },
+        {
+          "fallback": true,
+          "family": "rushing",
+          "player_id": "00-0040739",
+          "prior_mean": null,
+          "team": "SEA"
+        }
+      ]
+    }
+  ],
+  "model_sha256": "fa8e055c01543d7d231b1d13414a607936e400b778b9678ca111bfaa3dcf2360",
+  "source": "https://github.com/nflverse/nflverse-data/releases/tag/player_stats",
+  "source_publication_verified": false,
+  "source_sha256": "f081c819a007966c5cd395f2d87eaf9b1e91eff5c2eb6d758eb752d1f9f59e3d",
+  "source_snapshot": "reports/workload_v2_scan.history.parquet",
+  "spec": "NFL_PLAYER_WORKLOAD_SHRINKAGE_V2"
+}
