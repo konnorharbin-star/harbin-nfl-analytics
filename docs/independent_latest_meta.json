@@ -1,17 +1,17 @@
 {
-  "dashboard_published_utc": "2026-10-26T19:14:28.718596+00:00",
-  "games_forecast": 1,
-  "generated_utc": "2026-10-26T19:14:02.090246+00:00",
-  "input_quality_sha256": "7a7f32fabfcb58f6b7761ee8e07eda6dcc6647da1c5a9ec28c9bd3984b30e11c",
+  "dashboard_published_utc": "2026-10-27T18:42:38.795193+00:00",
+  "games_forecast": 14,
+  "generated_utc": "2026-10-27T18:40:51.732240+00:00",
+  "input_quality_sha256": "38adcbae50eafa08b65133412a6d382328cb67173e622d42d37b3ecdb3baeb18",
   "input_quality_status": "SUPPLEMENTAL_INPUT_CHECKS_AVAILABLE",
   "legacy_market_board_preserved": true,
   "market_superiority": "UNPROVEN",
-  "model_capture_utc": "2026-10-26T19:13:59.773733+00:00",
+  "model_capture_utc": "2026-10-27T18:40:29.812784+00:00",
   "model_lineage": "NFL_PLAYER_WORKLOAD_SHRINKAGE_V2",
   "qualified_bets": 0,
   "season": 2026,
-  "source_json_sha256": "f016c35c77e6aebe9ccd2edd583c3f1d204d0f380591ca73df07da6f0b84cac0",
+  "source_json_sha256": "4f9f1ecf1edf71dc9a8a1d2098bc9905b8ab3f54984da6a7669c87cca4932820",
   "spec": "NFL_PAGES_INDEPENDENT_DASHBOARD_V1",
-  "upcoming_games": 1,
-  "week": 7
+  "upcoming_games": 14,
+  "week": 8
 }
