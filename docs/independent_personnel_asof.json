@@ -3,9 +3,9 @@
     "betting_authorized": false,
     "new_observations": 14,
     "repeat_observations": 0,
-    "total_observations": 126
+    "total_observations": 140
   },
-  "asof_utc": "2026-10-28T18:51:26.246077+00:00",
+  "asof_utc": "2026-10-29T18:58:39.583836+00:00",
   "betting_authorized": false,
   "eligible_pregame_games": 14,
   "game_day_inactives_confirmed": 0,
@@ -13,27 +13,27 @@
     {
       "away_team": "CAR",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "c55f962b850181d250c9293a4733e5549b1df01254bdfdd782fb6648a3724197",
+      "forecast_sha256": "57a9ce483d4478ba392fdfa6f79536fd1a9a27caa8ff1e34fe472d9569a62b58",
       "game_id": "2026_08_CAR_GB",
       "home_team": "GB",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-10-30T00:15:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": -1.47,
+        "home_spread": -0.955,
         "predicted_score": {
-          "away": 22.624,
-          "home": 24.094
+          "away": 22.5745,
+          "home": 23.5295
         },
-        "total": 46.718
+        "total": 46.104
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -41,13 +41,13 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 33.089,
+              "historical_attempts_proxy": 33.1485,
               "name": "Bryce Young",
               "not_verified_starter": true,
               "player_id": "00-0039150"
             },
             {
-              "historical_attempts_proxy": 1.23,
+              "historical_attempts_proxy": 1.238,
               "name": "Kenny Pickett",
               "not_verified_starter": true,
               "player_id": "00-0038102"
@@ -143,7 +143,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0038102",
-              "historical_passing_attempts_proxy_mean": 1.23,
+              "historical_passing_attempts_proxy_mean": 1.238,
               "model_player_name": "Kenny Pickett",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -171,7 +171,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0039150",
-              "historical_passing_attempts_proxy_mean": 33.089,
+              "historical_passing_attempts_proxy_mean": 33.1485,
               "model_player_name": "Bryce Young",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -274,7 +274,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 34.519,
+              "historical_attempts_proxy": 34.395,
               "name": "Jordan Love",
               "not_verified_starter": true,
               "player_id": "00-0036264"
@@ -328,7 +328,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0036264",
-              "historical_passing_attempts_proxy_mean": 34.519,
+              "historical_passing_attempts_proxy_mean": 34.395,
               "model_player_name": "Jordan Love",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -515,33 +515,33 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     },
     {
       "away_team": "ARI",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "2156cffa08645b869c9307575e5edb0c91d190760d62fe06b919b4c741ee8490",
+      "forecast_sha256": "553c3354ff75f2bd141ad20c3328011789f55cd7d98038f8dac406371678346b",
       "game_id": "2026_08_ARI_DAL",
       "home_team": "DAL",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T18:00:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": -2.756,
+        "home_spread": -3.7455,
         "predicted_score": {
-          "away": 23.997,
-          "home": 26.753
+          "away": 23.7715,
+          "home": 27.517
         },
-        "total": 50.75
+        "total": 51.2885
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -549,7 +549,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 34.245,
+              "historical_attempts_proxy": 34.564,
               "name": "Jacoby Brissett",
               "not_verified_starter": true,
               "player_id": "00-0033119"
@@ -561,7 +561,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0033119",
-              "historical_passing_attempts_proxy_mean": 34.245,
+              "historical_passing_attempts_proxy_mean": 34.564,
               "model_player_name": "Jacoby Brissett",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -748,7 +748,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 34.8945,
+              "historical_attempts_proxy": 35.3135,
               "name": "Dak Prescott",
               "not_verified_starter": true,
               "player_id": "00-0033077"
@@ -760,7 +760,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0033077",
-              "historical_passing_attempts_proxy_mean": 34.8945,
+              "historical_passing_attempts_proxy_mean": 35.3135,
               "model_player_name": "Dak Prescott",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -933,33 +933,33 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     },
     {
       "away_team": "ATL",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "c336e7828bf803d2875f450fed5b3b084827336599beaa870f987d4d52b468cc",
+      "forecast_sha256": "aee66339f404d258fe67a48750d5d8f0ccb328c9d6548a684d4c3a0926154a0e",
       "game_id": "2026_08_ATL_TB",
       "home_team": "TB",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T18:00:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": -1.303,
+        "home_spread": -0.7365,
         "predicted_score": {
-          "away": 22.6225,
-          "home": 23.9255
+          "away": 22.848,
+          "home": 23.5845
         },
-        "total": 46.548
+        "total": 46.4325
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -967,13 +967,13 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 33.5205,
+              "historical_attempts_proxy": 33.7145,
               "name": "Michael Penix Jr.",
               "not_verified_starter": true,
               "player_id": "00-0039917"
             },
             {
-              "historical_attempts_proxy": 0.8165,
+              "historical_attempts_proxy": 0.833,
               "name": "Tua Tagovailoa",
               "not_verified_starter": true,
               "player_id": "00-0036212"
@@ -1013,7 +1013,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0036212",
-              "historical_passing_attempts_proxy_mean": 0.8165,
+              "historical_passing_attempts_proxy_mean": 0.833,
               "model_player_name": "Tua Tagovailoa",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -1153,7 +1153,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0039917",
-              "historical_passing_attempts_proxy_mean": 33.5205,
+              "historical_passing_attempts_proxy_mean": 33.7145,
               "model_player_name": "Michael Penix Jr.",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -1186,13 +1186,13 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 31.0675,
+              "historical_attempts_proxy": 31.0015,
               "name": "Jalon Daniels",
               "not_verified_starter": true,
               "player_id": "00-0041251"
             },
             {
-              "historical_attempts_proxy": 3.597,
+              "historical_attempts_proxy": 3.583,
               "name": "Baker Mayfield",
               "not_verified_starter": true,
               "player_id": "00-0034855"
@@ -1218,7 +1218,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0034855",
-              "historical_passing_attempts_proxy_mean": 3.597,
+              "historical_passing_attempts_proxy_mean": 3.583,
               "model_player_name": "Baker Mayfield",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -1372,7 +1372,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0041251",
-              "historical_passing_attempts_proxy_mean": 31.0675,
+              "historical_passing_attempts_proxy_mean": 31.0015,
               "model_player_name": "Jalon Daniels",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -1391,33 +1391,33 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     },
     {
       "away_team": "BAL",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "af688d63352658bf9f24526ebb58677523bbff7c437a92e80eb72354d093e78b",
+      "forecast_sha256": "783c373517143fd8ca7a358991e559f987b04e890ded8dec0ea115a8329ecfd1",
       "game_id": "2026_08_BAL_BUF",
       "home_team": "BUF",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T18:00:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": -2.717,
+        "home_spread": -2.5405,
         "predicted_score": {
-          "away": 25.066,
-          "home": 27.783
+          "away": 25.152,
+          "home": 27.6925
         },
-        "total": 52.849
+        "total": 52.8445
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -1425,13 +1425,13 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 29.1865,
+              "historical_attempts_proxy": 29.1715,
               "name": "Tyler Huntley",
               "not_verified_starter": true,
               "player_id": "00-0035993"
             },
             {
-              "historical_attempts_proxy": 5.5465,
+              "historical_attempts_proxy": 5.5065,
               "name": "Lamar Jackson",
               "not_verified_starter": true,
               "player_id": "00-0034796"
@@ -1471,7 +1471,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0034796",
-              "historical_passing_attempts_proxy_mean": 5.5465,
+              "historical_passing_attempts_proxy_mean": 5.5065,
               "model_player_name": "Lamar Jackson",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -1499,7 +1499,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0035993",
-              "historical_passing_attempts_proxy_mean": 29.1865,
+              "historical_passing_attempts_proxy_mean": 29.1715,
               "model_player_name": "Tyler Huntley",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -1644,7 +1644,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 35.2825,
+              "historical_attempts_proxy": 35.011,
               "name": "Josh Allen",
               "not_verified_starter": true,
               "player_id": "00-0034857"
@@ -1670,7 +1670,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0034857",
-              "historical_passing_attempts_proxy_mean": 35.2825,
+              "historical_passing_attempts_proxy_mean": 35.011,
               "model_player_name": "Josh Allen",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -1815,33 +1815,33 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     },
     {
       "away_team": "CLE",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "1f9e1662a8e1fbbd3fba9454ef89b6e20226f46fd69769d16701c159bd8cd439",
+      "forecast_sha256": "49fc0ca8ee564273f8fe77462b3823e9ac962e0a3d728adf6e10ef343426b3d9",
       "game_id": "2026_08_CLE_PIT",
       "home_team": "PIT",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T18:00:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": -2.668,
+        "home_spread": -2.274,
         "predicted_score": {
-          "away": 19.09,
-          "home": 21.758
+          "away": 19.52,
+          "home": 21.794
         },
-        "total": 40.848
+        "total": 41.314
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -1849,7 +1849,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 33.288,
+              "historical_attempts_proxy": 33.738,
               "name": "Deshaun Watson",
               "not_verified_starter": true,
               "player_id": "00-0033537"
@@ -1875,7 +1875,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0033537",
-              "historical_passing_attempts_proxy_mean": 33.288,
+              "historical_passing_attempts_proxy_mean": 33.738,
               "model_player_name": "Deshaun Watson",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -2062,7 +2062,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 34.013,
+              "historical_attempts_proxy": 34.2265,
               "name": "Aaron Rodgers",
               "not_verified_starter": true,
               "player_id": "00-0023459"
@@ -2074,7 +2074,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0023459",
-              "historical_passing_attempts_proxy_mean": 34.013,
+              "historical_passing_attempts_proxy_mean": 34.2265,
               "model_player_name": "Aaron Rodgers",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -2275,33 +2275,33 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     },
     {
       "away_team": "IND",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "c06ba12e72e15f905f1b040c4a1010e2b6f60b47f012059d7acfe345321e789e",
+      "forecast_sha256": "9350354d217a743fbd1e03f1295fc34218852593ca56fb557133813b9cfbec04",
       "game_id": "2026_08_IND_JAX",
       "home_team": "JAX",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T18:00:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": -5.9885,
+        "home_spread": -5.244,
         "predicted_score": {
-          "away": 20.784,
-          "home": 26.7725
+          "away": 20.947,
+          "home": 26.191
         },
-        "total": 47.5565
+        "total": 47.138
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -2309,7 +2309,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 33.8425,
+              "historical_attempts_proxy": 33.9535,
               "name": "Daniel Jones",
               "not_verified_starter": true,
               "player_id": "00-0035710"
@@ -2391,7 +2391,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0035710",
-              "historical_passing_attempts_proxy_mean": 33.8425,
+              "historical_passing_attempts_proxy_mean": 33.9535,
               "model_player_name": "Daniel Jones",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -2522,7 +2522,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 35.3915,
+              "historical_attempts_proxy": 35.093,
               "name": "Trevor Lawrence",
               "not_verified_starter": true,
               "player_id": "00-0036971"
@@ -2548,7 +2548,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0036971",
-              "historical_passing_attempts_proxy_mean": 35.3915,
+              "historical_passing_attempts_proxy_mean": 35.093,
               "model_player_name": "Trevor Lawrence",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -2679,33 +2679,33 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     },
     {
       "away_team": "LV",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "f978ed43d376ac4b1981a9f3aa8b46c3247fbfda461901e0331bd328ff31c308",
+      "forecast_sha256": "9185c4b5d39deba51ee4f29718edf6f7e4cadb1e619c3c079776a8b8e84c3132",
       "game_id": "2026_08_LV_NYJ",
       "home_team": "NYJ",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T18:00:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": 0.887,
+        "home_spread": 0.025,
         "predicted_score": {
-          "away": 23.747,
-          "home": 22.86
+          "away": 23.513,
+          "home": 23.488
         },
-        "total": 46.607
+        "total": 47.001
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -2713,13 +2713,13 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 33.129,
+              "historical_attempts_proxy": 33.339,
               "name": "Kirk Cousins",
               "not_verified_starter": true,
               "player_id": "00-0029604"
             },
             {
-              "historical_attempts_proxy": 1.616,
+              "historical_attempts_proxy": 1.656,
               "name": "Fernando Mendoza",
               "not_verified_starter": true,
               "player_id": "00-0041562"
@@ -2731,7 +2731,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0029604",
-              "historical_passing_attempts_proxy_mean": 33.129,
+              "historical_passing_attempts_proxy_mean": 33.339,
               "model_player_name": "Kirk Cousins",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -2927,7 +2927,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0041562",
-              "historical_passing_attempts_proxy_mean": 1.616,
+              "historical_passing_attempts_proxy_mean": 1.656,
               "model_player_name": "Fernando Mendoza",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -2946,7 +2946,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 34.424,
+              "historical_attempts_proxy": 34.5015,
               "name": "Geno Smith",
               "not_verified_starter": true,
               "player_id": "00-0030565"
@@ -2958,7 +2958,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0030565",
-              "historical_passing_attempts_proxy_mean": 34.424,
+              "historical_passing_attempts_proxy_mean": 34.5015,
               "model_player_name": "Geno Smith",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -3145,33 +3145,33 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     },
     {
       "away_team": "MIN",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "4f46b059abe26dcc3057c6dfc705443e539026dfc5e2f86194466dcf87b8533f",
+      "forecast_sha256": "4203daf8c104def785e53e9636b5c1874069abbe68a7f925a4b8701aafd727a7",
       "game_id": "2026_08_MIN_DET",
       "home_team": "DET",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T18:00:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": 1.66,
+        "home_spread": 1.8135,
         "predicted_score": {
-          "away": 23.76,
-          "home": 22.1
+          "away": 23.4505,
+          "home": 21.637
         },
-        "total": 45.86
+        "total": 45.0875
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -3179,7 +3179,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 34.175,
+              "historical_attempts_proxy": 34.2745,
               "name": "Jared Goff",
               "not_verified_starter": true,
               "player_id": "00-0033106"
@@ -3191,7 +3191,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0033106",
-              "historical_passing_attempts_proxy_mean": 34.175,
+              "historical_passing_attempts_proxy_mean": 34.2745,
               "model_player_name": "Jared Goff",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -3322,7 +3322,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 34.446,
+              "historical_attempts_proxy": 34.5605,
               "name": "Kyler Murray",
               "not_verified_starter": true,
               "player_id": "00-0035228"
@@ -3348,7 +3348,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0035228",
-              "historical_passing_attempts_proxy_mean": 34.446,
+              "historical_passing_attempts_proxy_mean": 34.5605,
               "model_player_name": "Kyler Murray",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -3549,33 +3549,33 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     },
     {
       "away_team": "TEN",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "5f7e3eb61839cfd0513c7368c4f9c1dba181d7f19540210289898ae36b4c50f0",
+      "forecast_sha256": "1d74a606c7100e859212a0a9740d3beaf2b52baf7eef26576ceb0adc3e669a9c",
       "game_id": "2026_08_TEN_CIN",
       "home_team": "CIN",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T18:00:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": -6.951,
+        "home_spread": -6.1885,
         "predicted_score": {
-          "away": 18.7205,
-          "home": 25.6715
+          "away": 19.1135,
+          "home": 25.302
         },
-        "total": 44.392
+        "total": 44.4155
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -3583,7 +3583,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 34.7015,
+              "historical_attempts_proxy": 34.753,
               "name": "Joe Burrow",
               "not_verified_starter": true,
               "player_id": "00-0036442"
@@ -3665,7 +3665,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0036442",
-              "historical_passing_attempts_proxy_mean": 34.7015,
+              "historical_passing_attempts_proxy_mean": 34.753,
               "model_player_name": "Joe Burrow",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -3768,7 +3768,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 33.524,
+              "historical_attempts_proxy": 33.7915,
               "name": "Cam Ward",
               "not_verified_starter": true,
               "player_id": "00-0040676"
@@ -3920,7 +3920,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0040676",
-              "historical_passing_attempts_proxy_mean": 33.524,
+              "historical_passing_attempts_proxy_mean": 33.7915,
               "model_player_name": "Cam Ward",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -3981,33 +3981,33 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     },
     {
       "away_team": "LAC",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "11fd0fe03414adcaf65f53a7423302864b009f04bd35bfbfa280c71cfc0b67d0",
+      "forecast_sha256": "09695298af255332803e12c3d38635b5358a548844a760eca342cc7c2af295e6",
       "game_id": "2026_08_LAC_LA",
       "home_team": "LA",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T21:05:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": -4.577,
+        "home_spread": -4.832,
         "predicted_score": {
-          "away": 19.005,
-          "home": 23.582
+          "away": 19.253,
+          "home": 24.085
         },
-        "total": 42.587
+        "total": 43.338
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -4015,7 +4015,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 34.7585,
+              "historical_attempts_proxy": 34.587,
               "name": "Matthew Stafford",
               "not_verified_starter": true,
               "player_id": "00-0026498"
@@ -4027,7 +4027,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0026498",
-              "historical_passing_attempts_proxy_mean": 34.7585,
+              "historical_passing_attempts_proxy_mean": 34.587,
               "model_player_name": "Matthew Stafford",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -4186,7 +4186,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 33.5875,
+              "historical_attempts_proxy": 33.646,
               "name": "Justin Herbert",
               "not_verified_starter": true,
               "player_id": "00-0036355"
@@ -4212,7 +4212,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0036355",
-              "historical_passing_attempts_proxy_mean": 33.5875,
+              "historical_passing_attempts_proxy_mean": 33.646,
               "model_player_name": "Justin Herbert",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -4399,33 +4399,33 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     },
     {
       "away_team": "KC",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "fbf69b1cb3caee2a2e695c78befecd59ca5d6849b95e034e3046862060df35d2",
+      "forecast_sha256": "e20fcf60cf8fbda8c6c8aefc007157cb86c50aa9b121d21841b74c9b6c85df76",
       "game_id": "2026_08_KC_DEN",
       "home_team": "DEN",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T21:25:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": 3.1325,
+        "home_spread": 1.3585,
         "predicted_score": {
-          "away": 22.7985,
-          "home": 19.666
+          "away": 21.3005,
+          "home": 19.942
         },
-        "total": 42.4645
+        "total": 41.2425
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -4433,7 +4433,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 33.7955,
+              "historical_attempts_proxy": 33.7005,
               "name": "Bo Nix",
               "not_verified_starter": true,
               "player_id": "00-0039732"
@@ -4571,7 +4571,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0039732",
-              "historical_passing_attempts_proxy_mean": 33.7955,
+              "historical_passing_attempts_proxy_mean": 33.7005,
               "model_player_name": "Bo Nix",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -4646,7 +4646,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 34.279,
+              "historical_attempts_proxy": 33.92,
               "name": "Patrick Mahomes",
               "not_verified_starter": true,
               "player_id": "00-0033873"
@@ -4672,7 +4672,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0033873",
-              "historical_passing_attempts_proxy_mean": 34.279,
+              "historical_passing_attempts_proxy_mean": 33.92,
               "model_player_name": "Patrick Mahomes",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -4817,33 +4817,33 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     },
     {
       "away_team": "NE",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "4ec467f06e9503415a4bd87031c7af1f5939d53f27c2c51ab7e3386c1fd1a32b",
+      "forecast_sha256": "de201781472fb0cf9f3cae1f1e6521c12cd3c8d76fde17c59f2f89fdb52637ff",
       "game_id": "2026_08_NE_MIA",
       "home_team": "MIA",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T21:25:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": 6.268,
+        "home_spread": 6.322,
         "predicted_score": {
-          "away": 24.8375,
-          "home": 18.5695
+          "away": 24.862,
+          "home": 18.54
         },
-        "total": 43.407
+        "total": 43.402
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -4851,7 +4851,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 33.7245,
+              "historical_attempts_proxy": 33.684,
               "name": "Malik Willis",
               "not_verified_starter": true,
               "player_id": "00-0038128"
@@ -4891,7 +4891,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0038128",
-              "historical_passing_attempts_proxy_mean": 33.7245,
+              "historical_passing_attempts_proxy_mean": 33.684,
               "model_player_name": "Malik Willis",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -5022,7 +5022,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 34.95,
+              "historical_attempts_proxy": 34.7255,
               "name": "Drake Maye",
               "not_verified_starter": true,
               "player_id": "00-0039851"
@@ -5118,7 +5118,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0039851",
-              "historical_passing_attempts_proxy_mean": 34.95,
+              "historical_passing_attempts_proxy_mean": 34.7255,
               "model_player_name": "Drake Maye",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -5207,33 +5207,33 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     },
     {
       "away_team": "PHI",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "7ea4aaf7a5c123be8c182398aac3131ac06deb2897a250a65584d7d57f8a64b9",
+      "forecast_sha256": "5cde4f6bec26d3f6997c1d1600c38d04b31ad2a3ec45baecfcb9fcd62bd99970",
       "game_id": "2026_08_PHI_WAS",
       "home_team": "WAS",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-02T01:20:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": 1.453,
+        "home_spread": 1.189,
         "predicted_score": {
-          "away": 23.3105,
-          "home": 21.8575
+          "away": 22.8895,
+          "home": 21.7005
         },
-        "total": 45.168
+        "total": 44.59
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -5241,13 +5241,13 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 18.935,
+              "historical_attempts_proxy": 18.4395,
               "name": "Tanner McKee",
               "not_verified_starter": true,
               "player_id": "00-0038400"
             },
             {
-              "historical_attempts_proxy": 15.732,
+              "historical_attempts_proxy": 15.5685,
               "name": "Jalen Hurts",
               "not_verified_starter": true,
               "player_id": "00-0036389"
@@ -5329,7 +5329,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0036389",
-              "historical_passing_attempts_proxy_mean": 15.732,
+              "historical_passing_attempts_proxy_mean": 15.5685,
               "model_player_name": "Jalen Hurts",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -5413,7 +5413,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0038400",
-              "historical_passing_attempts_proxy_mean": 18.935,
+              "historical_passing_attempts_proxy_mean": 18.4395,
               "model_player_name": "Tanner McKee",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -5516,19 +5516,19 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 21.698,
+              "historical_attempts_proxy": 21.843,
               "name": "Jayden Daniels",
               "not_verified_starter": true,
               "player_id": "00-0039910"
             },
             {
-              "historical_attempts_proxy": 11.1545,
+              "historical_attempts_proxy": 11.0415,
               "name": "Athan Kaliakmanis",
               "not_verified_starter": true,
               "player_id": "00-0041117"
             },
             {
-              "historical_attempts_proxy": 1.3585,
+              "historical_attempts_proxy": 1.3275,
               "name": "Marcus Mariota",
               "not_verified_starter": true,
               "player_id": "00-0032268"
@@ -5554,7 +5554,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0032268",
-              "historical_passing_attempts_proxy_mean": 1.3585,
+              "historical_passing_attempts_proxy_mean": 1.3275,
               "model_player_name": "Marcus Mariota",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -5722,7 +5722,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0039910",
-              "historical_passing_attempts_proxy_mean": 21.698,
+              "historical_passing_attempts_proxy_mean": 21.843,
               "model_player_name": "Jayden Daniels",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -5778,7 +5778,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0041117",
-              "historical_passing_attempts_proxy_mean": 11.1545,
+              "historical_passing_attempts_proxy_mean": 11.0415,
               "model_player_name": "Athan Kaliakmanis",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -5797,33 +5797,33 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     },
     {
       "away_team": "CHI",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "d94f31cd3cfd277eec5cd3aebf00cf679b1a59bc8eb5f95578a197fec26f0aad",
+      "forecast_sha256": "06408cd63f3dbf34427b1f2081ddb7799f12674aea5a387155064c87c8d2e08c",
       "game_id": "2026_08_CHI_SEA",
       "home_team": "SEA",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-03T01:15:00+00:00",
-      "model_capture_utc": "2026-10-28T18:50:01.233076+00:00",
+      "model_capture_utc": "2026-10-29T18:57:03.995386+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-10-28T18:51:26.246077+00:00",
+      "observed_utc": "2026-10-29T18:58:39.583836+00:00",
       "our_frozen_at_capture_projection": {
-        "home_spread": -0.069,
+        "home_spread": -1.335,
         "predicted_score": {
-          "away": 23.199,
-          "home": 23.268
+          "away": 22.105,
+          "home": 23.44
         },
-        "total": 46.467
+        "total": 45.545
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
-      "source_run_id": "40748548032",
-      "source_web_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0",
+      "source_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
+      "source_run_id": "40935412031",
+      "source_web_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -5831,19 +5831,19 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 16.6465,
+              "historical_attempts_proxy": 16.5435,
               "name": "Caleb Williams",
               "not_verified_starter": true,
               "player_id": "00-0039918"
             },
             {
-              "historical_attempts_proxy": 13.175,
+              "historical_attempts_proxy": 13.2525,
               "name": "Tyson Bagent",
               "not_verified_starter": true,
               "player_id": "00-0038416"
             },
             {
-              "historical_attempts_proxy": 4.5815,
+              "historical_attempts_proxy": 4.6125,
               "name": "Case Keenum",
               "not_verified_starter": true,
               "player_id": "00-0028986"
@@ -5855,7 +5855,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0028986",
-              "historical_passing_attempts_proxy_mean": 4.5815,
+              "historical_passing_attempts_proxy_mean": 4.6125,
               "model_player_name": "Case Keenum",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -5911,7 +5911,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0038416",
-              "historical_passing_attempts_proxy_mean": 13.175,
+              "historical_passing_attempts_proxy_mean": 13.2525,
               "model_player_name": "Tyson Bagent",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -5939,7 +5939,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0039918",
-              "historical_passing_attempts_proxy_mean": 16.6465,
+              "historical_passing_attempts_proxy_mean": 16.5435,
               "model_player_name": "Caleb Williams",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -6056,7 +6056,7 @@
           "game_day_inactives_verified": false,
           "historical_passing_volume_proxies": [
             {
-              "historical_attempts_proxy": 34.425,
+              "historical_attempts_proxy": 34.607,
               "name": "Sam Darnold",
               "not_verified_starter": true,
               "player_id": "00-0034869"
@@ -6096,7 +6096,7 @@
               "availability_evidence_status": "INJURY_SOURCE_UNAVAILABLE",
               "espn_reported_status": null,
               "gsis_id": "00-0034869",
-              "historical_passing_attempts_proxy_mean": 34.425,
+              "historical_passing_attempts_proxy_mean": 34.607,
               "model_player_name": "Sam Darnold",
               "nflverse_report_evidence": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
               "nflverse_report_modified_utc": null,
@@ -6227,17 +6227,17 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-10-28T18:51:08.621315+00:00",
+      "web_context_observed_utc": "2026-10-29T18:58:21.413315+00:00",
       "week": 8
     }
   ],
   "immutable_journal": "history/personnel_asof_v1_2026/observations.jsonl",
   "model_predictions_changed": false,
-  "original_bundle_sha256": "a50ccb45d812b134bbfbfbc38cd72f074cf8f8b16e6e4811efd38bfce569d68b",
+  "original_bundle_sha256": "26ca6f492a643f01e0e1bd050fdc03de24af6a96650de2051a3eb6264ca8b7b7",
   "research_only": true,
   "source_context_games_missing": 0,
   "source_original_bytes_archived_when_new": true,
   "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
   "starting_qbs_confirmed": 0,
-  "supplemental_context_sha256": "9efa9a9351c5316b2655966410cd50cf755c5100c5c080c985c0b28e107467f0"
+  "supplemental_context_sha256": "09e5692f8b022859e214cb06c8bd1321b00fcc4a3969052d804ca9b2de9dd074"
 }
