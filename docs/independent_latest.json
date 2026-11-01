@@ -34,15 +34,15 @@
       "draws": 2000,
       "fair_away_spread": 5.0235,
       "fair_home_spread": -5.0235,
-      "forecast_sha256": "72e0e127827b5d6ac58d5670e33aa6427d316c11bc3716452edef30fee307676",
+      "forecast_sha256": "84aa415dce87eb7e2ab5c6f0fc154710d5cd538312cb01ddaa8b5b52af175c60",
       "game_id": "2026_08_LAC_LA",
       "home_team": "LA",
       "independent_power_rating_baseline": {
-        "away_points": 19.25522470918295,
+        "away_points": 19.255224709183093,
         "home_points": 24.23235498852318
       },
       "kickoff_utc": "2026-11-01T21:05:00+00:00",
-      "model_capture_utc": "2026-11-01T18:25:28.329168+00:00",
+      "model_capture_utc": "2026-11-01T20:30:22.371454+00:00",
       "player_rows": 25,
       "predicted_home_margin": 5.0235,
       "predicted_score": {
@@ -94,15 +94,15 @@
       "draws": 2000,
       "fair_away_spread": -1.1715,
       "fair_home_spread": 1.1715,
-      "forecast_sha256": "96b45c240277e74df86eb2fafb9a107a9ad8c9c6ba43aaeac872174253ac7995",
+      "forecast_sha256": "dcc1bef1b079662cabe47e2f66e7469221754d3e2fb84a44bb3ad49e038a62fd",
       "game_id": "2026_08_KC_DEN",
       "home_team": "DEN",
       "independent_power_rating_baseline": {
-        "away_points": 21.30800416246377,
-        "home_points": 19.988468563285643
+        "away_points": 21.308004162463916,
+        "home_points": 19.988468563285636
       },
       "kickoff_utc": "2026-11-01T21:25:00+00:00",
-      "model_capture_utc": "2026-11-01T18:25:28.329168+00:00",
+      "model_capture_utc": "2026-11-01T20:30:22.371454+00:00",
       "player_rows": 25,
       "predicted_home_margin": -1.1715,
       "predicted_score": {
@@ -154,15 +154,15 @@
       "draws": 2000,
       "fair_away_spread": -6.8315,
       "fair_home_spread": 6.8315,
-      "forecast_sha256": "838bf3c3ed5592d7ac0ad9ba0bac80570f560de5548aa3c968f6cf14ff093ed6",
+      "forecast_sha256": "f70bdfc167a8f3e39307c1d8e8b99021af6ce9ed3b0f757b8e570cdbd5098ef7",
       "game_id": "2026_08_NE_MIA",
       "home_team": "MIA",
       "independent_power_rating_baseline": {
-        "away_points": 24.98269590456716,
-        "home_points": 18.555758563706704
+        "away_points": 24.982695904567308,
+        "home_points": 18.5557585637067
       },
       "kickoff_utc": "2026-11-01T21:25:00+00:00",
-      "model_capture_utc": "2026-11-01T18:25:28.329168+00:00",
+      "model_capture_utc": "2026-11-01T20:30:22.371454+00:00",
       "player_rows": 23,
       "predicted_home_margin": -6.8315,
       "predicted_score": {
@@ -214,15 +214,15 @@
       "draws": 2000,
       "fair_away_spread": -0.241,
       "fair_home_spread": 0.241,
-      "forecast_sha256": "79fce01daa1f9d4bc0142fbfc4aff2bc425466f3ae524fb23642da1fd717c6b9",
+      "forecast_sha256": "923b80880765bd31fc6bccdf7470f41d124e36e4f44854c81b86c52650d55c0d",
       "game_id": "2026_08_PHI_WAS",
       "home_team": "WAS",
       "independent_power_rating_baseline": {
-        "away_points": 23.118779527860813,
-        "home_points": 22.555309272455613
+        "away_points": 23.11877952786095,
+        "home_points": 22.555309272455602
       },
       "kickoff_utc": "2026-11-02T01:20:00+00:00",
-      "model_capture_utc": "2026-11-01T18:25:28.329168+00:00",
+      "model_capture_utc": "2026-11-01T20:30:22.371454+00:00",
       "player_rows": 36,
       "predicted_home_margin": -0.241,
       "predicted_score": {
@@ -274,15 +274,15 @@
       "draws": 2000,
       "fair_away_spread": 1.479,
       "fair_home_spread": -1.479,
-      "forecast_sha256": "52ac704fdc2abd00f609346f799669ae9b3a1a5290a02c81ee8d211f3da9f55e",
+      "forecast_sha256": "c10cbaa8bf353f488a7466a418551e45eef98ae5b9558ef8a8339b38fd0c8478",
       "game_id": "2026_08_CHI_SEA",
       "home_team": "SEA",
       "independent_power_rating_baseline": {
-        "away_points": 22.220870248562882,
-        "home_points": 23.33827800133852
+        "away_points": 22.220870248563028,
+        "home_points": 23.338278001338516
       },
       "kickoff_utc": "2026-11-03T01:15:00+00:00",
-      "model_capture_utc": "2026-11-01T18:25:28.329168+00:00",
+      "model_capture_utc": "2026-11-01T20:30:22.371454+00:00",
       "player_rows": 25,
       "predicted_home_margin": 1.479,
       "predicted_score": {
@@ -306,13 +306,13 @@
   ],
   "games_forecast": 5,
   "games_requested": 5,
-  "generated_utc": "2026-11-01T18:25:34.372927+00:00",
+  "generated_utc": "2026-11-01T20:30:29.906825+00:00",
   "limits": "Own conditional research forecasts. Historical roles are not confirmed active lineups. QB passing workload can be split among historical QB proxies: individual passing props are unreliable, not ranked for bets. Raw p10/p90 are simulation percentiles, not calibrated intervals. Full-game overtime/unusual scoring and market superiority remain unvalidated.",
-  "model_capture_utc": "2026-11-01T18:25:28.329168+00:00",
+  "model_capture_utc": "2026-11-01T20:30:22.371454+00:00",
   "named_player_rows": 134,
   "overtime_validated": false,
   "player_identity_crosswalk": {
-    "captured_utc": "2026-11-01T18:25:34.217464+00:00",
+    "captured_utc": "2026-11-01T20:30:29.706312+00:00",
     "mapping_sha256": "89351878d2ce52d04fead17dbc408374338359b5910fdabc13ce3225d1be55a2",
     "source": "nflreadpy.load_players",
     "status": "ONE_TO_ONE_SOURCE_DIRECTORY_IDS",
@@ -8992,8 +8992,8 @@
   "qualified_bets": 0,
   "season": 2026,
   "source_errors": [],
-  "source_replay_sha256": "0b51e26ba552f2fe0691e1e56199a9460ffbdc01e43645e4da3ecb31856b9a51",
-  "source_scan_sha256": "1870f393a061dd4ffb84d2d881ac596efd3474d4100a518c5800be6375b7e276",
+  "source_replay_sha256": "fc80fbda0fd34041a1a49af8da63a0b2d26dd69a91d9373caf94398baf3d7b36",
+  "source_scan_sha256": "603beaae936c195095fdd7c8f6bef0fdb1fb0a3f9cea5ea69c307a392f2f735c",
   "spec": "NFL_INDEPENDENT_FORECAST_PUBLICATION_V1",
   "sportsbook_prices_used": false,
   "spread_definition": "NEGATIVE_EXPECTED_HOME_MARGIN_NOT_A_CALIBRATED_50_PERCENT_COVER_LINE",

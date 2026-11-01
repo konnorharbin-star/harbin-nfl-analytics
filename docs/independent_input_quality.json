@@ -1,5 +1,5 @@
 {
-  "captured_utc": "2026-11-01T18:25:57.541304+00:00",
+  "captured_utc": "2026-11-01T20:30:47.370260+00:00",
   "forecast_values_changed": false,
   "games": [
     {
@@ -51,15 +51,14 @@
         "forecast_effect": "NO_WEB_CONTEXT_ADJUSTMENT",
         "missing_required_inputs": [
           "confirmed_starting_qbs",
-          "final_game_specific_player_availability",
-          "venue_bound_kickoff_weather_forecast"
+          "final_game_specific_player_availability"
         ],
         "model_players_needing_availability": 25,
         "official_inactive_teams": [],
         "outdoor_weather_required": true,
-        "outdoor_weather_verified": false,
+        "outdoor_weather_verified": true,
         "ready_for_context_adjusted_prediction": false,
-        "reported_injury_statuses_verified": 2,
+        "reported_injury_statuses_verified": 0,
         "roof_operating_position_required": false,
         "roof_status": "OUTDOOR_ROOF_POSITION_NOT_APPLICABLE",
         "status": "PARTIAL_VERIFIED_INPUTS",
@@ -71,7 +70,7 @@
           "venue_id",
           "venue_name",
           "venue_reported_indoor",
-          "dated_reported_player_statuses",
+          "outdoor_kickoff_weather_forecast",
           "roof_operating_position_not_applicable"
         ]
       },
@@ -165,13 +164,12 @@
         "forecast_effect": "NO_WEB_CONTEXT_ADJUSTMENT",
         "missing_required_inputs": [
           "confirmed_starting_qbs",
-          "final_game_specific_player_availability",
-          "venue_bound_kickoff_weather_forecast"
+          "final_game_specific_player_availability"
         ],
         "model_players_needing_availability": 25,
         "official_inactive_teams": [],
         "outdoor_weather_required": true,
-        "outdoor_weather_verified": false,
+        "outdoor_weather_verified": true,
         "ready_for_context_adjusted_prediction": false,
         "reported_injury_statuses_verified": 3,
         "roof_operating_position_required": false,
@@ -186,6 +184,7 @@
           "venue_name",
           "venue_reported_indoor",
           "dated_reported_player_statuses",
+          "outdoor_kickoff_weather_forecast",
           "roof_operating_position_not_applicable"
         ]
       },
@@ -194,8 +193,8 @@
     }
   ],
   "source_evidence": {
-    "captured_utc": "2026-11-01T18:25:57.541304+00:00",
-    "collection_started_utc": "2026-11-01T18:25:36.901477+00:00",
+    "captured_utc": "2026-11-01T20:30:47.370260+00:00",
+    "collection_started_utc": "2026-11-01T20:30:32.124719+00:00",
     "forecast_values_changed": false,
     "games": [
       {
@@ -237,7 +236,7 @@
         },
         "kickoff_utc": "2026-11-01T21:05:00+00:00",
         "structured_game_observation": {
-          "captured_utc": "2026-11-01T18:25:55.440888+00:00",
+          "captured_utc": "2026-11-01T20:30:45.352647+00:00",
           "eligible_for_historical_backfill": false,
           "facts": {
             "away_team": "LAC",
@@ -251,7 +250,7 @@
           "model_adjustment": null,
           "provider_event_id": "401873032",
           "reasons": [],
-          "snapshot_sha256": "a3aded103029ee9a5026c08859abb13719cab4f234202f4a92db649558bc3786",
+          "snapshot_sha256": "ea06db1299e9256564dbaf3392f0678260de8aef9b06f19dc517c92cb4fe963c",
           "source_kind": "ESPN_CURRENT_EVENT_SNAPSHOT",
           "source_publication_utc": null,
           "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20261101&limit=100",
@@ -302,8 +301,8 @@
                 "espn_athlete_id": "4242557",
                 "model_adjustment": null,
                 "player_id": "00-0036244",
-                "reported_status": "Questionable",
-                "source_update_utc": "2026-10-30T18:39:00+00:00",
+                "reported_status": "Out",
+                "source_update_utc": "2026-11-01T19:50:00+00:00",
                 "status": "DATED_EVENT_REPORTED_STATUS",
                 "team": "LA"
               },
@@ -368,9 +367,9 @@
                 "espn_athlete_id": "4569382",
                 "model_adjustment": null,
                 "player_id": "00-0039751",
-                "reported_status": "Questionable",
-                "source_update_utc": "2026-10-30T21:38:00+00:00",
-                "status": "DATED_EVENT_REPORTED_STATUS",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
                 "team": "LA"
               },
               {
@@ -511,9 +510,9 @@
                 "espn_athlete_id": "4426535",
                 "model_adjustment": null,
                 "player_id": "00-0040311",
-                "reported_status": null,
-                "source_update_utc": null,
-                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
+                "reported_status": "Out",
+                "source_update_utc": "2026-11-01T19:40:00+00:00",
+                "status": "DATED_EVENT_REPORTED_STATUS",
                 "team": "LAC"
               },
               {
@@ -541,8 +540,8 @@
             ],
             "rejections": [],
             "source": {
-              "captured_utc": "2026-11-01T18:25:55.654324+00:00",
-              "snapshot_sha256": "ef30b1b7707cdd87cf8ec6cdc77d2b76c2591633d58d1a7273665b42a246e01c",
+              "captured_utc": "2026-11-01T20:30:45.544082+00:00",
+              "snapshot_sha256": "c0dae92ef699682a8b31a798a121397bfccecce903c899fd8eddf408a0a847a9",
               "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873032"
             },
             "starting_qbs_verified": false,
@@ -568,7 +567,7 @@
             "outdoor_weather_required": true,
             "reported_roof": "dome",
             "source": {
-              "captured_utc": "2026-11-01T18:25:36.901477+00:00",
+              "captured_utc": "2026-11-01T20:30:32.124719+00:00",
               "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
               "snapshot_sha256": "09597db2ceb61aab370d723ea8ec022b4e829a48059ea2e41630bea3d85d5cfa",
               "source_method": "nflreadpy.load_schedules"
@@ -588,7 +587,7 @@
             "status": "FIXED_ROOF_POSITION_NOT_APPLICABLE"
           },
           "roof_schedule_snapshot": {
-            "captured_utc": "2026-11-01T18:25:36.901477+00:00",
+            "captured_utc": "2026-11-01T20:30:32.124719+00:00",
             "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
             "records": [
               {
@@ -660,11 +659,11 @@
           "weather": {
             "coordinate_source": "EXACT_EVENT_VENUE_NAME_EXISTING_APPROXIMATE_REGISTRY",
             "forecast_source": {
-              "captured_utc": "2026-11-01T18:25:55.964013+00:00",
-              "snapshot_sha256": "0a5b19d6516ee8658573367d291c3d01254b4d673366d9dbd1f0feee3161c0a3",
+              "captured_utc": "2026-11-01T20:30:45.951233+00:00",
+              "snapshot_sha256": "396466d0370dfd5c7d0cceb9fbec097adbcb392df9f63832942d06aa9f7c58f6",
               "source_url": "https://api.weather.gov/gridpoints/LOX/151,41/forecast/hourly"
             },
-            "issued_utc": "2026-11-01T17:16:47+00:00",
+            "issued_utc": "2026-11-01T18:26:34+00:00",
             "latitude": 33.9535,
             "longitude": -118.3392,
             "model_adjustment": null,
@@ -672,8 +671,8 @@
             "period_end_utc": "2026-11-01T22:00:00+00:00",
             "period_start_utc": "2026-11-01T21:00:00+00:00",
             "point_source": {
-              "captured_utc": "2026-11-01T18:25:55.849137+00:00",
-              "snapshot_sha256": "a82d86c42e8ee5fd1fecd93ab42061fa1f7f40e2d75b46fbb7bfc293671bc261",
+              "captured_utc": "2026-11-01T20:30:45.700391+00:00",
+              "snapshot_sha256": "15b72c1bada509d6bf58d7575c98271f929704028ea4c2656cbb3db334f69a21",
               "source_url": "https://api.weather.gov/points/33.9535,-118.3392"
             },
             "precipitation_probability_percent": 18,
@@ -699,15 +698,14 @@
           "forecast_effect": "NO_WEB_CONTEXT_ADJUSTMENT",
           "missing_required_inputs": [
             "confirmed_starting_qbs",
-            "final_game_specific_player_availability",
-            "venue_bound_kickoff_weather_forecast"
+            "final_game_specific_player_availability"
           ],
           "model_players_needing_availability": 25,
           "official_inactive_teams": [],
           "outdoor_weather_required": true,
-          "outdoor_weather_verified": false,
+          "outdoor_weather_verified": true,
           "ready_for_context_adjusted_prediction": false,
-          "reported_injury_statuses_verified": 2,
+          "reported_injury_statuses_verified": 0,
           "roof_operating_position_required": false,
           "roof_status": "OUTDOOR_ROOF_POSITION_NOT_APPLICABLE",
           "status": "PARTIAL_VERIFIED_INPUTS",
@@ -719,13 +717,13 @@
             "venue_id",
             "venue_name",
             "venue_reported_indoor",
-            "dated_reported_player_statuses",
+            "outdoor_kickoff_weather_forecast",
             "roof_operating_position_not_applicable"
           ]
         },
         "kickoff_utc": "2026-11-01T21:25:00+00:00",
         "structured_game_observation": {
-          "captured_utc": "2026-11-01T18:25:55.440888+00:00",
+          "captured_utc": "2026-11-01T20:30:45.352647+00:00",
           "eligible_for_historical_backfill": false,
           "facts": {
             "away_team": "KC",
@@ -739,7 +737,7 @@
           "model_adjustment": null,
           "provider_event_id": "401873033",
           "reasons": [],
-          "snapshot_sha256": "a3aded103029ee9a5026c08859abb13719cab4f234202f4a92db649558bc3786",
+          "snapshot_sha256": "ea06db1299e9256564dbaf3392f0678260de8aef9b06f19dc517c92cb4fe963c",
           "source_kind": "ESPN_CURRENT_EVENT_SNAPSHOT",
           "source_publication_utc": null,
           "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20261101&limit=100",
@@ -748,7 +746,7 @@
         },
         "verified_context_inputs": {
           "availability": {
-            "dated_reported_statuses": 2,
+            "dated_reported_statuses": 0,
             "final_game_availability_verified": false,
             "players": [
               {
@@ -812,9 +810,9 @@
                 "espn_athlete_id": "4372016",
                 "model_adjustment": null,
                 "player_id": "00-0036613",
-                "reported_status": "Questionable",
-                "source_update_utc": "2026-11-01T12:18:00+00:00",
-                "status": "DATED_EVENT_REPORTED_STATUS",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
                 "team": "DEN"
               },
               {
@@ -889,9 +887,9 @@
                 "espn_athlete_id": "4568490",
                 "model_adjustment": null,
                 "player_id": "00-0040730",
-                "reported_status": "Injured Reserve",
-                "source_update_utc": "2026-10-31T20:18:00+00:00",
-                "status": "DATED_EVENT_REPORTED_STATUS",
+                "reported_status": null,
+                "source_update_utc": null,
+                "status": "NOT_LISTED_DOES_NOT_PROVE_ACTIVE",
                 "team": "DEN"
               },
               {
@@ -1029,8 +1027,8 @@
             ],
             "rejections": [],
             "source": {
-              "captured_utc": "2026-11-01T18:25:56.190882+00:00",
-              "snapshot_sha256": "5abf964c5f5b207fd72559654bc8b8f1123e451f1f88a86410138535f5021e8d",
+              "captured_utc": "2026-11-01T20:30:46.042906+00:00",
+              "snapshot_sha256": "0055c805782ea05591ddfd5a0e7ddb62431abd2e2bfbaf53c67a9f4b08e3cd68",
               "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873033"
             },
             "starting_qbs_verified": false,
@@ -1056,7 +1054,7 @@
             "outdoor_weather_required": true,
             "reported_roof": "outdoors",
             "source": {
-              "captured_utc": "2026-11-01T18:25:36.901477+00:00",
+              "captured_utc": "2026-11-01T20:30:32.124719+00:00",
               "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
               "snapshot_sha256": "09597db2ceb61aab370d723ea8ec022b4e829a48059ea2e41630bea3d85d5cfa",
               "source_method": "nflreadpy.load_schedules"
@@ -1076,7 +1074,7 @@
             "status": "OUTDOOR_ROOF_POSITION_NOT_APPLICABLE"
           },
           "roof_schedule_snapshot": {
-            "captured_utc": "2026-11-01T18:25:36.901477+00:00",
+            "captured_utc": "2026-11-01T20:30:32.124719+00:00",
             "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
             "records": [
               {
@@ -1143,16 +1141,34 @@
             "snapshot_sha256": "09597db2ceb61aab370d723ea8ec022b4e829a48059ea2e41630bea3d85d5cfa",
             "source_method": "nflreadpy.load_schedules"
           },
-          "source_errors": [
-            {
-              "reason": "WEATHER_ISSUE_TIME_FUTURE_OR_STALE",
-              "source": "VENUE_WEATHER"
-            }
-          ],
+          "source_errors": [],
           "status": "PARTIAL_CONTEXT_ONLY",
           "weather": {
-            "reason": "WEATHER_ISSUE_TIME_FUTURE_OR_STALE",
-            "status": "WEATHER_NOT_VERIFIED"
+            "coordinate_source": "EXACT_EVENT_VENUE_NAME_EXISTING_APPROXIMATE_REGISTRY",
+            "forecast_source": {
+              "captured_utc": "2026-11-01T20:30:46.202272+00:00",
+              "snapshot_sha256": "45428794adb52dda6118db19c5544b78d706cd1443cbad913fa4caa616e79e4b",
+              "source_url": "https://api.weather.gov/gridpoints/BOU/62,62/forecast/hourly"
+            },
+            "issued_utc": "2026-11-01T18:47:11+00:00",
+            "latitude": 39.7439,
+            "longitude": -105.0201,
+            "model_adjustment": null,
+            "on_field_conditions_verified": false,
+            "period_end_utc": "2026-11-01T22:00:00+00:00",
+            "period_start_utc": "2026-11-01T21:00:00+00:00",
+            "point_source": {
+              "captured_utc": "2026-11-01T20:30:46.090259+00:00",
+              "snapshot_sha256": "d8c83f07a0aa7140b5d0df002adb256a80b9e5c03bfdb6aef6da1b58a69dad04",
+              "source_url": "https://api.weather.gov/points/39.7439,-105.0201"
+            },
+            "precipitation_probability_percent": 8,
+            "roof_position_verified": false,
+            "status": "VENUE_BOUND_NWS_KICKOFF_FORECAST",
+            "temperature_f": 62.0,
+            "venue_name": "Empower Field at Mile High",
+            "wind_mph_max": 7,
+            "wind_mph_min": 7
           }
         }
       },
@@ -1195,7 +1211,7 @@
         },
         "kickoff_utc": "2026-11-01T21:25:00+00:00",
         "structured_game_observation": {
-          "captured_utc": "2026-11-01T18:25:55.440888+00:00",
+          "captured_utc": "2026-11-01T20:30:45.352647+00:00",
           "eligible_for_historical_backfill": false,
           "facts": {
             "away_team": "NE",
@@ -1209,7 +1225,7 @@
           "model_adjustment": null,
           "provider_event_id": "401873034",
           "reasons": [],
-          "snapshot_sha256": "a3aded103029ee9a5026c08859abb13719cab4f234202f4a92db649558bc3786",
+          "snapshot_sha256": "ea06db1299e9256564dbaf3392f0678260de8aef9b06f19dc517c92cb4fe963c",
           "source_kind": "ESPN_CURRENT_EVENT_SNAPSHOT",
           "source_publication_utc": null,
           "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20261101&limit=100",
@@ -1371,7 +1387,7 @@
                 "model_adjustment": null,
                 "player_id": "00-0035676",
                 "reported_status": "Out",
-                "source_update_utc": "2026-10-31T17:07:00+00:00",
+                "source_update_utc": "2026-11-01T19:57:00+00:00",
                 "status": "DATED_EVENT_REPORTED_STATUS",
                 "team": "NE"
               },
@@ -1459,7 +1475,7 @@
                 "model_adjustment": null,
                 "player_id": "00-0040734",
                 "reported_status": "Out",
-                "source_update_utc": "2026-10-31T17:10:00+00:00",
+                "source_update_utc": "2026-11-01T19:57:00+00:00",
                 "status": "DATED_EVENT_REPORTED_STATUS",
                 "team": "NE"
               },
@@ -1477,8 +1493,8 @@
             ],
             "rejections": [],
             "source": {
-              "captured_utc": "2026-11-01T18:25:56.489004+00:00",
-              "snapshot_sha256": "88fc58dd23023291480baf91d4fc0b83859a63f10f427deb8029bebf38ef4a7a",
+              "captured_utc": "2026-11-01T20:30:46.346337+00:00",
+              "snapshot_sha256": "66ee8f8224eaefd10fed8c6a3ec52a58ce442217d88ddd8ec329b4029514e12a",
               "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873034"
             },
             "starting_qbs_verified": false,
@@ -1504,7 +1520,7 @@
             "outdoor_weather_required": true,
             "reported_roof": "outdoors",
             "source": {
-              "captured_utc": "2026-11-01T18:25:36.901477+00:00",
+              "captured_utc": "2026-11-01T20:30:32.124719+00:00",
               "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
               "snapshot_sha256": "09597db2ceb61aab370d723ea8ec022b4e829a48059ea2e41630bea3d85d5cfa",
               "source_method": "nflreadpy.load_schedules"
@@ -1524,7 +1540,7 @@
             "status": "OUTDOOR_ROOF_POSITION_NOT_APPLICABLE"
           },
           "roof_schedule_snapshot": {
-            "captured_utc": "2026-11-01T18:25:36.901477+00:00",
+            "captured_utc": "2026-11-01T20:30:32.124719+00:00",
             "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
             "records": [
               {
@@ -1596,11 +1612,11 @@
           "weather": {
             "coordinate_source": "EXACT_EVENT_VENUE_NAME_EXISTING_APPROXIMATE_REGISTRY",
             "forecast_source": {
-              "captured_utc": "2026-11-01T18:25:56.742632+00:00",
-              "snapshot_sha256": "bb14298498bd05cc6729819812358687511b6216713847363dbc0040ca1ba2e2",
+              "captured_utc": "2026-11-01T20:30:46.507001+00:00",
+              "snapshot_sha256": "56565250cff617662a6cb29a0beef672a486594196d0ec4c394b9267df6e047b",
               "source_url": "https://api.weather.gov/gridpoints/MFL/107,58/forecast/hourly"
             },
-            "issued_utc": "2026-11-01T18:02:00+00:00",
+            "issued_utc": "2026-11-01T19:56:27+00:00",
             "latitude": 25.958,
             "longitude": -80.2389,
             "model_adjustment": null,
@@ -1608,17 +1624,17 @@
             "period_end_utc": "2026-11-01T22:00:00+00:00",
             "period_start_utc": "2026-11-01T21:00:00+00:00",
             "point_source": {
-              "captured_utc": "2026-11-01T18:25:56.600407+00:00",
-              "snapshot_sha256": "31755ab7dc20238e122e2d21a1451321a76be81e58eeffb4d0bafc69aa00142a",
+              "captured_utc": "2026-11-01T20:30:46.385695+00:00",
+              "snapshot_sha256": "1d1c107011d5d35a0f81548df8dbaa7f50cb596d51c8de383d51af23793433d1",
               "source_url": "https://api.weather.gov/points/25.9580,-80.2389"
             },
-            "precipitation_probability_percent": 76,
+            "precipitation_probability_percent": 69,
             "roof_position_verified": false,
             "status": "VENUE_BOUND_NWS_KICKOFF_FORECAST",
             "temperature_f": 79.0,
             "venue_name": "Hard Rock Stadium",
-            "wind_mph_max": 13,
-            "wind_mph_min": 13
+            "wind_mph_max": 14,
+            "wind_mph_min": 14
           }
         }
       },
@@ -1661,7 +1677,7 @@
         },
         "kickoff_utc": "2026-11-02T01:20:00+00:00",
         "structured_game_observation": {
-          "captured_utc": "2026-11-01T18:25:55.440888+00:00",
+          "captured_utc": "2026-11-01T20:30:45.352647+00:00",
           "eligible_for_historical_backfill": false,
           "facts": {
             "away_team": "PHI",
@@ -1675,7 +1691,7 @@
           "model_adjustment": null,
           "provider_event_id": "401873035",
           "reasons": [],
-          "snapshot_sha256": "a3aded103029ee9a5026c08859abb13719cab4f234202f4a92db649558bc3786",
+          "snapshot_sha256": "ea06db1299e9256564dbaf3392f0678260de8aef9b06f19dc517c92cb4fe963c",
           "source_kind": "ESPN_CURRENT_EVENT_SNAPSHOT",
           "source_publication_utc": null,
           "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20261101&limit=100",
@@ -2086,8 +2102,8 @@
             ],
             "rejections": [],
             "source": {
-              "captured_utc": "2026-11-01T18:25:56.832665+00:00",
-              "snapshot_sha256": "9f35a5bad9efd6fe1632813519f9ba8e30d5a8b3b022a56da67d5cbf61bf3210",
+              "captured_utc": "2026-11-01T20:30:47.029160+00:00",
+              "snapshot_sha256": "5a65be5b794d47811288ed237126cc7cd629e5ce2cc1e526d00070d759fde7b6",
               "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873035"
             },
             "starting_qbs_verified": false,
@@ -2113,7 +2129,7 @@
             "outdoor_weather_required": true,
             "reported_roof": "outdoors",
             "source": {
-              "captured_utc": "2026-11-01T18:25:36.901477+00:00",
+              "captured_utc": "2026-11-01T20:30:32.124719+00:00",
               "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
               "snapshot_sha256": "09597db2ceb61aab370d723ea8ec022b4e829a48059ea2e41630bea3d85d5cfa",
               "source_method": "nflreadpy.load_schedules"
@@ -2133,7 +2149,7 @@
             "status": "OUTDOOR_ROOF_POSITION_NOT_APPLICABLE"
           },
           "roof_schedule_snapshot": {
-            "captured_utc": "2026-11-01T18:25:36.901477+00:00",
+            "captured_utc": "2026-11-01T20:30:32.124719+00:00",
             "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
             "records": [
               {
@@ -2205,11 +2221,11 @@
           "weather": {
             "coordinate_source": "EXACT_EVENT_VENUE_NAME_EXISTING_APPROXIMATE_REGISTRY",
             "forecast_source": {
-              "captured_utc": "2026-11-01T18:25:57.199757+00:00",
-              "snapshot_sha256": "081b43ec24543a04057d679e6cc05c87a10f07c83d15c6d260eb35ad8c68935d",
+              "captured_utc": "2026-11-01T20:30:47.193123+00:00",
+              "snapshot_sha256": "e6acd8f7bacac4cab143b7f2575059961d361590f9eb96b24b5247cb5ae077a0",
               "source_url": "https://api.weather.gov/gridpoints/LWX/102,73/forecast/hourly"
             },
-            "issued_utc": "2026-11-01T14:52:37+00:00",
+            "issued_utc": "2026-11-01T19:20:40+00:00",
             "latitude": 38.9078,
             "longitude": -76.8645,
             "model_adjustment": null,
@@ -2217,7 +2233,7 @@
             "period_end_utc": "2026-11-02T02:00:00+00:00",
             "period_start_utc": "2026-11-02T01:00:00+00:00",
             "point_source": {
-              "captured_utc": "2026-11-01T18:25:57.030357+00:00",
+              "captured_utc": "2026-11-01T20:30:47.120346+00:00",
               "snapshot_sha256": "74684c61a4532470fd62410b3056187b41fd5583b193dec4fe95aa037bbcd72a",
               "source_url": "https://api.weather.gov/points/38.9078,-76.8645"
             },
@@ -2244,13 +2260,12 @@
           "forecast_effect": "NO_WEB_CONTEXT_ADJUSTMENT",
           "missing_required_inputs": [
             "confirmed_starting_qbs",
-            "final_game_specific_player_availability",
-            "venue_bound_kickoff_weather_forecast"
+            "final_game_specific_player_availability"
           ],
           "model_players_needing_availability": 25,
           "official_inactive_teams": [],
           "outdoor_weather_required": true,
-          "outdoor_weather_verified": false,
+          "outdoor_weather_verified": true,
           "ready_for_context_adjusted_prediction": false,
           "reported_injury_statuses_verified": 3,
           "roof_operating_position_required": false,
@@ -2265,12 +2280,13 @@
             "venue_name",
             "venue_reported_indoor",
             "dated_reported_player_statuses",
+            "outdoor_kickoff_weather_forecast",
             "roof_operating_position_not_applicable"
           ]
         },
         "kickoff_utc": "2026-11-03T01:15:00+00:00",
         "structured_game_observation": {
-          "captured_utc": "2026-11-01T18:25:55.535459+00:00",
+          "captured_utc": "2026-11-01T20:30:45.457453+00:00",
           "eligible_for_historical_backfill": false,
           "facts": {
             "away_team": "CHI",
@@ -2284,7 +2300,7 @@
           "model_adjustment": null,
           "provider_event_id": "401873036",
           "reasons": [],
-          "snapshot_sha256": "eba11f6df45fc0f983a5aca018e448ccb3c484bf983400e2f3b0f860271b9832",
+          "snapshot_sha256": "619d8546a02d417280bd0dfb93d5fcc0717a438c74aadf100198b3a17e19025c",
           "source_kind": "ESPN_CURRENT_EVENT_SNAPSHOT",
           "source_publication_utc": null,
           "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20261102&limit=100",
@@ -2574,8 +2590,8 @@
             ],
             "rejections": [],
             "source": {
-              "captured_utc": "2026-11-01T18:25:57.311011+00:00",
-              "snapshot_sha256": "d2b2dcadcd9f71cf54d31dd3f4f435669131e33d9c3d66e56e79f6edd4b9dbf1",
+              "captured_utc": "2026-11-01T20:30:47.254526+00:00",
+              "snapshot_sha256": "a3542e4e5b0755e1ee3553d80152220b723f55c0fe66837f3248e515c7ab1d6f",
               "source_url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=401873036"
             },
             "starting_qbs_verified": false,
@@ -2601,7 +2617,7 @@
             "outdoor_weather_required": true,
             "reported_roof": "outdoors",
             "source": {
-              "captured_utc": "2026-11-01T18:25:36.901477+00:00",
+              "captured_utc": "2026-11-01T20:30:32.124719+00:00",
               "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
               "snapshot_sha256": "09597db2ceb61aab370d723ea8ec022b4e829a48059ea2e41630bea3d85d5cfa",
               "source_method": "nflreadpy.load_schedules"
@@ -2621,7 +2637,7 @@
             "status": "OUTDOOR_ROOF_POSITION_NOT_APPLICABLE"
           },
           "roof_schedule_snapshot": {
-            "captured_utc": "2026-11-01T18:25:36.901477+00:00",
+            "captured_utc": "2026-11-01T20:30:32.124719+00:00",
             "hash_scope": "NORMALIZED_EXPORTED_ROWS_NOT_ORIGINAL_PROVIDER_BYTES",
             "records": [
               {
@@ -2688,23 +2704,41 @@
             "snapshot_sha256": "09597db2ceb61aab370d723ea8ec022b4e829a48059ea2e41630bea3d85d5cfa",
             "source_method": "nflreadpy.load_schedules"
           },
-          "source_errors": [
-            {
-              "reason": "WEATHER_ISSUE_TIME_FUTURE_OR_STALE",
-              "source": "VENUE_WEATHER"
-            }
-          ],
+          "source_errors": [],
           "status": "PARTIAL_CONTEXT_ONLY",
           "weather": {
-            "reason": "WEATHER_ISSUE_TIME_FUTURE_OR_STALE",
-            "status": "WEATHER_NOT_VERIFIED"
+            "coordinate_source": "EXACT_EVENT_VENUE_NAME_EXISTING_APPROXIMATE_REGISTRY",
+            "forecast_source": {
+              "captured_utc": "2026-11-01T20:30:47.369584+00:00",
+              "snapshot_sha256": "bc60e4b26c5e4f0955c08640571281130249ce2019e5012bc6ce67817bc305da",
+              "source_url": "https://api.weather.gov/gridpoints/SEW/125,67/forecast/hourly"
+            },
+            "issued_utc": "2026-11-01T18:26:45+00:00",
+            "latitude": 47.5952,
+            "longitude": -122.3316,
+            "model_adjustment": null,
+            "on_field_conditions_verified": false,
+            "period_end_utc": "2026-11-03T02:00:00+00:00",
+            "period_start_utc": "2026-11-03T01:00:00+00:00",
+            "point_source": {
+              "captured_utc": "2026-11-01T20:30:47.289819+00:00",
+              "snapshot_sha256": "3aba8ea2fc980ca344f44596a143e96c87ed9a9261d9ba03f449890cf33caa14",
+              "source_url": "https://api.weather.gov/points/47.5952,-122.3316"
+            },
+            "precipitation_probability_percent": 0,
+            "roof_position_verified": false,
+            "status": "VENUE_BOUND_NWS_KICKOFF_FORECAST",
+            "temperature_f": 51.0,
+            "venue_name": "Lumen Field",
+            "wind_mph_max": 1,
+            "wind_mph_min": 1
           }
         }
       }
     ],
-    "source_forecast_generated_utc": "2026-11-01T18:25:34.372927+00:00",
-    "source_forecast_model_capture_utc": "2026-11-01T18:25:28.329168+00:00",
-    "source_forecast_sha256": "ebef3d0daf0a882e73d8e7e50996be8b3d38aee0b314b0d6542f4d4322f50adc",
+    "source_forecast_generated_utc": "2026-11-01T20:30:29.906825+00:00",
+    "source_forecast_model_capture_utc": "2026-11-01T20:30:22.371454+00:00",
+    "source_forecast_sha256": "63ef335404fe031b392b6bb9bd9d1ac1ac08de0e8fccc58b664cc3a8a4885040",
     "spec": "NFL_SUPPLEMENTAL_PUBLIC_INPUT_QUALITY_V1",
     "supplemental_after_forecast": true
   },

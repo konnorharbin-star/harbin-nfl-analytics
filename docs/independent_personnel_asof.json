@@ -3,9 +3,9 @@
     "betting_authorized": false,
     "new_observations": 5,
     "repeat_observations": 0,
-    "total_observations": 171
+    "total_observations": 176
   },
-  "asof_utc": "2026-11-01T18:26:12.884374+00:00",
+  "asof_utc": "2026-11-01T20:31:03.959140+00:00",
   "betting_authorized": false,
   "eligible_pregame_games": 5,
   "game_day_inactives_confirmed": 0,
@@ -13,14 +13,14 @@
     {
       "away_team": "LAC",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "72e0e127827b5d6ac58d5670e33aa6427d316c11bc3716452edef30fee307676",
+      "forecast_sha256": "84aa415dce87eb7e2ab5c6f0fc154710d5cd538312cb01ddaa8b5b52af175c60",
       "game_id": "2026_08_LAC_LA",
       "home_team": "LA",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T21:05:00+00:00",
-      "model_capture_utc": "2026-11-01T18:25:28.329168+00:00",
+      "model_capture_utc": "2026-11-01T20:30:22.371454+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-11-01T18:26:12.884374+00:00",
+      "observed_utc": "2026-11-01T20:31:03.959140+00:00",
       "our_frozen_at_capture_projection": {
         "home_spread": -5.0235,
         "predicted_score": {
@@ -31,9 +31,9 @@
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "ebef3d0daf0a882e73d8e7e50996be8b3d38aee0b314b0d6542f4d4322f50adc",
-      "source_run_id": "41336468906",
-      "source_web_context_sha256": "43a4699ed98a9dec78c5acafb4bbb65eb7f6a824f08e76e6b58c1723ccf7cdbd",
+      "source_bundle_sha256": "63ef335404fe031b392b6bb9bd9d1ac1ac08de0e8fccc58b664cc3a8a4885040",
+      "source_run_id": "41347106540",
+      "source_web_context_sha256": "2752d27cd394cd0e324dea4380d4c8e0d04f2b86f6978c86a5427c19a49711e3",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -425,20 +425,20 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-11-01T18:26:05.913521+00:00",
+      "web_context_observed_utc": "2026-11-01T20:30:57.561263+00:00",
       "week": 8
     },
     {
       "away_team": "KC",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "96b45c240277e74df86eb2fafb9a107a9ad8c9c6ba43aaeac872174253ac7995",
+      "forecast_sha256": "dcc1bef1b079662cabe47e2f66e7469221754d3e2fb84a44bb3ad49e038a62fd",
       "game_id": "2026_08_KC_DEN",
       "home_team": "DEN",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T21:25:00+00:00",
-      "model_capture_utc": "2026-11-01T18:25:28.329168+00:00",
+      "model_capture_utc": "2026-11-01T20:30:22.371454+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-11-01T18:26:12.884374+00:00",
+      "observed_utc": "2026-11-01T20:31:03.959140+00:00",
       "our_frozen_at_capture_projection": {
         "home_spread": 1.1715,
         "predicted_score": {
@@ -449,9 +449,9 @@
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "ebef3d0daf0a882e73d8e7e50996be8b3d38aee0b314b0d6542f4d4322f50adc",
-      "source_run_id": "41336468906",
-      "source_web_context_sha256": "43a4699ed98a9dec78c5acafb4bbb65eb7f6a824f08e76e6b58c1723ccf7cdbd",
+      "source_bundle_sha256": "63ef335404fe031b392b6bb9bd9d1ac1ac08de0e8fccc58b664cc3a8a4885040",
+      "source_run_id": "41347106540",
+      "source_web_context_sha256": "2752d27cd394cd0e324dea4380d4c8e0d04f2b86f6978c86a5427c19a49711e3",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -843,20 +843,20 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-11-01T18:26:05.913521+00:00",
+      "web_context_observed_utc": "2026-11-01T20:30:57.561263+00:00",
       "week": 8
     },
     {
       "away_team": "NE",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "838bf3c3ed5592d7ac0ad9ba0bac80570f560de5548aa3c968f6cf14ff093ed6",
+      "forecast_sha256": "f70bdfc167a8f3e39307c1d8e8b99021af6ce9ed3b0f757b8e570cdbd5098ef7",
       "game_id": "2026_08_NE_MIA",
       "home_team": "MIA",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-01T21:25:00+00:00",
-      "model_capture_utc": "2026-11-01T18:25:28.329168+00:00",
+      "model_capture_utc": "2026-11-01T20:30:22.371454+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-11-01T18:26:12.884374+00:00",
+      "observed_utc": "2026-11-01T20:31:03.959140+00:00",
       "our_frozen_at_capture_projection": {
         "home_spread": 6.8315,
         "predicted_score": {
@@ -867,9 +867,9 @@
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "ebef3d0daf0a882e73d8e7e50996be8b3d38aee0b314b0d6542f4d4322f50adc",
-      "source_run_id": "41336468906",
-      "source_web_context_sha256": "43a4699ed98a9dec78c5acafb4bbb65eb7f6a824f08e76e6b58c1723ccf7cdbd",
+      "source_bundle_sha256": "63ef335404fe031b392b6bb9bd9d1ac1ac08de0e8fccc58b664cc3a8a4885040",
+      "source_run_id": "41347106540",
+      "source_web_context_sha256": "2752d27cd394cd0e324dea4380d4c8e0d04f2b86f6978c86a5427c19a49711e3",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -1233,20 +1233,20 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-11-01T18:26:05.913521+00:00",
+      "web_context_observed_utc": "2026-11-01T20:30:57.561263+00:00",
       "week": 8
     },
     {
       "away_team": "PHI",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "79fce01daa1f9d4bc0142fbfc4aff2bc425466f3ae524fb23642da1fd717c6b9",
+      "forecast_sha256": "923b80880765bd31fc6bccdf7470f41d124e36e4f44854c81b86c52650d55c0d",
       "game_id": "2026_08_PHI_WAS",
       "home_team": "WAS",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-02T01:20:00+00:00",
-      "model_capture_utc": "2026-11-01T18:25:28.329168+00:00",
+      "model_capture_utc": "2026-11-01T20:30:22.371454+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-11-01T18:26:12.884374+00:00",
+      "observed_utc": "2026-11-01T20:31:03.959140+00:00",
       "our_frozen_at_capture_projection": {
         "home_spread": 0.241,
         "predicted_score": {
@@ -1257,9 +1257,9 @@
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "ebef3d0daf0a882e73d8e7e50996be8b3d38aee0b314b0d6542f4d4322f50adc",
-      "source_run_id": "41336468906",
-      "source_web_context_sha256": "43a4699ed98a9dec78c5acafb4bbb65eb7f6a824f08e76e6b58c1723ccf7cdbd",
+      "source_bundle_sha256": "63ef335404fe031b392b6bb9bd9d1ac1ac08de0e8fccc58b664cc3a8a4885040",
+      "source_run_id": "41347106540",
+      "source_web_context_sha256": "2752d27cd394cd0e324dea4380d4c8e0d04f2b86f6978c86a5427c19a49711e3",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -1823,20 +1823,20 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-11-01T18:26:05.913521+00:00",
+      "web_context_observed_utc": "2026-11-01T20:30:57.561263+00:00",
       "week": 8
     },
     {
       "away_team": "CHI",
       "confirmed_qb_effect_applied": false,
-      "forecast_sha256": "52ac704fdc2abd00f609346f799669ae9b3a1a5290a02c81ee8d211f3da9f55e",
+      "forecast_sha256": "c10cbaa8bf353f488a7466a418551e45eef98ae5b9558ef8a8339b38fd0c8478",
       "game_id": "2026_08_CHI_SEA",
       "home_team": "SEA",
       "injury_points_adjustment_applied": false,
       "kickoff_utc": "2026-11-03T01:15:00+00:00",
-      "model_capture_utc": "2026-11-01T18:25:28.329168+00:00",
+      "model_capture_utc": "2026-11-01T20:30:22.371454+00:00",
       "model_parameters_changed": false,
-      "observed_utc": "2026-11-01T18:26:12.884374+00:00",
+      "observed_utc": "2026-11-01T20:31:03.959140+00:00",
       "our_frozen_at_capture_projection": {
         "home_spread": -1.479,
         "predicted_score": {
@@ -1847,9 +1847,9 @@
       },
       "player_context_game_observed": true,
       "season": 2026,
-      "source_bundle_sha256": "ebef3d0daf0a882e73d8e7e50996be8b3d38aee0b314b0d6542f4d4322f50adc",
-      "source_run_id": "41336468906",
-      "source_web_context_sha256": "43a4699ed98a9dec78c5acafb4bbb65eb7f6a824f08e76e6b58c1723ccf7cdbd",
+      "source_bundle_sha256": "63ef335404fe031b392b6bb9bd9d1ac1ac08de0e8fccc58b664cc3a8a4885040",
+      "source_run_id": "41347106540",
+      "source_web_context_sha256": "2752d27cd394cd0e324dea4380d4c8e0d04f2b86f6978c86a5427c19a49711e3",
       "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
       "status": "PREGAME_PERSONNEL_RESEARCH_UNVERIFIED",
       "teams": {
@@ -2253,17 +2253,17 @@
       "valid_bet_identified": false,
       "validated_accuracy_gain": false,
       "web_context_game_observed": true,
-      "web_context_observed_utc": "2026-11-01T18:26:05.913521+00:00",
+      "web_context_observed_utc": "2026-11-01T20:30:57.561263+00:00",
       "week": 8
     }
   ],
   "immutable_journal": "history/personnel_asof_v1_2026/observations.jsonl",
   "model_predictions_changed": false,
-  "original_bundle_sha256": "ebef3d0daf0a882e73d8e7e50996be8b3d38aee0b314b0d6542f4d4322f50adc",
+  "original_bundle_sha256": "63ef335404fe031b392b6bb9bd9d1ac1ac08de0e8fccc58b664cc3a8a4885040",
   "research_only": true,
   "source_context_games_missing": 0,
   "source_original_bytes_archived_when_new": true,
   "spec": "NFL_PERSONNEL_ASOF_WATCH_V1",
   "starting_qbs_confirmed": 0,
-  "supplemental_context_sha256": "43a4699ed98a9dec78c5acafb4bbb65eb7f6a824f08e76e6b58c1723ccf7cdbd"
+  "supplemental_context_sha256": "2752d27cd394cd0e324dea4380d4c8e0d04f2b86f6978c86a5427c19a49711e3"
 }
